@@ -1,0 +1,84 @@
+\documentclass[a4paper,10pt]{scrartcl}
+\usepackage[hmargin=2.5cm,vmargin=3cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\hypersetup{
+colorlinks=false,
+hidelinks
+}
+\usepackage{minted}
+\usepackage{xcolor}
+\usepackage{amsmath}
+
+%opening
+\title{Report Lab 1}
+\author{Andres Calderon}
+
+\begin{document}
+
+\maketitle
+\section{Code}
+The following code was used to complete the report:	
+
+\subsection{kernel.cu}
+
+\inputminted[
+fontsize=\footnotesize,
+tabsize=2,
+breaklines,
+linenos
+]{c}{kernel.cu}
+
+\section{Answer to Questions}
+\begin{enumerate}
+ \item How many times is each element of the input matrices loaded during the execution of the kernel?
+
+ \begin{figure}
+  \centering
+  \includegraphics[width=0.5\textwidth]{./NTVsT_50-1K}
+  \caption{First performance comparisson between tiling and no tiling versions.}\label{fig:NTVsT_50-1K}
+ \end{figure}
+
+ \begin{figure}
+  \centering
+  \includegraphics[width=0.5\textwidth]{./NTVsT_1K-20K}
+  \caption{Second performance comparisson between tiling and no tiling versions.}\label{fig:NTVsT_50-1K}
+ \end{figure}
+
+ 
+ 
+ \begin{figure}
+  \centering
+  \includegraphics[width=0.5\textwidth]{./TilesizePerformance_50-1K}
+  \caption{Performance using different values of TILE\_SIZE.}\label{fig:NTVsT_50-1K}
+ \end{figure}
+
+ \begin{figure}
+  \centering
+  \includegraphics[width=0.5\textwidth]{./TilesizePerformance_1K-20K}
+  \caption{Performance of TILE\_SIZE 16 y 32 with more data.}\label{fig:NTVsT_50-1K}
+ \end{figure}
+ 
+\end{enumerate}
+
+\begin{thebibliography}{9}
+\bibitem{guide} 
+Nvidia Corporation.
+\textit{CUDA C Programing Guide}. 
+PG-02829-001\_v7.5, 2015.
+ 
+\bibitem{kirk2012} 
+David Kirk and Wen-Mei Hwu.
+\textit{Programming Massively Parallel Processors: A Hands-On Approach}. 
+Morgan Kaufmann, 2012.
+
+\bibitem{intro} 
+David Luebke, John Owens, Mike Roberts and Cheng-Han Lee.
+\textit{Coalesce Memory Access - Intro to Parallel Programming}. 
+Udacity Course, 2015. \url{https://www.udacity.com/course/intro-to-parallel-programming--cs344}.
+
+\end{thebibliography}
+ 
+
+\end{document}
