@@ -8,7 +8,7 @@
 
 #include <stdio.h>
 
-#define TILE_SIZE 16
+#define TILE_SIZE 32
 
 __global__ void mysgemm(int m, int n, int k, const float *A, const float *B, float *C) {
 
