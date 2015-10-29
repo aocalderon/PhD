@@ -19,7 +19,7 @@ hidelinks
 
 \maketitle
 \section{Code}
-The following code was used to complete the report:	
+The following code was used to complete the report:
 
 \subsection{kernel.cu}
 
@@ -32,32 +32,48 @@ linenos
 
 \section{Answer to Questions}
 \begin{enumerate}
- \item How many times is each element of the input matrices loaded during the execution of the kernel?
-
+ \item In your kernel implementation, how many threads can be simultaneously executing? Assume a GeForce GTX 280 GPU which has 30 streaming multiprocessors.
+ 
+ \item Use nvcc --ptxas-options=``-v'' to report the resource usage of your implementation your implementation.  Note that the compilation will fail but you will still get a report of the relevant information.  Experiment with the Nvidia visual profiler, which is part of the CUDA toolkit, and use it to further understand the resource usage.  In particular, report your branch divergence behavior and whether your memory accesses are coalesced. 
+ 
  \begin{figure}
-  \centering
-  \includegraphics[width=0.5\textwidth]{./NTVsT_50-1K}
-  \caption{First performance comparisson between tiling and no tiling versions.}\label{fig:NTVsT_50-1K}
+ \centering
+ \includegraphics[width=\textwidth]{./profile_sgemm-tiled.png}
+ \caption{NVVP performance analysis for \textit{sgemm-tiled}.}\label{fig:profile_sgemm-tiled}
  \end{figure}
 
  \begin{figure}
-  \centering
-  \includegraphics[width=0.5\textwidth]{./NTVsT_1K-20K}
-  \caption{Second performance comparisson between tiling and no tiling versions.}\label{fig:NTVsT_50-1K}
+ \centering
+ \includegraphics[width=\textwidth]{./profile_sgemm.png}
+ \caption{NVVP performance analysis for \textit{sgemm}.}\label{fig:profile_sgemm}
+ \end{figure}
+ 
+ \item Compare the performance of the The Tiled Matrix multiplication to the simple matrix multiplication as you increase the size of the matrices and for different tile sizes. Explain any trends that you see. 
+
+ \begin{figure}
+ \centering
+ \includegraphics[width=0.5\textwidth]{./NTVsT_50-1K}
+ \caption{First performance comparisson between tiling and no tiling versions.}\label{fig:NTVsT_50-1K}
+ \end{figure}
+
+ \begin{figure}
+ \centering
+ \includegraphics[width=0.5\textwidth]{./NTVsT_1K-20K}
+ \caption{Second performance comparisson between tiling and no tiling versions.}\label{fig:NTVsT_50-1K}
  \end{figure}
 
  
  
  \begin{figure}
-  \centering
-  \includegraphics[width=0.5\textwidth]{./TilesizePerformance_50-1K}
-  \caption{Performance using different values of TILE\_SIZE.}\label{fig:NTVsT_50-1K}
+ \centering
+ \includegraphics[width=0.5\textwidth]{./TilesizePerformance_50-1K}
+ \caption{Performance using different values of TILE\_SIZE.}\label{fig:NTVsT_50-1K}
  \end{figure}
 
  \begin{figure}
-  \centering
-  \includegraphics[width=0.5\textwidth]{./TilesizePerformance_1K-20K}
-  \caption{Performance of TILE\_SIZE 16 y 32 with more data.}\label{fig:NTVsT_50-1K}
+ \centering
+ \includegraphics[width=0.5\textwidth]{./TilesizePerformance_1K-20K}
+ \caption{Performance of TILE\_SIZE 16 y 32 with more data.}\label{fig:NTVsT_50-1K}
  \end{figure}
  
 \end{enumerate}
