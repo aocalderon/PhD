@@ -41,14 +41,14 @@ sql <- "SELECT AVG(TS16) AS TS16, AVG(TS32) AS TS32 FROM data GROUP BY I"
 data <- sqldf(sql)
 
 pdf('TilesizePerformance_1K-20K.pdf')
-plot(seq(1000,20000,1000), data$TS16, pch=0, col=2, 
+plot(seq(1000,20000,1000), data$TS16, pch=2, col=4, 
      xlab="Number of elements N in a NxN matrix.",
      ylab = "Time (s)", 
      main = "TILE_SIZE Performance")
-lines(seq(1000,20000,1000), data$TS16, col=2)
-points(seq(1000,20000,1000), data$TS32, pch=1, col=3)
-lines(seq(1000,20000,1000), data$TS32, col=3)
-legend('topleft', inset=c(0.01,0.02), title='TILE_SIZE', c("16","32"), lty=c(1,1), pch=c(0,1), col=c(2,3)) 
+lines(seq(1000,20000,1000), data$TS16, col=4)
+points(seq(1000,20000,1000), data$TS32, pch=3, col=5)
+lines(seq(1000,20000,1000), data$TS32, col=5)
+legend('topleft', inset=c(0.01,0.02), title='TILE_SIZE', c("16","32"), lty=c(1,1), pch=c(2,3), col=c(4,5)) 
 dev.off()
 
 ###
