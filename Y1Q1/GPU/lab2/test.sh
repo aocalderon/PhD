@@ -1,6 +1,6 @@
 #!/bin/bash
 # declare STRING variable
-N=10
+N=20
 for x in `seq 1 $N`; do
 	for y in `seq 1 $N`; do
 		for z in `seq 1 $N`; do
