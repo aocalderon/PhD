@@ -1,0 +1,21 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGdefault{n+nv}{NVCC}        \PYGdefault{o}{=} nvcc
+\PYGdefault{n+nv}{NVCC\PYGdefaultZus{}FLAGS}  \PYGdefault{o}{=} \PYGdefaultZhy{}\PYGdefaultZhy{}ptxas\PYGdefaultZhy{}options\PYGdefault{o}{=}\PYGdefault{l+s+s2}{\PYGdefaultZdq{}\PYGdefaultZhy{}v\PYGdefaultZdq{}} \PYGdefaultZhy{}O3 \PYGdefaultZhy{}I/usr/local/cuda/include
+\PYGdefault{n+nv}{LD\PYGdefaultZus{}FLAGS}    \PYGdefault{o}{=} \PYGdefaultZhy{}lcudart \PYGdefaultZhy{}L/usr/local/cuda/lib64
+\PYGdefault{n+nv}{EXE}	        \PYGdefault{o}{=} sgemm\PYGdefaultZhy{}tiled
+\PYGdefault{n+nv}{OBJ}	        \PYGdefault{o}{=} main.o support.o
+
+default: \PYGdefault{k}{\PYGdefaultZdl{}(}EXE\PYGdefault{k}{)}
+
+main.o: main.cu kernel.cu support.h
+	\PYGdefault{k}{\PYGdefaultZdl{}(}NVCC\PYGdefault{k}{)} \PYGdefaultZhy{}c \PYGdefaultZhy{}o \PYGdefault{n+nv}{\PYGdefaultZdl{}@} main.cu \PYGdefault{k}{\PYGdefaultZdl{}(}NVCC\PYGdefaultZus{}FLAGS\PYGdefault{k}{)}
+
+support.o: support.cu support.h
+	\PYGdefault{k}{\PYGdefaultZdl{}(}NVCC\PYGdefault{k}{)} \PYGdefaultZhy{}c \PYGdefaultZhy{}o \PYGdefault{n+nv}{\PYGdefaultZdl{}@} support.cu \PYGdefault{k}{\PYGdefaultZdl{}(}NVCC\PYGdefaultZus{}FLAGS\PYGdefault{k}{)}
+
+\PYGdefault{k}{\PYGdefaultZdl{}(}EXE\PYGdefault{k}{)}: \PYGdefault{k}{\PYGdefaultZdl{}(}OBJ\PYGdefault{k}{)}
+	\PYGdefault{k}{\PYGdefaultZdl{}(}NVCC\PYGdefault{k}{)} \PYGdefault{k}{\PYGdefaultZdl{}(}OBJ\PYGdefault{k}{)} \PYGdefaultZhy{}o \PYGdefault{k}{\PYGdefaultZdl{}(}EXE\PYGdefault{k}{)} \PYGdefault{k}{\PYGdefaultZdl{}(}LD\PYGdefaultZus{}FLAGS\PYGdefault{k}{)}
+
+clean:
+	rm \PYGdefaultZhy{}rf *.o \PYGdefault{k}{\PYGdefaultZdl{}(}EXE\PYGdefault{k}{)}
+\end{Verbatim}

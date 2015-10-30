@@ -36,6 +36,39 @@ linenos
  
  \item Use nvcc --ptxas-options=``-v'' to report the resource usage of your implementation your implementation.  Note that the compilation will fail but you will still get a report of the relevant information.  Experiment with the Nvidia visual profiler, which is part of the CUDA toolkit, and use it to further understand the resource usage.  In particular, report your branch divergence behavior and whether your memory accesses are coalesced. 
  
+ The \textit{--ptxas-options=``-v''} option was included in the Makefile as shows figure \ref{fig:Makefile}.  The output result can be seen in figure \ref{fig:compiling}.  It shows the number of registers allocated (12), the size of share memory (around 2 Kb) and some bytes used for constant memory (12 bytes). It is consistent with the use of two floating-point arrays in share memory for matrices A and B, each of 16x16 (TILE\_SIZE). The remaining bytes and size of constant memory could be explained by the use of kernel arguments and internal operations.
+ 
+\begin{figure}
+  \centering
+    \inputminted[
+    fontsize=\footnotesize,
+    tabsize=2,
+    breaklines,
+    frame=single,
+    framesep=10pt,
+    linenos
+    ]{bash}{Makefile}
+  \caption{Content of Makefile.}\label{fig:Makefile}
+\end{figure}
+
+\begin{figure}
+\centering
+  \inputminted[
+    fontsize=\footnotesize,
+    tabsize=2,
+    breaklines,
+    linenos,
+    framesep=10pt,
+    frame=single
+    ]{bash}{compiling.txt}
+\caption{Output of compilation using \textit{--ptxas-options=``-v''}.}\label{fig:compiling}
+\end{figure}
+
+
+Using the Nvidia Visual Profiler (NVVP) it was possible to extract valuable information about the performance of the code. A very gentle introduction to the use of NVVP is available at \cite{nvvp_tutorial}.  NVVP 5.0 (available at storm.ee.ucr.edu) was used to analyze the implementation.  For TILE\_SIZE=16 the results are shown in figure \ref{fig:profile_sgemm-tiled}. All the tests were run using the default parameters.  
+
+We can see that the figures for \textit{Branch Divergence Overhead}, which measures the instruction issue overhead caused by divergent branches, and \textit{Total Replay Overhead}, the percentage of instruction issues due to memory replays, are relatively small in comparison with the same figure for the no tiled version (figure \ref{fig:profile_sgemm}).  Similarly, the value of \textit{Global Memory Replay Overhead}, the percentage of instruction issues due to replays for non-coalesced global memory accesses, is consistently smaller in the tiled version. However, as we can see for the \textit{Global Load Efficiency } metric, the use of global memory bandwidth is more efficient for the simple implementation (61.2\%) than for the tiled implementation (39.8\%).
+
  \begin{figure}
  \centering
  \includegraphics[width=\textwidth]{./profile_sgemm-tiled.png}
@@ -50,6 +83,47 @@ linenos
  
  \item Compare the performance of the The Tiled Matrix multiplication to the simple matrix multiplication as you increase the size of the matrices and for different tile sizes. Explain any trends that you see. 
 
+In order to collect data, the script in figure X was used to run three iterations of the implementation with different values of N (size of a square matrix).  The result of the iterations was saved to a log file using the following command line functions:
+
+\begin{figure}
+\centering
+  \inputminted[
+    fontsize=\footnotesize,
+    tabsize=2,
+    breaklines,
+    linenos,
+    framesep=10pt,
+    frame=single
+    ]{bash}{test4.sh}
+\caption{Script to collect test data.}\label{fig:script}
+\end{figure}
+
+\begin{minted}[
+  fontsize=\footnotesize,
+  tabsize=2,
+  breaklines,
+  framesep=10pt,
+  frame=single
+]{bash}
+storm.ee.ucr.edu /home/tempmaj/classacc2391/PhD/Y1Q1/GPU/lab2 $ ./test.sh > testing_tiled_1K-20K_T16.log
+\end{minted}
+
+Then, the values for the time executing of the kernel section is extracted using:
+
+\begin{minted}[
+  fontsize=\footnotesize,
+  tabsize=2,
+  breaklines,
+  framesep=10pt,
+  frame=single
+]{bash}
+storm.ee.ucr.edu /home/tempmaj/classacc2391/PhD/Y1Q1/GPU/lab2 $ more testing_tiled_1K-20K_T16.log | grep 'Launching kernel...' | grep -Po '\d+.\d+' > times_tiled_1K-20K_T16.dat
+\end{minted}
+ 
+The files were processed in R\footnote{\url{https://www.r-project.org/}} to get the average of the three iterations and generate some plots. All data, code and figures are available at \cite{github}.
+
+Figures \ref{fig:NTVsT_50-1K} and \ref{fig:NTVsT_1K-20K} show the performance between both implementations.  The tests were set using different values of N for square matrices. Overall, the tiled implementation outperforms the simple one in small and relatively bigger datasets.  Although, the tiled implementation shows a lower global load efficiency, it seems that a more appropriate control  of branch divergence and coalesced access gives better results. 
+
  \begin{figure}
  \centering
  \includegraphics[width=0.5\textwidth]{./NTVsT_50-1K}
@@ -59,40 +133,40 @@ linenos
  \begin{figure}
  \centering
  \includegraphics[width=0.5\textwidth]{./NTVsT_1K-20K}
- \caption{Second performance comparisson between tiling and no tiling versions.}\label{fig:NTVsT_50-1K}
+ \caption{Second performance comparisson between tiling and no tiling versions.}\label{fig:NTVsT_1K-20K}
  \end{figure}
 
- 
+Figure \ref{fig:TilesizePerformance_50-1K} shows the performance for different values of TILE\_SIZE.  The general trend shows that the larger the size of the tile the better performance.  However, there is not significant difference between sizes 16 and 32.  Figure \ref{fig:TilesizePerformance_1K-20K} shows an additional test with bigger values of N for just these two values.  It seems there is not an increase in performance using a size of 32 over 16.  That is explained by the fact that a TILE\_SIZE equal to 32 allows 1024 threads per block, but the hardware limitation for each Streaming Multiprocessor (SM) is up to 1536 threads \cite{kirk2012}. So, under this configuration just one block (1024 threads) is actively executing.
  
  \begin{figure}
  \centering
  \includegraphics[width=0.5\textwidth]{./TilesizePerformance_50-1K}
- \caption{Performance using different values of TILE\_SIZE.}\label{fig:NTVsT_50-1K}
+ \caption{Performance using different values of TILE\_SIZE.}\label{fig:TilesizePerformance_50-1K}
  \end{figure}
 
  \begin{figure}
  \centering
  \includegraphics[width=0.5\textwidth]{./TilesizePerformance_1K-20K}
- \caption{Performance of TILE\_SIZE 16 y 32 with more data.}\label{fig:NTVsT_50-1K}
+ \caption{Performance of TILE\_SIZE 16 y 32 with more data.}\label{fig:TilesizePerformance_1K-20K}
  \end{figure}
  
 \end{enumerate}
 
 \begin{thebibliography}{9}
-\bibitem{guide} 
-Nvidia Corporation.
-\textit{CUDA C Programing Guide}. 
-PG-02829-001\_v7.5, 2015.
+\bibitem{github} 
+Andres Calderon.
+\textit{GitHub Personal Repository}. 
+\url{https://github.com/aocalderon/PhD/tree/master/Y1Q1/GPU/lab2}, 2015.
  
 \bibitem{kirk2012} 
 David Kirk and Wen-Mei Hwu.
 \textit{Programming Massively Parallel Processors: A Hands-On Approach}. 
 Morgan Kaufmann, 2012.
 
-\bibitem{intro} 
+\bibitem{nvvp_tutorial} 
 David Luebke, John Owens, Mike Roberts and Cheng-Han Lee.
-\textit{Coalesce Memory Access - Intro to Parallel Programming}. 
-Udacity Course, 2015. \url{https://www.udacity.com/course/intro-to-parallel-programming--cs344}.
+\textit{Using NVVP Part1 and Part 2 - Intro to Parallel Programming}. 
+Udacity Course, 2015. \url{https://www.youtube.com/watch?v=hyKA5fb5ZJI}.
 
 \end{thebibliography}
  

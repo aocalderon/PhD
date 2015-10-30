@@ -1,0 +1,12 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGdefault{c}{\PYGdefaultZsh{}!/bin/bash}
+date
+\PYGdefault{k}{for} i in \PYGdefault{l+s+sb}{`}seq \PYGdefault{l+m}{50} \PYGdefault{l+m}{50} 1000\PYGdefault{l+s+sb}{`}\PYGdefault{p}{;} \PYGdefault{k}{do}
+	./sgemm\PYGdefaultZhy{}tiled \PYGdefault{n+nv}{\PYGdefaultZdl{}i}
+	./sgemm\PYGdefaultZhy{}tiled \PYGdefault{n+nv}{\PYGdefaultZdl{}i}
+	./sgemm\PYGdefaultZhy{}tiled \PYGdefault{n+nv}{\PYGdefaultZdl{}i}
+\PYGdefault{k}{done}
+\PYGdefault{n+nv}{STRING}\PYGdefault{o}{=}\PYGdefault{l+s+s2}{\PYGdefaultZdq{}Done!!!\PYGdefaultZdq{}}
+\PYGdefault{n+nb}{echo} \PYGdefault{n+nv}{\PYGdefaultZdl{}STRING}
+date
+\end{Verbatim}

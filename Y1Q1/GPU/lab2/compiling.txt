@@ -1,0 +1,7 @@
+storm.ee.ucr.edu /home/tempmaj/classacc2391/PhD/Y1Q1/GPU/lab2 $ make
+nvcc -c -o main.o main.cu --ptxas-options="-v" -O3 -I/usr/local/cuda/include
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function '_Z7mysgemmiiiPKfS0_Pf' for 'sm_10'
+ptxas info    : Used 12 registers, 2104 bytes smem, 12 bytes cmem[1]
+nvcc main.o support.o -o sgemm-tiled -lcudart -L/usr/local/cuda/lib64
+storm.ee.ucr.edu /home/tempmaj/classacc2391/PhD/Y1Q1/GPU/lab2 $ 
