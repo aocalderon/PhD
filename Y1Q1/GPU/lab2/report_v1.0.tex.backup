@@ -30,9 +30,15 @@ breaklines,
 linenos
 ]{c}{kernel.cu}
 
+Validation in line 40 was based in the code explained in . 
+
 \section{Answer to Questions}
 \begin{enumerate}
  \item In your kernel implementation, how many threads can be simultaneously executing? Assume a GeForce GTX 280 GPU which has 30 streaming multiprocessors.
+ 
+According to \cite{gtx280} GeForce GTX 280 allows up to 1024 threads per Streaming Multiprocessor (SM). In my implementation I am using a BLOCK\_SIZE (TILE\_SIZE) of $16\times16=256$ threads per block so each SM can allocate 4 blocks.  With 30 SMs in total, the number of threads simultaneously executing is equal to:
+
+$16\times16\times4\times30=30720$
  
  \item Use nvcc --ptxas-options=``-v'' to report the resource usage of your implementation your implementation.  Note that the compilation will fail but you will still get a report of the relevant information.  Experiment with the Nvidia visual profiler, which is part of the CUDA toolkit, and use it to further understand the resource usage.  In particular, report your branch divergence behavior and whether your memory accesses are coalesced. 
  
@@ -83,20 +89,57 @@ We can see that the figures for \textit{Branch Divergence Overhead}, which measu
  
  \item Compare the performance of the The Tiled Matrix multiplication to the simple matrix multiplication as you increase the size of the matrices and for different tile sizes. Explain any trends that you see. 
 
-In order to collect data, the script in figure X was used running three iterations of the implementation with different values of N (size of a square matrix).  The result of the iterations was
+In order to collect data, the script in figure \ref{fig:script} was used to run three iterations of the implementations with different values of N (size of a square matrix).  The results of the iterations were saved to log files using the following command-line function:
 
-Figures \ref{fig:NTVsT_50-1K} and \ref{fig:NTVsT_1K-20K} show the performance between both implementations.  The tests were set using different values of N for square matrices. Overall, the tiled implementation outperforms the simple one in small and relatively bigger datasets.  Although, the tiled implementation shows a lower global load efficiency, it seems that a more appropriate control  of branch divergence and coalesced access gives better results. 
+\begin{figure}
+\centering
+  \inputminted[
+    fontsize=\footnotesize,
+    tabsize=2,
+    breaklines,
+    linenos,
+    framesep=10pt,
+    frame=single
+    ]{bash}{test4.sh}
+\caption{Script to collect test data.}\label{fig:script}
+\end{figure}
+
+\begin{minted}[
+  fontsize=\footnotesize,
+  tabsize=2,
+  breaklines,
+  framesep=10pt,
+  frame=single
+]{bash}
+storm.ee.ucr.edu /home/tempmaj/classacc2391/PhD/Y1Q1/GPU/lab2 $ ./test.sh > testing_tiled_1K-20K_T16.log
+\end{minted}
+
+Then, the times for kernel execution are extracted using:
+
+\begin{minted}[
+  fontsize=\footnotesize,
+  tabsize=2,
+  breaklines,
+  framesep=10pt,
+  frame=single
+]{bash}
+storm.ee.ucr.edu /home/tempmaj/classacc2391/PhD/Y1Q1/GPU/lab2 $ more testing_tiled_1K-20K_T16.log | grep 'Launching kernel...' | grep -Po '\d+.\d+' > times_tiled_1K-20K_T16.dat
+\end{minted}
+ 
+The files were processed in R\footnote{\url{https://www.r-project.org/}} to get the average of the three iterations and generate some plots. All data, code and figures are available at \cite{github}.
+
+Figures \ref{fig:NTVsT_50-1K} and \ref{fig:NTVsT_1K-20K} show the performance between both tiled and no tiled implementations.  The tests were set using different values of N for square matrices. Overall, the tiled implementation outperforms the simple one in small and relatively bigger datasets.  Although, the tiled implementation shows a lower global load efficiency, it seems that a more appropriate control of branch divergence and coalesced access give better results. 
 
  \begin{figure}
  \centering
  \includegraphics[width=0.5\textwidth]{./NTVsT_50-1K}
- \caption{First performance comparisson between tiling and no tiling versions.}\label{fig:NTVsT_50-1K}
+ \caption{First performance comparison between tiled and no tiled versions.}\label{fig:NTVsT_50-1K}
  \end{figure}
 
  \begin{figure}
  \centering
  \includegraphics[width=0.5\textwidth]{./NTVsT_1K-20K}
- \caption{Second performance comparisson between tiling and no tiling versions.}\label{fig:NTVsT_1K-20K}
+ \caption{Second performance comparison between tiled and no tiled versions.}\label{fig:NTVsT_1K-20K}
  \end{figure}
 
 Figure \ref{fig:TilesizePerformance_50-1K} shows the performance for different values of TILE\_SIZE.  The general trend shows that the larger the size of the tile the better performance.  However, there is not significant difference between sizes 16 and 32.  Figure \ref{fig:TilesizePerformance_1K-20K} shows an additional test with bigger values of N for just these two values.  It seems there is not an increase in performance using a size of 32 over 16.  That is explained by the fact that a TILE\_SIZE equal to 32 allows 1024 threads per block, but the hardware limitation for each Streaming Multiprocessor (SM) is up to 1536 threads \cite{kirk2012}. So, under this configuration just one block (1024 threads) is actively executing.
@@ -116,20 +159,30 @@ Figure \ref{fig:TilesizePerformance_50-1K} shows the performance for different v
 \end{enumerate}
 
 \begin{thebibliography}{9}
-\bibitem{guide} 
-Nvidia Corporation.
-\textit{CUDA C Programing Guide}. 
-PG-02829-001\_v7.5, 2015.
+\bibitem{github} 
+Andres Calderon.
+\textit{GitHub Personal Repository}. 
+\url{https://github.com/aocalderon/PhD/tree/master/Y1Q1/GPU/lab2}, 2015.
  
 \bibitem{kirk2012} 
 David Kirk and Wen-Mei Hwu.
 \textit{Programming Massively Parallel Processors: A Hands-On Approach}. 
 Morgan Kaufmann, 2012.
 
+\bibitem{kirk2012} 
+Wen-Mei Hwu.
+\textit{ - Heterogeneous Parallel Programming}. 
+Coursera Course, 2015. \url{https://www.youtube.com/watch?v=hyKA5fb5ZJI}.
+
 \bibitem{nvvp_tutorial} 
 David Luebke, John Owens, Mike Roberts and Cheng-Han Lee.
 \textit{Using NVVP Part1 and Part 2 - Intro to Parallel Programming}. 
 Udacity Course, 2015. \url{https://www.youtube.com/watch?v=hyKA5fb5ZJI}.
+
+\bibitem{gtx280}
+Nvidia Corporation.
+\textit{GeForce® GTX 200 GPU Architectural Overview}. Technical Brief \#TB-04044-001\_v01 
+\url{http://www.nvidia.com/docs/IO/55506/GeForce_GTX_200_GPU_Technical_Brief.pdf}, 2008.
 
 \end{thebibliography}
  

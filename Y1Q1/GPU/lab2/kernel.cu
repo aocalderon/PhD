@@ -25,7 +25,7 @@ __global__ void mysgemm(int m, int n, int k, const float *A, const float *B, flo
 
     // INSERT KERNEL CODE HERE
     // Declaring the variables in shared memory...
-    __shared__ float A_s[TILE_SIZE][TILE_SIZE];
+	__shared__ float A_s[TILE_SIZE][TILE_SIZE];
 	__shared__ float B_s[TILE_SIZE][TILE_SIZE];
 
 	// Finding the coordinates for the current thread...
@@ -38,7 +38,7 @@ __global__ void mysgemm(int m, int n, int k, const float *A, const float *B, flo
 
 	for(int i = 0; i < ((k - 1) / TILE_SIZE) + 1; ++i){
 		// Validation in the case the thread tries to write in share 
-		// memory of the dimensions of matrix A...
+		// memory a value outside the dimensions of matrix A...
 		if(row < m && (i * TILE_SIZE + tx) < k){
 			A_s[ty][tx] = A[(row * k) + (i * TILE_SIZE + tx)];
 		} else {
@@ -67,14 +67,13 @@ __global__ void mysgemm(int m, int n, int k, const float *A, const float *B, flo
 	if(row < m && col < n){
 		C[row * n + col] = sum;
 	}
-
 }
 
 void basicSgemm(char transa, char transb, int m, int n, int k, float alpha, const float *A, int lda, const float *B, int ldb, float beta, float *C, int ldc)
 {
     if ((transa != 'N') && (transa != 'n')) {
 		printf("unsupported value of 'transa'\n");
-    	return;
+		return;
     }
 
     if ((transb != 'N') && (transb != 'n')) {
@@ -95,8 +94,8 @@ void basicSgemm(char transa, char transb, int m, int n, int k, float alpha, cons
 
     // Initialize thread block and kernel grid dimensions
     const dim3 dim_block(BLOCK_SIZE, BLOCK_SIZE, 1);
-	const dim3 dim_grid(((n - 1) / BLOCK_SIZE) + 1, ((m - 1) / BLOCK_SIZE) + 1, 1);
+    const dim3 dim_grid(((n - 1) / BLOCK_SIZE) + 1, ((m - 1) / BLOCK_SIZE) + 1, 1);
 
     // Calling the kernel with the above-mentioned setting... 
-	mysgemm<<<dim_grid, dim_block>>>(m, n, k, A, B, C);
+    mysgemm<<<dim_grid, dim_block>>>(m, n, k, A, B, C);
 }

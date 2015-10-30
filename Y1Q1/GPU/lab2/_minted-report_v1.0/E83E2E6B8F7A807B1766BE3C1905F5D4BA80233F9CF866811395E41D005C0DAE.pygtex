@@ -26,7 +26,7 @@
 
     \PYGdefault{c+c1}{// INSERT KERNEL CODE HERE}
     \PYGdefault{c+c1}{// Declaring the variables in shared memory...}
-    \PYGdefault{n}{\PYGdefaultZus{}\PYGdefaultZus{}shared\PYGdefaultZus{}\PYGdefaultZus{}} \PYGdefault{k+kt}{float} \PYGdefault{n}{A\PYGdefaultZus{}s}\PYGdefault{p}{[}\PYGdefault{n}{TILE\PYGdefaultZus{}SIZE}\PYGdefault{p}{][}\PYGdefault{n}{TILE\PYGdefaultZus{}SIZE}\PYGdefault{p}{];}
+	\PYGdefault{n}{\PYGdefaultZus{}\PYGdefaultZus{}shared\PYGdefaultZus{}\PYGdefaultZus{}} \PYGdefault{k+kt}{float} \PYGdefault{n}{A\PYGdefaultZus{}s}\PYGdefault{p}{[}\PYGdefault{n}{TILE\PYGdefaultZus{}SIZE}\PYGdefault{p}{][}\PYGdefault{n}{TILE\PYGdefaultZus{}SIZE}\PYGdefault{p}{];}
 	\PYGdefault{n}{\PYGdefaultZus{}\PYGdefaultZus{}shared\PYGdefaultZus{}\PYGdefaultZus{}} \PYGdefault{k+kt}{float} \PYGdefault{n}{B\PYGdefaultZus{}s}\PYGdefault{p}{[}\PYGdefault{n}{TILE\PYGdefaultZus{}SIZE}\PYGdefault{p}{][}\PYGdefault{n}{TILE\PYGdefaultZus{}SIZE}\PYGdefault{p}{];}
 
 	\PYGdefault{c+c1}{// Finding the coordinates for the current thread...}
@@ -39,7 +39,7 @@
 
 	\PYGdefault{k}{for}\PYGdefault{p}{(}\PYGdefault{k+kt}{int} \PYGdefault{n}{i} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;} \PYGdefault{n}{i} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{p}{((}\PYGdefault{n}{k} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{)} \PYGdefault{o}{/} \PYGdefault{n}{TILE\PYGdefaultZus{}SIZE}\PYGdefault{p}{)} \PYGdefault{o}{+} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{;} \PYGdefault{o}{++}\PYGdefault{n}{i}\PYGdefault{p}{)\PYGdefaultZob{}}
 		\PYGdefault{c+c1}{// Validation in the case the thread tries to write in share }
-		\PYGdefault{c+c1}{// memory of the dimensions of matrix A...}
+		\PYGdefault{c+c1}{// memory a value outside the dimensions of matrix A...}
 		\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{row} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{n}{m} \PYGdefault{o}{\PYGdefaultZam{}\PYGdefaultZam{}} \PYGdefault{p}{(}\PYGdefault{n}{i} \PYGdefault{o}{*} \PYGdefault{n}{TILE\PYGdefaultZus{}SIZE} \PYGdefault{o}{+} \PYGdefault{n}{tx}\PYGdefault{p}{)} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{n}{k}\PYGdefault{p}{)\PYGdefaultZob{}}
 			\PYGdefault{n}{A\PYGdefaultZus{}s}\PYGdefault{p}{[}\PYGdefault{n}{ty}\PYGdefault{p}{][}\PYGdefault{n}{tx}\PYGdefault{p}{]} \PYGdefault{o}{=} \PYGdefault{n}{A}\PYGdefault{p}{[(}\PYGdefault{n}{row} \PYGdefault{o}{*} \PYGdefault{n}{k}\PYGdefault{p}{)} \PYGdefault{o}{+} \PYGdefault{p}{(}\PYGdefault{n}{i} \PYGdefault{o}{*} \PYGdefault{n}{TILE\PYGdefaultZus{}SIZE} \PYGdefault{o}{+} \PYGdefault{n}{tx}\PYGdefault{p}{)];}
 		\PYGdefault{p}{\PYGdefaultZcb{}} \PYGdefault{k}{else} \PYGdefault{p}{\PYGdefaultZob{}}
@@ -68,14 +68,13 @@
 	\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{row} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{n}{m} \PYGdefault{o}{\PYGdefaultZam{}\PYGdefaultZam{}} \PYGdefault{n}{col} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{n}{n}\PYGdefault{p}{)\PYGdefaultZob{}}
 		\PYGdefault{n}{C}\PYGdefault{p}{[}\PYGdefault{n}{row} \PYGdefault{o}{*} \PYGdefault{n}{n} \PYGdefault{o}{+} \PYGdefault{n}{col}\PYGdefault{p}{]} \PYGdefault{o}{=} \PYGdefault{n}{sum}\PYGdefault{p}{;}
 	\PYGdefault{p}{\PYGdefaultZcb{}}
-
 \PYGdefault{p}{\PYGdefaultZcb{}}
 
 \PYGdefault{k+kt}{void} \PYGdefault{n+nf}{basicSgemm}\PYGdefault{p}{(}\PYGdefault{k+kt}{char} \PYGdefault{n}{transa}\PYGdefault{p}{,} \PYGdefault{k+kt}{char} \PYGdefault{n}{transb}\PYGdefault{p}{,} \PYGdefault{k+kt}{int} \PYGdefault{n}{m}\PYGdefault{p}{,} \PYGdefault{k+kt}{int} \PYGdefault{n}{n}\PYGdefault{p}{,} \PYGdefault{k+kt}{int} \PYGdefault{n}{k}\PYGdefault{p}{,} \PYGdefault{k+kt}{float} \PYGdefault{n}{alpha}\PYGdefault{p}{,} \PYGdefault{k}{const} \PYGdefault{k+kt}{float} \PYGdefault{o}{*}\PYGdefault{n}{A}\PYGdefault{p}{,} \PYGdefault{k+kt}{int} \PYGdefault{n}{lda}\PYGdefault{p}{,} \PYGdefault{k}{const} \PYGdefault{k+kt}{float} \PYGdefault{o}{*}\PYGdefault{n}{B}\PYGdefault{p}{,} \PYGdefault{k+kt}{int} \PYGdefault{n}{ldb}\PYGdefault{p}{,} \PYGdefault{k+kt}{float} \PYGdefault{n}{beta}\PYGdefault{p}{,} \PYGdefault{k+kt}{float} \PYGdefault{o}{*}\PYGdefault{n}{C}\PYGdefault{p}{,} \PYGdefault{k+kt}{int} \PYGdefault{n}{ldc}\PYGdefault{p}{)}
 \PYGdefault{p}{\PYGdefaultZob{}}
     \PYGdefault{k}{if} \PYGdefault{p}{((}\PYGdefault{n}{transa} \PYGdefault{o}{!=} \PYGdefault{l+s+sc}{\PYGdefaultZsq{}N\PYGdefaultZsq{}}\PYGdefault{p}{)} \PYGdefault{o}{\PYGdefaultZam{}\PYGdefaultZam{}} \PYGdefault{p}{(}\PYGdefault{n}{transa} \PYGdefault{o}{!=} \PYGdefault{l+s+sc}{\PYGdefaultZsq{}n\PYGdefaultZsq{}}\PYGdefault{p}{))} \PYGdefault{p}{\PYGdefaultZob{}}
 		\PYGdefault{n}{printf}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}unsupported value of \PYGdefaultZsq{}transa\PYGdefaultZsq{}}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{p}{);}
-    	\PYGdefault{k}{return}\PYGdefault{p}{;}
+		\PYGdefault{k}{return}\PYGdefault{p}{;}
     \PYGdefault{p}{\PYGdefaultZcb{}}
 
     \PYGdefault{k}{if} \PYGdefault{p}{((}\PYGdefault{n}{transb} \PYGdefault{o}{!=} \PYGdefault{l+s+sc}{\PYGdefaultZsq{}N\PYGdefaultZsq{}}\PYGdefault{p}{)} \PYGdefault{o}{\PYGdefaultZam{}\PYGdefaultZam{}} \PYGdefault{p}{(}\PYGdefault{n}{transb} \PYGdefault{o}{!=} \PYGdefault{l+s+sc}{\PYGdefaultZsq{}n\PYGdefaultZsq{}}\PYGdefault{p}{))} \PYGdefault{p}{\PYGdefaultZob{}}
@@ -96,9 +95,9 @@
 
     \PYGdefault{c+c1}{// Initialize thread block and kernel grid dimensions}
     \PYGdefault{k}{const} \PYGdefault{n}{dim3} \PYGdefault{n}{dim\PYGdefaultZus{}block}\PYGdefault{p}{(}\PYGdefault{n}{BLOCK\PYGdefaultZus{}SIZE}\PYGdefault{p}{,} \PYGdefault{n}{BLOCK\PYGdefaultZus{}SIZE}\PYGdefault{p}{,} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{);}
-	\PYGdefault{k}{const} \PYGdefault{n}{dim3} \PYGdefault{n}{dim\PYGdefaultZus{}grid}\PYGdefault{p}{(((}\PYGdefault{n}{n} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{)} \PYGdefault{o}{/} \PYGdefault{n}{BLOCK\PYGdefaultZus{}SIZE}\PYGdefault{p}{)} \PYGdefault{o}{+} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{,} \PYGdefault{p}{((}\PYGdefault{n}{m} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{)} \PYGdefault{o}{/} \PYGdefault{n}{BLOCK\PYGdefaultZus{}SIZE}\PYGdefault{p}{)} \PYGdefault{o}{+} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{,} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{);}
+    \PYGdefault{k}{const} \PYGdefault{n}{dim3} \PYGdefault{n}{dim\PYGdefaultZus{}grid}\PYGdefault{p}{(((}\PYGdefault{n}{n} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{)} \PYGdefault{o}{/} \PYGdefault{n}{BLOCK\PYGdefaultZus{}SIZE}\PYGdefault{p}{)} \PYGdefault{o}{+} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{,} \PYGdefault{p}{((}\PYGdefault{n}{m} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{)} \PYGdefault{o}{/} \PYGdefault{n}{BLOCK\PYGdefaultZus{}SIZE}\PYGdefault{p}{)} \PYGdefault{o}{+} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{,} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{);}
 
     \PYGdefault{c+c1}{// Calling the kernel with the above\PYGdefaultZhy{}mentioned setting... }
-	\PYGdefault{n}{mysgemm}\PYGdefault{o}{\PYGdefaultZlt{}\PYGdefaultZlt{}\PYGdefaultZlt{}}\PYGdefault{n}{dim\PYGdefaultZus{}grid}\PYGdefault{p}{,} \PYGdefault{n}{dim\PYGdefaultZus{}block}\PYGdefault{o}{\PYGdefaultZgt{}\PYGdefaultZgt{}\PYGdefaultZgt{}}\PYGdefault{p}{(}\PYGdefault{n}{m}\PYGdefault{p}{,} \PYGdefault{n}{n}\PYGdefault{p}{,} \PYGdefault{n}{k}\PYGdefault{p}{,} \PYGdefault{n}{A}\PYGdefault{p}{,} \PYGdefault{n}{B}\PYGdefault{p}{,} \PYGdefault{n}{C}\PYGdefault{p}{);}
+    \PYGdefault{n}{mysgemm}\PYGdefault{o}{\PYGdefaultZlt{}\PYGdefaultZlt{}\PYGdefaultZlt{}}\PYGdefault{n}{dim\PYGdefaultZus{}grid}\PYGdefault{p}{,} \PYGdefault{n}{dim\PYGdefaultZus{}block}\PYGdefault{o}{\PYGdefaultZgt{}\PYGdefaultZgt{}\PYGdefaultZgt{}}\PYGdefault{p}{(}\PYGdefault{n}{m}\PYGdefault{p}{,} \PYGdefault{n}{n}\PYGdefault{p}{,} \PYGdefault{n}{k}\PYGdefault{p}{,} \PYGdefault{n}{A}\PYGdefault{p}{,} \PYGdefault{n}{B}\PYGdefault{p}{,} \PYGdefault{n}{C}\PYGdefault{p}{);}
 \PYGdefault{p}{\PYGdefaultZcb{}}
 \end{Verbatim}
