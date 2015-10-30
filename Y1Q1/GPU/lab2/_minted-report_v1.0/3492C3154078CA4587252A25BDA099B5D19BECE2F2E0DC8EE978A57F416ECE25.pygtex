@@ -1,0 +1,9 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+storm.ee.ucr.edu /home/tempmaj/classacc2391/PhD/Y1Q1/GPU/lab2 \PYGdefault{n+nv}{\PYGdefaultZdl{} }make
+nvcc \PYGdefaultZhy{}c \PYGdefaultZhy{}o main.o main.cu \PYGdefaultZhy{}\PYGdefaultZhy{}ptxas\PYGdefaultZhy{}options\PYGdefault{o}{=}\PYGdefault{l+s+s2}{\PYGdefaultZdq{}\PYGdefaultZhy{}v\PYGdefaultZdq{}} \PYGdefaultZhy{}O3 \PYGdefaultZhy{}I/usr/local/cuda/include
+ptxas info    : \PYGdefault{l+m}{0} bytes gmem
+ptxas info    : Compiling entry \PYGdefault{k}{function} \PYGdefault{l+s+s1}{\PYGdefaultZsq{}\PYGdefaultZus{}Z7mysgemmiiiPKfS0\PYGdefaultZus{}Pf\PYGdefaultZsq{}} \PYGdefault{k}{for} \PYGdefault{l+s+s1}{\PYGdefaultZsq{}sm\PYGdefaultZus{}10\PYGdefaultZsq{}}
+ptxas info    : Used \PYGdefault{l+m}{12} registers, \PYGdefault{l+m}{2104} bytes smem, \PYGdefault{l+m}{12} bytes cmem\PYGdefault{o}{[}1\PYGdefault{o}{]}
+nvcc main.o support.o \PYGdefaultZhy{}o sgemm\PYGdefaultZhy{}tiled \PYGdefaultZhy{}lcudart \PYGdefaultZhy{}L/usr/local/cuda/lib64
+storm.ee.ucr.edu /home/tempmaj/classacc2391/PhD/Y1Q1/GPU/lab2 \PYGdefault{n+nv}{\PYGdefaultZdl{} }
+\end{Verbatim}
