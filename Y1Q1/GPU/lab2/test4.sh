@@ -2,7 +2,7 @@
 # declare STRING variable
 date
 N=10
-for i in `seq 50 50 1000`; do
+for i in `seq 1000 1000 20000`; do
 	./sgemm-tiled $i
 	./sgemm-tiled $i
 	./sgemm-tiled $i
