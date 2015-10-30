@@ -42,7 +42,7 @@ $16\times16\times4\times30=30720$.
  
  \item Use nvcc --ptxas-options=``-v'' to report the resource usage of your implementation your implementation.  Note that the compilation will fail but you will still get a report of the relevant information.  Experiment with the Nvidia visual profiler, which is part of the CUDA toolkit, and use it to further understand the resource usage.  In particular, report your branch divergence behavior and whether your memory accesses are coalesced. 
  
- The \textit{--ptxas-options=``-v''} option was included in the Makefile as shows figure \ref{fig:Makefile} (line 2).  The output result can be seen in figure \ref{fig:compiling}.  It shows the number of registers allocated (12), the size of share memory (around 2 Kb) and the number of bytes used for constant memory (12 bytes). It is consistent with the use of two floating-point arrays in share memory for matrices A and B, each of $16\times16$ (TILE\_SIZE). The remaining bytes and size of constant memory could be explained by the use of kernel arguments and internal operations.
+ The \textit{--ptxas-options=``-v''} option was included in the Makefile as shows figure \ref{fig:Makefile} (line 2).  The output result can be seen in figure \ref{fig:compiling}.  In line 5, it shows the number of registers allocated (12), the size of share memory (around 2 Kb) and the number of bytes used for constant memory (12 bytes). It is consistent with the use of two floating-point arrays in share memory for matrices A and B, each of $16\times16$ (TILE\_SIZE). The remaining bytes and size of constant memory could be explained by the use of kernel arguments and internal operations.
  
 \begin{figure}[h!]
   \centering
@@ -133,13 +133,13 @@ Figures \ref{fig:NTVsT_50-1K} and \ref{fig:NTVsT_1K-20K} show the performance be
  \begin{figure}
  \centering
  \includegraphics[width=0.5\textwidth]{./NTVsT_50-1K}
- \caption{First performance comparison between tiled and no tiled versions.}\label{fig:NTVsT_50-1K}
+ \caption{First performance comparison between tiled and no tiled versions (N ranges from 50 to 1000).}\label{fig:NTVsT_50-1K}
  \end{figure}
 
  \begin{figure}
  \centering
  \includegraphics[width=0.5\textwidth]{./NTVsT_1K-20K}
- \caption{Second performance comparison between tiled and no tiled versions.}\label{fig:NTVsT_1K-20K}
+ \caption{Second performance comparison between tiled and no tiled versions (N ranges from 1000 to 20000).}\label{fig:NTVsT_1K-20K}
  \end{figure}
 
 Figure \ref{fig:TilesizePerformance_50-1K} shows the performance for different values of TILE\_SIZE.  The general trend shows that the larger the size of the tile the better performance.  However, there is not significant difference between sizes 16 and 32.  Figure \ref{fig:TilesizePerformance_1K-20K} shows an additional test with bigger values of N for just these two values.  It seems there is not an increase in performance using a size of 32 over 16.  That is explained by the fact that a TILE\_SIZE equal to 32 allows 1024 threads per block, but the hardware limitation for each Streaming Multiprocessor (SM) is up to 1536 threads \cite{kirk2012}. So, under this configuration just one block (1024 threads) is actively executing.
