@@ -142,7 +142,7 @@ int main (int argc, char *argv[])
 
     printf("Verifying results..."); fflush(stdout);
 
-    // verify(A_h, B_h, C_h, matArow, matAcol, matBcol, D);
+    verify(A_h, B_h, C_h, matArow, matAcol, matBcol, D);
 
     // Printing relatively small matrices just for testing purposes...
     if(matArow * matBcol <= 100){
