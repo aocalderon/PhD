@@ -31,6 +31,5 @@ __global__ void reduction(float *out, float *in, unsigned size)
 			partialSum[t] += partialSum[t + stride];
 	} 
 
-	for(int i = 0; i < size; i++)
-		out[i] = partialSum[i];
+	out[blockIdx.x] = partialSum[0];
 }

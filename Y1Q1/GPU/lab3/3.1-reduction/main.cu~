@@ -111,20 +111,24 @@ int main(int argc, char* argv[])
 
 	// Verify the result 
     verify(in_h, in_elements, out_h[0]);
+
+	// Printing results (just for debugging purposes)...
 	
+	if(in_elements < 100){
+		printf("\nPrinting IN (%d elements)...\n", in_elements);
+		for(i = 0; i < in_elements; i++){
+			printf("%0.3f ", in_h[i]);
+		}
+		printf("\n");
+
+		printf("\nPrinting OUT (%d elements)...\n", out_elements);
+		for(i = 0; i < out_elements; i++){
+			printf("%0.3f ", out_h[i]);
+		}
+		printf("\n");
+	}
+
     // Free memory ------------------------------------------------------------
-
-	printf("\nPrinting IN (%d elements)...\n", in_elements);
-	for(i = 0; i < in_elements; i++){
-		printf("%0.3f ", in_h[i]);
-	}
-	printf("\n");
-
-	printf("\nPrinting OUT (%d elements)...\n", out_elements);
-	for(i = 0; i < out_elements; i++){
-		printf("%0.3f ", out_h[i]);
-	}
-	printf("\n");
 
     cudaFree(in_d); cudaFree(out_d);
     free(in_h); free(out_h);

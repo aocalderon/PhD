@@ -71,7 +71,7 @@ int main(int argc, char* argv[])
     cuda_ret = cudaMemcpy(in_d, in_h, in_elements * sizeof(float), cudaMemcpyHostToDevice);
     if(cuda_ret != cudaSuccess) FATAL("Unable to copy memory to the device");
 
-    cuda_ret = cudaMemset(out_d, 0, out_elements * sizeof(float));
+    cuda_ret = cudaMemset(out_d, 0.0, out_elements * sizeof(float));
     if(cuda_ret != cudaSuccess) FATAL("Unable to set device memory");
 
     cudaDeviceSynchronize();
