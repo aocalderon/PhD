@@ -25,7 +25,6 @@ __global__ void scan(float *out, float *in, unsigned size){
 	section[threadIdx.x]++;
 	out[threadIdx.x] = section[threadIdx.x];
 }
-
 /******************************************************************************
 Setup and invoke your kernel(s) in this function. You may also allocate more
 GPU memory if you need to
