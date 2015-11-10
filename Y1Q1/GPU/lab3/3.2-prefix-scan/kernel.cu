@@ -22,8 +22,31 @@ __global__ void scan(float *out, float *in, unsigned size){
 		section[threadIdx.x] = in[t];
 	__syncthreads();
 	
-	section[threadIdx.x]++;
-	out[threadIdx.x] = section[threadIdx.x];
+	for(int stride = 1; stride <= BLOCK_SIZE; stride = stride * 2){
+		int index = (threadIdx.x + 1) * stride * 2 - 1;
+		if(index < 2 * BLOCK_SIZE)
+			section[index] += section[index - stride];
+		__syncthreads();
+	}
+	
+	for(int stride = BLOCK_SIZE / 2; stride > 0; stride /= 2){
+		__syncthreads();
+		int index = (threadIdx.x + 1) * stride * 2 - 1;
+		if(index + stride < 2 * BLOCK_SIZE){
+			section[index + stride] += section[index];
+		}
+	}
+	__syncthreads();
+	if(t < size) 
+		out[t] = section[threadIdx.x];
+}
+
+__global__ void post(float *out, float *n, unsigned size){
+	int t = blockDim.x * blockIdx.x + threadIdx.x;
+	
+//	if(t > BLOCK_SIZE)
+//		out[t] += n[t % BLOCK_SIZE - 1];
+	out[t] += n[t / BLOCK_SIZE];
 }
 
 /******************************************************************************
@@ -36,5 +59,13 @@ void preScan(float *out, float *in, unsigned size)
 	dim3 dim_block(BLOCK_SIZE, 1, 1);
 	dim3 dim_grid(size/BLOCK_SIZE + 1, 1, 1);
 	scan<<<dim_grid, dim_block>>>(out, in, size);
+}
+
+void postScan(float *out, float *n, unsigned size)
+{
+    // INSERT CODE HERE
+	dim3 dim_block(BLOCK_SIZE, 1, 1);
+	dim3 dim_grid(size/BLOCK_SIZE + 1, 1, 1);
+	post<<<dim_grid, dim_block>>>(out, n, size);
 }
 

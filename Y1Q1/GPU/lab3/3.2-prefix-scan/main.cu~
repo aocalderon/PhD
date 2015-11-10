@@ -96,6 +96,33 @@ int main(int argc, char* argv[])
     cudaDeviceSynchronize();
     stopTime(&timer); printf("%f s\n", elapsedTime(timer));
 
+	float *partial_h, *partial_d;
+	partial_h = (float *) malloc((num_elements/BLOCK_SIZE + 1) * sizeof(float));
+	partial_h[0] = 0;
+	int n = 1;
+	for(int i = BLOCK_SIZE - 1; i < num_elements; i += BLOCK_SIZE){
+		partial_h[n] = partial_h[n - 1] + out_h[i];
+		n++;
+	}
+	if(num_elements <= 100){
+		for(int i = 0; i < n; i ++){
+			printf("\nPARTIAL[%d] = %0.3f", i, partial_h[i]);
+		}
+		printf("\n");
+	}
+
+	cuda_ret = cudaMalloc((void**)&partial_d, (num_elements/BLOCK_SIZE + 1) * sizeof(float));
+	if(cuda_ret != cudaSuccess) FATAL("Unable to allocate device memory");
+    cuda_ret = cudaMemcpy(partial_d, partial_h, (num_elements/BLOCK_SIZE + 1) * sizeof(float), cudaMemcpyHostToDevice);
+	if(cuda_ret != cudaSuccess) FATAL("Unable to copy memory to the device");
+
+	postScan(out_d, partial_d, num_elements);
+	cuda_ret = cudaDeviceSynchronize();
+	if(cuda_ret != cudaSuccess) FATAL("Unable to launch/execute kernel");
+
+    cuda_ret = cudaMemcpy(out_h, out_d, num_elements*sizeof(float), cudaMemcpyDeviceToHost);
+    if(cuda_ret != cudaSuccess) FATAL("Unable to copy memory to host");
+
     // Verify correctness -----------------------------------------------------
 
     printf("Verifying results..."); fflush(stdout);
@@ -104,7 +131,7 @@ int main(int argc, char* argv[])
 
 	// Printing results (just for debugging purposes)...
 
-	if(num_elements < 100){
+	if(num_elements <= 100){
 		printf("\nPrinting IN (%d elements)...\n", num_elements);
 		for(int i = 0; i < num_elements; i++){
 			printf("%0.3f ", in_h[i]);
