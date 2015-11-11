@@ -1,0 +1,65 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGdefault{c+cm}{/******************************************************************************}
+\PYGdefault{c+cm}{ *cr}
+\PYGdefault{c+cm}{ *cr            (C) Copyright 2010 The Board of Trustees of the}
+\PYGdefault{c+cm}{ *cr                        University of Illinois}
+\PYGdefault{c+cm}{ *cr                         All Rights Reserved}
+\PYGdefault{c+cm}{ *cr}
+\PYGdefault{c+cm}{ ******************************************************************************/}
+
+\PYGdefault{c+cp}{\PYGdefaultZsh{}define BLOCK\PYGdefaultZus{}SIZE 512}
+
+\PYGdefault{c+c1}{// Define your kernels in this file you may use more than one kernel if you}
+\PYGdefault{c+c1}{// need to}
+
+\PYGdefault{n}{\PYGdefaultZus{}\PYGdefaultZus{}global\PYGdefaultZus{}\PYGdefaultZus{}} \PYGdefault{k+kt}{void} \PYGdefault{n+nf}{scan}\PYGdefault{p}{(}\PYGdefault{k+kt}{float} \PYGdefault{o}{*}\PYGdefault{n}{out}\PYGdefault{p}{,} \PYGdefault{k+kt}{float} \PYGdefault{o}{*}\PYGdefault{n}{in}\PYGdefault{p}{,} \PYGdefault{k+kt}{unsigned} \PYGdefault{n}{size}\PYGdefault{p}{)\PYGdefaultZob{}}
+	\PYGdefault{n}{\PYGdefaultZus{}\PYGdefaultZus{}shared\PYGdefaultZus{}\PYGdefaultZus{}} \PYGdefault{k+kt}{float} \PYGdefault{n}{section}\PYGdefault{p}{[}\PYGdefault{l+m+mi}{2} \PYGdefault{o}{*} \PYGdefault{n}{BLOCK\PYGdefaultZus{}SIZE}\PYGdefault{p}{];}
+	\PYGdefault{k+kt}{int} \PYGdefault{n}{t} \PYGdefault{o}{=} \PYGdefault{n}{blockDim}\PYGdefault{p}{.}\PYGdefault{n}{x} \PYGdefault{o}{*} \PYGdefault{n}{blockIdx}\PYGdefault{p}{.}\PYGdefault{n}{x} \PYGdefault{o}{+} \PYGdefault{n}{threadIdx}\PYGdefault{p}{.}\PYGdefault{n}{x}\PYGdefault{p}{;}
+
+	\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{t} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{n}{size}\PYGdefault{p}{)}
+		\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{t} \PYGdefault{o}{==} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)}
+			\PYGdefault{n}{section}\PYGdefault{p}{[}\PYGdefault{l+m+mi}{0}\PYGdefault{p}{]} \PYGdefault{o}{=} \PYGdefault{l+m+mf}{0.0f}\PYGdefault{p}{;}
+		\PYGdefault{k}{else}
+			\PYGdefault{n}{section}\PYGdefault{p}{[}\PYGdefault{n}{threadIdx}\PYGdefault{p}{.}\PYGdefault{n}{x}\PYGdefault{p}{]} \PYGdefault{o}{=} \PYGdefault{n}{in}\PYGdefault{p}{[}\PYGdefault{n}{t} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{];}
+	\PYGdefault{n}{\PYGdefaultZus{}\PYGdefaultZus{}syncthreads}\PYGdefault{p}{();}
+	
+	\PYGdefault{k}{for}\PYGdefault{p}{(}\PYGdefault{k+kt}{int} \PYGdefault{n}{stride} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{;} \PYGdefault{n}{stride} \PYGdefault{o}{\PYGdefaultZlt{}=} \PYGdefault{n}{BLOCK\PYGdefaultZus{}SIZE}\PYGdefault{p}{;} \PYGdefault{n}{stride} \PYGdefault{o}{=} \PYGdefault{n}{stride} \PYGdefault{o}{*} \PYGdefault{l+m+mi}{2}\PYGdefault{p}{)\PYGdefaultZob{}}
+		\PYGdefault{k+kt}{int} \PYGdefault{n}{index} \PYGdefault{o}{=} \PYGdefault{p}{(}\PYGdefault{n}{threadIdx}\PYGdefault{p}{.}\PYGdefault{n}{x} \PYGdefault{o}{+} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{)} \PYGdefault{o}{*} \PYGdefault{n}{stride} \PYGdefault{o}{*} \PYGdefault{l+m+mi}{2} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{;}
+		\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{index} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{l+m+mi}{2} \PYGdefault{o}{*} \PYGdefault{n}{BLOCK\PYGdefaultZus{}SIZE}\PYGdefault{p}{)}
+			\PYGdefault{n}{section}\PYGdefault{p}{[}\PYGdefault{n}{index}\PYGdefault{p}{]} \PYGdefault{o}{+=} \PYGdefault{n}{section}\PYGdefault{p}{[}\PYGdefault{n}{index} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{n}{stride}\PYGdefault{p}{];}
+		\PYGdefault{n}{\PYGdefaultZus{}\PYGdefaultZus{}syncthreads}\PYGdefault{p}{();}
+	\PYGdefault{p}{\PYGdefaultZcb{}}
+	
+	\PYGdefault{k}{for}\PYGdefault{p}{(}\PYGdefault{k+kt}{int} \PYGdefault{n}{stride} \PYGdefault{o}{=} \PYGdefault{n}{BLOCK\PYGdefaultZus{}SIZE} \PYGdefault{o}{/} \PYGdefault{l+m+mi}{2}\PYGdefault{p}{;} \PYGdefault{n}{stride} \PYGdefault{o}{\PYGdefaultZgt{}} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;} \PYGdefault{n}{stride} \PYGdefault{o}{/=} \PYGdefault{l+m+mi}{2}\PYGdefault{p}{)\PYGdefaultZob{}}
+		\PYGdefault{k+kt}{int} \PYGdefault{n}{index} \PYGdefault{o}{=} \PYGdefault{p}{(}\PYGdefault{n}{threadIdx}\PYGdefault{p}{.}\PYGdefault{n}{x} \PYGdefault{o}{+} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{)} \PYGdefault{o}{*} \PYGdefault{n}{stride} \PYGdefault{o}{*} \PYGdefault{l+m+mi}{2} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{;}
+		\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{index} \PYGdefault{o}{+} \PYGdefault{n}{stride} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{l+m+mi}{2} \PYGdefault{o}{*} \PYGdefault{n}{BLOCK\PYGdefaultZus{}SIZE}\PYGdefault{p}{)}
+			\PYGdefault{n}{section}\PYGdefault{p}{[}\PYGdefault{n}{index} \PYGdefault{o}{+} \PYGdefault{n}{stride}\PYGdefault{p}{]} \PYGdefault{o}{+=} \PYGdefault{n}{section}\PYGdefault{p}{[}\PYGdefault{n}{index}\PYGdefault{p}{];}
+		\PYGdefault{n}{\PYGdefaultZus{}\PYGdefaultZus{}syncthreads}\PYGdefault{p}{();}
+	\PYGdefault{p}{\PYGdefaultZcb{}}
+	\PYGdefault{c+c1}{//\PYGdefaultZus{}\PYGdefaultZus{}syncthreads();}
+	\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{t} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{n}{size}\PYGdefault{p}{)} 
+		\PYGdefault{n}{out}\PYGdefault{p}{[}\PYGdefault{n}{t}\PYGdefault{p}{]} \PYGdefault{o}{=} \PYGdefault{n}{section}\PYGdefault{p}{[}\PYGdefault{n}{threadIdx}\PYGdefault{p}{.}\PYGdefault{n}{x}\PYGdefault{p}{];}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+
+\PYGdefault{n}{\PYGdefaultZus{}\PYGdefaultZus{}global\PYGdefaultZus{}\PYGdefaultZus{}} \PYGdefault{k+kt}{void} \PYGdefault{n+nf}{post}\PYGdefault{p}{(}\PYGdefault{k+kt}{float} \PYGdefault{o}{*}\PYGdefault{n}{out}\PYGdefault{p}{,} \PYGdefault{k+kt}{float} \PYGdefault{o}{*}\PYGdefault{n}{n}\PYGdefault{p}{,} \PYGdefault{k+kt}{unsigned} \PYGdefault{n}{size}\PYGdefault{p}{)\PYGdefaultZob{}}
+	\PYGdefault{k+kt}{int} \PYGdefault{n}{t} \PYGdefault{o}{=} \PYGdefault{n}{blockDim}\PYGdefault{p}{.}\PYGdefault{n}{x} \PYGdefault{o}{*} \PYGdefault{n}{blockIdx}\PYGdefault{p}{.}\PYGdefault{n}{x} \PYGdefault{o}{+} \PYGdefault{n}{threadIdx}\PYGdefault{p}{.}\PYGdefault{n}{x}\PYGdefault{p}{;}
+	
+	\PYGdefault{n}{out}\PYGdefault{p}{[}\PYGdefault{n}{t}\PYGdefault{p}{]} \PYGdefault{o}{+=} \PYGdefault{n}{n}\PYGdefault{p}{[}\PYGdefault{n}{t} \PYGdefault{o}{/} \PYGdefault{n}{BLOCK\PYGdefaultZus{}SIZE}\PYGdefault{p}{];}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+
+\PYGdefault{c+cm}{/******************************************************************************}
+\PYGdefault{c+cm}{Setup and invoke your kernel(s) in this function. You may also allocate more}
+\PYGdefault{c+cm}{GPU memory if you need to}
+\PYGdefault{c+cm}{*******************************************************************************/}
+\PYGdefault{k+kt}{void} \PYGdefault{n+nf}{preScan}\PYGdefault{p}{(}\PYGdefault{k+kt}{float} \PYGdefault{o}{*}\PYGdefault{n}{out}\PYGdefault{p}{,} \PYGdefault{k+kt}{float} \PYGdefault{o}{*}\PYGdefault{n}{in}\PYGdefault{p}{,} \PYGdefault{k+kt}{unsigned} \PYGdefault{n}{size}\PYGdefault{p}{)\PYGdefaultZob{}}
+	\PYGdefault{n}{dim3} \PYGdefault{n}{dim\PYGdefaultZus{}block}\PYGdefault{p}{(}\PYGdefault{n}{BLOCK\PYGdefaultZus{}SIZE}\PYGdefault{p}{,} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{,} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{);}
+	\PYGdefault{n}{dim3} \PYGdefault{n}{dim\PYGdefaultZus{}grid}\PYGdefault{p}{(}\PYGdefault{n}{size}\PYGdefault{o}{/}\PYGdefault{n}{BLOCK\PYGdefaultZus{}SIZE} \PYGdefault{o}{+} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{,} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{,} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{);}
+	\PYGdefault{n}{scan}\PYGdefault{o}{\PYGdefaultZlt{}\PYGdefaultZlt{}\PYGdefaultZlt{}}\PYGdefault{n}{dim\PYGdefaultZus{}grid}\PYGdefault{p}{,} \PYGdefault{n}{dim\PYGdefaultZus{}block}\PYGdefault{o}{\PYGdefaultZgt{}\PYGdefaultZgt{}\PYGdefaultZgt{}}\PYGdefault{p}{(}\PYGdefault{n}{out}\PYGdefault{p}{,} \PYGdefault{n}{in}\PYGdefault{p}{,} \PYGdefault{n}{size}\PYGdefault{p}{);}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+
+\PYGdefault{k+kt}{void} \PYGdefault{n+nf}{postScan}\PYGdefault{p}{(}\PYGdefault{k+kt}{float} \PYGdefault{o}{*}\PYGdefault{n}{out}\PYGdefault{p}{,} \PYGdefault{k+kt}{float} \PYGdefault{o}{*}\PYGdefault{n}{n}\PYGdefault{p}{,} \PYGdefault{k+kt}{unsigned} \PYGdefault{n}{size}\PYGdefault{p}{)\PYGdefaultZob{}}
+	\PYGdefault{n}{dim3} \PYGdefault{n}{dim\PYGdefaultZus{}block}\PYGdefault{p}{(}\PYGdefault{n}{BLOCK\PYGdefaultZus{}SIZE}\PYGdefault{p}{,} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{,} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{);}
+	\PYGdefault{n}{dim3} \PYGdefault{n}{dim\PYGdefaultZus{}grid}\PYGdefault{p}{(}\PYGdefault{n}{size}\PYGdefault{o}{/}\PYGdefault{n}{BLOCK\PYGdefaultZus{}SIZE} \PYGdefault{o}{+} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{,} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{,} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{);}
+	\PYGdefault{n}{post}\PYGdefault{o}{\PYGdefaultZlt{}\PYGdefaultZlt{}\PYGdefaultZlt{}}\PYGdefault{n}{dim\PYGdefaultZus{}grid}\PYGdefault{p}{,} \PYGdefault{n}{dim\PYGdefaultZus{}block}\PYGdefault{o}{\PYGdefaultZgt{}\PYGdefaultZgt{}\PYGdefaultZgt{}}\PYGdefault{p}{(}\PYGdefault{n}{out}\PYGdefault{p}{,} \PYGdefault{n}{n}\PYGdefault{p}{,} \PYGdefault{n}{size}\PYGdefault{p}{);}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+\end{Verbatim}
