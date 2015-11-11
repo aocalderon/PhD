@@ -7,7 +7,6 @@
  ******************************************************************************/
 
 #include <stdio.h>
-
 #include "support.h"
 #include "kernel.cu"
 
@@ -15,8 +14,7 @@ int main(int argc, char* argv[])
 {
     Timer timer;
 
-    // Initialize host variables ----------------------------------------------
-
+    // Initialize host variables
     printf("\nSetting up the problem..."); fflush(stdout);
     startTime(&timer);
 
@@ -50,8 +48,7 @@ int main(int argc, char* argv[])
     stopTime(&timer); printf("%f s\n", elapsedTime(timer));
     printf("    Input size = %u\n", in_elements);
 
-    // Allocate device variables ----------------------------------------------
-
+    // Allocate device variables
     printf("Allocating device variables..."); fflush(stdout);
     startTime(&timer);
 
@@ -63,8 +60,7 @@ int main(int argc, char* argv[])
     cudaDeviceSynchronize();
     stopTime(&timer); printf("%f s\n", elapsedTime(timer));
 
-    // Copy host variables to device ------------------------------------------
-
+    // Copy host variables to device
     printf("Copying data from host to device..."); fflush(stdout);
     startTime(&timer);
 
@@ -77,7 +73,7 @@ int main(int argc, char* argv[])
     cudaDeviceSynchronize();
     stopTime(&timer); printf("%f s\n", elapsedTime(timer));
 
-    // Launch kernel ----------------------------------------------------------
+    // Launch kernel
     printf("Launching kernel..."); fflush(stdout);
     startTime(&timer);
 
@@ -89,8 +85,7 @@ int main(int argc, char* argv[])
 
     stopTime(&timer); printf("%f s\n", elapsedTime(timer));
 
-    // Copy device variables from host ----------------------------------------
-
+    // Copy device variables from host
     printf("Copying data from device to host..."); fflush(stdout);
     startTime(&timer);
 
@@ -100,9 +95,8 @@ int main(int argc, char* argv[])
     cudaDeviceSynchronize();
     stopTime(&timer); printf("%f s\n", elapsedTime(timer));
 
-    // Verify correctness -----------------------------------------------------
-	
-    printf("Verifying results..."); fflush(stdout);
+    // Verify correctness
+	printf("Verifying results..."); fflush(stdout);
 
     // Accumulate partial sums on host 
 	for(i = 1; i < out_elements; i++) {
@@ -112,8 +106,7 @@ int main(int argc, char* argv[])
 	// Verify the result 
     verify(in_h, in_elements, out_h[0]);
 
-	// Printing results (just for debugging purposes)...
-	
+	// Printing results (just for debugging purposes)
 	if(in_elements < 100){
 		printf("\nPrinting IN (%d elements)...\n", in_elements);
 		for(i = 0; i < in_elements; i++){
@@ -128,8 +121,7 @@ int main(int argc, char* argv[])
 		printf("\n");
 	}
 
-    // Free memory ------------------------------------------------------------
-
+    // Free memory
     cudaFree(in_d); cudaFree(out_d);
     free(in_h); free(out_h);
 

@@ -1,0 +1,139 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGdefault{c+cm}{/******************************************************************************}
+\PYGdefault{c+cm}{ *cr}
+\PYGdefault{c+cm}{ *cr			(C) Copyright 2010 The Board of Trustees of the}
+\PYGdefault{c+cm}{ *cr						University of Illinois}
+\PYGdefault{c+cm}{ *cr						 All Rights Reserved}
+\PYGdefault{c+cm}{ *cr}
+\PYGdefault{c+cm}{ ******************************************************************************/}
+
+\PYGdefault{c+cp}{\PYGdefaultZsh{}include \PYGdefaultZlt{}stdio.h\PYGdefaultZgt{}}
+\PYGdefault{c+cp}{\PYGdefaultZsh{}include \PYGdefaultZdq{}support.h\PYGdefaultZdq{}}
+\PYGdefault{c+cp}{\PYGdefaultZsh{}include \PYGdefaultZdq{}kernel.cu\PYGdefaultZdq{}}
+
+\PYGdefault{k+kt}{int} \PYGdefault{n+nf}{main}\PYGdefault{p}{(}\PYGdefault{k+kt}{int} \PYGdefault{n}{argc}\PYGdefault{p}{,} \PYGdefault{k+kt}{char}\PYGdefault{o}{*} \PYGdefault{n}{argv}\PYGdefault{p}{[])}
+\PYGdefault{p}{\PYGdefaultZob{}}
+	\PYGdefault{n}{Timer} \PYGdefault{n}{timer}\PYGdefault{p}{;}
+	\PYGdefault{c+c1}{// Initialize host variables}
+	\PYGdefault{n}{printf}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{Setting up the problem...\PYGdefaultZdq{}}\PYGdefault{p}{);} \PYGdefault{n}{fflush}\PYGdefault{p}{(}\PYGdefault{n}{stdout}\PYGdefault{p}{);}
+	\PYGdefault{n}{startTime}\PYGdefault{p}{(}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{timer}\PYGdefault{p}{);}
+
+	\PYGdefault{k+kt}{float} \PYGdefault{o}{*}\PYGdefault{n}{in\PYGdefaultZus{}h}\PYGdefault{p}{,} \PYGdefault{o}{*}\PYGdefault{n}{out\PYGdefaultZus{}h}\PYGdefault{p}{;}
+	\PYGdefault{k+kt}{float} \PYGdefault{o}{*}\PYGdefault{n}{in\PYGdefaultZus{}d}\PYGdefault{p}{,} \PYGdefault{o}{*}\PYGdefault{n}{out\PYGdefaultZus{}d}\PYGdefault{p}{;}
+	\PYGdefault{k+kt}{unsigned} \PYGdefault{n}{num\PYGdefaultZus{}elements}\PYGdefault{p}{;}
+	\PYGdefault{n}{cudaError\PYGdefaultZus{}t} \PYGdefault{n}{cuda\PYGdefaultZus{}ret}\PYGdefault{p}{;}
+
+	\PYGdefault{c+cm}{/* Allocate and initialize input vector */}
+	\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{argc} \PYGdefault{o}{==} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{)} \PYGdefault{p}{\PYGdefaultZob{}}
+		\PYGdefault{n}{num\PYGdefaultZus{}elements} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{1000000}\PYGdefault{p}{;}
+	\PYGdefault{p}{\PYGdefaultZcb{}} \PYGdefault{k}{else} \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{argc} \PYGdefault{o}{==} \PYGdefault{l+m+mi}{2}\PYGdefault{p}{)} \PYGdefault{p}{\PYGdefaultZob{}}
+		\PYGdefault{n}{num\PYGdefaultZus{}elements} \PYGdefault{o}{=} \PYGdefault{n}{atoi}\PYGdefault{p}{(}\PYGdefault{n}{argv}\PYGdefault{p}{[}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{]);}
+	\PYGdefault{p}{\PYGdefaultZcb{}} \PYGdefault{k}{else} \PYGdefault{p}{\PYGdefaultZob{}}
+		\PYGdefault{n}{printf}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{	Invalid input parameters!\PYGdefaultZdq{}}
+			\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{	Usage: ./prefix\PYGdefaultZhy{}scan     \PYGdefaultZsh{} Input of size 1,000,000 is used\PYGdefaultZdq{}}
+			\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{	Usage: ./prefix\PYGdefaultZhy{}scan \PYGdefaultZlt{}m\PYGdefaultZgt{} \PYGdefaultZsh{} Input of size m is used\PYGdefaultZdq{}}
+			\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{p}{);}
+		\PYGdefault{n}{exit}\PYGdefault{p}{(}\PYGdefault{l+m+mi}{0}\PYGdefault{p}{);}
+	\PYGdefault{p}{\PYGdefaultZcb{}}
+	\PYGdefault{n}{initVector}\PYGdefault{p}{(}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{in\PYGdefaultZus{}h}\PYGdefault{p}{,} \PYGdefault{n}{num\PYGdefaultZus{}elements}\PYGdefault{p}{);}
+
+	\PYGdefault{c+cm}{/* Allocate and initialize output vector */}
+	\PYGdefault{n}{out\PYGdefaultZus{}h} \PYGdefault{o}{=} \PYGdefault{p}{(}\PYGdefault{k+kt}{float}\PYGdefault{o}{*}\PYGdefault{p}{)}\PYGdefault{n}{calloc}\PYGdefault{p}{(}\PYGdefault{n}{num\PYGdefaultZus{}elements}\PYGdefault{p}{,} \PYGdefault{k}{sizeof}\PYGdefault{p}{(}\PYGdefault{k+kt}{float}\PYGdefault{p}{));}
+	\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{out\PYGdefaultZus{}h} \PYGdefault{o}{==} \PYGdefault{n+nb}{NULL}\PYGdefault{p}{)} \PYGdefault{n}{FATAL}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}Unable to allocate host\PYGdefaultZdq{}}\PYGdefault{p}{);}
+
+	\PYGdefault{n}{stopTime}\PYGdefault{p}{(}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{timer}\PYGdefault{p}{);} \PYGdefault{n}{printf}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}\PYGdefaultZpc{}f s}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{p}{,} \PYGdefault{n}{elapsedTime}\PYGdefault{p}{(}\PYGdefault{n}{timer}\PYGdefault{p}{));}
+	\PYGdefault{n}{printf}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}Input size = \PYGdefaultZpc{}u}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{p}{,} \PYGdefault{n}{num\PYGdefaultZus{}elements}\PYGdefault{p}{);}
+
+	\PYGdefault{c+c1}{// Allocate device variables}
+	\PYGdefault{n}{printf}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}Allocating device variables...\PYGdefaultZdq{}}\PYGdefault{p}{);} \PYGdefault{n}{fflush}\PYGdefault{p}{(}\PYGdefault{n}{stdout}\PYGdefault{p}{);}
+	\PYGdefault{n}{startTime}\PYGdefault{p}{(}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{timer}\PYGdefault{p}{);}
+	\PYGdefault{n}{cuda\PYGdefaultZus{}ret} \PYGdefault{o}{=} \PYGdefault{n}{cudaMalloc}\PYGdefault{p}{((}\PYGdefault{k+kt}{void}\PYGdefault{o}{**}\PYGdefault{p}{)}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{in\PYGdefaultZus{}d}\PYGdefault{p}{,} \PYGdefault{n}{num\PYGdefaultZus{}elements}\PYGdefault{o}{*}\PYGdefault{k}{sizeof}\PYGdefault{p}{(}\PYGdefault{k+kt}{float}\PYGdefault{p}{));}
+	\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{cuda\PYGdefaultZus{}ret} \PYGdefault{o}{!=} \PYGdefault{n}{cudaSuccess}\PYGdefault{p}{)} \PYGdefault{n}{FATAL}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}Unable to allocate device memory\PYGdefaultZdq{}}\PYGdefault{p}{);}
+	\PYGdefault{n}{cuda\PYGdefaultZus{}ret} \PYGdefault{o}{=} \PYGdefault{n}{cudaMalloc}\PYGdefault{p}{((}\PYGdefault{k+kt}{void}\PYGdefault{o}{**}\PYGdefault{p}{)}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{out\PYGdefaultZus{}d}\PYGdefault{p}{,} \PYGdefault{n}{num\PYGdefaultZus{}elements}\PYGdefault{o}{*}\PYGdefault{k}{sizeof}\PYGdefault{p}{(}\PYGdefault{k+kt}{float}\PYGdefault{p}{));}
+	\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{cuda\PYGdefaultZus{}ret} \PYGdefault{o}{!=} \PYGdefault{n}{cudaSuccess}\PYGdefault{p}{)} \PYGdefault{n}{FATAL}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}Unable to allocate device memory\PYGdefaultZdq{}}\PYGdefault{p}{);}
+	\PYGdefault{n}{cudaDeviceSynchronize}\PYGdefault{p}{();}
+	\PYGdefault{n}{stopTime}\PYGdefault{p}{(}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{timer}\PYGdefault{p}{);} \PYGdefault{n}{printf}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}\PYGdefaultZpc{}f s}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{p}{,} \PYGdefault{n}{elapsedTime}\PYGdefault{p}{(}\PYGdefault{n}{timer}\PYGdefault{p}{));}
+
+	\PYGdefault{c+c1}{// Copy host variables to device}
+	\PYGdefault{n}{printf}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}Copying data from host to device...\PYGdefaultZdq{}}\PYGdefault{p}{);} \PYGdefault{n}{fflush}\PYGdefault{p}{(}\PYGdefault{n}{stdout}\PYGdefault{p}{);}
+	\PYGdefault{n}{startTime}\PYGdefault{p}{(}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{timer}\PYGdefault{p}{);}
+	\PYGdefault{n}{cuda\PYGdefaultZus{}ret} \PYGdefault{o}{=} \PYGdefault{n}{cudaMemcpy}\PYGdefault{p}{(}\PYGdefault{n}{in\PYGdefaultZus{}d}\PYGdefault{p}{,} \PYGdefault{n}{in\PYGdefaultZus{}h}\PYGdefault{p}{,} \PYGdefault{n}{num\PYGdefaultZus{}elements}\PYGdefault{o}{*}\PYGdefault{k}{sizeof}\PYGdefault{p}{(}\PYGdefault{k+kt}{float}\PYGdefault{p}{),} \PYGdefault{n}{cudaMemcpyHostToDevice}\PYGdefault{p}{);}
+	\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{cuda\PYGdefaultZus{}ret} \PYGdefault{o}{!=} \PYGdefault{n}{cudaSuccess}\PYGdefault{p}{)} \PYGdefault{n}{FATAL}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}Unable to copy memory to the device\PYGdefaultZdq{}}\PYGdefault{p}{);}
+	\PYGdefault{n}{cuda\PYGdefaultZus{}ret} \PYGdefault{o}{=} \PYGdefault{n}{cudaMemset}\PYGdefault{p}{(}\PYGdefault{n}{out\PYGdefaultZus{}d}\PYGdefault{p}{,} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{,} \PYGdefault{n}{num\PYGdefaultZus{}elements}\PYGdefault{o}{*}\PYGdefault{k}{sizeof}\PYGdefault{p}{(}\PYGdefault{k+kt}{float}\PYGdefault{p}{));}
+	\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{cuda\PYGdefaultZus{}ret} \PYGdefault{o}{!=} \PYGdefault{n}{cudaSuccess}\PYGdefault{p}{)} \PYGdefault{n}{FATAL}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}Unable to set device memory\PYGdefaultZdq{}}\PYGdefault{p}{);}
+	\PYGdefault{n}{cudaDeviceSynchronize}\PYGdefault{p}{();}
+	\PYGdefault{n}{stopTime}\PYGdefault{p}{(}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{timer}\PYGdefault{p}{);} \PYGdefault{n}{printf}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}\PYGdefaultZpc{}f s}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{p}{,} \PYGdefault{n}{elapsedTime}\PYGdefault{p}{(}\PYGdefault{n}{timer}\PYGdefault{p}{));}
+
+	\PYGdefault{c+c1}{// Launch kernel}
+	\PYGdefault{n}{printf}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}Launching kernel...\PYGdefaultZdq{}}\PYGdefault{p}{);} \PYGdefault{n}{fflush}\PYGdefault{p}{(}\PYGdefault{n}{stdout}\PYGdefault{p}{);}
+	\PYGdefault{n}{startTime}\PYGdefault{p}{(}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{timer}\PYGdefault{p}{);}
+	\PYGdefault{c+c1}{// Set up and invoke your kernel inside the preScan function, }
+	\PYGdefault{c+c1}{// which is in kernel.cu}
+	\PYGdefault{n}{preScan}\PYGdefault{p}{(}\PYGdefault{n}{out\PYGdefaultZus{}d}\PYGdefault{p}{,} \PYGdefault{n}{in\PYGdefaultZus{}d}\PYGdefault{p}{,} \PYGdefault{n}{num\PYGdefaultZus{}elements}\PYGdefault{p}{);}
+	\PYGdefault{n}{cuda\PYGdefaultZus{}ret} \PYGdefault{o}{=} \PYGdefault{n}{cudaDeviceSynchronize}\PYGdefault{p}{();}
+	\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{cuda\PYGdefaultZus{}ret} \PYGdefault{o}{!=} \PYGdefault{n}{cudaSuccess}\PYGdefault{p}{)} \PYGdefault{n}{FATAL}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}Unable to launch/execute kernel\PYGdefaultZdq{}}\PYGdefault{p}{);}
+	\PYGdefault{n}{stopTime}\PYGdefault{p}{(}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{timer}\PYGdefault{p}{);} \PYGdefault{n}{printf}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}\PYGdefaultZpc{}f s}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{p}{,} \PYGdefault{n}{elapsedTime}\PYGdefault{p}{(}\PYGdefault{n}{timer}\PYGdefault{p}{));}
+
+	\PYGdefault{c+c1}{// Copy device variables from host}
+	\PYGdefault{n}{printf}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}Copying data from device to host...\PYGdefaultZdq{}}\PYGdefault{p}{);} \PYGdefault{n}{fflush}\PYGdefault{p}{(}\PYGdefault{n}{stdout}\PYGdefault{p}{);}
+	\PYGdefault{n}{startTime}\PYGdefault{p}{(}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{timer}\PYGdefault{p}{);}
+	\PYGdefault{n}{cuda\PYGdefaultZus{}ret} \PYGdefault{o}{=} \PYGdefault{n}{cudaMemcpy}\PYGdefault{p}{(}\PYGdefault{n}{out\PYGdefaultZus{}h}\PYGdefault{p}{,} \PYGdefault{n}{out\PYGdefaultZus{}d}\PYGdefault{p}{,} \PYGdefault{n}{num\PYGdefaultZus{}elements}\PYGdefault{o}{*}\PYGdefault{k}{sizeof}\PYGdefault{p}{(}\PYGdefault{k+kt}{float}\PYGdefault{p}{),} \PYGdefault{n}{cudaMemcpyDeviceToHost}\PYGdefault{p}{);}
+	\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{cuda\PYGdefaultZus{}ret} \PYGdefault{o}{!=} \PYGdefault{n}{cudaSuccess}\PYGdefault{p}{)} \PYGdefault{n}{FATAL}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}Unable to copy memory to host\PYGdefaultZdq{}}\PYGdefault{p}{);}
+	\PYGdefault{n}{cudaDeviceSynchronize}\PYGdefault{p}{();}
+	\PYGdefault{n}{stopTime}\PYGdefault{p}{(}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{timer}\PYGdefault{p}{);} \PYGdefault{n}{printf}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}\PYGdefaultZpc{}f s}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{p}{,} \PYGdefault{n}{elapsedTime}\PYGdefault{p}{(}\PYGdefault{n}{timer}\PYGdefault{p}{));}
+
+	\PYGdefault{c+c1}{// My code...}
+	\PYGdefault{k+kt}{float} \PYGdefault{o}{*}\PYGdefault{n}{partial\PYGdefaultZus{}h}\PYGdefault{p}{,} \PYGdefault{o}{*}\PYGdefault{n}{partial\PYGdefaultZus{}d}\PYGdefault{p}{;}
+	\PYGdefault{n}{partial\PYGdefaultZus{}h} \PYGdefault{o}{=} \PYGdefault{p}{(}\PYGdefault{k+kt}{float} \PYGdefault{o}{*}\PYGdefault{p}{)} \PYGdefault{n}{malloc}\PYGdefault{p}{((}\PYGdefault{n}{num\PYGdefaultZus{}elements}\PYGdefault{o}{/}\PYGdefault{n}{BLOCK\PYGdefaultZus{}SIZE} \PYGdefault{o}{+} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{)} \PYGdefault{o}{*} \PYGdefault{k}{sizeof}\PYGdefault{p}{(}\PYGdefault{k+kt}{float}\PYGdefault{p}{));}
+	\PYGdefault{n}{partial\PYGdefaultZus{}h}\PYGdefault{p}{[}\PYGdefault{l+m+mi}{0}\PYGdefault{p}{]} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
+	\PYGdefault{k+kt}{int} \PYGdefault{n}{n} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{;}
+	\PYGdefault{k}{for}\PYGdefault{p}{(}\PYGdefault{k+kt}{int} \PYGdefault{n}{i} \PYGdefault{o}{=} \PYGdefault{n}{BLOCK\PYGdefaultZus{}SIZE} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{;} \PYGdefault{n}{i} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{n}{num\PYGdefaultZus{}elements}\PYGdefault{p}{;} \PYGdefault{n}{i} \PYGdefault{o}{+=} \PYGdefault{n}{BLOCK\PYGdefaultZus{}SIZE}\PYGdefault{p}{)\PYGdefaultZob{}}
+		\PYGdefault{n}{partial\PYGdefaultZus{}h}\PYGdefault{p}{[}\PYGdefault{n}{n}\PYGdefault{p}{]} \PYGdefault{o}{=} \PYGdefault{n}{partial\PYGdefaultZus{}h}\PYGdefault{p}{[}\PYGdefault{n}{n} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{]} \PYGdefault{o}{+} \PYGdefault{n}{out\PYGdefaultZus{}h}\PYGdefault{p}{[}\PYGdefault{n}{i}\PYGdefault{p}{];}
+		\PYGdefault{n}{n}\PYGdefault{o}{++}\PYGdefault{p}{;}
+	\PYGdefault{p}{\PYGdefaultZcb{}}
+	\PYGdefault{k}{if}\PYGdefault{p}{((}\PYGdefault{n}{num\PYGdefaultZus{}elements}\PYGdefault{o}{/}\PYGdefault{n}{BLOCK\PYGdefaultZus{}SIZE} \PYGdefault{o}{+} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{)} \PYGdefault{o}{\PYGdefaultZlt{}=} \PYGdefault{l+m+mi}{10}\PYGdefault{p}{)\PYGdefaultZob{}}
+		\PYGdefault{k}{for}\PYGdefault{p}{(}\PYGdefault{k+kt}{int} \PYGdefault{n}{i} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;} \PYGdefault{n}{i} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{n}{n}\PYGdefault{p}{;} \PYGdefault{n}{i} \PYGdefault{o}{++}\PYGdefault{p}{)\PYGdefaultZob{}}
+			\PYGdefault{n}{printf}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{PARTIAL[\PYGdefaultZpc{}d] = \PYGdefaultZpc{}0.3f\PYGdefaultZdq{}}\PYGdefault{p}{,} \PYGdefault{n}{i}\PYGdefault{p}{,} \PYGdefault{n}{partial\PYGdefaultZus{}h}\PYGdefault{p}{[}\PYGdefault{n}{i}\PYGdefault{p}{]);}
+		\PYGdefault{p}{\PYGdefaultZcb{}}
+		\PYGdefault{n}{printf}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{p}{);}
+	\PYGdefault{p}{\PYGdefaultZcb{}}
+	\PYGdefault{c+c1}{//}
+	\PYGdefault{n}{cuda\PYGdefaultZus{}ret} \PYGdefault{o}{=} \PYGdefault{n}{cudaMalloc}\PYGdefault{p}{((}\PYGdefault{k+kt}{void}\PYGdefault{o}{**}\PYGdefault{p}{)}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{partial\PYGdefaultZus{}d}\PYGdefault{p}{,} \PYGdefault{p}{(}\PYGdefault{n}{num\PYGdefaultZus{}elements}\PYGdefault{o}{/}\PYGdefault{n}{BLOCK\PYGdefaultZus{}SIZE} \PYGdefault{o}{+} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{)} \PYGdefault{o}{*} \PYGdefault{k}{sizeof}\PYGdefault{p}{(}\PYGdefault{k+kt}{float}\PYGdefault{p}{));}
+	\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{cuda\PYGdefaultZus{}ret} \PYGdefault{o}{!=} \PYGdefault{n}{cudaSuccess}\PYGdefault{p}{)} \PYGdefault{n}{FATAL}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}Unable to allocate device memory\PYGdefaultZdq{}}\PYGdefault{p}{);}
+	\PYGdefault{n}{cuda\PYGdefaultZus{}ret} \PYGdefault{o}{=} \PYGdefault{n}{cudaMemcpy}\PYGdefault{p}{(}\PYGdefault{n}{partial\PYGdefaultZus{}d}\PYGdefault{p}{,} \PYGdefault{n}{partial\PYGdefaultZus{}h}\PYGdefault{p}{,} \PYGdefault{p}{(}\PYGdefault{n}{num\PYGdefaultZus{}elements}\PYGdefault{o}{/}\PYGdefault{n}{BLOCK\PYGdefaultZus{}SIZE} \PYGdefault{o}{+} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{)} \PYGdefault{o}{*} \PYGdefault{k}{sizeof}\PYGdefault{p}{(}\PYGdefault{k+kt}{float}\PYGdefault{p}{),} \PYGdefault{n}{cudaMemcpyHostToDevice}\PYGdefault{p}{);}
+	\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{cuda\PYGdefaultZus{}ret} \PYGdefault{o}{!=} \PYGdefault{n}{cudaSuccess}\PYGdefault{p}{)} \PYGdefault{n}{FATAL}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}Unable to copy memory to the device\PYGdefaultZdq{}}\PYGdefault{p}{);}
+	\PYGdefault{c+c1}{//}
+	\PYGdefault{n}{postScan}\PYGdefault{p}{(}\PYGdefault{n}{out\PYGdefaultZus{}d}\PYGdefault{p}{,} \PYGdefault{n}{partial\PYGdefaultZus{}d}\PYGdefault{p}{,} \PYGdefault{n}{num\PYGdefaultZus{}elements}\PYGdefault{p}{);}
+	\PYGdefault{n}{cuda\PYGdefaultZus{}ret} \PYGdefault{o}{=} \PYGdefault{n}{cudaDeviceSynchronize}\PYGdefault{p}{();}
+	\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{cuda\PYGdefaultZus{}ret} \PYGdefault{o}{!=} \PYGdefault{n}{cudaSuccess}\PYGdefault{p}{)} \PYGdefault{n}{FATAL}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}Unable to launch/execute kernel\PYGdefaultZdq{}}\PYGdefault{p}{);}
+	
+	\PYGdefault{c+c1}{//}
+	\PYGdefault{n}{cuda\PYGdefaultZus{}ret} \PYGdefault{o}{=} \PYGdefault{n}{cudaMemcpy}\PYGdefault{p}{(}\PYGdefault{n}{out\PYGdefaultZus{}h}\PYGdefault{p}{,} \PYGdefault{n}{out\PYGdefaultZus{}d}\PYGdefault{p}{,} \PYGdefault{n}{num\PYGdefaultZus{}elements}\PYGdefault{o}{*}\PYGdefault{k}{sizeof}\PYGdefault{p}{(}\PYGdefault{k+kt}{float}\PYGdefault{p}{),} \PYGdefault{n}{cudaMemcpyDeviceToHost}\PYGdefault{p}{);}
+	\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{cuda\PYGdefaultZus{}ret} \PYGdefault{o}{!=} \PYGdefault{n}{cudaSuccess}\PYGdefault{p}{)} \PYGdefault{n}{FATAL}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}Unable to copy memory to host\PYGdefaultZdq{}}\PYGdefault{p}{);}
+
+	\PYGdefault{c+c1}{// Verify correctness}
+	\PYGdefault{n}{printf}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}Verifying results...\PYGdefaultZdq{}}\PYGdefault{p}{);} \PYGdefault{n}{fflush}\PYGdefault{p}{(}\PYGdefault{n}{stdout}\PYGdefault{p}{);}
+	\PYGdefault{n}{verify}\PYGdefault{p}{(}\PYGdefault{n}{in\PYGdefaultZus{}h}\PYGdefault{p}{,} \PYGdefault{n}{out\PYGdefaultZus{}h}\PYGdefault{p}{,} \PYGdefault{n}{num\PYGdefaultZus{}elements}\PYGdefault{p}{);}
+
+	\PYGdefault{c+c1}{// Printing results (just for debugging purposes)...}
+	\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{num\PYGdefaultZus{}elements} \PYGdefault{o}{\PYGdefaultZlt{}=} \PYGdefault{l+m+mi}{100}\PYGdefault{p}{)\PYGdefaultZob{}}
+		\PYGdefault{n}{printf}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{Printing IN (\PYGdefaultZpc{}d elements)...}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{p}{,} \PYGdefault{n}{num\PYGdefaultZus{}elements}\PYGdefault{p}{);}
+		\PYGdefault{k}{for}\PYGdefault{p}{(}\PYGdefault{k+kt}{int} \PYGdefault{n}{i} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;} \PYGdefault{n}{i} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{n}{num\PYGdefaultZus{}elements}\PYGdefault{p}{;} \PYGdefault{n}{i}\PYGdefault{o}{++}\PYGdefault{p}{)\PYGdefaultZob{}}
+			\PYGdefault{n}{printf}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}\PYGdefaultZpc{}0.3f \PYGdefaultZdq{}}\PYGdefault{p}{,} \PYGdefault{n}{in\PYGdefaultZus{}h}\PYGdefault{p}{[}\PYGdefault{n}{i}\PYGdefault{p}{]);}
+		\PYGdefault{p}{\PYGdefaultZcb{}}
+		\PYGdefault{n}{printf}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{p}{);}
+
+		\PYGdefault{n}{printf}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{Printing OUT (\PYGdefaultZpc{}d elements)...}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{p}{,} \PYGdefault{n}{num\PYGdefaultZus{}elements}\PYGdefault{p}{);}
+		\PYGdefault{k}{for}\PYGdefault{p}{(}\PYGdefault{k+kt}{int} \PYGdefault{n}{i} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;} \PYGdefault{n}{i} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{n}{num\PYGdefaultZus{}elements}\PYGdefault{p}{;} \PYGdefault{n}{i}\PYGdefault{o}{++}\PYGdefault{p}{)\PYGdefaultZob{}}
+			\PYGdefault{n}{printf}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}\PYGdefaultZpc{}0.3f \PYGdefaultZdq{}}\PYGdefault{p}{,} \PYGdefault{n}{out\PYGdefaultZus{}h}\PYGdefault{p}{[}\PYGdefault{n}{i}\PYGdefault{p}{]);}
+		\PYGdefault{p}{\PYGdefaultZcb{}}
+		\PYGdefault{n}{printf}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{p}{);}
+	\PYGdefault{p}{\PYGdefaultZcb{}}
+
+	\PYGdefault{c+c1}{// Free memory}
+	\PYGdefault{n}{cudaFree}\PYGdefault{p}{(}\PYGdefault{n}{in\PYGdefaultZus{}d}\PYGdefault{p}{);} \PYGdefault{n}{cudaFree}\PYGdefault{p}{(}\PYGdefault{n}{out\PYGdefaultZus{}d}\PYGdefault{p}{);} \PYGdefault{n}{cudaFree}\PYGdefault{p}{(}\PYGdefault{n}{partial\PYGdefaultZus{}d}\PYGdefault{p}{);}
+	\PYGdefault{n}{free}\PYGdefault{p}{(}\PYGdefault{n}{in\PYGdefaultZus{}h}\PYGdefault{p}{);} \PYGdefault{n}{free}\PYGdefault{p}{(}\PYGdefault{n}{out\PYGdefaultZus{}h}\PYGdefault{p}{);} \PYGdefault{n}{free}\PYGdefault{p}{(}\PYGdefault{n}{partial\PYGdefaultZus{}h}\PYGdefault{p}{);}
+
+	\PYGdefault{k}{return} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+\end{Verbatim}
