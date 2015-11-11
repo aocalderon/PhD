@@ -105,7 +105,7 @@ int main(int argc, char* argv[])
     printf("Verifying results..."); fflush(stdout);
 
     // Accumulate partial sums on host 
-	for(i=1; i<out_elements; i++) {
+	for(i = 1; i < out_elements; i++) {
 		out_h[0] += out_h[i];
 	}
 
