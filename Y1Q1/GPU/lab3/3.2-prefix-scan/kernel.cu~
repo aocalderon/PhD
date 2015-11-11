@@ -6,7 +6,7 @@
  *cr
  ******************************************************************************/
 
-#define BLOCK_SIZE 32
+#define BLOCK_SIZE 512
 
 // Define your kernels in this file you may use more than one kernel if you
 // need to
@@ -19,7 +19,10 @@ __global__ void scan(float *out, float *in, unsigned size){
 	int t = blockDim.x * blockIdx.x + threadIdx.x;
 
 	if(t < size)
-		section[threadIdx.x] = in[t];
+		if(t == 0)
+			section[0] = 0.0f;
+		else
+			section[threadIdx.x] = in[t];
 	__syncthreads();
 	
 	for(int stride = 1; stride <= BLOCK_SIZE; stride = stride * 2){
@@ -44,8 +47,6 @@ __global__ void scan(float *out, float *in, unsigned size){
 __global__ void post(float *out, float *n, unsigned size){
 	int t = blockDim.x * blockIdx.x + threadIdx.x;
 	
-//	if(t > BLOCK_SIZE)
-//		out[t] += n[t % BLOCK_SIZE - 1];
 	out[t] += n[t / BLOCK_SIZE];
 }
 

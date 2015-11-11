@@ -32,13 +32,12 @@ void verify(float* input, float* output, unsigned num_elements) {
 
   float sum = 0.0f;
   for(int i = 0; i < num_elements; ++i) {
-	sum += input[i];
     float relativeError = (sum - output[i])/sum;
     if (relativeError > relativeTolerance || relativeError < -relativeTolerance) {
       printf("TEST FAILED at i = %d, cpu = %0.3f, gpu = %0.3f\n\n", i, sum, output[i]);
-      // exit(0);
+      exit(0);
     }
-    // sum += input[i];
+    sum += input[i];
   }
   printf("TEST PASSED\n\n");
 
