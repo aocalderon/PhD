@@ -8,13 +8,13 @@
 
 #define BLOCK_SIZE 512
 
-// Define your kernels in this file you may use more than one kernel if you
-// need to
-
+// Define your kernels in this file you may use more than one kernel if you need to
 __global__ void scan(float *out, float *in, unsigned size){
+	// Declare share memory space...
 	__shared__ float section[2 * BLOCK_SIZE];
 	int t = blockDim.x * blockIdx.x + threadIdx.x;
 
+	// Load data in memory share taking into account that exclusive scan is required...
 	if(t < size)
 		if(t == 0)
 			section[0] = 0.0f;
@@ -22,6 +22,7 @@ __global__ void scan(float *out, float *in, unsigned size){
 			section[threadIdx.x] = in[t - 1];
 	__syncthreads();
 	
+	// First phase: reduction step...
 	for(int stride = 1; stride <= BLOCK_SIZE; stride = stride * 2){
 		int index = (threadIdx.x + 1) * stride * 2 - 1;
 		if(index < 2 * BLOCK_SIZE)
@@ -29,17 +30,20 @@ __global__ void scan(float *out, float *in, unsigned size){
 		__syncthreads();
 	}
 	
+	// Second phase: post-scan step...
 	for(int stride = BLOCK_SIZE / 2; stride > 0; stride /= 2){
 		int index = (threadIdx.x + 1) * stride * 2 - 1;
 		if(index + stride < 2 * BLOCK_SIZE)
 			section[index + stride] += section[index];
 		__syncthreads();
 	}
-	//__syncthreads();
+	
+	// Copy back to global memory...
 	if(t < size) 
 		out[t] = section[threadIdx.x];
 }
 
+// This function takes the output of the scan function and add the accumulated sum (stored in n) to positions in each block... 
 __global__ void post(float *out, float *n, unsigned size){
 	int t = blockDim.x * blockIdx.x + threadIdx.x;
 	
@@ -50,6 +54,7 @@ __global__ void post(float *out, float *n, unsigned size){
 Setup and invoke your kernel(s) in this function. You may also allocate more
 GPU memory if you need to
 *******************************************************************************/
+// Functions to define block a grid dimensions and lunch the kernels...
 void preScan(float *out, float *in, unsigned size){
 	dim3 dim_block(BLOCK_SIZE, 1, 1);
 	dim3 dim_grid(size/BLOCK_SIZE + 1, 1, 1);
