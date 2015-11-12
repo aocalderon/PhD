@@ -54,10 +54,27 @@ breaklines,
 linenos
 ]{c}{3.2-prefix-scan/main.cu}
 
-\section{Answer to Questions}
+\section{Answers to Questions}
 \begin{enumerate}
- \item In your kernel implementation, how many threads can be simultaneously executing? Assume a GeForce GTX 280 GPU which has 30 streaming multiprocessors.
+ \item Use visual profiler to report relevant statistics about the execution of your kernels.  Did you find any surprising results?
  
+ \begin{figure}
+  \centering
+  \includegraphics[width=\textwidth]{./NVVP_Reduction.png}
+  \caption{NVVP performance analysis for \textit{reduction}.}\label{fig:NVVP_Reduction}
+ \end{figure}
+
+ \begin{figure}
+  \centering
+  \includegraphics[width=\textwidth]{./NVVP_Prefix-scan.png}
+  \caption{NVVP performance analysis for \textit{prefix-scan}.}\label{fig:NVVP_Prefix-scan}
+ \end{figure}
+
+ \item For each of reduction and prefix scan, suggest one approach to speed up your implementation.
+ 
+ For reduction: padding...
+ 
+ For prefix-scan: Harris' algorithm...
 \end{enumerate}
 
 \begin{thebibliography}{9}
