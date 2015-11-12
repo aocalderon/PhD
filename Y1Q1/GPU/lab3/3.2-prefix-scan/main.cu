@@ -22,7 +22,7 @@ int main(int argc, char* argv[])
 	unsigned num_elements;
 	cudaError_t cuda_ret;
 
-	/* Allocate and initialize input vector */
+	// Allocate and initialize input vector
 	if(argc == 1) {
 		num_elements = 1000000;
 	} else if(argc == 2) {
@@ -36,7 +36,7 @@ int main(int argc, char* argv[])
 	}
 	initVector(&in_h, num_elements);
 
-	/* Allocate and initialize output vector */
+	// Allocate and initialize output vector
 	out_h = (float*)calloc(num_elements, sizeof(float));
 	if(out_h == NULL) FATAL("Unable to allocate host");
 
@@ -66,8 +66,7 @@ int main(int argc, char* argv[])
 	// Launch kernel
 	printf("Launching kernel..."); fflush(stdout);
 	startTime(&timer);
-	// Set up and invoke your kernel inside the preScan function, 
-	// which is in kernel.cu
+	// Set up and invoke your kernel inside the preScan function, which is in kernel.cu
 	preScan(out_d, in_d, num_elements);
 	cuda_ret = cudaDeviceSynchronize();
 	if(cuda_ret != cudaSuccess) FATAL("Unable to launch/execute kernel");
@@ -81,32 +80,39 @@ int main(int argc, char* argv[])
 	cudaDeviceSynchronize();
 	stopTime(&timer); printf("%f s\n", elapsedTime(timer));
 
-	// My code...
+	/* Now we need to traverse the out_h array to extract the last accumulated sum for each block and then add them to its corresponding positions... */
+	   
+	// Let's declare a auxiliar array to store the accumulated sums of each block...
 	float *partial_h, *partial_d;
+	// Allocate memory for the new array...
 	partial_h = (float *) malloc((num_elements/BLOCK_SIZE + 1) * sizeof(float));
+	// We do not add nothig to the first block
 	partial_h[0] = 0;
 	int n = 1;
+	// Iterate through the array out_h extracting partial sums...
 	for(int i = BLOCK_SIZE - 1; i < num_elements; i += BLOCK_SIZE){
 		partial_h[n] = partial_h[n - 1] + out_h[i];
 		n++;
 	}
+	// Print the partial_h array just for debugging purposes...
 	if((num_elements/BLOCK_SIZE + 1) <= 10){
 		for(int i = 0; i < n; i ++){
 			printf("\nPARTIAL[%d] = %0.3f", i, partial_h[i]);
 		}
 		printf("\n");
 	}
-	//
+	// Allocate memory and copy the array in the device...
 	cuda_ret = cudaMalloc((void**)&partial_d, (num_elements/BLOCK_SIZE + 1) * sizeof(float));
 	if(cuda_ret != cudaSuccess) FATAL("Unable to allocate device memory");
 	cuda_ret = cudaMemcpy(partial_d, partial_h, (num_elements/BLOCK_SIZE + 1) * sizeof(float), cudaMemcpyHostToDevice);
 	if(cuda_ret != cudaSuccess) FATAL("Unable to copy memory to the device");
-	//
+	
+	// Invoke a new kernel (it is in kernel.cu) where each thread add the accumulated sum in partial_d to its correponding position in out_d...
 	postScan(out_d, partial_d, num_elements);
 	cuda_ret = cudaDeviceSynchronize();
 	if(cuda_ret != cudaSuccess) FATAL("Unable to launch/execute kernel");
 	
-	//
+	// Copy back the new results...
 	cuda_ret = cudaMemcpy(out_h, out_d, num_elements*sizeof(float), cudaMemcpyDeviceToHost);
 	if(cuda_ret != cudaSuccess) FATAL("Unable to copy memory to host");
 
