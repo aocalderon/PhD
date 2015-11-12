@@ -54,6 +54,8 @@ breaklines,
 linenos
 ]{c}{3.2-prefix-scan/main.cu}
 
+Full code and other materials are available at \cite{github}.
+
 \section{Answers to Questions}
 \begin{enumerate}
  \item Use visual profiler to report relevant statistics about the execution of your kernels.  Did you find any surprising results?
@@ -72,36 +74,38 @@ linenos
 
  \item For each of reduction and prefix scan, suggest one approach to speed up your implementation.
  
- For reduction,  chunk input data to perform more \textbf{\texttt{memcpy}} operations and take advantage of the time of each of them to perform computation using streams. So, when the program is copying some data it already can computing some of them asynchronously.  In this way, it is possible to overlap the copy and compute stages.
+ For reduction, it is possible to chunk input data to perform more \textbf{\texttt{memcpy}} operations and take advantage of the time of each of them to perform computation using streams. So, when the program is copying some data, it already can compute some of them asynchronously.  In this way, it is possible to overlap the copy and compute stages \cite{overlap}.
  
- For prefix-scan: Harris' algorithm...
+ For prefix-scan, \cite{harris2007} explore a new alternative in order to avoid share memory bank conflicts. The main idea is to avoid most of the bank conflicts by adding a variable amount of padding to each shared memory array index they compute. Specifically, the value of the index divided by the number of shared memory banks is added to each index. A gentle explanation of the algorithm is available in \cite{udacity}.  However, as \cite{hwu2015} argues, this approach (although offers an increase in time response) could be more computationally expensive.
 \end{enumerate}
 
 \begin{thebibliography}{9}
 \bibitem{github} 
 Andres Calderon.
 \textit{GitHub Personal Repository}, 2015. 
-\url{https://github.com/aocalderon/PhD/tree/master/Y1Q1/GPU/lab2}.
+\url{https://github.com/aocalderon/PhD/tree/master/Y1Q1/GPU/lab3}.
  
-\bibitem{kirk2012} 
-David Kirk and Wen-Mei Hwu.
-\textit{Programming Massively Parallel Processors: A Hands-On Approach}. 
-Morgan Kaufmann, 2012.
-
 \bibitem{hwu2015} 
 Wen-Mei Hwu.
-\textit{A Tiled Kernel for Arbitrary Matrix Dimensions - Heterogeneous Parallel Programming}. 
-Coursera Course, 2015. \url{https://www.dropbox.com/s/4y06b1m6dozp2kt/2%20-%208%20-%202.8-%20A%20Tiled%20Kernel%20for%20Arbitrary%20Matrix%20Dimensions.mp4?dl=0}.
+\textit{Parallel Computation Patterns, More on Parallel Scan - Heterogeneous Parallel Programming}. 
+Coursera Course, 2015. \url{https://www.dropbox.com/s/ad1ifkeoucwargz/4%20-%207%20-%204.7-%20Parallel%20Computation%20Patterns%20-%20More%20on%20Parallel%20Scan.mp4?dl=0}.
 
-\bibitem{nvvp_tutorial} 
+\bibitem{udacity} 
 David Luebke, John Owens, Mike Roberts and Cheng-Han Lee.
-\textit{Using NVVP Part1 and Part 2 - Intro to Parallel Programming}. 
+\textit{Blelloch Scan - Intro to Parallel Programming}. 
 Udacity Course, 2015. \url{https://www.youtube.com/watch?v=hyKA5fb5ZJI}.
 
-\bibitem{gtx280}
-Nvidia Corporation.
-\textit{GeForce® GTX 200 GPU Architectural Overview}. Technical Brief \#TB-04044-001\_v01, 2008. 
-\url{http://www.nvidia.com/docs/IO/55506/GeForce_GTX_200_GPU_Technical_Brief.pdf}.
+\bibitem{harris2007}
+Mark Harris, Shubhabrata Sengupta and John D. Owens.
+\textit{Parallel Prefix Sum (Scan) with CUDA} in \textit{GPU Gems 3} edited by Hubert Nguyen. 
+Addison-Wesley, 2007.
+\url{http://http.developer.nvidia.com/GPUGems3/gpugems3_ch39.html}.
+
+\bibitem{overlap}
+Mark Harris.
+\textit{How to Overlap Data Transfers in CUDA C/C++} in \textit{Parallel Forall} Website. Nvidia, 2012.
+\url{http://devblogs.nvidia.com/parallelforall/how-overlap-data-transfers-cuda-cc/}.
+
 \end{thebibliography}
 
 \end{document}
