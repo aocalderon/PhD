@@ -60,6 +60,10 @@ Full code and other materials are available at \cite{github}.
 \begin{enumerate}
  \item Use visual profiler to report relevant statistics about the execution of your kernels.  Did you find any surprising results?
  
+ Figure \ref{fig:NVVP_Reduction} shows the summary of the profile analysis over the \texttt{reduction} kernel.  One important metric that should be noted is the high performance for \textit{Global Load and Global Store Efficiency} (highlighted by 1 in the figures).  Those values are significantly larger in comparison with the \texttt{prefix-scan} kernel (figure \ref{fig:NVVP_Prefix-scan}).  The strategy for avoiding uncoalesced memory access implemented in the \texttt{reduction} kernel proves to be more efficient.  
+ 
+ Another important metric is the \textit{Low Compute / Memcpy Efficiency} in both kernels (pointed by 2 in both figures).  As it can be seen, the time spent to copy data between the host and the device is considerably larger that the time spent in computation. The NVVP Help proposes asynchronous and overlapping transfers using \texttt{cudaMemcpyAsync()} function as a possible alternative to address the problem \cite{overlap} \cite{fortran}.
+ 
  \begin{figure}
   \centering
   \includegraphics[width=\textwidth]{./NVVP_Reduction.png}
@@ -74,9 +78,9 @@ Full code and other materials are available at \cite{github}.
 
  \item For each of reduction and prefix scan, suggest one approach to speed up your implementation.
  
- For reduction, it is possible to chunk input data to perform more \textbf{\texttt{memcpy}} operations and take advantage of the time of each of them to perform computation using streams. So, when the program is copying some data, it already can compute some of them asynchronously.  In this way, it is possible to overlap the copy and compute stages \cite{overlap}.
+ For reduction, it is possible to chunk input data to perform more \textbf{\texttt{memcpy}} operations and take advantage of the time of each of them to perform computation using streams. So, when the program is copying some data, it already can compute some of them asynchronously \cite{overlap} \cite{fortran}.  In this way, it is possible to overlap the copy and compute stages.
  
- For prefix-scan, \cite{harris2007} explore a new alternative in order to avoid share memory bank conflicts. The main idea is to avoid most of the bank conflicts by adding a variable amount of padding to each shared memory array index they compute. Specifically, the value of the index divided by the number of shared memory banks is added to each index. A gentle explanation of the algorithm is available in \cite{udacity}.  However, as \cite{hwu2015} argues, this approach (although offers an increase in time response) could be more computationally expensive.
+ For prefix-scan, \cite{harris2007} explore an alternative in order to avoid share memory bank conflicts. The main idea is to avoid most of the bank conflicts by adding a variable amount of padding to each shared memory array index they compute. Specifically, the value of the index divided by the number of shared memory banks is added to each index. A gentle explanation of the algorithm is available in \cite{udacity}.  However, as \cite{hwu2015} argues, this approach (although offers an increase in time response) could be more computationally expensive.
 \end{enumerate}
 
 \begin{thebibliography}{9}
@@ -105,6 +109,11 @@ Addison-Wesley, 2007.
 Mark Harris.
 \textit{How to Overlap Data Transfers in CUDA C/C++} in \textit{Parallel Forall} Website. Nvidia, 2012.
 \url{http://devblogs.nvidia.com/parallelforall/how-overlap-data-transfers-cuda-cc/}.
+
+\bibitem{fortran}
+Gregory Ruetsch and Massimiliano Fatica.
+\textit{CUDA Fortran for Scientists and Engineers: Best Practices for Efficient CUDA Fortran Programming}. pag 52-60.
+Morgan Kaufmann. 2013.
 
 \end{thebibliography}
 
