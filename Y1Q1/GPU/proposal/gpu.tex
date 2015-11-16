@@ -23,12 +23,12 @@ A flock pattern is defined as a group of entities which move together for a defi
  
  \item What is your plan/outline of your solution?
  
-The algorithms proposed by \citep{vieira_-line_2009} and \citep{turdukulov_visual_2014} share the same initial strategy to detect flock patterns.  In that, first they find cluster of points which could be close enough to initiate a flock for each time interval.  This is a costly operation due to the large number of points and intervals to be analyzed.  The technique use a grid-based index and a stencil (see figure~\ref{fig:grid}) to speed up the process but the complexity is still high.  My plan is to allow that individual threads compute each of the stencils in the grid in parallel.
+The algorithms proposed by \citep{vieira_-line_2009} and \citep{turdukulov_visual_2014} share the same initial strategy to detect flock patterns.  In that, first they find clusters of points which could be close enough to initiate a flock for each time interval.  This is a costly operation due to the large number of points and intervals to be analyzed.  The technique uses a grid-based index and a stencil (see figure~\ref{fig:grid}) to speed up the process but the complexity is still high.  My plan is to allow  individual threads to compute each of the stencils in the grid in parallel.
 
 \begin{figure}[t]
  \centering
  \includegraphics[width=0.4\textwidth]{./grid.png}
- \caption{Grid-based index use in .}
+ \caption{Grid-based index used in \citep{vieira_-line_2009}.}
  \label{fig:grid}
 \end{figure}
 
