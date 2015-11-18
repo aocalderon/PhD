@@ -1,0 +1,135 @@
+and@and-dblab:~/Documents/Projects/C++/word2vec/trunk$ ./demo-phrases.sh 
+make: Nothing to be done for 'all'.
+--2015-11-12 18:33:08--  http://www.statmt.org/wmt14/training-monolingual-news-crawl/news.2012.en.shuffled.gz
+Resolving www.statmt.org (www.statmt.org)... 129.215.197.100
+Connecting to www.statmt.org (www.statmt.org)|129.215.197.100|:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 786717767 (750M) [application/x-gzip]
+Saving to: ‘news.2012.en.shuffled.gz’
+
+news.2012.en.shuffled.gz                            100%[====================================================================================================================>] 750.27M  4.25MB/s   in 3m 7s  
+
+2015-11-12 18:36:16 (4.02 MB/s) - ‘news.2012.en.shuffled.gz’ saved [786717767/786717767]
+
+Starting training using file news.2012.en.shuffled-norm0
+Words processed: 296900K     Vocab size: 33198K  
+Vocab size (unigrams + bigrams): 18838711
+Words in train file: 296901342
+Words written: 296900K
+real	7m38.607s
+user	7m8.592s
+sys	0m15.176s
+Starting training using file news.2012.en.shuffled-norm0-phrase0
+Words processed: 280500K     Vocab size: 38761K  
+Vocab size (unigrams + bigrams): 21728781
+Words in train file: 280513979
+Words written: 280500K
+real	7m0.022s
+user	6m19.436s
+sys	0m14.756s
+Starting training using file news.2012.en.shuffled-norm1-phrase1
+Vocab size: 681320
+Words in train file: 283545447
+Alpha: 0.000005  Progress: 100.00%  Words/thread/sec: 162.97k  
+real	115m6.531s
+user	434m57.904s
+sys	1m4.464s
+Enter word or sentence (EXIT to break): dog
+
+Word: dog  Position in vocabulary: 1775
+
+                                              Word       Cosine distance
+------------------------------------------------------------------------
+                                              dogs		0.826302
+                                             puppy		0.763667
+                                               cat		0.743035
+                                     border_collie		0.731633
+                                          pit_bull		0.724550
+                                   german_shepherd		0.721175
+                                            canine		0.720818
+                                               pet		0.718427
+                                             dog's		0.713674
+                                             pooch		0.708754
+                                          shih_tzu		0.701748
+                                              mutt		0.685426
+                                              cats		0.672527
+                                               pup		0.665426
+                                        pomeranian		0.654995
+                                         dachshund		0.653261
+                                            dog_vs		0.651594
+                                        rottweiler		0.651066
+                                       mixed_breed		0.650705
+                                      bull_terrier		0.648525
+                                        weimaraner		0.647514
+                                            bichon		0.640262
+                                           pooches		0.638887
+                                           puppies		0.637923
+                                           canines		0.634793
+                                        dachshunds		0.634350
+                                      jack_russell		0.626984
+                                           terrier		0.625477
+                                      shepherd_mix		0.625273
+                                  together_slayton		0.623425
+                                         dog_lover		0.620694
+                                  golden_retriever		0.619098
+                        staffordshire_bull_terrier		0.614811
+                                           whippet		0.613782
+                                       rottweilers		0.613553
+                                       labradoodle		0.613226
+                                   english_bulldog		0.610445
+                                 yorkshire_terrier		0.609417
+                                         old_puppy		0.608629
+                                    black_labrador		0.608429
+Enter word or sentence (EXIT to break): dog cat rat human
+
+Word: dog  Position in vocabulary: 1775
+
+Word: cat  Position in vocabulary: 4231
+
+Word: rat  Position in vocabulary: 13663
+
+Word: human  Position in vocabulary: 1307
+
+                                              Word       Cosine distance
+------------------------------------------------------------------------
+                                            animal		0.760178
+                                              cats		0.756352
+                                              dogs		0.706711
+                                             dog's		0.679598
+                                            monkey		0.669439
+                                            canine		0.665267
+                                          creature		0.663933
+                                            feline		0.653792
+                                               pet		0.653405
+                                             cat's		0.645468
+                                           animals		0.637104
+                                             puppy		0.632207
+                                          squirrel		0.625400
+                                            rodent		0.625115
+                                             mouse		0.624554
+                                           raccoon		0.619774
+                                             snake		0.618697
+                                             mangy		0.615993
+                                     border_collie		0.614567
+                                          animal's		0.610640
+                                              mutt		0.608741
+                                              bird		0.599199
+                                           monkeys		0.598324
+                                         creatures		0.598287
+                                            kitten		0.592712
+                                             dogs'		0.591698
+                                             hyena		0.589413
+                                           critter		0.584027
+                                              paws		0.583714
+                                      bull_terrier		0.581862
+                                            vervet		0.581629
+                                            rabbit		0.580669
+                                              rats		0.577508
+                                             tabby		0.577230
+                                               pig		0.575258
+                                            lizard		0.574031
+                                             doggy		0.574023
+                                            spider		0.572851
+                                               paw		0.570567
+                                             moggy		0.570383
+Enter word or sentence (EXIT to break): 

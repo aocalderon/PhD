@@ -1,0 +1,161 @@
+\documentclass{beamer}
+
+\usepackage[spanish]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{tabularx}
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{hyperref}
+\hypersetup{colorlinks,
+  citecolor=blue,
+  linkcolor=blue,
+  urlcolor=blue}
+
+\usetheme{Warsaw}
+\usecolortheme{default}
+
+\begin{document}
+
+\title[Electiva Base de Datos I]{ELECTIVA BASE DE DATOS I.}
+\subtitle[Presentación]{Presentación}
+\author[M.Sc. Andrés Calderón]{Andrés O. Calderón Romero}
+\institute[UdeNar]{Programa de Ingeniería de Sistemas, Universidad de Nariño}
+\date[\today]{\today}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\AtBeginSection[]
+{
+\begin{frame}{Contenido}
+\tableofcontents[currentsection, hideallsubsections]
+\end{frame}
+}
+
+\section{Introducción}
+\begin{frame}\frametitle{Introducción}
+  \begin{block}{Temática}
+    Descubrimiento de conocimiento en bases de datos.
+  \end{block}
+  \begin{block}{Enfoque}
+    Bodegas de datos.
+  \end{block}
+\end{frame}
+
+\begin{frame}\frametitle{Introducción}
+  \begin{block}{Objetivo}
+    Introducirnos en el uso y aplicación de herramientas prácticas para el diseño de bodegas de datos haciendo énfasis en soluciones de código abierto.
+  \end{block}
+\end{frame}
+
+\section{Contenido}
+\begin{frame}\frametitle{Contenido}
+  \begin{itemize}
+    \item Introducción a Pentaho.
+      \begin{itemize}
+	\item Conceptos generales.
+	\item Instalación y configuración del servidor.
+	\item El proceso de inteligencia de negocios en Pentaho.
+	\item Algunos ejemplos.
+      \end{itemize}
+    \item Modelamiento dimensional y diseño de bodegas de datos.
+      \begin{itemize}
+	\item Introducción a bodegas de datos.
+	\item Modelamiento del negocio usando esquemas de estrella.
+	\item Proceso de diseño de almacenes de datos.
+	\item Caso de estudio: World Class Movies.
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}\frametitle{Contenido}
+  \begin{itemize}
+    \item Integración de datos y procesos ETL.
+      \begin{itemize}
+	\item Introducción a Pentaho Data Integration (PDI).
+	\item Diseñando soluciones PDI.
+	\item Desarrollando soluciones PDI.
+      \end{itemize}
+    \item Aplicaciones de inteligencia de negocios.
+      \begin{itemize}
+	\item Usando las herramientas de generación de reportes.
+	\item Soluciones OLAP usando Pentaho Analysis Services.
+	\item Minería de datos con WEKA.
+	\item Construyendo paneles de mando (Dashboards).
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\section{Recursos}
+\begin{frame}\frametitle{Recursos}
+  \begin{block}{Bibliografía, web y listas de correo}
+    \begin{itemize}
+      \item Bibliografía
+	\begin{itemize}
+	  \item Pentaho Solutions: Business Intelligence and Data Warehousing with Pentaho and MySQL (Bouman and Dongen, 2009).
+	  \item The Data Warehouse Toolkit Second Edition (Kimball and Ross,2002).
+	  \item Pentaho Kettle Solutions: Building Open Source ETL Solutions with Pentaho Data Integration (Casters et al, 2010).
+	  \item The Data Warehouse ETL Toolkit (Kimball and Caserta, 2004).
+	  \item Pentaho 3.2 Data Integration: Beginner\'s Guide (Roldán, 2010).
+	  \item Pentaho Reporting 3.5 for Java Developers (Gorman, 2009).
+	\end{itemize}
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}\frametitle{Recursos}
+  \begin{block}{Bibliografía y recursos web}
+    \begin{itemize}
+      \item Recursos web
+	\begin{itemize}
+	  \item \href{http://community.pentaho.com/}{\url{http://community.pentaho.com/}}
+	  \item \href{http://en.wikipedia.org/wiki/Business\_intelligence}{\url{http://en.wikipedia.org/wiki/Business\_intelligence}}
+	  \item \href{http://es.wikipedia.org/wiki/}{\url{http://es.wikipedia.org/wiki/Almacen\_de\_datos}}
+	  \item \href{http://www.kimballgroup.com}{\url{http://www.kimballgroup.com}}
+	  \item \href{http://b-eye-network.com}{\url{http://b-eye-network.com}}
+	  \item \href{http://www.tdwi.org}{\url{http://www.tdwi.org}}
+	\end{itemize}
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}\frametitle{Recursos}
+  \begin{block}{Bibliografía y recursos web}
+    \begin{itemize}
+      \item Foros y wikis (Disponibles en \href{http://community.pentaho.com/}{\url{http://community.pentaho.com/}})
+	\begin{itemize}
+	  \item \href{http://forums.pentaho.com/forumdisplay.php?73-BI-Platform}{BI Platform}
+	  \item \href{http://forums.pentaho.com/forumdisplay.php?135-Pentaho-Data-Integration-Kettle}{PDI}
+	\end{itemize}
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\section{Evaluación}
+\begin{frame}\frametitle{Evaluación}
+  \begin{block}{Mecanismos de evaluación}
+    \begin{itemize}
+      \item Exposiciones (30\%)
+      \item Talleres (30\%)
+      \item Proyecto Final (40\%)
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\section{Contacto}
+\begin{frame}\frametitle{Contacto}
+  \begin{block}{Atención a estudiantes}
+    \centering
+    \vspace{5mm}
+    \href{mailto://bodegasdedatos.udenar@gmail.com}{\url{bodegasdedatos.udenar@gmail.com}}\\
+    Grupo de Investigación Aplicada a Sistemas - GRiAS\\
+    Laboratorios de Ingeniería - Universidad de Nariño
+  \end{block}
+\end{frame}
+
+% \begin{frame}\frametitle{}
+% 
+% \end{frame}
+
+\end{document}

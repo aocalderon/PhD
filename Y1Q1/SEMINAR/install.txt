@@ -1,0 +1,74 @@
+aocalderon:~/workspace (master) $ svn checkout http://word2vec.googlecode.com/svn/trunk/
+A    trunk/word2phrase.c
+A    trunk/LICENSE
+A    trunk/word-analogy.c
+A    trunk/compute-accuracy.c
+A    trunk/demo-analogy.sh
+A    trunk/demo-classes.sh
+A    trunk/demo-train-big-model-v1.sh
+A    trunk/demo-word-accuracy.sh
+A    trunk/demo-phrases.sh
+A    trunk/questions-words.txt
+A    trunk/demo-phrase-accuracy.sh
+A    trunk/demo-word.sh
+A    trunk/distance.c
+A    trunk/README.txt
+A    trunk/questions-phrases.txt
+A    trunk/word2vec.c
+A    trunk/makefile
+Checked out revision 42.
+
+aocalderon:~/workspace (master) $ ls
+README.md*  html/  node.js/  php/  python/  ruby/  trunk/
+
+aocalderon:~/workspace (master) $ cd trunk/
+
+aocalderon:~/workspace/trunk (master) $ ls
+LICENSE     compute-accuracy.c  demo-classes.sh          demo-phrases.sh              demo-word-accuracy.sh  distance.c  questions-phrases.txt  word-analogy.c  word2vec.c
+README.txt  demo-analogy.sh     demo-phrase-accuracy.sh  demo-train-big-model-v1.sh*  demo-word.sh           makefile    questions-words.txt    word2phrase.c
+
+aocalderon:~/workspace/trunk (master) $ more makefile 
+CC = gcc
+#Using -Ofast instead of -O3 might result in faster code, but is supported only by newer GCC versions
+CFLAGS = -lm -pthread -O3 -march=native -Wall -funroll-loops -Wno-unused-result
+
+all: word2vec word2phrase distance word-analogy compute-accuracy
+
+word2vec : word2vec.c
+        $(CC) word2vec.c -o word2vec $(CFLAGS)
+word2phrase : word2phrase.c
+        $(CC) word2phrase.c -o word2phrase $(CFLAGS)
+distance : distance.c
+        $(CC) distance.c -o distance $(CFLAGS)
+word-analogy : word-analogy.c
+        $(CC) word-analogy.c -o word-analogy $(CFLAGS)
+compute-accuracy : compute-accuracy.c
+        $(CC) compute-accuracy.c -o compute-accuracy $(CFLAGS)
+        chmod +x *.sh
+
+clean:
+        rm -rf word2vec word2phrase distance word-analogy compute-accuracy
+
+aocalderon:~/workspace/trunk (master) $ make
+gcc word2vec.c -o word2vec -lm -pthread -O3 -march=native -Wall -funroll-loops -Wno-unused-result
+gcc word2phrase.c -o word2phrase -lm -pthread -O3 -march=native -Wall -funroll-loops -Wno-unused-result
+gcc distance.c -o distance -lm -pthread -O3 -march=native -Wall -funroll-loops -Wno-unused-result
+distance.c: In function ‘main’:
+distance.c:31:8: warning: unused variable ‘ch’ [-Wunused-variable]
+   char ch;
+        ^
+gcc word-analogy.c -o word-analogy -lm -pthread -O3 -march=native -Wall -funroll-loops -Wno-unused-result
+word-analogy.c: In function ‘main’:
+word-analogy.c:31:8: warning: unused variable ‘ch’ [-Wunused-variable]
+   char ch;
+        ^
+gcc compute-accuracy.c -o compute-accuracy -lm -pthread -O3 -march=native -Wall -funroll-loops -Wno-unused-result
+compute-accuracy.c: In function ‘main’:
+compute-accuracy.c:29:109: warning: unused variable ‘ch’ [-Wunused-variable]
+   char st1[max_size], st2[max_size], st3[max_size], st4[max_size], bestw[N][max_size], file_name[max_size], ch;
+                                                                                                             ^
+chmod +x *.sh
+
+aocalderon:~/workspace/trunk (master) $ ls
+LICENSE     compute-accuracy*   demo-analogy.sh*  demo-phrase-accuracy.sh*  demo-train-big-model-v1.sh*  demo-word.sh*  distance.c  questions-phrases.txt  word-analogy*   word2phrase*   word2vec*
+README.txt  compute-accuracy.c  demo-classes.sh*  demo-phrases.sh*          demo-word-accuracy.sh*       distance*      makefile    questions-words.txt    word-analogy.c  word2phrase.c  word2vec.c

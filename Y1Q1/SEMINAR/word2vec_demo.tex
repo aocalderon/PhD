@@ -1,0 +1,278 @@
+%% LyX 2.1.4 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass[spanish]{beamer}
+\usepackage{mathptmx}
+\usepackage{graphicx}
+\usepackage{minted}
+\usepackage{xcolor}
+
+\definecolor{LightGray}{gray}{0.9}
+
+\ifx\hypersetup\undefined
+  \AtBeginDocument{%
+    \hypersetup{unicode=true,
+ bookmarksnumbered=false,bookmarksopen=false,
+ breaklinks=false,pdfborder={0 0 0},colorlinks=false}
+  }
+\else
+  \hypersetup{unicode=true,
+ bookmarksnumbered=false,bookmarksopen=false,
+ breaklinks=false,pdfborder={0 0 0},colorlinks=false}
+\fi
+
+\makeatletter
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Textclass specific LaTeX commands.
+ % this default might be overridden by plain title style
+ \newcommand\makebeamertitle{\frame{\maketitle}}%
+ % (ERT) argument for the TOC
+ \AtBeginDocument{%
+   \let\origtableofcontents=\tableofcontents
+   \def\tableofcontents{\@ifnextchar[{\origtableofcontents}{\gobbletableofcontents}}
+   \def\gobbletableofcontents#1{\origtableofcontents}
+ }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
+\usetheme{Warsaw}
+% or ...
+\useoutertheme{infolines}
+\addtobeamertemplate{headline}{}{\vskip2pt}
+
+\setbeamercovered{transparent}
+% or whatever (possibly just delete it)
+
+
+
+\setbeamertemplate{footline}
+{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+    \usebeamerfont{date in head/foot}\insertshortdate{}\hspace*{2em}
+    \insertframenumber{} / \inserttotalframenumber\hspace*{2ex} 
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+\usepackage{pifont}
+\makeatother
+
+\begin{document}
+
+\title{word2vec Demo}
+\subtitle{Efficient Estimation of Word Representations in Vector Space (Mikolov et al, 2013).}
+\author{Andres Calderon and Hinna Shabir}
+\institute{University of California, Riverside}
+
+\makebeamertitle
+
+\AtBeginSection[]{
+  \frame<beamer>{ 
+    \frametitle{Agenda}   
+    \tableofcontents[currentsection] 
+  }
+}
+
+\begin{frame}{Agenda}
+  \tableofcontents{}
+\end{frame}
+
+\section{Original implementation}
+\subsection{Source code}
+
+\begin{frame}{word2vec source code}
+  \begin{itemize}
+    \item \url{https://code.google.com/p/word2vec/}.
+    \item Provides an efficient implementation of the continuous bag-of-words and skip-gram.
+    \item Clean and well documented code in C.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{word2vec source code}
+  \centering
+  \includegraphics[width=0.85\textwidth]{./Figures/00-svn.png}
+\end{frame}
+
+\begin{frame}{word2vec source code}
+  \centering
+  \includegraphics[width=0.85\textwidth]{./Figures/01-makefile.png}
+\end{frame}
+
+\begin{frame}{word2vec source code}
+  \centering
+  \includegraphics[width=0.85\textwidth]{./Figures/02-binaries.png}
+\end{frame}
+
+\begin{frame}{word2vec source code}
+  \centering
+  \includegraphics[width=\textheight]{./Figures/03-word2vec.png}
+\end{frame}
+
+\subsection{Demos}
+
+\begin{frame}[fragile]{demo-word.sh}
+  \inputminted[
+    fontsize=\tiny,
+    tabsize=2,
+    breaklines,
+    linenos,
+    framesep=10pt,
+    frame=single
+    ]{bash}{demo-word.sh}
+\end{frame}
+
+\begin{frame}{text8 file}
+  \centering
+  \includegraphics[width=0.9\textwidth]{./Figures/04-text8.png}
+\end{frame}
+
+\begin{frame}[fragile]{demo-word.sh output}
+  \inputminted[
+    fontsize=\tiny,
+    tabsize=2,
+    breaklines,
+    linenos,
+    framesep=10pt,
+    frame=single
+    ]{bash}{output.sh}
+\end{frame}
+
+\begin{frame}{demo-00.sh}
+  \inputminted[
+    fontsize=\tiny,
+    tabsize=2,
+    breaklines,
+    linenos,
+    framesep=10pt,
+    frame=single
+    ]{bash}{demo-00.sh}
+\end{frame}
+
+\begin{frame}{demo-01.sh}
+  \inputminted[
+    fontsize=\tiny,
+    tabsize=2,
+    breaklines,
+    linenos,
+    framesep=10pt,
+    frame=single
+    ]{bash}{demo-01.sh}
+\end{frame}
+
+\begin{frame}{demo-word.sh revisited}
+  \begin{itemize}
+    \item \textbf{distance} can load a pre-trained model...
+    \item Let's try some examples...
+      \begin{enumerate}
+       \item california
+       \item sciences
+       \item happiness
+       \item man
+       \item ...
+      \end{enumerate}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{demo-classes.sh}
+  \inputminted[
+    fontsize=\tiny,
+    tabsize=2,
+    breaklines,
+    linenos,
+    framesep=10pt,
+    frame=single
+    ]{bash}{demo-classes.sh}
+\end{frame}
+
+\begin{frame}{Interesting properties of the word vectors}
+  \begin{itemize}
+    \item $\overrightarrow{paris} - \overrightarrow{france} + \overrightarrow{italy} \cong \overrightarrow{rome}$
+    \item $\overrightarrow{king} - \overrightarrow{man} + \overrightarrow{women} \cong \overrightarrow{queen}$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{demo-analogy.sh}
+  \inputminted[
+    fontsize=\tiny,
+    tabsize=2,
+    breaklines,
+    linenos,
+    framesep=10pt,
+    frame=single
+    ]{bash}{demo-analogy.sh}
+\end{frame}
+
+\begin{frame}{demo-analogy.sh}
+  \begin{itemize}
+    \item Some examples...
+    \begin{enumerate}
+     \item paris france bogota ...
+     \item king man queen ...
+     \item boy girl brother ...
+     \item chicago illinois memphis ...
+     \item poland zloty sweden ...
+     \item bad worst good ...
+     \item child children mouse ...
+     \item going went selling ...
+     \item mexico mexican peru ...
+     \item berlin germany riyadh\footnote{\textbf{word2phrase} will address the problem...} ...
+     \item woman angel man ...
+     \item heaven hell man ...
+    \end{enumerate}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{demo-phrases.sh}
+  \inputminted[
+    fontsize=\tiny,
+    tabsize=2,
+    breaklines,
+    linenos,
+    framesep=10pt,
+    frame=single
+    ]{bash}{demo-phrases.sh}
+\end{frame}
+
+\begin{frame}[fragile]{demo-phrases.sh output (1/3)}
+  \inputminted[
+    fontsize=\tiny,
+    tabsize=2,
+    breaklines,
+    linenos,
+    framesep=10pt,
+    frame=single
+    ]{bash}{output2.sh}
+\end{frame}
+
+\begin{frame}[fragile]{demo-phrases.sh output (2/3)}
+  \inputminted[
+    fontsize=\tiny,
+    tabsize=2,
+    breaklines,
+    linenos,
+    framesep=10pt,
+    frame=single
+    ]{bash}{output3.sh}
+\end{frame}
+
+\begin{frame}[fragile]{demo-phrases.sh output (3/3)}
+  \inputminted[
+    fontsize=\tiny,
+    tabsize=2,
+    breaklines,
+    linenos,
+    framesep=10pt,
+    frame=single
+    ]{bash}{output4.sh}
+\end{frame}
+
+\begin{frame}{}
+  \begin{itemize}
+    \item 
+  \end{itemize}
+\end{frame}
+
+
+\end{document}
