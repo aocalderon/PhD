@@ -1,14 +1,26 @@
-vectors_3 <- read.table('vectors_small_3.txt', header = F, sep = " ")
-vectors_3 <- vectors_3[,1:4]
-king <- sqldf("SELECT V2, V3, V4 from vectors_3 WHERE V1 LIKE 'king'")
-man <- sqldf("SELECT V2, V3, V4 from vectors_3 WHERE V1 LIKE 'man'")
-woman <- sqldf("SELECT V2, V3, V4 from vectors_3 WHERE V1 LIKE 'woman'")
-queen <- sqldf("SELECT V2, V3, V4 from vectors_3 WHERE V1 LIKE 'queen'")
+require('lsa')
+require('rgl')
 
-x <- (vectors_3[,2] - king[,1])^2
-y <- (vectors_3[,3] - king[,2])^2
-z <- (vectors_3[,4] - king[,3])^2
+setwd('/home/and/Documents/Projects/C++/word2vec/trunk/')
+vectors <- read.table('vectors_small_3.txt', header = F, sep = " ")
+dims <- dim(vectors)[2] - 1
+vectors <- vectors[,1:dims]
 
-d <- sqrt(x + y + z)
+getDistance <- function(vectors, word){
+  n <- dim(vectors)[1]
+  vectors$d <- rep(0.0, n)
+  v1 <- as.numeric(vectors[vectors[,1] == word, 2:dims])
+  i <- 1
+  for(w in 1:n){
+    v2 <- as.numeric(vectors[w, 2:dims])
+    vectors[i,dims + 1] <- cosine(v1, v2)
+    i <- i + 1
+  }
+  return(vectors[order(-vectors$d),])
+}
 
-plot3d(vectors_3[,2], vectors_3[,3], vectors_3[,4], col = rgb(d / max(d), 0, 0, d / max(d)))
+# california3 <- getDistance(vectors, 'california')
+
+plot3d(california3[1:10, 2:4], col = 'red', cex = 10, xlab = '', ylab = '', zlab = '')
+points3d(california3[1:2000, 2:4], add = T)
+text3d(california3[1:10, 2],california3[1:10, 3],california3[1:10, 4],california[1:10,1], cex = 0.5)
