@@ -1,6 +1,6 @@
 %% LyX 2.1.4 created this file.  For more info, see http://www.lyx.org/.
 %% Do not edit unless you really know what you are doing.
-\documentclass[spanish]{beamer}
+\documentclass{beamer}
 \usepackage{mathptmx}
 \usepackage{graphicx}
 \usepackage{minted}
@@ -79,8 +79,7 @@
   \tableofcontents{}
 \end{frame}
 
-\section{Original implementation}
-\subsection{Source code}
+\section{Installation}
 
 \begin{frame}{word2vec source code}
   \begin{itemize}
@@ -110,7 +109,9 @@
   \includegraphics[width=\textheight]{./Figures/03-word2vec.png}
 \end{frame}
 
-\subsection{Demos}
+\section{Demos}
+
+\subsection{Word vectors}
 
 \begin{frame}[fragile]{demo-word.sh}
   \inputminted[
@@ -163,7 +164,7 @@
 
 \begin{frame}{demo-word.sh revisited}
   \begin{itemize}
-    \item \textbf{./distance} can load a pre-trained model...
+    \item \textbf{distance} can load a pre-trained model...
     \item Let's try some examples...
       \begin{enumerate}
        \item california
@@ -174,6 +175,8 @@
       \end{enumerate}
   \end{itemize}
 \end{frame}
+
+\subsection{Word classification}
 
 \begin{frame}[fragile]{demo-classes.sh}
   \inputminted[
@@ -186,13 +189,29 @@
     ]{bash}{demo-classes.sh}
 \end{frame}
 
-\begin{frame}{Interesting properties of the word vectors}
-  \begin{itemize}
-    \item $\vec{paris} - france + italy = rome$
-    \item $king - man + women = queen$
-  \end{itemize}
+\begin{frame}[fragile]{demo-classes.sh}
+  \begin{minted}[
+    fontsize=\tiny,
+    tabsize=2,
+    breaklines,
+    linenos,
+    framesep=10pt,
+    frame=single
+    ]{bash}
+      ## Let's build a small model...
+      ./word2vec -train text8_small -output classes.txt -cbow 1 -size 50 -window 5 -negative 0 -hs 12 -sample 1e-4 -threads 20 -iter 3 -classes 10
+      sort classes.txt -k 2 -n > classes.sorted.txt
+  \end{minted}
 \end{frame}
 
+\subsection{Word analogies}
+
+\begin{frame}{Interesting properties of the word vectors}
+  \begin{itemize}
+    \item $\overrightarrow{paris} - \overrightarrow{france} + \overrightarrow{italy} \cong \overrightarrow{rome}$
+    \item $\overrightarrow{king} - \overrightarrow{man} + \overrightarrow{women} \cong \overrightarrow{queen}$
+  \end{itemize}
+\end{frame}
 
 \begin{frame}[fragile]{demo-analogy.sh}
   \inputminted[
@@ -210,19 +229,36 @@
     \item Some examples...
     \begin{enumerate}
      \item paris france bogota ...
+     \item king man queen ...
      \item boy girl brother ...
      \item chicago illinois memphis ...
      \item poland zloty sweden ...
      \item bad worst good ...
      \item child children mouse ...
      \item going went selling ...
-     \item king man queen ...
      \item mexico mexican peru ...
+     \item berlin germany riyadh\footnote{\textbf{word2phrase} will address the problem...} ...
      \item woman angel man ...
+     \item heaven hell man ...
     \end{enumerate}
   \end{itemize}
 \end{frame}
 
+\subsection{From words to phrases}
+
+\begin{frame}{From words to phrases and beyond}
+  \begin{itemize}
+    \item It is desirable to have only one vector for representing `san\_francisco'.
+    \item How to get vector representation of larger pieces of text no just words?
+    \item \textbf{word2phrase} 
+    \item Pre-processing the training data set to form phrases.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{demo-phrases.sh}
+  \centering
+  \includegraphics[width=0.9\textwidth]{./Figures/05-word2phrase.png}
+\end{frame}
 
 \begin{frame}[fragile]{demo-phrases.sh}
   \inputminted[
@@ -233,6 +269,21 @@
     framesep=10pt,
     frame=single
     ]{bash}{demo-phrases.sh}
+\end{frame}
+
+\begin{frame}{demo-phrases.sh}
+  \centering
+  \includegraphics[width=0.9\textwidth]{./Figures/06-word2phrase.png}
+\end{frame}
+
+\begin{frame}{demo-phrases.sh}
+  \centering
+  \includegraphics[width=0.9\textwidth]{./Figures/07-word2phrase.png}
+\end{frame}
+
+\begin{frame}{demo-phrases.sh}
+  \centering
+  \includegraphics[width=0.9\textwidth]{./Figures/08-word2phrase.png}
 \end{frame}
 
 \begin{frame}[fragile]{demo-phrases.sh output (1/3)}
@@ -266,6 +317,103 @@
     framesep=10pt,
     frame=single
     ]{bash}{output4.sh}
+\end{frame}
+
+\subsection{Word and phrase accuracy}
+
+\begin{frame}{compute-accuracy}
+  \centering
+  \includegraphics[width=0.9\textwidth]{./Figures/11-accuracy.png}
+\end{frame}
+
+\begin{frame}[fragile]{demo-word-accuracy.sh}
+  \inputminted[
+    fontsize=\tiny,
+    tabsize=2,
+    breaklines,
+    linenos,
+    framesep=10pt,
+    frame=single
+    ]{bash}{demo-word-accuracy.sh}
+\end{frame}
+
+\begin{frame}{questions-words.txt}
+  \begin{itemize}
+    \item \tiny \url{https://word2vec.googlecode.com/svn/trunk/questions-words.txt}
+  \end{itemize}
+  \centering
+  \includegraphics[width=0.6\textheight]{./Figures/12-questions-words.png}
+\end{frame}
+
+\begin{frame}{demo-word-accuracy.sh output}
+  \centering
+  \includegraphics[width=0.7\textheight]{./Figures/09-accuracy.png}
+\end{frame}
+
+\begin{frame}[fragile]{demo-phrase-accuracy.sh}
+  \inputminted[
+    fontsize=\tiny,
+    tabsize=2,
+    breaklines,
+    linenos,
+    framesep=10pt,
+    frame=single
+    ]{bash}{demo-phrase-accuracy.sh}
+\end{frame}
+
+\begin{frame}{questions-phrases.txt}
+  \begin{itemize}
+    \item \tiny \url{https://word2vec.googlecode.com/svn/trunk/questions-phrases.txt}
+  \end{itemize}
+  \centering
+  \includegraphics[width=0.6\textheight]{./Figures/13-questions-phrases.png}
+\end{frame}
+
+\begin{frame}{demo-phrase-accuracy.sh output}
+  \centering
+  \includegraphics[width=0.6\textwidth]{./Figures/10-accuracy.png}
+\end{frame}
+
+\subsection{Pre-trained models}
+
+\begin{frame}[fragile]{demo-train-big-model-v1.sh}
+  \inputminted[
+    fontsize=\tiny,
+    tabsize=2,
+    breaklines,
+    linenos,
+    framesep=10pt,
+    frame=single
+    ]{bash}{demo-train-big-model-v1.sh}
+\end{frame}
+
+\begin{frame}{}
+  \begin{itemize}
+    \item \href{https://drive.google.com/file/d/0B7XkCwpI5KDYNlNUTTlSS21pQmM/edit?usp=sharing}{GoogleNews-vectors-negative300.bin.gz}
+    \begin{itemize}
+     \item 100 billion words
+     \item 300 dimensional vectors
+     \item 1.6 GB
+    \end{itemize}
+    \item \href{https://docs.google.com/file/d/0B7XkCwpI5KDYaDBDQm1tZGNDRHc/edit?usp=sharing}{freebase-vectors-skipgram1000.bin.gz}
+    \begin{itemize}
+     \item 100 billion words
+     \item 1000 dimensional vectors
+     \item 2.5 GB
+    \end{itemize}
+    \item Some tips about performance and where obtain more training data can be found in \url{https://code.google.com/p/word2vec/}.
+  \end{itemize}
+\end{frame}
+
+\subsection{Other implementations}
+
+\begin{frame}{}
+  \begin{itemize}
+    \item in Python: gensim (\url{http://rare-technologies.com/deep-learning-with-word2vec-and-gensim/})
+    \item in Java: deeplearning4j (\url{http://deeplearning4j.org/word2vec.html})
+    \item in R: tmcn (\url{http://rpackages.ianhowson.com/rforge/tmcn.word2vec/man/word2vec.html})
+    \item in Scala: Apache Spark (\url{https://spark.apache.org/docs/latest/mllib-feature-extraction.html\#word2vec})
+  \end{itemize}
 \end{frame}
 
 \begin{frame}{}
