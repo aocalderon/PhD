@@ -1,0 +1,15 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGdefault{c}{\PYGdefaultZsh{}\PYGdefaultZsh{} Same than before...}
+make
+\PYGdefault{k}{if} \PYGdefault{o}{[} ! \PYGdefaultZhy{}e news.2012.en.shuffled \PYGdefault{o}{]}\PYGdefault{p}{;} \PYGdefault{k}{then}
+  wget http://www.statmt.org/wmt14/training\PYGdefaultZhy{}monolingual\PYGdefaultZhy{}news\PYGdefaultZhy{}crawl/news.2012.en.shuffled.gz
+  gzip \PYGdefaultZhy{}d news.2012.en.shuffled.gz \PYGdefaultZhy{}f
+\PYGdefault{k}{fi}
+sed \PYGdefaultZhy{}e \PYGdefault{l+s+s2}{\PYGdefaultZdq{}s/’/\PYGdefaultZsq{}/g\PYGdefaultZdq{}} \PYGdefaultZhy{}e \PYGdefault{l+s+s2}{\PYGdefaultZdq{}s/′/\PYGdefaultZsq{}/g\PYGdefaultZdq{}} \PYGdefaultZhy{}e \PYGdefault{l+s+s2}{\PYGdefaultZdq{}s/\PYGdefaultZsq{}\PYGdefaultZsq{}/ /g\PYGdefaultZdq{}} \PYGdefaultZlt{} news.2012.en.shuffled \PYGdefault{p}{|} tr \PYGdefaultZhy{}c \PYGdefault{l+s+s2}{\PYGdefaultZdq{}A\PYGdefaultZhy{}Za\PYGdefaultZhy{}z\PYGdefaultZsq{}\PYGdefaultZus{} \PYGdefaultZbs{}n\PYGdefaultZdq{}} \PYGdefault{l+s+s2}{\PYGdefaultZdq{} \PYGdefaultZdq{}} \PYGdefaultZgt{} news.2012.en.shuffled\PYGdefaultZhy{}norm0
+\PYGdefault{n+nb}{time} ./word2phrase \PYGdefaultZhy{}train news.2012.en.shuffled\PYGdefaultZhy{}norm0 \PYGdefaultZhy{}output news.2012.en.shuffled\PYGdefaultZhy{}norm0\PYGdefaultZhy{}phrase0 \PYGdefaultZhy{}threshold \PYGdefault{l+m}{200} \PYGdefaultZhy{}debug 2
+\PYGdefault{n+nb}{time} ./word2phrase \PYGdefaultZhy{}train news.2012.en.shuffled\PYGdefaultZhy{}norm0\PYGdefaultZhy{}phrase0 \PYGdefaultZhy{}output news.2012.en.shuffled\PYGdefaultZhy{}norm0\PYGdefaultZhy{}phrase1 \PYGdefaultZhy{}threshold \PYGdefault{l+m}{100} \PYGdefaultZhy{}debug 2
+tr A\PYGdefaultZhy{}Z a\PYGdefaultZhy{}z \PYGdefaultZlt{} news.2012.en.shuffled\PYGdefaultZhy{}norm0\PYGdefaultZhy{}phrase1 \PYGdefaultZgt{} news.2012.en.shuffled\PYGdefaultZhy{}norm1\PYGdefaultZhy{}phrase1
+\PYGdefault{n+nb}{time} ./word2vec \PYGdefaultZhy{}train news.2012.en.shuffled\PYGdefaultZhy{}norm1\PYGdefaultZhy{}phrase1 \PYGdefaultZhy{}output vectors\PYGdefaultZhy{}phrase.bin \PYGdefaultZhy{}cbow \PYGdefault{l+m}{1} \PYGdefaultZhy{}size \PYGdefault{l+m}{200} \PYGdefaultZhy{}window \PYGdefault{l+m}{10} \PYGdefaultZhy{}negative \PYGdefault{l+m}{25} \PYGdefaultZhy{}hs \PYGdefault{l+m}{0} \PYGdefaultZhy{}sample 1e\PYGdefaultZhy{}5 \PYGdefaultZhy{}threads \PYGdefault{l+m}{20} \PYGdefaultZhy{}binary \PYGdefault{l+m}{1} \PYGdefaultZhy{}iter 15
+\PYGdefault{c}{\PYGdefaultZsh{}\PYGdefaultZsh{} Test accuracy...}
+./compute\PYGdefaultZhy{}accuracy vectors\PYGdefaultZhy{}phrase.bin \PYGdefaultZlt{} questions\PYGdefaultZhy{}phrases.txt
+\end{Verbatim}
