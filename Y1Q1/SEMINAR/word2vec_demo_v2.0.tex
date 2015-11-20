@@ -304,57 +304,13 @@
   \includegraphics[width=0.6\textwidth]{./Figures/17-phrases.png}
 \end{frame}
 
-\section{Additional notes}
-
-\subsection{Pre-trained models}
-
-\begin{frame}[fragile]{demo-train-big-model-v1.sh}
-  \inputminted[
-    fontsize=\tiny,
-    tabsize=2,
-    breaklines,
-    linenos,
-    framesep=10pt,
-    frame=single
-    ]{bash}{demo-train-big-model-v1.sh}
-\end{frame}
-
-\begin{frame}{}
-  \begin{itemize}
-    \item \href{https://drive.google.com/file/d/0B7XkCwpI5KDYNlNUTTlSS21pQmM/edit?usp=sharing}{GoogleNews-vectors-negative300.bin.gz}
-    \begin{itemize}
-     \item 100 billion words
-     \item 300 dimensional vectors
-     \item 1.6 GB
-    \end{itemize}
-    \item \href{https://docs.google.com/file/d/0B7XkCwpI5KDYaDBDQm1tZGNDRHc/edit?usp=sharing}{freebase-vectors-skipgram1000.bin.gz}
-    \begin{itemize}
-     \item 100 billion words
-     \item 1000 dimensional vectors
-     \item 2.5 GB
-    \end{itemize}
-    \item Some tips about performance and where obtain more training data can be found in \url{https://code.google.com/p/word2vec/}.
-  \end{itemize}
-\end{frame}
-
-\subsection{Other implementations}
-
-\begin{frame}{Ports of the framework...}
-  \begin{itemize}
-    \item in Python: \href{https://radimrehurek.com/gensim/}{gensim}\footnote{\tiny \url{http://rare-technologies.com/deep-learning-with-word2vec-and-gensim/}}
-    \item in Java: \href{http://deeplearning4j.org/}{deeplearning4j}\footnote{\tiny \url{http://deeplearning4j.org/word2vec.html}}
-    \item in R: \href{https://r-forge.r-project.org/R/?group_id=1571}{tmcn}\footnote{\tiny \url{http://rpackages.ianhowson.com/rforge/tmcn.word2vec/man/word2vec.html}}
-    \item in Scala: \href{http://spark.apache.org/}{Apache Spark}\footnote{\tiny \url{https://spark.apache.org/docs/latest/mllib-feature-extraction.html\#word2vec}}
-  \end{itemize}
-\end{frame}
-
 \subsection*{Thanks...}
 
 \begin{frame}{}
   \centering
   \huge Thank you!!! \\
   \vspace{2cm}
-  \tiny Download this presentation at \url{https://goo.gl/pE8Mjw}
+  \tiny Download this presentation at \url{https://goo.gl/WvZrMP}
 \end{frame}
 
 \section{Optional}
@@ -421,5 +377,56 @@
   \end{minted}
 \end{frame}
 
+\subsection{Pre-trained models}
+
+\begin{frame}[fragile]{demo-train-big-model-v1.sh}
+  \inputminted[
+    fontsize=\tiny,
+    tabsize=2,
+    breaklines,
+    linenos,
+    framesep=10pt,
+    frame=single
+    ]{bash}{demo-train-big-model-v1.sh}
+\end{frame}
+
+\begin{frame}{}
+  \begin{itemize}
+    \item \href{https://drive.google.com/file/d/0B7XkCwpI5KDYNlNUTTlSS21pQmM/edit?usp=sharing}{GoogleNews-vectors-negative300.bin.gz}
+    \begin{itemize}
+     \item 100 billion words
+     \item 300 dimensional vectors
+     \item 1.6 GB
+    \end{itemize}
+    \item \href{https://docs.google.com/file/d/0B7XkCwpI5KDYaDBDQm1tZGNDRHc/edit?usp=sharing}{freebase-vectors-skipgram1000.bin.gz}
+    \begin{itemize}
+     \item 100 billion words
+     \item 1000 dimensional vectors
+     \item 2.5 GB
+    \end{itemize}
+    \item Some tips about performance and where obtain more training data can be found in \url{https://code.google.com/p/word2vec/}.
+  \end{itemize}
+\end{frame}
+
+\subsection{Other implementations}
+
+\begin{frame}{Ports of the framework...}
+  \begin{itemize}
+    \item in Python: \href{https://radimrehurek.com/gensim/}{gensim}\footnote{\tiny \url{http://rare-technologies.com/deep-learning-with-word2vec-and-gensim/}}
+    \item in Java: \href{http://deeplearning4j.org/}{deeplearning4j}\footnote{\tiny \url{http://deeplearning4j.org/word2vec.html}}
+    \item in R: \href{https://r-forge.r-project.org/R/?group_id=1571}{tmcn}\footnote{\tiny \url{http://rpackages.ianhowson.com/rforge/tmcn.word2vec/man/word2vec.html}}
+    \item in Scala: \href{http://spark.apache.org/}{Apache Spark}\footnote{\tiny \url{https://spark.apache.org/docs/latest/mllib-feature-extraction.html\#word2vec}}
+  \end{itemize}
+\end{frame}
+
+
+\subsection*{Thanks...}
+
+\begin{frame}{}
+  \centering
+  \huge Thank you!!! \\
+  \vspace{2cm}
+  \tiny Download this presentation at \url{https://goo.gl/WvZrMP}
+\end{frame}
 
 \end{document}
