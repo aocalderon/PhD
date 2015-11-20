@@ -1,0 +1,425 @@
+%% LyX 2.1.4 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass{beamer}
+\usepackage{mathptmx}
+\usepackage{graphicx}
+\usepackage{minted}
+\usepackage{xcolor}
+
+\definecolor{LightGray}{gray}{0.9}
+
+\ifx\hypersetup\undefined
+  \AtBeginDocument{%
+    \hypersetup{unicode=true,
+ bookmarksnumbered=false,bookmarksopen=false,
+ breaklinks=false,pdfborder={0 0 0},colorlinks=false}
+  }
+\else
+  \hypersetup{unicode=true,
+ bookmarksnumbered=false,bookmarksopen=false,
+ breaklinks=false,pdfborder={0 0 0},colorlinks=false}
+\fi
+
+\makeatletter
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Textclass specific LaTeX commands.
+ % this default might be overridden by plain title style
+ \newcommand\makebeamertitle{\frame{\maketitle}}%
+ % (ERT) argument for the TOC
+ \AtBeginDocument{%
+   \let\origtableofcontents=\tableofcontents
+   \def\tableofcontents{\@ifnextchar[{\origtableofcontents}{\gobbletableofcontents}}
+   \def\gobbletableofcontents#1{\origtableofcontents}
+ }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
+\usetheme{Warsaw}
+% or ...
+\useoutertheme{infolines}
+\addtobeamertemplate{headline}{}{\vskip2pt}
+
+\setbeamercovered{transparent}
+% or whatever (possibly just delete it)
+
+
+
+\setbeamertemplate{footline}
+{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+    \usebeamerfont{date in head/foot}\insertshortdate{}\hspace*{2em}
+    \insertframenumber{} / \inserttotalframenumber\hspace*{2ex} 
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+\usepackage{pifont}
+\makeatother
+
+\begin{document}
+
+\title{word2vec Demo}
+\subtitle{Efficient Estimation of Word Representations in Vector Space (Mikolov et al, 2013).}
+\author{Andres Calderon and Hinna Shabir}
+\institute{University of California, Riverside}
+
+\makebeamertitle
+
+% \AtBeginSection[]{
+%   \frame<beamer>{ 
+%     \frametitle{Agenda}   
+%     \tableofcontents[currentsubsection] 
+%   }
+% }
+
+\newif\iflattersubsect
+
+\AtBeginSection[] {
+    \begin{frame}<beamer>
+    \frametitle{Agenda} %
+    \tableofcontents[currentsection]  
+    \end{frame}
+    \lattersubsectfalse
+}
+
+\AtBeginSubsection[] {
+    % \iflattersubsect
+    \begin{frame}<beamer>
+    \frametitle{Agenda} %
+    \tableofcontents[currentsubsection]  
+    \end{frame}
+    % \fi
+    % \lattersubsecttrue
+}
+
+\begin{frame}{Agenda}
+  \tableofcontents{}
+\end{frame}
+
+\section{Installation}
+
+\begin{frame}{word2vec source code}
+  \begin{itemize}
+    \item \url{https://code.google.com/p/word2vec/}.
+    \item Provides an efficient implementation of the continuous bag-of-words and skip-gram.
+    \item Clean and well documented code in C.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{word2vec source code}
+  \centering
+  \includegraphics[width=0.65\textwidth]{./Figures/00-svn.png}
+\end{frame}
+
+\begin{frame}{word2vec source code}
+  \centering
+  \includegraphics[width=0.85\textwidth]{./Figures/01-makefile.png}
+\end{frame}
+
+\begin{frame}{word2vec source code}
+  \centering
+  \includegraphics[width=\textheight]{./Figures/03-word2vec.png}
+\end{frame}
+
+\section{Demos}
+
+\subsection{Word vectors}
+
+\begin{frame}[fragile]{demo-word.sh}
+  \inputminted[
+    fontsize=\tiny,
+    tabsize=2,
+    breaklines,
+    linenos,
+    framesep=10pt,
+    frame=single
+    ]{bash}{demo-word.sh}
+\end{frame}
+
+\begin{frame}{text8 file}
+  \centering
+  \includegraphics[width=0.9\textwidth]{./Figures/04-text8.png}
+\end{frame}
+
+\begin{frame}[fragile]{demo-word.sh output}
+  \inputminted[
+    fontsize=\tiny,
+    tabsize=2,
+    breaklines,
+    linenos,
+    framesep=10pt,
+    frame=single
+    ]{bash}{output.sh}
+\end{frame}
+
+\begin{frame}{demo-00.sh}
+  \inputminted[
+    fontsize=\tiny,
+    tabsize=2,
+    breaklines,
+    linenos,
+    framesep=10pt,
+    frame=single
+    ]{bash}{demo-00.sh}
+\end{frame}
+
+\begin{frame}{demo-01.sh}
+  \inputminted[
+    fontsize=\tiny,
+    tabsize=2,
+    breaklines,
+    linenos,
+    framesep=10pt,
+    frame=single
+    ]{bash}{demo-01.sh}
+\end{frame}
+
+\begin{frame}{demo-word.sh revisited}
+  \begin{itemize}
+    \item \textbf{distance} can load a pre-trained model...
+    \item Let's try some examples...
+      \begin{enumerate}
+       \item california
+       \item sciences
+       \item happiness
+       \item man
+       \item ...
+      \end{enumerate}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{3d plot}
+  \centering
+  \includegraphics[width=\textwidth]{./Figures/14-3d.png}
+\end{frame}
+
+\subsection{Word analogies}
+
+\begin{frame}{Interesting properties of the word vectors}
+  \begin{itemize}
+    \item $\overrightarrow{paris} - \overrightarrow{france} + \overrightarrow{italy} \cong \overrightarrow{rome}$
+    \item $\overrightarrow{king} - \overrightarrow{man} + \overrightarrow{women} \cong \overrightarrow{queen}$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Parcoord plot}
+  \centering
+  \includegraphics[width=\textwidth]{./Figures/15-parcoord.png}
+\end{frame}
+
+\begin{frame}[fragile]{demo-analogy.sh}
+  \inputminted[
+    fontsize=\tiny,
+    tabsize=2,
+    breaklines,
+    linenos,
+    framesep=10pt,
+    frame=single
+    ]{bash}{demo-analogy.sh}
+\end{frame}
+
+\begin{frame}{demo-analogy.sh}
+  \begin{itemize}
+    \item Some examples...
+    \begin{enumerate}
+     \item paris france bogota ...
+     \item king man queen ...
+     \item boy girl brother ...
+     \item chicago illinois memphis ...
+     \item poland zloty sweden ...
+     \item bad worst good ...
+     \item child children mouse ...
+     \item going went selling ...
+     \item mexico mexican peru ...
+     \item berlin germany riyadh\footnote{\textbf{word2phrase} will address the problem...} ...
+     \item woman angel man ...
+     \item heaven hell man ...
+    \end{enumerate}
+  \end{itemize}
+\end{frame}
+
+\subsection{From words to phrases}
+
+\begin{frame}{From words to phrases and beyond}
+  \begin{itemize}
+    \item It is desirable to have only one vector for representing `los\_angeles'.
+    \item How to get vector representation of larger pieces of text no just words?
+    \item \textbf{word2phrase} 
+    \item Pre-processing the training data set to form phrases.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{demo-phrases.sh}
+  \centering
+  \includegraphics[width=0.9\textwidth]{./Figures/05-word2phrase.png}
+\end{frame}
+
+\begin{frame}[fragile]{demo-phrases.sh}
+  \inputminted[
+    fontsize=\tiny,
+    tabsize=2,
+    breaklines,
+    linenos,
+    framesep=10pt,
+    frame=single
+    ]{bash}{demo-phrases.sh}
+\end{frame}
+
+\begin{frame}{demo-phrases.sh}
+  \centering
+  \includegraphics[width=0.9\textwidth]{./Figures/06-word2phrase.png}
+\end{frame}
+
+\begin{frame}{demo-phrases.sh}
+  \centering
+  \includegraphics[width=0.9\textwidth]{./Figures/07-word2phrase.png}
+\end{frame}
+
+\begin{frame}{demo-phrases.sh}
+  \centering
+  \includegraphics[width=0.9\textwidth]{./Figures/08-word2phrase.png}
+\end{frame}
+
+\begin{frame}[fragile]{demo-phrases.sh output}
+  \inputminted[
+    fontsize=\tiny,
+    tabsize=2,
+    breaklines,
+    linenos,
+    framesep=10pt,
+    frame=single
+    ]{bash}{output4.sh}
+\end{frame}
+
+\begin{frame}{demo-phrases.sh}
+  \centering
+  \includegraphics[width=0.6\textwidth]{./Figures/16-phrases.png}
+\end{frame}
+
+\begin{frame}{demo-phrases.sh}
+  \centering
+  \includegraphics[width=0.6\textwidth]{./Figures/17-phrases.png}
+\end{frame}
+
+\section{Additional notes}
+
+\subsection{Pre-trained models}
+
+\begin{frame}[fragile]{demo-train-big-model-v1.sh}
+  \inputminted[
+    fontsize=\tiny,
+    tabsize=2,
+    breaklines,
+    linenos,
+    framesep=10pt,
+    frame=single
+    ]{bash}{demo-train-big-model-v1.sh}
+\end{frame}
+
+\begin{frame}{}
+  \begin{itemize}
+    \item \href{https://drive.google.com/file/d/0B7XkCwpI5KDYNlNUTTlSS21pQmM/edit?usp=sharing}{GoogleNews-vectors-negative300.bin.gz}
+    \begin{itemize}
+     \item 100 billion words
+     \item 300 dimensional vectors
+     \item 1.6 GB
+    \end{itemize}
+    \item \href{https://docs.google.com/file/d/0B7XkCwpI5KDYaDBDQm1tZGNDRHc/edit?usp=sharing}{freebase-vectors-skipgram1000.bin.gz}
+    \begin{itemize}
+     \item 100 billion words
+     \item 1000 dimensional vectors
+     \item 2.5 GB
+    \end{itemize}
+    \item Some tips about performance and where obtain more training data can be found in \url{https://code.google.com/p/word2vec/}.
+  \end{itemize}
+\end{frame}
+
+\subsection{Other implementations}
+
+\begin{frame}{Ports of the framework...}
+  \begin{itemize}
+    \item in Python: \href{https://radimrehurek.com/gensim/}{gensim}\footnote{\tiny \url{http://rare-technologies.com/deep-learning-with-word2vec-and-gensim/}}
+    \item in Java: \href{http://deeplearning4j.org/}{deeplearning4j}\footnote{\tiny \url{http://deeplearning4j.org/word2vec.html}}
+    \item in R: \href{https://r-forge.r-project.org/R/?group_id=1571}{tmcn}\footnote{\tiny \url{http://rpackages.ianhowson.com/rforge/tmcn.word2vec/man/word2vec.html}}
+    \item in Scala: \href{http://spark.apache.org/}{Apache Spark}\footnote{\tiny \url{https://spark.apache.org/docs/latest/mllib-feature-extraction.html\#word2vec}}
+  \end{itemize}
+\end{frame}
+
+\subsection*{Thanks...}
+
+\begin{frame}{}
+  \centering
+  \huge Thank you!!! \\
+  \vspace{2cm}
+  \tiny Download this presentation at \url{https://goo.gl/pE8Mjw}
+\end{frame}
+
+\section{Optional}
+
+\subsection{Word and phrase accuracy}
+
+\begin{frame}[fragile]{demo-word-accuracy.sh}
+  \inputminted[
+    fontsize=\tiny,
+    tabsize=2,
+    breaklines,
+    linenos,
+    framesep=10pt,
+    frame=single
+    ]{bash}{demo-word-accuracy.sh}
+\end{frame}
+
+\begin{frame}{questions-words.txt}
+  \begin{itemize}
+    \item \tiny \url{https://word2vec.googlecode.com/svn/trunk/questions-words.txt}
+  \end{itemize}
+  \centering
+  \includegraphics[width=0.6\textheight]{./Figures/12-questions-words.png}
+\end{frame}
+
+\begin{frame}{questions-phrases.txt}
+  \begin{itemize}
+    \item \tiny \url{https://word2vec.googlecode.com/svn/trunk/questions-phrases.txt}
+  \end{itemize}
+  \centering
+  \includegraphics[width=0.6\textheight]{./Figures/13-questions-phrases.png}
+\end{frame}
+
+\begin{frame}{demo-word-accuracy.sh output}
+  \centering
+  \includegraphics[width=0.7\textheight]{./Figures/09-accuracy.png}
+\end{frame}
+
+\subsection{Word classification}
+
+\begin{frame}[fragile]{demo-classes.sh}
+  \inputminted[
+    fontsize=\tiny,
+    tabsize=2,
+    breaklines,
+    linenos,
+    framesep=10pt,
+    frame=single
+    ]{bash}{demo-classes.sh}
+\end{frame}
+
+\begin{frame}[fragile]{demo-classes.sh}
+  \begin{minted}[
+    fontsize=\tiny,
+    tabsize=2,
+    breaklines,
+    linenos,
+    framesep=10pt,
+    frame=single
+    ]{bash}
+      ## Let's build a small model...
+      ./word2vec -train text8_small -output classes.txt -cbow 1 -size 50 -window 5 -negative 0 -hs 12 -sample 1e-4 -threads 20 -iter 3 -classes 10
+      sort classes.txt -k 2 -n > classes.sorted.txt
+  \end{minted}
+\end{frame}
+
+
+\end{document}

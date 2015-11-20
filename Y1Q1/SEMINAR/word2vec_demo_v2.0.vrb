@@ -1,0 +1,13 @@
+\frametitle{demo-classes.sh}
+\begin{minted}[
+    fontsize=\tiny,
+    tabsize=2,
+    breaklines,
+    linenos,
+    framesep=10pt,
+    frame=single
+    ]{bash}
+      ## Let's build a small model...
+      ./word2vec -train text8_small -output classes.txt -cbow 1 -size 50 -window 5 -negative 0 -hs 12 -sample 1e-4 -threads 20 -iter 3 -classes 10
+      sort classes.txt -k 2 -n > classes.sorted.txt
+  \end{minted}

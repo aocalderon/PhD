@@ -1,0 +1,14 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGdefault{c}{\PYGdefaultZsh{}\PYGdefaultZsh{} Same than before...}
+make
+\PYGdefault{k}{if} \PYGdefault{o}{[} ! \PYGdefaultZhy{}e text8 \PYGdefault{o}{]}\PYGdefault{p}{;} \PYGdefault{k}{then}
+  wget http://mattmahoney.net/dc/text8.zip \PYGdefaultZhy{}O text8.gz
+  gzip \PYGdefaultZhy{}d text8.gz \PYGdefaultZhy{}f
+\PYGdefault{k}{fi}
+\PYGdefault{n+nb}{time} ./word2vec \PYGdefaultZhy{}train text8 \PYGdefaultZhy{}output vectors.bin \PYGdefaultZhy{}cbow \PYGdefault{l+m}{1} \PYGdefaultZhy{}size \PYGdefault{l+m}{200} \PYGdefaultZhy{}window \PYGdefault{l+m}{8} \PYGdefaultZhy{}negative \PYGdefault{l+m}{25} \PYGdefaultZhy{}hs \PYGdefault{l+m}{0} \PYGdefaultZhy{}sample 1e\PYGdefaultZhy{}4 \PYGdefaultZhy{}threads \PYGdefault{l+m}{20} \PYGdefaultZhy{}binary \PYGdefault{l+m}{1} \PYGdefaultZhy{}iter 15
+\PYGdefault{c}{\PYGdefaultZsh{}\PYGdefaultZsh{} Test accuracy...}
+./compute\PYGdefaultZhy{}accuracy vectors.bin \PYGdefault{l+m}{30000} \PYGdefaultZlt{} questions\PYGdefaultZhy{}words.txt
+\PYGdefault{c}{\PYGdefaultZsh{}\PYGdefaultZsh{} threshold is used to reduce vocabulary of the model for fast approximate evaluation }
+\PYGdefault{c}{\PYGdefaultZsh{}\PYGdefaultZsh{} to compute accuracy with the full vocabulary, use: }
+\PYGdefault{c}{\PYGdefaultZsh{}\PYGdefaultZsh{} ./compute\PYGdefaultZhy{}accuracy vectors.bin \PYGdefaultZlt{} questions\PYGdefaultZhy{}words.txt}
+\end{Verbatim}
