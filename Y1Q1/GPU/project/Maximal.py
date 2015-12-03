@@ -47,8 +47,8 @@ class Point(object):
             self.y = float(args[3])
         
         elif len(args) == 2:
-            self.x = float(args[0])
-            self.y = float(args[1])
+            self.x = int(args[0])
+            self.y = int(args[1])
         else:
             raise SomeException()
         
@@ -57,7 +57,7 @@ class Point(object):
         return index
         
     def __str__(self):
-        return "%s %s" % (self.x, self.y)
+        return "%s\t%s" % (self.x, self.y)
     
 
 class Grid(object):
@@ -104,13 +104,12 @@ class Disk(object):
         b = set()
         for i in self.members:
             b.add(str(i))
-        return "%s %s" % (a,b)
+        return "%s\t%s" % (a,b)
 
 
 def calculateDisks(p1, p2):
     """Calculate the center of the disk passing through two points"""
     r2 = math.pow(epsilon/2,2)
-    print("r2:{0}".format(r2))
 
     disks = []
     
@@ -121,27 +120,27 @@ def calculateDisks(p1, p2):
     
     X = p1_x - p2_x
     Y = p1_y - p2_y
-    print("X:{0} Y:{1}".format(X, Y))
+    #print("X:{0} Y:{1}".format(X, Y))
     D2 = math.pow(X, 2) + math.pow(Y, 2)
-    print("D2:{0}".format(D2))
+    #print("D2:{0}".format(D2))
     
     if (D2 == 0):
         return []
 
     expression = abs(4 * (r2 / D2) - 1)
-    print("expression:{0}".format(expression))
+    #print("expression:{0}".format(expression))
 
     root = math.pow(expression, 0.5)
-    print("root:{0}".format(root))
-    h_1 = ((X + Y * root) / 2) + p2_x
-    h_2 = ((X - Y * root) / 2) + p2_x
-    k_1 = ((Y - X * root) / 2) + p2_y
-    k_2 = ((Y + X * root) / 2) + p2_y
-    print("X + Y * root:{0}".format(X + Y * root))
-    print("Y - X * root:{0}".format(Y - X * root))
+    #print("root:{0}".format(root))
+    h_1 = (int)(((X + Y * root) / 2) + p2_x)
+    #h_2 = ((X - Y * root) / 2) + p2_x
+    k_1 = (int)(((Y - X * root) / 2) + p2_y)
+    #k_2 = ((Y + X * root) / 2) + p2_y
+    #print("X + Y * root:{0}".format(X + Y * root))
+    #print("Y - X * root:{0}".format(Y - X * root))
 
     disks.append(Point(h_1, k_1))
-    disks.append(Point(h_2, k_2))
+    #disks.append(Point(h_2, k_2))
     
     return disks
 
@@ -277,37 +276,20 @@ def main():
     precision = 0.001
     filename = 'test.csv'
     
-    dataset = csv.reader(open('Datasets/'+filename, 'r'),delimiter='\t')
-    next(dataset)
-    
-    t1 = time.time()
-    
-    points = pointTimestamp(dataset)
-    
-    timestamps = list(map(int,points.keys()))
-    timestamps.sort()
-        
-    previousFlocks = []
-    keyFlock = 1
-    diskID = 1
-    
-    for timestamp in timestamps:
-        centersDiskCompare, treeCenters, disksTime = disksTimestamp(points, timestamp)
-        if centersDiskCompare == 0:
-            continue
-        #print(timestamp, len(centersDiskCompare))
-        maximalDisks, diskID = maximalDisksTimestamp(centersDiskCompare, treeCenters,disksTime, timestamp, diskID)
-        #print("Maximal",len(maximalDisks))
-    
-    t2 = time.time() - t1    
-    #print("\nTime: ",t2)
-
-    p1 = Point(0,0,1,1)
-    p2 = Point(0,0,1,3)
-    epsilon = 4
+    p1 = Point(0,0,10,10)
+    p2 = Point(0,0,10,30)
+    epsilon = 100
     disks = calculateDisks(p1, p2)
-    for disk in disks:
-        print(disk)
+        
+    f = open("test.tsv")
+    for line in f:
+        n = line.split('\t')
+        p1 = Point(0,0,n[0],n[1])
+        p2 = Point(0,0,n[2],n[3])
+        disks = calculateDisks(p1, p2)
+        for disk in disks:
+            print(disk)
+    f.close()
     
     return 0
 

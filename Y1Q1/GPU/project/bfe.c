@@ -1,13 +1,14 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <limits.h>
+#include "bfe.h"
 
-#include <libpq-fe.h>
+struct Point{
+	int x;
+	int y;
+}
 
 int main(){
     const int TIMESTAMP = 1;
-    const int EPSILON = 200;
+    const int EPSILON = 2000;
 
     FILE *in;
     FILE *out;
@@ -21,10 +22,9 @@ int main(){
 	int lat; int lon;
 	int max_lat = INT_MIN; int min_lat = INT_MAX;
 	int max_lon = INT_MIN; int min_lon = INT_MAX;
-	int M = 0; int m;
-	int N = 0; int n;
+	int M = 0; 
+	int N = 0; 
     while (fgets(line, 1024, in)){
-		const char* tok;
         atoi(strtok(line, ";"));
 		if(atoi(strtok(NULL, ";\n")) != TIMESTAMP) continue;
         lat = atoi(strtok(NULL, ";\n"));
@@ -41,16 +41,18 @@ int main(){
 	N = (max_lon - min_lon) / EPSILON + 1;
 	rewind(in);
     while (fgets(line, 1024, in)){
-		const char* tok;
         oid = atoi(strtok(line, ";"));
         time = atoi(strtok(NULL, ";\n"));
 		if(time != TIMESTAMP) continue;
         lat = atoi(strtok(NULL, ";\n"));
         lon = atoi(strtok(NULL, ";\n"));
-        grid_id = ((lat - min_lat) / EPSILON) * M + ((lon - min_lon) / EPSILON);
+        grid_id = M * ((N - 1) - ((lon - min_lon) / EPSILON)) + ((lat - min_lat) / EPSILON) ;
 
         fprintf(out, "%d;%hi;%d;%d;%li\n", oid, time, lat, lon, grid_id);
 	}
 	printf("Number of points:\t%d\n", i);
-	printf("M x N : %d x %d", M, N);
+	printf("M x N : %d x %d\n", M, N);
+	int r = createGrid("grid.shp", EPSILON, min_lat, max_lat, min_lon, max_lon);
+	
+	return r;
 }
