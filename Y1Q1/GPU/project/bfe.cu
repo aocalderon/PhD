@@ -1,6 +1,11 @@
 #include <stdio.h>
 #include "bfe.h"
 
+struct Point{
+	int x;
+	int y;
+}
+
 int main(){
     const int TIMESTAMP = 1;
     const int EPSILON = 2000;
