@@ -1,0 +1,12 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGdefault{c}{\PYGdefaultZsh{}!/bin/bash}
+\PYGdefault{c}{\PYGdefaultZsh{}Usage: ./compile.sh DataReducer /path/to/locations/ /path/to/recordings/ /path/to/output/}
+\PYGdefault{c}{\PYGdefaultZsh{}For example:}
+\PYGdefault{c}{\PYGdefaultZsh{}		./compile.sh DataReducer /user/acald013/ /user/acald013/ /user/acald013/output/}
+\PYGdefault{n+nv}{HADOOP\PYGdefaultZus{}CLASSPATH}\PYGdefault{o}{=}\PYGdefault{k}{\PYGdefaultZdl{}(}hadoop classpath\PYGdefault{k}{)} 
+hdfs dfs \PYGdefaultZhy{}rm \PYGdefaultZhy{}R \PYGdefault{l+s+si}{\PYGdefaultZdl{}\PYGdefaultZob{}}\PYGdefault{n+nv}{4}\PYGdefault{l+s+si}{\PYGdefaultZcb{}}
+javac \PYGdefaultZhy{}classpath \PYGdefault{n+nv}{\PYGdefaultZdl{}HADOOP\PYGdefaultZus{}CLASSPATH} \PYGdefault{l+s+si}{\PYGdefaultZdl{}\PYGdefaultZob{}}\PYGdefault{n+nv}{1}\PYGdefault{l+s+si}{\PYGdefaultZcb{}}.java
+jar \PYGdefaultZhy{}cvf \PYGdefault{l+s+si}{\PYGdefaultZdl{}\PYGdefaultZob{}}\PYGdefault{n+nv}{1}\PYGdefault{l+s+si}{\PYGdefaultZcb{}}.jar \PYGdefault{l+s+si}{\PYGdefaultZdl{}\PYGdefaultZob{}}\PYGdefault{n+nv}{1}\PYGdefault{l+s+si}{\PYGdefaultZcb{}}*
+hadoop jar \PYGdefault{l+s+si}{\PYGdefaultZdl{}\PYGdefaultZob{}}\PYGdefault{n+nv}{1}\PYGdefault{l+s+si}{\PYGdefaultZcb{}}.jar \PYGdefault{l+s+si}{\PYGdefaultZdl{}\PYGdefaultZob{}}\PYGdefault{n+nv}{1}\PYGdefault{l+s+si}{\PYGdefaultZcb{}} \PYGdefault{l+s+si}{\PYGdefaultZdl{}\PYGdefaultZob{}}\PYGdefault{n+nv}{2}\PYGdefault{l+s+si}{\PYGdefaultZcb{}} \PYGdefault{l+s+si}{\PYGdefaultZdl{}\PYGdefaultZob{}}\PYGdefault{n+nv}{3}\PYGdefault{l+s+si}{\PYGdefaultZcb{}} \PYGdefault{l+s+si}{\PYGdefaultZdl{}\PYGdefaultZob{}}\PYGdefault{n+nv}{4}\PYGdefault{l+s+si}{\PYGdefaultZcb{}} 
+hdfs dfs \PYGdefaultZhy{}cat \PYGdefault{l+s+si}{\PYGdefaultZdl{}\PYGdefaultZob{}}\PYGdefault{n+nv}{4}\PYGdefault{l+s+si}{\PYGdefaultZcb{}}final/part\PYGdefaultZhy{}r\PYGdefaultZhy{}00000
+\end{Verbatim}

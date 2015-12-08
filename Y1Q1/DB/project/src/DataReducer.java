@@ -197,8 +197,9 @@ public class DataReducer extends Configured implements Tool{
 
 	@Override
 	public int run(String[] args) throws Exception {
-		String PATH_IN  = args[0];
-		String PATH_OUT = args[1];
+		String PATH_LOC = args[0];
+		String PATH_REC = args[1];
+		String PATH_OUT = args[2];
 		String PATH1 =  PATH_OUT + "temp1";
 		String PATH2 =  PATH_OUT + "temp2";
 		String PATH3 =  PATH_OUT + "temp3";
@@ -212,11 +213,11 @@ public class DataReducer extends Configured implements Tool{
 		// The output will be joined by JoinReducer and saved to PATH1...
 		Job job1 = new Job(conf, "Job1");
 		job1.setJarByClass(DataReducer.class);
-                MultipleInputs.addInputPath(job1, new Path(PATH_IN + "WeatherStationLocations.csv"), TextInputFormat.class, StationMapper.class);
-       	        MultipleInputs.addInputPath(job1, new Path(PATH_IN + "2006.txt"), TextInputFormat.class, DataMapper.class);
-       	        MultipleInputs.addInputPath(job1, new Path(PATH_IN + "2007.txt"), TextInputFormat.class, DataMapper.class);
-       	        MultipleInputs.addInputPath(job1, new Path(PATH_IN + "2008.txt"), TextInputFormat.class, DataMapper.class);
-       	        MultipleInputs.addInputPath(job1, new Path(PATH_IN + "2009.txt"), TextInputFormat.class, DataMapper.class);
+                MultipleInputs.addInputPath(job1, new Path(PATH_LOC + "WeatherStationLocations.csv"), TextInputFormat.class, StationMapper.class);
+       	        MultipleInputs.addInputPath(job1, new Path(PATH_REC + "2006.txt"), TextInputFormat.class, DataMapper.class);
+       	        MultipleInputs.addInputPath(job1, new Path(PATH_REC + "2007.txt"), TextInputFormat.class, DataMapper.class);
+       	        MultipleInputs.addInputPath(job1, new Path(PATH_REC + "2008.txt"), TextInputFormat.class, DataMapper.class);
+       	        MultipleInputs.addInputPath(job1, new Path(PATH_REC + "2009.txt"), TextInputFormat.class, DataMapper.class);
 		job1.setReducerClass(JoinReducer.class);
 		job1.setOutputValueClass(Text.class);
 		job1.setOutputKeyClass(Text.class);

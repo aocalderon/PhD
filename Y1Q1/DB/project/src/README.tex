@@ -110,12 +110,28 @@ The final job read the last output using \texttt{SortMapper}. This map uses a cu
 \end{figure}
 
 \vspace{\baselineskip}
-\noindent The four jobs take around 1m08s to complete\footnote{See details at \url{http://www.cs.ucr.edu/~acald013/MP_Output.txt}.}.
+\noindent The four jobs take around 01m21s to complete\footnote{See details at \url{http://www.cs.ucr.edu/~acald013/MP_Output.txt}.}.
 
 \subsection{How to approach the join}
 Section \ref{sec:first-job} and figures \ref{fig:map1} and \ref{fig:reduce1} explain my approximation to deal with the requested join.
 
 \subsection{Possible extra-credit}
 I would like to put into consideration the implementation of a custom WritableComparable explained in section \ref{sec:fourth-job} as extra-credit.
+
+\subsection{Appendix}
+The bash script in figure \ref{fig:compile} has some instructions to compile and run the jobs.  It is submitted together with DataReducer.java and DataReducer.jar files which are the source code and executable of my implementation.
+
+\begin{figure}
+\centering
+  \inputminted[
+    fontsize=\footnotesize,
+    tabsize=2,
+    breaklines,
+    linenos,
+    framesep=10pt,
+    frame=single
+    ]{bash}{compile.sh}
+\caption{Bash script for compilation and execution.}\label{fig:compile}
+\end{figure}
 
 \end{document}
