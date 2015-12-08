@@ -1,0 +1,97 @@
+\documentclass[10pt]{scrartcl}
+\usepackage[hmargin=2.5cm,vmargin=3cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\hypersetup{
+colorlinks=false,
+hidelinks
+}
+\usepackage{minted}
+\usepackage{xcolor}
+\usepackage{amsmath}
+
+%opening
+\title{Max Min Average Temperature by States - MapReduce Project/CS236}
+\author{Andres Calderon - SID:861243796}
+
+\begin{document}
+
+\maketitle
+\section{Max Min Average Temperature by States}
+
+\subsection{Username and node number}
+My username is acald013 and I used the z7 node.
+
+\subsection{Overall description}
+My main idea was to combine the required data in one file where station id is the key. Then a reduce job put the station id together and we can emulate an inner join.  After that, different map and reduce jobs organize the data and compute aggregates (average, max and min).  Finally, a mapper will format and sort the final result.
+
+\subsection{Description of mapreduce jobs}
+\subsubsection{First job}
+The first job will read the files for the stations and recordings and apply StationMapper and DataMapper respectively. The mappers extract just the required data if they pass some conditions.  For example, for recording just read record where country is US and state is not empty.  The output of the mappers will be a $<key, value>$ pair where the key is the station id and the value can be:
+\begin{enumerate}
+ \item a month and temperature record for that station (it comes from the recording files and is marked with a 'D'), or
+ \item the state where the station is located (it comes from the location file and is marked with a 'S').
+\end{enumerate}
+
+An example of the output of the mappers can be seen in figure \ref{fig:map1}.  Then, JoinReducer is called in this job to read the mappers output and combine the data by station id. The output of the job will be a new $<key, value>$ file where the key will be the combination of state and month and the value will be its temperature. Figure \ref{fig:reduce1} shows an example.  
+
+\begin{figure}
+\centering
+  \inputminted[
+    fontsize=\footnotesize,
+    tabsize=2,
+    breaklines,
+    framesep=10pt,
+    frame=single
+    ]{bash}{map1.txt}
+\caption{Output of Data and Station Mappers.}\label{fig:map1}
+\end{figure}
+
+\begin{figure}
+\centering
+  \inputminted[
+    fontsize=\footnotesize,
+    tabsize=2,
+    breaklines,
+    %linenos,
+    framesep=10pt,
+    frame=single
+    ]{bash}{reduce1.txt}
+\caption{Output of JoinReducer.}\label{fig:reduce1}
+\end{figure}
+
+\subsubsection{Second job}
+The second job use a simple mapper (FileMapper) to read the last output and AverageReducer to compute the average aggregation.  It take advantage that the reducer collects all the values with same State-Month combination and compute the average for those values.  The reducer will map the output using the state as key and a concatenation of month and average temperature as value.  Figure \ref{fig:reduce2} shows a example of the results.
+
+\begin{figure}
+\centering
+  \inputminted[
+    fontsize=\footnotesize,
+    tabsize=2,
+    breaklines,
+    %linenos,
+    framesep=10pt,
+    frame=single
+    ]{bash}{reduce2.txt}
+\caption{Output of AverageReducer.}\label{fig:reduce2}
+\end{figure}
+
+\subsubsection{Third job}
+The third use again FileMapper to read the last output. The reduce job (MaxMinReducer) will collect the month and its average for each state. Then, it will select the maximum and minimum value and compute the difference.  For each case, it will extract the associated months and put them in the output.  The job will map the output using the state as key and a concatenation of the maximum temperature, the month for the maximum temperature, the minimum temperature, the month for the minimum temperature and the difference as value.  Figure XX shows an example.
+
+\begin{figure}
+\centering
+  \inputminted[
+    fontsize=\footnotesize,
+    tabsize=2,
+    breaklines,
+    %linenos,
+    framesep=10pt,
+    frame=single
+    ]{bash}{reduce2.txt}
+\caption{Output of MaxMinReducer.}\label{fig:reduce3}
+\end{figure}
+
+
+\end{document}
