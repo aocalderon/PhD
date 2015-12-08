@@ -14,32 +14,40 @@ import org.apache.hadoop.util.*;
 import org.apache.hadoop.fs.FileSystem;
 
 public class DataReducer extends Configured implements Tool{ 
-
+	
+	/* Class to map station data  */
 	public static class StationMapper extends Mapper<LongWritable, Text, Text, Text> {
      		public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException{
        			String line = value.toString();
        			String columns[] = line.split("\",\"");
+			// Take data just for US and where state label is not empty.  Also discard header...
 			if(columns.length >= 5 && !columns[0].equals("USAF") && columns[3].equals("US") && !columns[4].equals("")){
+				// If station id is different to 999999...
 				if(!columns[0].equals("\"999999")){
+					// Map de station id as key and the state as value.  Mark states with a S...
 					context.write(new Text(columns[0].substring(1)), new Text("S~"+columns[4]));
 				}
 			}
      		}
    	}	
 	
+	/* Class to map temperature data from files */
 	public static class DataMapper extends Mapper<LongWritable, Text, Text, Text> {
      		public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException{
        			String line = value.toString();
        			StringBuilder buffer = new StringBuilder();
-       			String header = line.substring(0, 6);
+       			String header = line.substring(0, 6);		// Capture the station id...
+			// Discard multiple headers...
 			if(!header.equals("STN---")){
-				buffer.append(line.substring(18, 20)).append(",");
-				buffer.append(line.substring(24, 30));
+				buffer.append(line.substring(18, 20)).append(","); 	// Capture date...
+				buffer.append(line.substring(24, 30)); 			// Capture temperature...
+				// Map the station id as key and date and temperature as value.  Mark this info with a D...
 				context.write(new Text(header), new Text("D~"+buffer.toString()));
 			}
 		}
 	}	
 	
+	/* Class to map temporary files to be passed to the next reducer */
 	public static class FileMapper extends Mapper<LongWritable, Text, Text, Text> {
      		public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException{
        			String line = value.toString();
@@ -48,6 +56,7 @@ public class DataReducer extends Configured implements Tool{
      		}
    	}
 	
+	/* Class to sort and format the final result */
 	public static class SortMapper extends Mapper<LongWritable, Text, SortableKey, Text> {
      		public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException{
        			String line = value.toString();
@@ -59,6 +68,7 @@ public class DataReducer extends Configured implements Tool{
      		}
    	}
 	
+	/* Reduce job to join the data */
 	public static class JoinReducer extends Reducer<Text, Text, Text, Text> {
 		private ArrayList<String> data;
 		private String state;
@@ -71,6 +81,7 @@ public class DataReducer extends Configured implements Tool{
 		public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException{
 			data = new ArrayList<String>();
 			state = null;
+			// For each station id collect its state and data (month and temperature) separately...
 			for (Text v : values) {
 				value = v.toString();
 				records = value.split("~");
@@ -80,18 +91,21 @@ public class DataReducer extends Configured implements Tool{
 					state = records[1];
 				}
 			}
+			// Just if there are state and data available...
 			if(state != null && data.size() > 0){
+				// For each state and month combination store their temperature...
 				for(String sample : data){
 					records = sample.split(",");
 					month = records[0];
 					temperature = records[1];
-					
+					// Map the state and month as key and temperature as values...
 					context.write(new Text(state + "-" + month), new Text(temperature));
 				}
 			}
 		}
 	}
 	
+	/* Reduce job to compute the average for each state-month key */
 	public static class AverageReducer extends Reducer<Text, Text, Text, Text> {
 		private float temperature;
 		private float sum;
@@ -109,10 +123,12 @@ public class DataReducer extends Configured implements Tool{
 			}
 			avg = sum / count;
 			String[] parts = key.toString().split("-");
+			// Map the state as key and month and its average as value...
 			context.write(new Text(parts[0]), new Text(parts[1] + "," + avg));
 		}
 	}
 	
+	/* Reduce job to select the months with maximum and minimum temperature averages */
 	public static class MaxMinReducer extends Reducer<Text, Text, Text, Text> {
 		private float avg;
 		private float min;
@@ -138,10 +154,12 @@ public class DataReducer extends Configured implements Tool{
 				}
 			}
 			dif = max - min;
+			// Map keeping the same key (state) and the collected info as value...
 			context.write(key, new Text(max_month + "\t" + round(max, 2) + "\t" + min_month + "\t" + round(min, 2) + "\t" + round(dif, 2)));
 		}
 	}
 
+	/* Just a fancy class to print by state but sort by difference */
 	public static class SortableKey implements WritableComparable<SortableKey>{
 		private String state;
 		private Float dif;
@@ -156,12 +174,12 @@ public class DataReducer extends Configured implements Tool{
 		
 		@Override
 		public String toString(){
-			return this.state;
+			return this.state; // Show just the state...
 		}
 
 		@Override
 		public int compareTo(SortableKey o){
-			return dif.compareTo(o.dif);
+			return dif.compareTo(o.dif); // Sort by difference...
 		}
 
 		@Override
@@ -190,6 +208,8 @@ public class DataReducer extends Configured implements Tool{
 	
 		Configuration conf = new Configuration();
 		
+		// First job read the files and call Station and Data Mappers...
+		// The output will be joined by JoinReducer and saved to PATH1...
 		Job job1 = new Job(conf, "Job1");
 		job1.setJarByClass(DataReducer.class);
                 MultipleInputs.addInputPath(job1, new Path(PATH_IN + "WeatherStationLocations.csv"), TextInputFormat.class, StationMapper.class);
@@ -203,7 +223,8 @@ public class DataReducer extends Configured implements Tool{
 		TextOutputFormat.setOutputPath(job1, new Path(PATH1));
 			
 		job1.waitForCompletion(true);
-			
+
+		// Read PATH1 and compute the average temperature grouped by state and month... 			
        		Job job2 = new Job(new Configuration(), "Job2");
                 job2.setJarByClass(DataReducer.class);
                 job2.setMapperClass(FileMapper.class);
@@ -215,6 +236,7 @@ public class DataReducer extends Configured implements Tool{
 		
 		job2.waitForCompletion(true);
        		
+		// Job 3 call MaxMinReducer to extract maximum and minimum month temperature for each state...
 		Job job3 = new Job(new Configuration(), "Job3");
                 job3.setJarByClass(DataReducer.class);
                 job3.setMapperClass(FileMapper.class);
@@ -226,6 +248,7 @@ public class DataReducer extends Configured implements Tool{
                        				
 		job3.waitForCompletion(true);
 		
+		// Job 4 just read the last output, map it using SortableKey and let the default reducer to sort the data...
 		Job job4 = new Job(new Configuration(), "Job4");
                 job4.setJarByClass(DataReducer.class);
 		job4.setMapperClass(SortMapper.class);
