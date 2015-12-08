@@ -17,9 +17,9 @@ public class DataReducer extends Configured implements Tool{
 	
 	/* Class to map station data  */
 	public static class StationMapper extends Mapper<LongWritable, Text, Text, Text> {
-     		public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException{
-       			String line = value.toString();
-       			String columns[] = line.split("\",\"");
+     	public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException{
+       		String line = value.toString();
+       		String columns[] = line.split("\",\"");
 			// Take data just for US and where state label is not empty.  Also discard header...
 			if(columns.length >= 5 && !columns[0].equals("USAF") && columns[3].equals("US") && !columns[4].equals("")){
 				// If station id is different to 999999...
@@ -28,15 +28,15 @@ public class DataReducer extends Configured implements Tool{
 					context.write(new Text(columns[0].substring(1)), new Text("S~"+columns[4]));
 				}
 			}
-     		}
-   	}	
+		}
+	}	
 	
 	/* Class to map temperature data from files */
 	public static class DataMapper extends Mapper<LongWritable, Text, Text, Text> {
-     		public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException{
-       			String line = value.toString();
-       			StringBuilder buffer = new StringBuilder();
-       			String header = line.substring(0, 6);		// Capture the station id...
+     	public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException{
+       		String line = value.toString();
+       		StringBuilder buffer = new StringBuilder();
+       		String header = line.substring(0, 6);		// Capture the station id...
 			// Discard multiple headers...
 			if(!header.equals("STN---")){
 				buffer.append(line.substring(18, 20)).append(","); 	// Capture date...
@@ -49,23 +49,23 @@ public class DataReducer extends Configured implements Tool{
 	
 	/* Class to map temporary files to be passed to the next reducer */
 	public static class FileMapper extends Mapper<LongWritable, Text, Text, Text> {
-     		public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException{
-       			String line = value.toString();
-       			String columns[] = line.split("\t");
+     	public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException{
+       		String line = value.toString();
+       		String columns[] = line.split("\t");
 			context.write(new Text(columns[0]), new Text(columns[1]));
-     		}
+     	}
    	}
 	
 	/* Class to sort and format the final result */
 	public static class SortMapper extends Mapper<LongWritable, Text, SortableKey, Text> {
-     		public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException{
-       			String line = value.toString();
-       			String columns[] = line.split("\t");
+     	public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException{
+       		String line = value.toString();
+       		String columns[] = line.split("\t");
 			String max_month = new DateFormatSymbols().getMonths()[Integer.parseInt(columns[1])-1];
 			String min_month = new DateFormatSymbols().getMonths()[Integer.parseInt(columns[3])-1];
 			String output = String.format("%10s\t%5s\t%10s\t%5s\t%5s", max_month, columns[2], min_month, columns[4], columns[5]);
 			context.write(new SortableKey(columns[0], new Float(columns[5])), new Text(output));
-     		}
+     	}
    	}
 	
 	/* Reduce job to join the data */
@@ -213,11 +213,11 @@ public class DataReducer extends Configured implements Tool{
 		// The output will be joined by JoinReducer and saved to PATH1...
 		Job job1 = new Job(conf, "Job1");
 		job1.setJarByClass(DataReducer.class);
-                MultipleInputs.addInputPath(job1, new Path(PATH_LOC + "WeatherStationLocations.csv"), TextInputFormat.class, StationMapper.class);
-       	        MultipleInputs.addInputPath(job1, new Path(PATH_REC + "2006.txt"), TextInputFormat.class, DataMapper.class);
-       	        MultipleInputs.addInputPath(job1, new Path(PATH_REC + "2007.txt"), TextInputFormat.class, DataMapper.class);
-       	        MultipleInputs.addInputPath(job1, new Path(PATH_REC + "2008.txt"), TextInputFormat.class, DataMapper.class);
-       	        MultipleInputs.addInputPath(job1, new Path(PATH_REC + "2009.txt"), TextInputFormat.class, DataMapper.class);
+        MultipleInputs.addInputPath(job1, new Path(PATH_LOC + "WeatherStationLocations.csv"), TextInputFormat.class, StationMapper.class);
+       	MultipleInputs.addInputPath(job1, new Path(PATH_REC + "2006.txt"), TextInputFormat.class, DataMapper.class);
+       	MultipleInputs.addInputPath(job1, new Path(PATH_REC + "2007.txt"), TextInputFormat.class, DataMapper.class);
+       	MultipleInputs.addInputPath(job1, new Path(PATH_REC + "2008.txt"), TextInputFormat.class, DataMapper.class);
+       	MultipleInputs.addInputPath(job1, new Path(PATH_REC + "2009.txt"), TextInputFormat.class, DataMapper.class);
 		job1.setReducerClass(JoinReducer.class);
 		job1.setOutputValueClass(Text.class);
 		job1.setOutputKeyClass(Text.class);
@@ -226,46 +226,46 @@ public class DataReducer extends Configured implements Tool{
 		job1.waitForCompletion(true);
 
 		// Read PATH1 and compute the average temperature grouped by state and month... 			
-       		Job job2 = new Job(new Configuration(), "Job2");
-                job2.setJarByClass(DataReducer.class);
-                job2.setMapperClass(FileMapper.class);
-                job2.setReducerClass(AverageReducer.class);
-                job2.setOutputKeyClass(Text.class);
-                job2.setOutputValueClass(Text.class);
+		Job job2 = new Job(new Configuration(), "Job2");
+		job2.setJarByClass(DataReducer.class);
+		job2.setMapperClass(FileMapper.class);
+		job2.setReducerClass(AverageReducer.class);
+		job2.setOutputKeyClass(Text.class);
+		job2.setOutputValueClass(Text.class);
 		TextInputFormat.addInputPath(job2, new Path(PATH1));
-                TextOutputFormat.setOutputPath(job2, new Path(PATH2));
+		TextOutputFormat.setOutputPath(job2, new Path(PATH2));
 		
 		job2.waitForCompletion(true);
        		
 		// Job 3 call MaxMinReducer to extract maximum and minimum month temperature for each state...
 		Job job3 = new Job(new Configuration(), "Job3");
-                job3.setJarByClass(DataReducer.class);
-                job3.setMapperClass(FileMapper.class);
-                job3.setReducerClass(MaxMinReducer.class);
-                job3.setOutputKeyClass(Text.class);
-                job3.setOutputValueClass(Text.class);
+		job3.setJarByClass(DataReducer.class);
+		job3.setMapperClass(FileMapper.class);
+		job3.setReducerClass(MaxMinReducer.class);
+		job3.setOutputKeyClass(Text.class);
+		job3.setOutputValueClass(Text.class);
 		TextInputFormat.addInputPath(job3, new Path(PATH2));
-                TextOutputFormat.setOutputPath(job3, new Path(PATH3));
-                       				
+		TextOutputFormat.setOutputPath(job3, new Path(PATH3));
+               				
 		job3.waitForCompletion(true);
 		
 		// Job 4 just read the last output, map it using SortableKey and let the default reducer to sort the data...
 		Job job4 = new Job(new Configuration(), "Job4");
-                job4.setJarByClass(DataReducer.class);
+		job4.setJarByClass(DataReducer.class);
 		job4.setMapperClass(SortMapper.class);
-                job4.setOutputKeyClass(SortableKey.class);
-                job4.setOutputValueClass(Text.class);
+		job4.setOutputKeyClass(SortableKey.class);
+		job4.setOutputValueClass(Text.class);
 		TextInputFormat.addInputPath(job4, new Path(PATH3));
-                TextOutputFormat.setOutputPath(job4, new Path(PATH4));
+		TextOutputFormat.setOutputPath(job4, new Path(PATH4));
 			
 		return job4.waitForCompletion(true) ? 0 : 1;
 	}
            	
-        public static BigDecimal round(float d, int decimalPlace) {
-        	BigDecimal bd = new BigDecimal(Float.toString(d));
+	public static BigDecimal round(float d, int decimalPlace) {
+		BigDecimal bd = new BigDecimal(Float.toString(d));
 		bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);       
-        	return bd;
-        }
+		return bd;
+	}
                                                              	
 	public static void main(String[] args) throws Exception {
 		int r = ToolRunner.run(new DataReducer(), args);
