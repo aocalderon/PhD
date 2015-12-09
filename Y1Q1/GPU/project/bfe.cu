@@ -1,13 +1,17 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <thrust/sort.h>
 #include <thrust/functional.h>
 #include <thrust/device_vector.h>
 #include <thrust/host_vector.h>
 #include "bfe.h"
+#include "kernel.cu"
 
 int main(){
 	const int TIMESTAMP = 1;
     	const int EPSILON = 2000;
+
+	cudaError_t cuda_ret;
 	
 	FILE *in;
     	FILE *out;
@@ -34,10 +38,14 @@ int main(){
         	if(lon < min_lon) min_lon = lon;
         	n++;
 	}
-	int x[n];
-	int y[n];
-	int g[n];
-	int i[n];
+	int *x;
+	x = (int*) malloc( sizeof(int) * n);
+	int *y;
+	y = (int*) malloc( sizeof(int) * n);
+	int *g;
+	g = (int*) malloc( sizeof(int) * n);
+	int *i;
+	i = (int*) malloc( sizeof(int) * n);
 	printf("Min and max latitude:\t(%d, %d)\n", min_lat, max_lat);
 	printf("Min and max longitude:\t(%d, %d)\n", min_lon, max_lon);
 	M = (max_lat - min_lat) / EPSILON + 1;
@@ -69,19 +77,114 @@ int main(){
 	thrust::gather(d_i.begin(), d_i.end(), d_x.begin(), d_x.begin());
 	thrust::gather(d_i.begin(), d_i.end(), d_y.begin(), d_y.begin());
    	
-	for(j = 0; j < n; j++)
-		std::cout << g[j] << "-" << i[j] << "(" << x[j] << "," << y[j] << ")";
-	std::cout << std::endl;
-	std::cout << std::endl;
 	thrust::copy(d_g.begin(), d_g.end(), g);
 	thrust::copy(d_i.begin(), d_i.end(), i);
 	thrust::copy(d_x.begin(), d_x.end(), x);
 	thrust::copy(d_y.begin(), d_y.end(), y);
-	for(j = 0; j < n; j++)
-		std::cout << g[j] << "-" << i[j] << "(" << x[j] << "," << y[j] << ")";
-	std::cout << std::endl;
-	std::cout << std::endl;
-	//thrust::copy(d_x.begin(), d_x.end(), std::ostream_iterator<int>(std::cout, ","));
+	int *a;
+	a = (int*) malloc(sizeof(int) * (M * N));
+	int *b;
+	b = (int*) malloc(sizeof(int) * (M * N));
+	a[0] = g[0];
+	b[0] = 0;
+	int k = 0;
+	for(j = 0; j < n; j++){
+		if(g[j] != a[k]){
+			a[k + 1] = g[j];
+			b[k + 1] = j;
+			k++;
+		}	
+	}
+	//for(j = 0; j < n; j++)
+	//	std::cout << g[j] << "-" << i[j] << "(" << x[j] << "," << y[j] << ")";
 	//std::cout << std::endl;
+	for(j = 0; j < k; j++)
+		std::cout << a[j] << "->" << b[j] << "\t";
+	std::cout << std::endl;
+	for(j = 0; j < n; j++)
+		std::cout << g[j] << "--" << j << "\t ";
+	std::cout << std::endl;
+
+	int *x_d, *y_d, *g_d;
+	int *N_DISKS;
+	int *result;
+
+	result = (int*) malloc(sizeof(int) * n);
+
+	cuda_ret = cudaMalloc((void **) &x_d, sizeof(int) * n);
+	if(cuda_ret != cudaSuccess){
+		printf("\nChecking cudaMalloc for x ...  %s in %s at line %d\n", cudaGetErrorString(cuda_ret), __FILE__, __LINE__);
+		exit(EXIT_FAILURE);
+	}
+	cuda_ret = cudaMalloc((void **) &y_d, sizeof(int) * n);
+	if(cuda_ret != cudaSuccess){
+		printf("\nChecking cudaMalloc for y ...  %s in %s at line %d\n", cudaGetErrorString(cuda_ret), __FILE__, __LINE__);
+		exit(EXIT_FAILURE);
+	}
+	cuda_ret = cudaMalloc((void **) &g_d, sizeof(int) * n);
+	if(cuda_ret != cudaSuccess){
+		printf("\nChecking cudaMalloc for g ...  %s in %s at line %d\n", cudaGetErrorString(cuda_ret), __FILE__, __LINE__);
+		exit(EXIT_FAILURE);
+	}
+	cuda_ret = cudaMalloc((void **) &N_DISKS, sizeof(int) * n);
+	if(cuda_ret != cudaSuccess){
+		printf("\nChecking cudaMalloc for N_DISKS ...  %s in %s at line %d\n", cudaGetErrorString(cuda_ret), __FILE__, __LINE__);
+		exit(EXIT_FAILURE);
+	}
+	cudaDeviceSynchronize();
+	cuda_ret = cudaMemcpy(x_d, x, sizeof(int) * n, cudaMemcpyHostToDevice);
+	if(cuda_ret != cudaSuccess){
+		printf("\nChecking cudaMemcpy for A...  %s in %s at line %d\n", cudaGetErrorString(cuda_ret), __FILE__, __LINE__);
+		exit(EXIT_FAILURE);
+	}
+	cuda_ret = cudaMemcpy(y_d, y, sizeof(int) * n, cudaMemcpyHostToDevice);
+	if(cuda_ret != cudaSuccess){
+		printf("\nChecking cudaMemcpy for A...  %s in %s at line %d\n", cudaGetErrorString(cuda_ret), __FILE__, __LINE__);
+		exit(EXIT_FAILURE);
+	}
+	cuda_ret = cudaMemcpy(g_d, g, sizeof(int) * n, cudaMemcpyHostToDevice);
+	if(cuda_ret != cudaSuccess){
+		printf("\nChecking cudaMemcpy for A...  %s in %s at line %d\n", cudaGetErrorString(cuda_ret), __FILE__, __LINE__);
+		exit(EXIT_FAILURE);
+	}
+	cudaDeviceSynchronize();
+	//const dim3 dim_block(BLOCK_SIZE, BLOCK_SIZE, 1);
+	//const dim3 dim_grid(((n - 1) / BLOCK_SIZE) + 1, ((m - 1) / BLOCK_SIZE) + 1, 1);
+	const dim3 dim_grid(1, 1, 1);
+	const dim3 dim_block(n, 1, 1);
+
+	// Calling the kernel with the above-mentioned setting... 
+	parallelBFE<<<dim_grid, dim_block>>>(x_d, y_d, g_d, n, N_DISKS);
+	
+	cuda_ret = cudaDeviceSynchronize();
+	if(cuda_ret != cudaSuccess){
+		printf("\nError lunching kernel...  %s in %s at line %d\n", cudaGetErrorString(cuda_ret), __FILE__, __LINE__);
+		exit(EXIT_FAILURE);
+	}
+	
+	cuda_ret = cudaMemcpy(result, N_DISKS, sizeof(int) * n, cudaMemcpyDeviceToHost);
+	if(cuda_ret != cudaSuccess){
+		printf("\nChecking cudaMemcpy for result...  %s in %s at line %d\n", cudaGetErrorString(cuda_ret), __FILE__, __LINE__);
+		exit(EXIT_FAILURE);
+	}
+	cudaDeviceSynchronize();
+	/*
+	printf("\n");
+	for(int j = 0; j < n; j++){
+		printf("%d ", result[j]);
+	}
+	printf("\n");
+	*/
+	cudaFree(x_d);
+	cudaFree(y_d);
+	cudaFree(g_d);
+	cudaFree(N_DISKS);
+	
+	free(x);
+	free(y);
+	free(g);
+	free(i);
+	free(result);
+	
 	return 0;
 }
