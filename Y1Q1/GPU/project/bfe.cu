@@ -33,7 +33,7 @@ int main(int argc,char *argv[]){
 	int N = 0; 
 	while (fgets(line, 1024, in)){
 		atoi(strtok(line, ";"));
-		if(atoi(strtok(NULL, ";\n")) != TIMESTAMP) continue;
+		if(atoi(strtok(NULL, ";\n")) > TIMESTAMP) continue;
 		lat = atoi(strtok(NULL, ";\n"));
 		if(lat > max_lat) max_lat = lat;
 		if(lat < min_lat) min_lat = lat;
@@ -59,7 +59,7 @@ int main(int argc,char *argv[]){
 	while (fgets(line, 1024, in)){
 		atoi(strtok(line, ";"));
 		time = atoi(strtok(NULL, ";\n"));
-		if(time != TIMESTAMP) continue;
+		if(time > TIMESTAMP) continue;
 		lat = atoi(strtok(NULL, ";\n"));
 		lon = atoi(strtok(NULL, ";\n"));
 		g[j] = M * ((N - 1) - ((lon - min_lon) / EPSILON)) + ((lat - min_lat) / EPSILON);
