@@ -9,8 +9,8 @@
 
 int main(){
 	const int TIMESTAMP = 1;
-    	const int EPSILON = 2000;
-
+	const int EPSILON = 2000;
+	const int E2 = EPSILON * EPSILON;
 	cudaError_t cuda_ret;
 	
 	FILE *in;
@@ -176,7 +176,7 @@ int main(){
 
 	// Calling the kernel with the above-mentioned setting... 
 	printf("k=%d", k);
-	parallelBFE<<<1, k>>>(x_d, y_d, g_d, a_d, b_d, n, k, M, N, N_DISKS);
+	parallelBFE<<<1, k>>>(x_d, y_d, g_d, a_d, b_d, n, k, M, N, E2, N_DISKS);
 	
 	cuda_ret = cudaDeviceSynchronize();
 	if(cuda_ret != cudaSuccess){

@@ -1,10 +1,6 @@
 #include <stdio.h>
-#include <math.h>
-#define TILE_SIZE 16
 
-__device__ int distance(int x1, int y1, int x2, int y2){
-	return (int) sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));
-}
+#define TILE_SIZE 16
 
 __device__ int findPosition(const int *a, int k, int b, int top){
 	if(b < 0){
@@ -21,21 +17,22 @@ __device__ int findPosition(const int *a, int k, int b, int top){
 	return -3;
 }
 
-__global__ void parallelBFE(const int *x, const int *y, int *g, const int *a, const int *b, int n, int k, int M, int N, int E, int *N_DISKS){
+__global__ void parallelBFE(const int *x, const int *y, int *g, const int *a, const int *b, int n, int k, int M, int N, int *N_DISKS){
 	//int t = blockIdx.x * blockDim.x + threadIdx.x;
 	int t = threadIdx.x;
-	int px[1000];
-	int py[1000];
+	__shared__ int px[1000];
+	__shared__ int py[1000];
 	int j = 0;
-	int h = 0;
+	int h;
 
 	// Center-Medium
 	int cm = a[t];
 	for(int i = b[t]; i < b[t + 1]; i++){
 		px[j] = x[i];
 		py[j] = y[i];
-		h++;
+		j++;
 	}
+	h = j;
 
 	// Left-Medium
 	int lm;
@@ -46,13 +43,9 @@ __global__ void parallelBFE(const int *x, const int *y, int *g, const int *a, co
 	}
 	if(lm >= 0){
 		for(int i = b[lm]; i < b[lm + 1]; i++){
-			//px[j] = x[i];
-			//py[j] = y[i];
-			for(int l = 0; l < h; l++){
-				if(distance(px[l], py[l], x[i], y[i]) < E){				
-					j++;
-				}
-			}
+			px[j] = x[i];
+			py[j] = y[i];
+			j++;
 		}
 	}
 	// Right-Medium
@@ -64,13 +57,9 @@ __global__ void parallelBFE(const int *x, const int *y, int *g, const int *a, co
 	}
 	if(rm >= 0){
 		for(int i = b[rm]; i < b[rm + 1]; i++){
-			//px[j] = x[i];
-			//py[j] = y[i];
-			for(int l = 0; l < h; l++){
-				if(distance(px[l], py[l], x[i], y[i]) < E){				
-					j++;
-				}
-			}
+			px[j] = x[i];
+			py[j] = y[i];
+			j++;
 		}
 	}
 	// Center-Up
@@ -78,13 +67,9 @@ __global__ void parallelBFE(const int *x, const int *y, int *g, const int *a, co
 	cu = findPosition(a, k, cu, M*N);
 	if(cu >= 0){
 		for(int i = b[cu]; i < b[cu + 1]; i++){
-			//px[j] = x[i];
-			//py[j] = y[i];
-			for(int l = 0; l < h; l++){
-				if(distance(px[l], py[l], x[i], y[i]) < E){				
-					j++;
-				}
-			}
+			px[j] = x[i];
+			py[j] = y[i];
+			j++;
 		}
 	}
 	// Left-Up
@@ -96,13 +81,9 @@ __global__ void parallelBFE(const int *x, const int *y, int *g, const int *a, co
 	}
 	if(lu >= 0){
 		for(int i = b[lu]; i < b[lu + 1]; i++){
-			//px[j] = x[i];
-			//py[j] = y[i];
-			for(int l = 0; l < h; l++){
-				if(distance(px[l], py[l], x[i], y[i]) < E){				
-					j++;
-				}
-			}
+			px[j] = x[i];
+			py[j] = y[i];
+			j++;
 		}
 	}
 	// Right-Up
@@ -114,13 +95,9 @@ __global__ void parallelBFE(const int *x, const int *y, int *g, const int *a, co
 	}
 	if(ru >= 0){
 		for(int i = b[ru]; i < b[ru + 1]; i++){
-			//px[j] = x[i];
-			//py[j] = y[i];
-			for(int l = 0; l < h; l++){
-				if(distance(px[l], py[l], x[i], y[i]) < E){				
-					j++;
-				}
-			}
+			px[j] = x[i];
+			py[j] = y[i];
+			j++;
 		}
 	}
 	// Center-Down
@@ -128,13 +105,9 @@ __global__ void parallelBFE(const int *x, const int *y, int *g, const int *a, co
 	cd = findPosition(a, k, cd, M*N);
 	if(cd >= 0){
 		for(int i = b[cd]; i < b[cd + 1]; i++){
-			//px[j] = x[i];
-			//py[j] = y[i];
-			for(int l = 0; l < h; l++){
-				if(distance(px[l], py[l], x[i], y[i]) < E){				
-					j++;
-				}
-			}
+			px[j] = x[i];
+			py[j] = y[i];
+			j++;
 		}
 	}
 	// Left-Down
@@ -146,13 +119,9 @@ __global__ void parallelBFE(const int *x, const int *y, int *g, const int *a, co
 	}
 	if(ld >= 0){
 		for(int i = b[ld]; i < b[ld + 1]; i++){
-			//px[j] = x[i];
-			//py[j] = y[i];
-			for(int l = 0; l < h; l++){
-				if(distance(px[l], py[l], x[i], y[i]) < E){				
-					j++;
-				}
-			}
+			px[j] = x[i];
+			py[j] = y[i];
+			j++;
 		}
 	}
 	// Right-Down
@@ -164,17 +133,13 @@ __global__ void parallelBFE(const int *x, const int *y, int *g, const int *a, co
 	}
 	if(rd >= 0){
 		for(int i = b[rd]; i < b[rd + 1]; i++){
-			//px[j] = x[i];
-			//py[j] = y[i];
-			for(int l = 0; l < h; l++){
-				if(distance(px[l], py[l], x[i], y[i]) < E){				
-					j++;
-				}
-			}
+			px[j] = x[i];
+			py[j] = y[i];
+			j++;
 		}
 	}
 	//__syncthreads();
-	N_DISKS[t] = j;
+	N_DISKS[t] = j - h;
 }
 
 
