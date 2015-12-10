@@ -1,6 +1,4 @@
 #include <stdio.h>
-#include <math.h>
-#define TILE_SIZE 16
 
 __device__ int distance(int x1, int y1, int x2, int y2){
 	int dx = x2 - x1;
@@ -23,21 +21,22 @@ __device__ int findPosition(const int *a, int k, int b, int top){
 	return -3;
 }
 
-__global__ void parallelBFE(const int *x, const int *y, int *g, const int *a, const int *b, int n, int k, int M, int N, int E, int *N_DISKS){
+__global__ void parallelBFE(const int *x, const int *y, int *g, const int *a, const int *b, int n, int k, int M, int N, int E, unsigned long *N_DISKS){
 	//int t = blockIdx.x * blockDim.x + threadIdx.x;
 	int t = threadIdx.x;
-	int px[1000];
-	int py[1000];
-	int j = 0;
-	int h = 0;
-
+	//int px[250];
+	//int py[250];
+	//int h;
+	unsigned long j = 0;
+	
 	// Center-Medium
 	int cm = a[t];
 	for(int i = b[t]; i < b[t + 1]; i++){
-		px[j] = x[i];
-		py[j] = y[i];
-		h++;
+		//px[j] = x[i];
+		//py[j] = y[i];
+		j++;
 	}
+	//h = j;
 
 	// Left-Medium
 	int lm;
@@ -50,11 +49,7 @@ __global__ void parallelBFE(const int *x, const int *y, int *g, const int *a, co
 		for(int i = b[lm]; i < b[lm + 1]; i++){
 			//px[j] = x[i];
 			//py[j] = y[i];
-			for(int l = 0; l < h; l++){
-				if(distance(px[l], py[l], x[i], y[i]) < E){				
-					j++;
-				}
-			}
+			j++;
 		}
 	}
 	// Right-Medium
@@ -68,11 +63,7 @@ __global__ void parallelBFE(const int *x, const int *y, int *g, const int *a, co
 		for(int i = b[rm]; i < b[rm + 1]; i++){
 			//px[j] = x[i];
 			//py[j] = y[i];
-			for(int l = 0; l < h; l++){
-				if(distance(px[l], py[l], x[i], y[i]) < E){				
-					j++;
-				}
-			}
+			j++;
 		}
 	}
 	// Center-Up
@@ -82,11 +73,7 @@ __global__ void parallelBFE(const int *x, const int *y, int *g, const int *a, co
 		for(int i = b[cu]; i < b[cu + 1]; i++){
 			//px[j] = x[i];
 			//py[j] = y[i];
-			for(int l = 0; l < h; l++){
-				if(distance(px[l], py[l], x[i], y[i]) < E){				
-					j++;
-				}
-			}
+			j++;
 		}
 	}
 	// Left-Up
@@ -100,11 +87,7 @@ __global__ void parallelBFE(const int *x, const int *y, int *g, const int *a, co
 		for(int i = b[lu]; i < b[lu + 1]; i++){
 			//px[j] = x[i];
 			//py[j] = y[i];
-			for(int l = 0; l < h; l++){
-				if(distance(px[l], py[l], x[i], y[i]) < E){				
-					j++;
-				}
-			}
+			j++;
 		}
 	}
 	// Right-Up
@@ -118,11 +101,7 @@ __global__ void parallelBFE(const int *x, const int *y, int *g, const int *a, co
 		for(int i = b[ru]; i < b[ru + 1]; i++){
 			//px[j] = x[i];
 			//py[j] = y[i];
-			for(int l = 0; l < h; l++){
-				if(distance(px[l], py[l], x[i], y[i]) < E){				
-					j++;
-				}
-			}
+			j++;
 		}
 	}
 	// Center-Down
@@ -132,11 +111,7 @@ __global__ void parallelBFE(const int *x, const int *y, int *g, const int *a, co
 		for(int i = b[cd]; i < b[cd + 1]; i++){
 			//px[j] = x[i];
 			//py[j] = y[i];
-			for(int l = 0; l < h; l++){
-				if(distance(px[l], py[l], x[i], y[i]) < E){				
-					j++;
-				}
-			}
+			j++;
 		}
 	}
 	// Left-Down
@@ -150,11 +125,7 @@ __global__ void parallelBFE(const int *x, const int *y, int *g, const int *a, co
 		for(int i = b[ld]; i < b[ld + 1]; i++){
 			//px[j] = x[i];
 			//py[j] = y[i];
-			for(int l = 0; l < h; l++){
-				if(distance(px[l], py[l], x[i], y[i]) < E){				
-					j++;
-				}
-			}
+			j++;
 		}
 	}
 	// Right-Down
@@ -168,72 +139,18 @@ __global__ void parallelBFE(const int *x, const int *y, int *g, const int *a, co
 		for(int i = b[rd]; i < b[rd + 1]; i++){
 			//px[j] = x[i];
 			//py[j] = y[i];
-			for(int l = 0; l < h; l++){
-				if(distance(px[l], py[l], x[i], y[i]) < E){				
-					j++;
-				}
-			}
+			j++;
 		}
 	}
-	//__syncthreads();
 	N_DISKS[t] = j;
 }
 
-
-__global__ void mysgemm(int m, int n, int k, const float *A, const float *B, float *C) {
-    // Declaring the variables in shared memory...
-	__shared__ float A_s[TILE_SIZE][TILE_SIZE];
-	__shared__ float B_s[TILE_SIZE][TILE_SIZE];
-
-	// Finding the coordinates for the current thread...
+__global__ void seeThreadIndex(const int *a_d, const int *b_d, int k, int M, int N, unsigned long *N_DISKS){
 	int tx = threadIdx.x;
 	int ty = threadIdx.y;
 	int col = blockIdx.x * blockDim.x + tx;
 	int row = blockIdx.y * blockDim.y + ty;
 
-	float sum = 0.0f;
-
-	for(int i = 0; i < ((k - 1) / TILE_SIZE) + 1; ++i){
-		// Validation in the case the thread tries to write in share 
-		// memory a value outside the dimensions of matrix A...
-		if(row < m && (i * TILE_SIZE + tx) < k){
-			A_s[ty][tx] = A[(row * k) + (i * TILE_SIZE + tx)];
-		} else {
-			// In that case, just write a 0 which will no affect 
-			// the computation...
-			A_s[ty][tx] = 0.0f;
-		}
-		// Similar validation for B...
-		if((i * TILE_SIZE + ty) < k && col < n){
-			B_s[ty][tx] = B[((i * TILE_SIZE + ty) * n) + col];
-		} else {
-			B_s[ty][tx] = 0.0f;
-		}
-		// Wait for all the threads to write in share memory
-		__syncthreads();
-
-		// Compute the multiplication on the tile...
-		for(int j = 0; j < TILE_SIZE; ++j){
-			sum += A_s[ty][j] * B_s[j][tx];
-		}
-		// Wait to finish before to go ahead with the next phase...
-		__syncthreads();
-	}
-	// Write the final result in C just if it is inside of the valid 
-	// dimensions... 
-	if(row < m && col < n){
-		C[row * n + col] = sum;
-	}
+	N_DISKS[row * M + col] = (unsigned long) tx;
 }
 
-void basicSgemm(char transa, char transb, int m, int n, int k, float alpha, const float *A, int lda, const float *B, int ldb, float beta, float *C, int ldc)
-{
-    const unsigned int BLOCK_SIZE = TILE_SIZE;
-
-    // Initialize thread block and kernel grid dimensions
-    const dim3 dim_block(BLOCK_SIZE, BLOCK_SIZE, 1);
-    const dim3 dim_grid(((n - 1) / BLOCK_SIZE) + 1, ((m - 1) / BLOCK_SIZE) + 1, 1);
-
-    // Calling the kernel with the above-mentioned setting... 
-    mysgemm<<<dim_grid, dim_block>>>(m, n, k, A, B, C);
-}
