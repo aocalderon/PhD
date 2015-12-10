@@ -140,7 +140,7 @@ __global__ void parallelBFE(const int *x, const int *y, int *g, const int *a, co
 	}
 
 	//__syncthreads();
-	N_DISKS[t] = j;
+	N_DISKS[t] = cm;
 }
 
 
