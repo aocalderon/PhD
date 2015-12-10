@@ -1,0 +1,71 @@
+\documentclass[a4paper,10pt]{scrartcl}
+\usepackage[hmargin=2.5cm,vmargin=3cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\hypersetup{
+colorlinks=false,
+hidelinks
+}
+\usepackage{minted}
+\usepackage{xcolor}
+\usepackage{amsmath}
+
+%opening
+\title{Final Project}
+\author{Andres Calderon - SID:861243796}
+
+\begin{document}
+
+\maketitle
+
+\section{Data}
+ \begin{figure}
+  \centering
+  \includegraphics[width=\textwidth]{./grid}
+  \caption{Data points.}\label{fig:grid}
+ \end{figure}
+
+\section{Code}
+Full code and other materials are available at \cite{github}.
+
+\subsection{bfe.cu}
+  \inputminted[
+  fontsize=\footnotesize,
+  tabsize=2,
+  breaklines,
+  linenos
+  ]{c}{bfe.cu}
+
+\subsubsection{kernel.cu}
+  \inputminted[
+  fontsize=\footnotesize,
+  tabsize=2,
+  breaklines,
+  linenos
+  ]{c}{kernel.cu}
+
+\section{Output}
+  \inputminted[
+  fontsize=\footnotesize,
+  tabsize=2,
+  breaklines,
+  linenos
+  ]{bash}{outputs.sh}
+
+\section{Output}
+ \begin{figure}
+  \centering
+  \includegraphics[width=\textwidth]{figures/nvvp_T1-E2K-M3.png}
+  \caption{NVVP performance analysis for T1-E2K-M3.}\label{fig:nvvp_T1-E2K-M3}
+ \end{figure}
+
+
+\begin{thebibliography}{9}
+  \bibitem{github} 
+  Andres Calderon.
+  \textit{GitHub Personal Repository}, 2015. 
+  \url{https://github.com/aocalderon/PhD/tree/master/Y1Q1/GPU/lab3}.
+\end{thebibliography}
+
+\end{document}

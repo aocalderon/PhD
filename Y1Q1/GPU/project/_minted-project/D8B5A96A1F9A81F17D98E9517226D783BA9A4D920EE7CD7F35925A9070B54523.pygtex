@@ -1,0 +1,147 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGdefault{c+cp}{\PYGdefaultZsh{}include \PYGdefaultZlt{}stdio.h\PYGdefaultZgt{}}
+
+\PYGdefault{n}{\PYGdefaultZus{}\PYGdefaultZus{}device\PYGdefaultZus{}\PYGdefaultZus{}} \PYGdefault{k+kt}{int} \PYGdefault{n+nf}{distance}\PYGdefault{p}{(}\PYGdefault{k+kt}{int} \PYGdefault{n}{x1}\PYGdefault{p}{,} \PYGdefault{k+kt}{int} \PYGdefault{n}{y1}\PYGdefault{p}{,} \PYGdefault{k+kt}{int} \PYGdefault{n}{x2}\PYGdefault{p}{,} \PYGdefault{k+kt}{int} \PYGdefault{n}{y2}\PYGdefault{p}{)\PYGdefaultZob{}}
+	\PYGdefault{k+kt}{int} \PYGdefault{n}{dx} \PYGdefault{o}{=} \PYGdefault{n}{x2} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{n}{x1}\PYGdefault{p}{;}
+	\PYGdefault{k+kt}{int} \PYGdefault{n}{dy} \PYGdefault{o}{=} \PYGdefault{n}{y2} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{n}{y1}\PYGdefault{p}{;}
+	\PYGdefault{k}{return} \PYGdefault{p}{(}\PYGdefault{n}{dx} \PYGdefault{o}{*} \PYGdefault{n}{dx}\PYGdefault{p}{)} \PYGdefault{o}{+} \PYGdefault{p}{(}\PYGdefault{n}{dy} \PYGdefault{o}{*} \PYGdefault{n}{dy}\PYGdefault{p}{);}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+
+\PYGdefault{n}{\PYGdefaultZus{}\PYGdefaultZus{}device\PYGdefaultZus{}\PYGdefaultZus{}} \PYGdefault{k+kt}{int} \PYGdefault{n+nf}{findPosition}\PYGdefault{p}{(}\PYGdefault{k}{const} \PYGdefault{k+kt}{int} \PYGdefault{o}{*}\PYGdefault{n}{a}\PYGdefault{p}{,} \PYGdefault{k+kt}{int} \PYGdefault{n}{k}\PYGdefault{p}{,} \PYGdefault{k+kt}{int} \PYGdefault{n}{b}\PYGdefault{p}{,} \PYGdefault{k+kt}{int} \PYGdefault{n}{top}\PYGdefault{p}{)\PYGdefaultZob{}}
+	\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{b} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)\PYGdefaultZob{}}
+		\PYGdefault{k}{return} \PYGdefault{o}{\PYGdefaultZhy{}}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{;}
+	\PYGdefault{p}{\PYGdefaultZcb{}}
+	\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{b} \PYGdefault{o}{\PYGdefaultZgt{}} \PYGdefault{n}{top}\PYGdefault{p}{)\PYGdefaultZob{}}
+		\PYGdefault{k}{return} \PYGdefault{o}{\PYGdefaultZhy{}}\PYGdefault{l+m+mi}{2}\PYGdefault{p}{;}
+	\PYGdefault{p}{\PYGdefaultZcb{}}
+	\PYGdefault{k}{for}\PYGdefault{p}{(}\PYGdefault{k+kt}{int} \PYGdefault{n}{i} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;} \PYGdefault{n}{i} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{n}{k}\PYGdefault{p}{;} \PYGdefault{n}{i}\PYGdefault{o}{++}\PYGdefault{p}{)\PYGdefaultZob{}}
+		\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{a}\PYGdefault{p}{[}\PYGdefault{n}{i}\PYGdefault{p}{]} \PYGdefault{o}{==} \PYGdefault{n}{b}\PYGdefault{p}{)\PYGdefaultZob{}}
+			\PYGdefault{k}{return} \PYGdefault{n}{i}\PYGdefault{p}{;}
+		\PYGdefault{p}{\PYGdefaultZcb{}}	
+	\PYGdefault{p}{\PYGdefaultZcb{}}
+	\PYGdefault{k}{return} \PYGdefault{o}{\PYGdefaultZhy{}}\PYGdefault{l+m+mi}{3}\PYGdefault{p}{;}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+
+\PYGdefault{n}{\PYGdefaultZus{}\PYGdefaultZus{}global\PYGdefaultZus{}\PYGdefaultZus{}} \PYGdefault{k+kt}{void} \PYGdefault{n+nf}{parallelBFE}\PYGdefault{p}{(}\PYGdefault{k}{const} \PYGdefault{k+kt}{int} \PYGdefault{o}{*}\PYGdefault{n}{x}\PYGdefault{p}{,} \PYGdefault{k}{const} \PYGdefault{k+kt}{int} \PYGdefault{o}{*}\PYGdefault{n}{y}\PYGdefault{p}{,} \PYGdefault{k+kt}{int} \PYGdefault{o}{*}\PYGdefault{n}{g}\PYGdefault{p}{,} \PYGdefault{k}{const} \PYGdefault{k+kt}{int} \PYGdefault{o}{*}\PYGdefault{n}{a}\PYGdefault{p}{,} \PYGdefault{k}{const} \PYGdefault{k+kt}{int} \PYGdefault{o}{*}\PYGdefault{n}{b}\PYGdefault{p}{,} \PYGdefault{k+kt}{int} \PYGdefault{n}{n}\PYGdefault{p}{,} \PYGdefault{k+kt}{int} \PYGdefault{n}{k}\PYGdefault{p}{,} \PYGdefault{k+kt}{int} \PYGdefault{n}{M}\PYGdefault{p}{,} \PYGdefault{k+kt}{int} \PYGdefault{n}{N}\PYGdefault{p}{,} \PYGdefault{k+kt}{int} \PYGdefault{n}{E}\PYGdefault{p}{,} \PYGdefault{k+kt}{unsigned} \PYGdefault{k+kt}{long} \PYGdefault{o}{*}\PYGdefault{n}{N\PYGdefaultZus{}DISKS}\PYGdefault{p}{)\PYGdefaultZob{}}
+	\PYGdefault{k+kt}{int} \PYGdefault{n}{t} \PYGdefault{o}{=} \PYGdefault{n}{threadIdx}\PYGdefault{p}{.}\PYGdefault{n}{x}\PYGdefault{p}{;}
+	\PYGdefault{c+c1}{//int px[250];}
+	\PYGdefault{c+c1}{//int py[250];}
+	\PYGdefault{c+c1}{//int h;}
+	\PYGdefault{k+kt}{unsigned} \PYGdefault{k+kt}{long} \PYGdefault{n}{j} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
+	
+	\PYGdefault{c+c1}{// Center\PYGdefaultZhy{}Medium}
+	\PYGdefault{k+kt}{int} \PYGdefault{n}{cm} \PYGdefault{o}{=} \PYGdefault{n}{a}\PYGdefault{p}{[}\PYGdefault{n}{t}\PYGdefault{p}{];}
+	\PYGdefault{k}{for}\PYGdefault{p}{(}\PYGdefault{k+kt}{int} \PYGdefault{n}{i} \PYGdefault{o}{=} \PYGdefault{n}{b}\PYGdefault{p}{[}\PYGdefault{n}{t}\PYGdefault{p}{];} \PYGdefault{n}{i} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{n}{b}\PYGdefault{p}{[}\PYGdefault{n}{t} \PYGdefault{o}{+} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{];} \PYGdefault{n}{i}\PYGdefault{o}{++}\PYGdefault{p}{)\PYGdefaultZob{}}
+		\PYGdefault{c+c1}{//px[j] = x[i];}
+		\PYGdefault{c+c1}{//py[j] = y[i];}
+		\PYGdefault{n}{j}\PYGdefault{o}{++}\PYGdefault{p}{;}
+	\PYGdefault{p}{\PYGdefaultZcb{}}
+	\PYGdefault{c+c1}{//h = j;}
+
+	\PYGdefault{c+c1}{// Left\PYGdefaultZhy{}Medium}
+	\PYGdefault{k+kt}{int} \PYGdefault{n}{lm}\PYGdefault{p}{;}
+	\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{cm} \PYGdefault{o}{\PYGdefaultZpc{}} \PYGdefault{n}{M} \PYGdefault{o}{==} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)\PYGdefaultZob{}}
+		\PYGdefault{n}{lm} \PYGdefault{o}{=} \PYGdefault{o}{\PYGdefaultZhy{}}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{;}
+	\PYGdefault{p}{\PYGdefaultZcb{}} \PYGdefault{k}{else} \PYGdefault{p}{\PYGdefaultZob{}}
+		\PYGdefault{n}{lm} \PYGdefault{o}{=} \PYGdefault{n}{findPosition}\PYGdefault{p}{(}\PYGdefault{n}{a}\PYGdefault{p}{,} \PYGdefault{n}{k}\PYGdefault{p}{,} \PYGdefault{n}{cm} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{,} \PYGdefault{n}{M}\PYGdefault{o}{*}\PYGdefault{n}{N}\PYGdefault{p}{);}
+	\PYGdefault{p}{\PYGdefaultZcb{}}
+	\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{lm} \PYGdefault{o}{\PYGdefaultZgt{}=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)\PYGdefaultZob{}}
+		\PYGdefault{k}{for}\PYGdefault{p}{(}\PYGdefault{k+kt}{int} \PYGdefault{n}{i} \PYGdefault{o}{=} \PYGdefault{n}{b}\PYGdefault{p}{[}\PYGdefault{n}{lm}\PYGdefault{p}{];} \PYGdefault{n}{i} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{n}{b}\PYGdefault{p}{[}\PYGdefault{n}{lm} \PYGdefault{o}{+} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{];} \PYGdefault{n}{i}\PYGdefault{o}{++}\PYGdefault{p}{)\PYGdefaultZob{}}
+			\PYGdefault{c+c1}{//px[j] = x[i];}
+			\PYGdefault{c+c1}{//py[j] = y[i];}
+			\PYGdefault{n}{j}\PYGdefault{o}{++}\PYGdefault{p}{;}
+		\PYGdefault{p}{\PYGdefaultZcb{}}
+	\PYGdefault{p}{\PYGdefaultZcb{}}
+	\PYGdefault{c+c1}{// Right\PYGdefaultZhy{}Medium}
+	\PYGdefault{k+kt}{int} \PYGdefault{n}{rm}\PYGdefault{p}{;}
+	\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{cm} \PYGdefault{o}{\PYGdefaultZpc{}} \PYGdefault{n}{M} \PYGdefault{o}{==} \PYGdefault{n}{M} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{)\PYGdefaultZob{}}
+		\PYGdefault{n}{rm} \PYGdefault{o}{=} \PYGdefault{o}{\PYGdefaultZhy{}}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{;}
+	\PYGdefault{p}{\PYGdefaultZcb{}} \PYGdefault{k}{else} \PYGdefault{p}{\PYGdefaultZob{}}
+		\PYGdefault{n}{rm} \PYGdefault{o}{=} \PYGdefault{n}{findPosition}\PYGdefault{p}{(}\PYGdefault{n}{a}\PYGdefault{p}{,} \PYGdefault{n}{k}\PYGdefault{p}{,} \PYGdefault{n}{cm} \PYGdefault{o}{+} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{,} \PYGdefault{n}{M}\PYGdefault{o}{*}\PYGdefault{n}{N}\PYGdefault{p}{);}
+	\PYGdefault{p}{\PYGdefaultZcb{}}
+	\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{rm} \PYGdefault{o}{\PYGdefaultZgt{}=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)\PYGdefaultZob{}}
+		\PYGdefault{k}{for}\PYGdefault{p}{(}\PYGdefault{k+kt}{int} \PYGdefault{n}{i} \PYGdefault{o}{=} \PYGdefault{n}{b}\PYGdefault{p}{[}\PYGdefault{n}{rm}\PYGdefault{p}{];} \PYGdefault{n}{i} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{n}{b}\PYGdefault{p}{[}\PYGdefault{n}{rm} \PYGdefault{o}{+} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{];} \PYGdefault{n}{i}\PYGdefault{o}{++}\PYGdefault{p}{)\PYGdefaultZob{}}
+			\PYGdefault{c+c1}{//px[j] = x[i];}
+			\PYGdefault{c+c1}{//py[j] = y[i];}
+			\PYGdefault{n}{j}\PYGdefault{o}{++}\PYGdefault{p}{;}
+		\PYGdefault{p}{\PYGdefaultZcb{}}
+	\PYGdefault{p}{\PYGdefaultZcb{}}
+	\PYGdefault{c+c1}{// Center\PYGdefaultZhy{}Up}
+	\PYGdefault{k+kt}{int} \PYGdefault{n}{cu} \PYGdefault{o}{=} \PYGdefault{n}{cm} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{n}{M}\PYGdefault{p}{;}
+	\PYGdefault{n}{cu} \PYGdefault{o}{=} \PYGdefault{n}{findPosition}\PYGdefault{p}{(}\PYGdefault{n}{a}\PYGdefault{p}{,} \PYGdefault{n}{k}\PYGdefault{p}{,} \PYGdefault{n}{cu}\PYGdefault{p}{,} \PYGdefault{n}{M}\PYGdefault{o}{*}\PYGdefault{n}{N}\PYGdefault{p}{);}
+	\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{cu} \PYGdefault{o}{\PYGdefaultZgt{}=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)\PYGdefaultZob{}}
+		\PYGdefault{k}{for}\PYGdefault{p}{(}\PYGdefault{k+kt}{int} \PYGdefault{n}{i} \PYGdefault{o}{=} \PYGdefault{n}{b}\PYGdefault{p}{[}\PYGdefault{n}{cu}\PYGdefault{p}{];} \PYGdefault{n}{i} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{n}{b}\PYGdefault{p}{[}\PYGdefault{n}{cu} \PYGdefault{o}{+} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{];} \PYGdefault{n}{i}\PYGdefault{o}{++}\PYGdefault{p}{)\PYGdefaultZob{}}
+			\PYGdefault{c+c1}{//px[j] = x[i];}
+			\PYGdefault{c+c1}{//py[j] = y[i];}
+			\PYGdefault{n}{j}\PYGdefault{o}{++}\PYGdefault{p}{;}
+		\PYGdefault{p}{\PYGdefaultZcb{}}
+	\PYGdefault{p}{\PYGdefaultZcb{}}
+	\PYGdefault{c+c1}{// Left\PYGdefaultZhy{}Up}
+	\PYGdefault{k+kt}{int} \PYGdefault{n}{lu}\PYGdefault{p}{;}
+	\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{cm} \PYGdefault{o}{\PYGdefaultZpc{}} \PYGdefault{n}{M} \PYGdefault{o}{==} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)\PYGdefaultZob{}}
+		\PYGdefault{n}{lu} \PYGdefault{o}{=} \PYGdefault{o}{\PYGdefaultZhy{}}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{;}
+	\PYGdefault{p}{\PYGdefaultZcb{}} \PYGdefault{k}{else} \PYGdefault{p}{\PYGdefaultZob{}}
+		\PYGdefault{n}{lu} \PYGdefault{o}{=} \PYGdefault{n}{findPosition}\PYGdefault{p}{(}\PYGdefault{n}{a}\PYGdefault{p}{,} \PYGdefault{n}{k}\PYGdefault{p}{,} \PYGdefault{n}{cm} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{n}{M} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{,} \PYGdefault{n}{M}\PYGdefault{o}{*}\PYGdefault{n}{N}\PYGdefault{p}{);}
+	\PYGdefault{p}{\PYGdefaultZcb{}}
+	\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{lu} \PYGdefault{o}{\PYGdefaultZgt{}=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)\PYGdefaultZob{}}
+		\PYGdefault{k}{for}\PYGdefault{p}{(}\PYGdefault{k+kt}{int} \PYGdefault{n}{i} \PYGdefault{o}{=} \PYGdefault{n}{b}\PYGdefault{p}{[}\PYGdefault{n}{lu}\PYGdefault{p}{];} \PYGdefault{n}{i} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{n}{b}\PYGdefault{p}{[}\PYGdefault{n}{lu} \PYGdefault{o}{+} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{];} \PYGdefault{n}{i}\PYGdefault{o}{++}\PYGdefault{p}{)\PYGdefaultZob{}}
+			\PYGdefault{c+c1}{//px[j] = x[i];}
+			\PYGdefault{c+c1}{//py[j] = y[i];}
+			\PYGdefault{n}{j}\PYGdefault{o}{++}\PYGdefault{p}{;}
+		\PYGdefault{p}{\PYGdefaultZcb{}}
+	\PYGdefault{p}{\PYGdefaultZcb{}}
+	\PYGdefault{c+c1}{// Right\PYGdefaultZhy{}Up}
+	\PYGdefault{k+kt}{int} \PYGdefault{n}{ru}\PYGdefault{p}{;}
+	\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{cm} \PYGdefault{o}{\PYGdefaultZpc{}} \PYGdefault{n}{M} \PYGdefault{o}{==} \PYGdefault{n}{M} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{)\PYGdefaultZob{}}
+		\PYGdefault{n}{ru} \PYGdefault{o}{=} \PYGdefault{o}{\PYGdefaultZhy{}}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{;}
+	\PYGdefault{p}{\PYGdefaultZcb{}} \PYGdefault{k}{else} \PYGdefault{p}{\PYGdefaultZob{}}
+		\PYGdefault{n}{ru} \PYGdefault{o}{=} \PYGdefault{n}{findPosition}\PYGdefault{p}{(}\PYGdefault{n}{a}\PYGdefault{p}{,} \PYGdefault{n}{k}\PYGdefault{p}{,} \PYGdefault{n}{cm} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{n}{M} \PYGdefault{o}{+} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{,} \PYGdefault{n}{M}\PYGdefault{o}{*}\PYGdefault{n}{N}\PYGdefault{p}{);}
+	\PYGdefault{p}{\PYGdefaultZcb{}}
+	\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{ru} \PYGdefault{o}{\PYGdefaultZgt{}=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)\PYGdefaultZob{}}
+		\PYGdefault{k}{for}\PYGdefault{p}{(}\PYGdefault{k+kt}{int} \PYGdefault{n}{i} \PYGdefault{o}{=} \PYGdefault{n}{b}\PYGdefault{p}{[}\PYGdefault{n}{ru}\PYGdefault{p}{];} \PYGdefault{n}{i} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{n}{b}\PYGdefault{p}{[}\PYGdefault{n}{ru} \PYGdefault{o}{+} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{];} \PYGdefault{n}{i}\PYGdefault{o}{++}\PYGdefault{p}{)\PYGdefaultZob{}}
+			\PYGdefault{c+c1}{//px[j] = x[i];}
+			\PYGdefault{c+c1}{//py[j] = y[i];}
+			\PYGdefault{n}{j}\PYGdefault{o}{++}\PYGdefault{p}{;}
+		\PYGdefault{p}{\PYGdefaultZcb{}}
+	\PYGdefault{p}{\PYGdefaultZcb{}}
+	\PYGdefault{c+c1}{// Center\PYGdefaultZhy{}Down}
+	\PYGdefault{k+kt}{int} \PYGdefault{n}{cd} \PYGdefault{o}{=} \PYGdefault{n}{cm} \PYGdefault{o}{+} \PYGdefault{n}{M}\PYGdefault{p}{;}
+	\PYGdefault{n}{cd} \PYGdefault{o}{=} \PYGdefault{n}{findPosition}\PYGdefault{p}{(}\PYGdefault{n}{a}\PYGdefault{p}{,} \PYGdefault{n}{k}\PYGdefault{p}{,} \PYGdefault{n}{cd}\PYGdefault{p}{,} \PYGdefault{n}{M}\PYGdefault{o}{*}\PYGdefault{n}{N}\PYGdefault{p}{);}
+	\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{cd} \PYGdefault{o}{\PYGdefaultZgt{}=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)\PYGdefaultZob{}}
+		\PYGdefault{k}{for}\PYGdefault{p}{(}\PYGdefault{k+kt}{int} \PYGdefault{n}{i} \PYGdefault{o}{=} \PYGdefault{n}{b}\PYGdefault{p}{[}\PYGdefault{n}{cd}\PYGdefault{p}{];} \PYGdefault{n}{i} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{n}{b}\PYGdefault{p}{[}\PYGdefault{n}{cd} \PYGdefault{o}{+} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{];} \PYGdefault{n}{i}\PYGdefault{o}{++}\PYGdefault{p}{)\PYGdefaultZob{}}
+			\PYGdefault{c+c1}{//px[j] = x[i];}
+			\PYGdefault{c+c1}{//py[j] = y[i];}
+			\PYGdefault{n}{j}\PYGdefault{o}{++}\PYGdefault{p}{;}
+		\PYGdefault{p}{\PYGdefaultZcb{}}
+	\PYGdefault{p}{\PYGdefaultZcb{}}
+	\PYGdefault{c+c1}{// Left\PYGdefaultZhy{}Down}
+	\PYGdefault{k+kt}{int} \PYGdefault{n}{ld}\PYGdefault{p}{;}
+	\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{cm} \PYGdefault{o}{\PYGdefaultZpc{}} \PYGdefault{n}{M} \PYGdefault{o}{==} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)\PYGdefaultZob{}}
+		\PYGdefault{n}{ld} \PYGdefault{o}{=} \PYGdefault{o}{\PYGdefaultZhy{}}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{;}
+	\PYGdefault{p}{\PYGdefaultZcb{}} \PYGdefault{k}{else} \PYGdefault{p}{\PYGdefaultZob{}}
+		\PYGdefault{n}{ld} \PYGdefault{o}{=} \PYGdefault{n}{findPosition}\PYGdefault{p}{(}\PYGdefault{n}{a}\PYGdefault{p}{,} \PYGdefault{n}{k}\PYGdefault{p}{,} \PYGdefault{n}{cm} \PYGdefault{o}{+} \PYGdefault{n}{M} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{,} \PYGdefault{n}{M}\PYGdefault{o}{*}\PYGdefault{n}{N}\PYGdefault{p}{);}
+	\PYGdefault{p}{\PYGdefaultZcb{}}
+	\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{ld} \PYGdefault{o}{\PYGdefaultZgt{}=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)\PYGdefaultZob{}}
+		\PYGdefault{k}{for}\PYGdefault{p}{(}\PYGdefault{k+kt}{int} \PYGdefault{n}{i} \PYGdefault{o}{=} \PYGdefault{n}{b}\PYGdefault{p}{[}\PYGdefault{n}{ld}\PYGdefault{p}{];} \PYGdefault{n}{i} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{n}{b}\PYGdefault{p}{[}\PYGdefault{n}{ld} \PYGdefault{o}{+} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{];} \PYGdefault{n}{i}\PYGdefault{o}{++}\PYGdefault{p}{)\PYGdefaultZob{}}
+			\PYGdefault{c+c1}{//px[j] = x[i];}
+			\PYGdefault{c+c1}{//py[j] = y[i];}
+			\PYGdefault{n}{j}\PYGdefault{o}{++}\PYGdefault{p}{;}
+		\PYGdefault{p}{\PYGdefaultZcb{}}
+	\PYGdefault{p}{\PYGdefaultZcb{}}
+	\PYGdefault{c+c1}{// Right\PYGdefaultZhy{}Down}
+	\PYGdefault{k+kt}{int} \PYGdefault{n}{rd}\PYGdefault{p}{;}
+	\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{cm} \PYGdefault{o}{\PYGdefaultZpc{}} \PYGdefault{n}{M} \PYGdefault{o}{==} \PYGdefault{n}{M} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{)\PYGdefaultZob{}}
+		\PYGdefault{n}{rd} \PYGdefault{o}{=} \PYGdefault{o}{\PYGdefaultZhy{}}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{;}
+	\PYGdefault{p}{\PYGdefaultZcb{}} \PYGdefault{k}{else} \PYGdefault{p}{\PYGdefaultZob{}}
+		\PYGdefault{n}{rd} \PYGdefault{o}{=} \PYGdefault{n}{findPosition}\PYGdefault{p}{(}\PYGdefault{n}{a}\PYGdefault{p}{,} \PYGdefault{n}{k}\PYGdefault{p}{,} \PYGdefault{n}{cm} \PYGdefault{o}{+} \PYGdefault{n}{M} \PYGdefault{o}{+} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{,} \PYGdefault{n}{M}\PYGdefault{o}{*}\PYGdefault{n}{N}\PYGdefault{p}{);}
+	\PYGdefault{p}{\PYGdefaultZcb{}}
+	\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{rd} \PYGdefault{o}{\PYGdefaultZgt{}=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)\PYGdefaultZob{}}
+		\PYGdefault{k}{for}\PYGdefault{p}{(}\PYGdefault{k+kt}{int} \PYGdefault{n}{i} \PYGdefault{o}{=} \PYGdefault{n}{b}\PYGdefault{p}{[}\PYGdefault{n}{rd}\PYGdefault{p}{];} \PYGdefault{n}{i} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{n}{b}\PYGdefault{p}{[}\PYGdefault{n}{rd} \PYGdefault{o}{+} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{];} \PYGdefault{n}{i}\PYGdefault{o}{++}\PYGdefault{p}{)\PYGdefaultZob{}}
+			\PYGdefault{c+c1}{//px[j] = x[i];}
+			\PYGdefault{c+c1}{//py[j] = y[i];}
+			\PYGdefault{n}{j}\PYGdefault{o}{++}\PYGdefault{p}{;}
+		\PYGdefault{p}{\PYGdefaultZcb{}}
+	\PYGdefault{p}{\PYGdefaultZcb{}}
+	\PYGdefault{n}{N\PYGdefaultZus{}DISKS}\PYGdefault{p}{[}\PYGdefault{n}{t}\PYGdefault{p}{]} \PYGdefault{o}{=} \PYGdefault{n}{j}\PYGdefault{p}{;}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+\end{Verbatim}

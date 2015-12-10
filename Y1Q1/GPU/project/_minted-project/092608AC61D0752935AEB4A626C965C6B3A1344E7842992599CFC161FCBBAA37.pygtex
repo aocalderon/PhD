@@ -1,0 +1,214 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGdefault{c+cp}{\PYGdefaultZsh{}include \PYGdefaultZlt{}stdio.h\PYGdefaultZgt{}}
+\PYGdefault{c+cp}{\PYGdefaultZsh{}include \PYGdefaultZlt{}stdlib.h\PYGdefaultZgt{}}
+\PYGdefault{c+cp}{\PYGdefaultZsh{}include \PYGdefaultZlt{}thrust/sort.h\PYGdefaultZgt{}}
+\PYGdefault{c+cp}{\PYGdefaultZsh{}include \PYGdefaultZlt{}thrust/functional.h\PYGdefaultZgt{}}
+\PYGdefault{c+cp}{\PYGdefaultZsh{}include \PYGdefaultZlt{}thrust/device\PYGdefaultZus{}vector.h\PYGdefaultZgt{}}
+\PYGdefault{c+cp}{\PYGdefaultZsh{}include \PYGdefaultZlt{}thrust/host\PYGdefaultZus{}vector.h\PYGdefaultZgt{}}
+\PYGdefault{c+cp}{\PYGdefaultZsh{}include \PYGdefaultZdq{}bfe.h\PYGdefaultZdq{}}
+\PYGdefault{c+cp}{\PYGdefaultZsh{}include \PYGdefaultZdq{}kernel.cu\PYGdefaultZdq{}}
+
+\PYGdefault{k+kt}{int} \PYGdefault{n+nf}{main}\PYGdefault{p}{(}\PYGdefault{k+kt}{int} \PYGdefault{n}{argc}\PYGdefault{p}{,}\PYGdefault{k+kt}{char} \PYGdefault{o}{*}\PYGdefault{n}{argv}\PYGdefault{p}{[])\PYGdefaultZob{}}
+	\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{argc} \PYGdefault{o}{!=} \PYGdefault{l+m+mi}{4}\PYGdefault{p}{)\PYGdefaultZob{}}
+		\PYGdefault{n}{printf}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}Usage: \PYGdefaultZpc{}s TIMESTAMP EPSILON MU\PYGdefaultZdq{}}\PYGdefault{p}{,} \PYGdefault{n}{argv}\PYGdefault{p}{[}\PYGdefault{l+m+mi}{0}\PYGdefault{p}{]);}
+		\PYGdefault{k}{return} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{;}
+	\PYGdefault{p}{\PYGdefaultZcb{}}
+	\PYGdefault{k}{const} \PYGdefault{k+kt}{int} \PYGdefault{n}{TIMESTAMP} \PYGdefault{o}{=} \PYGdefault{n}{atoi}\PYGdefault{p}{(}\PYGdefault{n}{argv}\PYGdefault{p}{[}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{]);}
+	\PYGdefault{k}{const} \PYGdefault{k+kt}{int} \PYGdefault{n}{EPSILON} \PYGdefault{o}{=} \PYGdefault{n}{atoi}\PYGdefault{p}{(}\PYGdefault{n}{argv}\PYGdefault{p}{[}\PYGdefault{l+m+mi}{2}\PYGdefault{p}{]);}
+	\PYGdefault{k}{const} \PYGdefault{k+kt}{int} \PYGdefault{n}{E2} \PYGdefault{o}{=} \PYGdefault{n}{EPSILON} \PYGdefault{o}{*} \PYGdefault{n}{EPSILON}\PYGdefault{p}{;}
+	\PYGdefault{k}{const} \PYGdefault{k+kt}{int} \PYGdefault{n}{MU} \PYGdefault{o}{=} \PYGdefault{n}{atoi}\PYGdefault{p}{(}\PYGdefault{n}{argv}\PYGdefault{p}{[}\PYGdefault{l+m+mi}{3}\PYGdefault{p}{]);}
+	\PYGdefault{n}{cudaError\PYGdefaultZus{}t} \PYGdefault{n}{cuda\PYGdefaultZus{}ret}\PYGdefault{p}{;}
+	
+	\PYGdefault{k+kt}{FILE} \PYGdefault{o}{*}\PYGdefault{n}{in}\PYGdefault{p}{;}
+	\PYGdefault{k+kt}{FILE} \PYGdefault{o}{*}\PYGdefault{n}{out}\PYGdefault{p}{;}
+	\PYGdefault{n}{in} \PYGdefault{o}{=} \PYGdefault{n}{fopen}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}oldenburg.csv\PYGdefaultZdq{}}\PYGdefault{p}{,} \PYGdefault{l+s}{\PYGdefaultZdq{}r\PYGdefaultZdq{}}\PYGdefault{p}{);}
+	\PYGdefault{n}{out} \PYGdefault{o}{=} \PYGdefault{n}{fopen}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}output.csv\PYGdefaultZdq{}}\PYGdefault{p}{,} \PYGdefault{l+s}{\PYGdefaultZdq{}w\PYGdefaultZdq{}}\PYGdefault{p}{);}
+	\PYGdefault{n}{fprintf}\PYGdefault{p}{(}\PYGdefault{n}{out}\PYGdefault{p}{,} \PYGdefault{l+s}{\PYGdefaultZdq{}oid;time;lat;lon;grid\PYGdefaultZus{}id}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{p}{);}
+	\PYGdefault{k+kt}{char} \PYGdefault{n}{line}\PYGdefault{p}{[}\PYGdefault{l+m+mi}{1024}\PYGdefault{p}{];}
+	\PYGdefault{k+kt}{int} \PYGdefault{n}{n} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
+	\PYGdefault{k+kt}{short} \PYGdefault{n}{time}\PYGdefault{p}{;}
+	\PYGdefault{k+kt}{int} \PYGdefault{n}{lat}\PYGdefault{p}{;} \PYGdefault{k+kt}{int} \PYGdefault{n}{lon}\PYGdefault{p}{;}
+	\PYGdefault{k+kt}{int} \PYGdefault{n}{max\PYGdefaultZus{}lat} \PYGdefault{o}{=} \PYGdefault{n}{INT\PYGdefaultZus{}MIN}\PYGdefault{p}{;} \PYGdefault{k+kt}{int} \PYGdefault{n}{min\PYGdefaultZus{}lat} \PYGdefault{o}{=} \PYGdefault{n}{INT\PYGdefaultZus{}MAX}\PYGdefault{p}{;}
+	\PYGdefault{k+kt}{int} \PYGdefault{n}{max\PYGdefaultZus{}lon} \PYGdefault{o}{=} \PYGdefault{n}{INT\PYGdefaultZus{}MIN}\PYGdefault{p}{;} \PYGdefault{k+kt}{int} \PYGdefault{n}{min\PYGdefaultZus{}lon} \PYGdefault{o}{=} \PYGdefault{n}{INT\PYGdefaultZus{}MAX}\PYGdefault{p}{;}
+	\PYGdefault{k+kt}{int} \PYGdefault{n}{M} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;} 
+	\PYGdefault{k+kt}{int} \PYGdefault{n}{N} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;} 
+	\PYGdefault{k}{while} \PYGdefault{p}{(}\PYGdefault{n}{fgets}\PYGdefault{p}{(}\PYGdefault{n}{line}\PYGdefault{p}{,} \PYGdefault{l+m+mi}{1024}\PYGdefault{p}{,} \PYGdefault{n}{in}\PYGdefault{p}{))\PYGdefaultZob{}}
+		\PYGdefault{n}{atoi}\PYGdefault{p}{(}\PYGdefault{n}{strtok}\PYGdefault{p}{(}\PYGdefault{n}{line}\PYGdefault{p}{,} \PYGdefault{l+s}{\PYGdefaultZdq{};\PYGdefaultZdq{}}\PYGdefault{p}{));}
+		\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{atoi}\PYGdefault{p}{(}\PYGdefault{n}{strtok}\PYGdefault{p}{(}\PYGdefault{n+nb}{NULL}\PYGdefault{p}{,} \PYGdefault{l+s}{\PYGdefaultZdq{};}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{p}{))} \PYGdefault{o}{\PYGdefaultZgt{}} \PYGdefault{n}{TIMESTAMP}\PYGdefault{p}{)} \PYGdefault{k}{continue}\PYGdefault{p}{;}
+		\PYGdefault{n}{lat} \PYGdefault{o}{=} \PYGdefault{n}{atoi}\PYGdefault{p}{(}\PYGdefault{n}{strtok}\PYGdefault{p}{(}\PYGdefault{n+nb}{NULL}\PYGdefault{p}{,} \PYGdefault{l+s}{\PYGdefaultZdq{};}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{p}{));}
+		\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{lat} \PYGdefault{o}{\PYGdefaultZgt{}} \PYGdefault{n}{max\PYGdefaultZus{}lat}\PYGdefault{p}{)} \PYGdefault{n}{max\PYGdefaultZus{}lat} \PYGdefault{o}{=} \PYGdefault{n}{lat}\PYGdefault{p}{;}
+		\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{lat} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{n}{min\PYGdefaultZus{}lat}\PYGdefault{p}{)} \PYGdefault{n}{min\PYGdefaultZus{}lat} \PYGdefault{o}{=} \PYGdefault{n}{lat}\PYGdefault{p}{;}
+		\PYGdefault{n}{lon} \PYGdefault{o}{=} \PYGdefault{n}{atoi}\PYGdefault{p}{(}\PYGdefault{n}{strtok}\PYGdefault{p}{(}\PYGdefault{n+nb}{NULL}\PYGdefault{p}{,} \PYGdefault{l+s}{\PYGdefaultZdq{};}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{p}{));}
+		\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{lon} \PYGdefault{o}{\PYGdefaultZgt{}} \PYGdefault{n}{max\PYGdefaultZus{}lon}\PYGdefault{p}{)} \PYGdefault{n}{max\PYGdefaultZus{}lon} \PYGdefault{o}{=} \PYGdefault{n}{lon}\PYGdefault{p}{;}
+		\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{lon} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{n}{min\PYGdefaultZus{}lon}\PYGdefault{p}{)} \PYGdefault{n}{min\PYGdefaultZus{}lon} \PYGdefault{o}{=} \PYGdefault{n}{lon}\PYGdefault{p}{;}
+		\PYGdefault{n}{n}\PYGdefault{o}{++}\PYGdefault{p}{;}
+	\PYGdefault{p}{\PYGdefaultZcb{}}
+	\PYGdefault{k+kt}{int} \PYGdefault{o}{*}\PYGdefault{n}{x}\PYGdefault{p}{;}
+	\PYGdefault{n}{x} \PYGdefault{o}{=} \PYGdefault{p}{(}\PYGdefault{k+kt}{int}\PYGdefault{o}{*}\PYGdefault{p}{)} \PYGdefault{n}{malloc}\PYGdefault{p}{(} \PYGdefault{k}{sizeof}\PYGdefault{p}{(}\PYGdefault{k+kt}{int}\PYGdefault{p}{)} \PYGdefault{o}{*} \PYGdefault{n}{n}\PYGdefault{p}{);}
+	\PYGdefault{k+kt}{int} \PYGdefault{o}{*}\PYGdefault{n}{y}\PYGdefault{p}{;}
+	\PYGdefault{n}{y} \PYGdefault{o}{=} \PYGdefault{p}{(}\PYGdefault{k+kt}{int}\PYGdefault{o}{*}\PYGdefault{p}{)} \PYGdefault{n}{malloc}\PYGdefault{p}{(} \PYGdefault{k}{sizeof}\PYGdefault{p}{(}\PYGdefault{k+kt}{int}\PYGdefault{p}{)} \PYGdefault{o}{*} \PYGdefault{n}{n}\PYGdefault{p}{);}
+	\PYGdefault{k+kt}{int} \PYGdefault{o}{*}\PYGdefault{n}{g}\PYGdefault{p}{;}
+	\PYGdefault{n}{g} \PYGdefault{o}{=} \PYGdefault{p}{(}\PYGdefault{k+kt}{int}\PYGdefault{o}{*}\PYGdefault{p}{)} \PYGdefault{n}{malloc}\PYGdefault{p}{(} \PYGdefault{k}{sizeof}\PYGdefault{p}{(}\PYGdefault{k+kt}{int}\PYGdefault{p}{)} \PYGdefault{o}{*} \PYGdefault{n}{n}\PYGdefault{p}{);}
+	\PYGdefault{k+kt}{int} \PYGdefault{o}{*}\PYGdefault{n}{i}\PYGdefault{p}{;}
+	\PYGdefault{n}{i} \PYGdefault{o}{=} \PYGdefault{p}{(}\PYGdefault{k+kt}{int}\PYGdefault{o}{*}\PYGdefault{p}{)} \PYGdefault{n}{malloc}\PYGdefault{p}{(} \PYGdefault{k}{sizeof}\PYGdefault{p}{(}\PYGdefault{k+kt}{int}\PYGdefault{p}{)} \PYGdefault{o}{*} \PYGdefault{n}{n}\PYGdefault{p}{);}
+	\PYGdefault{n}{printf}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}Min and max latitude:}\PYGdefault{l+s+se}{\PYGdefaultZbs{}t}\PYGdefault{l+s}{(\PYGdefaultZpc{}d, \PYGdefaultZpc{}d)}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{p}{,} \PYGdefault{n}{min\PYGdefaultZus{}lat}\PYGdefault{p}{,} \PYGdefault{n}{max\PYGdefaultZus{}lat}\PYGdefault{p}{);}
+	\PYGdefault{n}{printf}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}Min and max longitude:}\PYGdefault{l+s+se}{\PYGdefaultZbs{}t}\PYGdefault{l+s}{(\PYGdefaultZpc{}d, \PYGdefaultZpc{}d)}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{p}{,} \PYGdefault{n}{min\PYGdefaultZus{}lon}\PYGdefault{p}{,} \PYGdefault{n}{max\PYGdefaultZus{}lon}\PYGdefault{p}{);}
+	\PYGdefault{n}{M} \PYGdefault{o}{=} \PYGdefault{p}{(}\PYGdefault{n}{max\PYGdefaultZus{}lat} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{n}{min\PYGdefaultZus{}lat}\PYGdefault{p}{)} \PYGdefault{o}{/} \PYGdefault{n}{EPSILON} \PYGdefault{o}{+} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{;}
+	\PYGdefault{n}{N} \PYGdefault{o}{=} \PYGdefault{p}{(}\PYGdefault{n}{max\PYGdefaultZus{}lon} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{n}{min\PYGdefaultZus{}lon}\PYGdefault{p}{)} \PYGdefault{o}{/} \PYGdefault{n}{EPSILON} \PYGdefault{o}{+} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{;}
+	\PYGdefault{n}{rewind}\PYGdefault{p}{(}\PYGdefault{n}{in}\PYGdefault{p}{);}
+	\PYGdefault{k+kt}{int} \PYGdefault{n}{j} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
+	\PYGdefault{k}{while} \PYGdefault{p}{(}\PYGdefault{n}{fgets}\PYGdefault{p}{(}\PYGdefault{n}{line}\PYGdefault{p}{,} \PYGdefault{l+m+mi}{1024}\PYGdefault{p}{,} \PYGdefault{n}{in}\PYGdefault{p}{))\PYGdefaultZob{}}
+		\PYGdefault{n}{atoi}\PYGdefault{p}{(}\PYGdefault{n}{strtok}\PYGdefault{p}{(}\PYGdefault{n}{line}\PYGdefault{p}{,} \PYGdefault{l+s}{\PYGdefaultZdq{};\PYGdefaultZdq{}}\PYGdefault{p}{));}
+		\PYGdefault{n}{time} \PYGdefault{o}{=} \PYGdefault{n}{atoi}\PYGdefault{p}{(}\PYGdefault{n}{strtok}\PYGdefault{p}{(}\PYGdefault{n+nb}{NULL}\PYGdefault{p}{,} \PYGdefault{l+s}{\PYGdefaultZdq{};}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{p}{));}
+		\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{time} \PYGdefault{o}{\PYGdefaultZgt{}} \PYGdefault{n}{TIMESTAMP}\PYGdefault{p}{)} \PYGdefault{k}{continue}\PYGdefault{p}{;}
+		\PYGdefault{n}{lat} \PYGdefault{o}{=} \PYGdefault{n}{atoi}\PYGdefault{p}{(}\PYGdefault{n}{strtok}\PYGdefault{p}{(}\PYGdefault{n+nb}{NULL}\PYGdefault{p}{,} \PYGdefault{l+s}{\PYGdefaultZdq{};}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{p}{));}
+		\PYGdefault{n}{lon} \PYGdefault{o}{=} \PYGdefault{n}{atoi}\PYGdefault{p}{(}\PYGdefault{n}{strtok}\PYGdefault{p}{(}\PYGdefault{n+nb}{NULL}\PYGdefault{p}{,} \PYGdefault{l+s}{\PYGdefaultZdq{};}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{p}{));}
+		\PYGdefault{n}{g}\PYGdefault{p}{[}\PYGdefault{n}{j}\PYGdefault{p}{]} \PYGdefault{o}{=} \PYGdefault{n}{M} \PYGdefault{o}{*} \PYGdefault{p}{((}\PYGdefault{n}{N} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{)} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{p}{((}\PYGdefault{n}{lon} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{n}{min\PYGdefaultZus{}lon}\PYGdefault{p}{)} \PYGdefault{o}{/} \PYGdefault{n}{EPSILON}\PYGdefault{p}{))} \PYGdefault{o}{+} \PYGdefault{p}{((}\PYGdefault{n}{lat} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{n}{min\PYGdefaultZus{}lat}\PYGdefault{p}{)} \PYGdefault{o}{/} \PYGdefault{n}{EPSILON}\PYGdefault{p}{);}
+		\PYGdefault{n}{x}\PYGdefault{p}{[}\PYGdefault{n}{j}\PYGdefault{p}{]} \PYGdefault{o}{=} \PYGdefault{n}{lat}\PYGdefault{p}{;}
+		\PYGdefault{n}{y}\PYGdefault{p}{[}\PYGdefault{n}{j}\PYGdefault{p}{]} \PYGdefault{o}{=} \PYGdefault{n}{lon}\PYGdefault{p}{;}
+		\PYGdefault{n}{i}\PYGdefault{p}{[}\PYGdefault{n}{j}\PYGdefault{p}{]} \PYGdefault{o}{=} \PYGdefault{n}{j}\PYGdefault{p}{;} 
+       	\PYGdefault{c+c1}{//printf(\PYGdefaultZdq{}\PYGdefaultZpc{}d;\PYGdefaultZpc{}hi;\PYGdefaultZpc{}d;\PYGdefaultZpc{}d;\PYGdefaultZpc{}d\PYGdefaultZbs{}n\PYGdefaultZdq{}, oid, time, lat, lon, g[j]);}
+		\PYGdefault{n}{j}\PYGdefault{o}{++}\PYGdefault{p}{;}
+	\PYGdefault{p}{\PYGdefaultZcb{}}
+	\PYGdefault{n}{printf}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}Number of points:}\PYGdefault{l+s+se}{\PYGdefaultZbs{}t}\PYGdefault{l+s}{\PYGdefaultZpc{}d}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{p}{,} \PYGdefault{n}{n}\PYGdefault{p}{);}
+	\PYGdefault{n}{printf}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}M x N : \PYGdefaultZpc{}d x \PYGdefaultZpc{}d}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{p}{,} \PYGdefault{n}{M}\PYGdefault{p}{,} \PYGdefault{n}{N}\PYGdefault{p}{);}
+	\PYGdefault{k+kt}{int} \PYGdefault{n}{c} \PYGdefault{o}{=} \PYGdefault{n}{M} \PYGdefault{o}{*} \PYGdefault{n}{N}\PYGdefault{p}{;}
+	\PYGdefault{c+c1}{//int r = createGrid(\PYGdefaultZdq{}grid.shp\PYGdefaultZdq{}, EPSILON, min\PYGdefaultZus{}lat, max\PYGdefaultZus{}lat, min\PYGdefaultZus{}lon, max\PYGdefaultZus{}lon);}
+	\PYGdefault{n}{printf}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}Sorting arrays...}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{p}{);}
+	\PYGdefault{n}{thrust}\PYGdefault{o}{::}\PYGdefault{n}{device\PYGdefaultZus{}vector}\PYGdefault{o}{\PYGdefaultZlt{}}\PYGdefault{k+kt}{int}\PYGdefault{o}{\PYGdefaultZgt{}} \PYGdefault{n}{d\PYGdefaultZus{}x}\PYGdefault{p}{(}\PYGdefault{n}{x}\PYGdefault{p}{,} \PYGdefault{n}{x} \PYGdefault{o}{+} \PYGdefault{n}{n}\PYGdefault{p}{);}
+	\PYGdefault{n}{thrust}\PYGdefault{o}{::}\PYGdefault{n}{device\PYGdefaultZus{}vector}\PYGdefault{o}{\PYGdefaultZlt{}}\PYGdefault{k+kt}{int}\PYGdefault{o}{\PYGdefaultZgt{}} \PYGdefault{n}{d\PYGdefaultZus{}y}\PYGdefault{p}{(}\PYGdefault{n}{y}\PYGdefault{p}{,} \PYGdefault{n}{y} \PYGdefault{o}{+} \PYGdefault{n}{n}\PYGdefault{p}{);}
+	\PYGdefault{n}{thrust}\PYGdefault{o}{::}\PYGdefault{n}{device\PYGdefaultZus{}vector}\PYGdefault{o}{\PYGdefaultZlt{}}\PYGdefault{k+kt}{int}\PYGdefault{o}{\PYGdefaultZgt{}} \PYGdefault{n}{d\PYGdefaultZus{}g}\PYGdefault{p}{(}\PYGdefault{n}{g}\PYGdefault{p}{,} \PYGdefault{n}{g} \PYGdefault{o}{+} \PYGdefault{n}{n}\PYGdefault{p}{);}
+	\PYGdefault{n}{thrust}\PYGdefault{o}{::}\PYGdefault{n}{device\PYGdefaultZus{}vector}\PYGdefault{o}{\PYGdefaultZlt{}}\PYGdefault{k+kt}{int}\PYGdefault{o}{\PYGdefaultZgt{}} \PYGdefault{n}{d\PYGdefaultZus{}i}\PYGdefault{p}{(}\PYGdefault{n}{i}\PYGdefault{p}{,} \PYGdefault{n}{i} \PYGdefault{o}{+} \PYGdefault{n}{n}\PYGdefault{p}{);}
+	\PYGdefault{n}{thrust}\PYGdefault{o}{::}\PYGdefault{n}{sort\PYGdefaultZus{}by\PYGdefaultZus{}key}\PYGdefault{p}{(}\PYGdefault{n}{d\PYGdefaultZus{}g}\PYGdefault{p}{.}\PYGdefault{n}{begin}\PYGdefault{p}{(),} \PYGdefault{n}{d\PYGdefaultZus{}g}\PYGdefault{p}{.}\PYGdefault{n}{end}\PYGdefault{p}{(),} \PYGdefault{n}{d\PYGdefaultZus{}i}\PYGdefault{p}{.}\PYGdefault{n}{begin}\PYGdefault{p}{());}
+	\PYGdefault{n}{thrust}\PYGdefault{o}{::}\PYGdefault{n}{gather}\PYGdefault{p}{(}\PYGdefault{n}{d\PYGdefaultZus{}i}\PYGdefault{p}{.}\PYGdefault{n}{begin}\PYGdefault{p}{(),} \PYGdefault{n}{d\PYGdefaultZus{}i}\PYGdefault{p}{.}\PYGdefault{n}{end}\PYGdefault{p}{(),} \PYGdefault{n}{d\PYGdefaultZus{}x}\PYGdefault{p}{.}\PYGdefault{n}{begin}\PYGdefault{p}{(),} \PYGdefault{n}{d\PYGdefaultZus{}x}\PYGdefault{p}{.}\PYGdefault{n}{begin}\PYGdefault{p}{());}
+	\PYGdefault{n}{thrust}\PYGdefault{o}{::}\PYGdefault{n}{gather}\PYGdefault{p}{(}\PYGdefault{n}{d\PYGdefaultZus{}i}\PYGdefault{p}{.}\PYGdefault{n}{begin}\PYGdefault{p}{(),} \PYGdefault{n}{d\PYGdefaultZus{}i}\PYGdefault{p}{.}\PYGdefault{n}{end}\PYGdefault{p}{(),} \PYGdefault{n}{d\PYGdefaultZus{}y}\PYGdefault{p}{.}\PYGdefault{n}{begin}\PYGdefault{p}{(),} \PYGdefault{n}{d\PYGdefaultZus{}y}\PYGdefault{p}{.}\PYGdefault{n}{begin}\PYGdefault{p}{());}
+	\PYGdefault{n}{thrust}\PYGdefault{o}{::}\PYGdefault{n}{copy}\PYGdefault{p}{(}\PYGdefault{n}{d\PYGdefaultZus{}g}\PYGdefault{p}{.}\PYGdefault{n}{begin}\PYGdefault{p}{(),} \PYGdefault{n}{d\PYGdefaultZus{}g}\PYGdefault{p}{.}\PYGdefault{n}{end}\PYGdefault{p}{(),} \PYGdefault{n}{g}\PYGdefault{p}{);}
+	\PYGdefault{n}{thrust}\PYGdefault{o}{::}\PYGdefault{n}{copy}\PYGdefault{p}{(}\PYGdefault{n}{d\PYGdefaultZus{}i}\PYGdefault{p}{.}\PYGdefault{n}{begin}\PYGdefault{p}{(),} \PYGdefault{n}{d\PYGdefaultZus{}i}\PYGdefault{p}{.}\PYGdefault{n}{end}\PYGdefault{p}{(),} \PYGdefault{n}{i}\PYGdefault{p}{);}
+	\PYGdefault{n}{thrust}\PYGdefault{o}{::}\PYGdefault{n}{copy}\PYGdefault{p}{(}\PYGdefault{n}{d\PYGdefaultZus{}x}\PYGdefault{p}{.}\PYGdefault{n}{begin}\PYGdefault{p}{(),} \PYGdefault{n}{d\PYGdefaultZus{}x}\PYGdefault{p}{.}\PYGdefault{n}{end}\PYGdefault{p}{(),} \PYGdefault{n}{x}\PYGdefault{p}{);}
+	\PYGdefault{n}{thrust}\PYGdefault{o}{::}\PYGdefault{n}{copy}\PYGdefault{p}{(}\PYGdefault{n}{d\PYGdefaultZus{}y}\PYGdefault{p}{.}\PYGdefault{n}{begin}\PYGdefault{p}{(),} \PYGdefault{n}{d\PYGdefaultZus{}y}\PYGdefault{p}{.}\PYGdefault{n}{end}\PYGdefault{p}{(),} \PYGdefault{n}{y}\PYGdefault{p}{);}
+
+	\PYGdefault{n}{printf}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}Counting point indices...}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{p}{);}
+	\PYGdefault{k+kt}{int} \PYGdefault{o}{*}\PYGdefault{n}{a}\PYGdefault{p}{;}
+	\PYGdefault{n}{a} \PYGdefault{o}{=} \PYGdefault{p}{(}\PYGdefault{k+kt}{int}\PYGdefault{o}{*}\PYGdefault{p}{)} \PYGdefault{n}{malloc}\PYGdefault{p}{(}\PYGdefault{k}{sizeof}\PYGdefault{p}{(}\PYGdefault{k+kt}{int}\PYGdefault{p}{)} \PYGdefault{o}{*} \PYGdefault{n}{c}\PYGdefault{p}{);}
+	\PYGdefault{k+kt}{int} \PYGdefault{o}{*}\PYGdefault{n}{b}\PYGdefault{p}{;}
+	\PYGdefault{n}{b} \PYGdefault{o}{=} \PYGdefault{p}{(}\PYGdefault{k+kt}{int}\PYGdefault{o}{*}\PYGdefault{p}{)} \PYGdefault{n}{malloc}\PYGdefault{p}{(}\PYGdefault{k}{sizeof}\PYGdefault{p}{(}\PYGdefault{k+kt}{int}\PYGdefault{p}{)} \PYGdefault{o}{*} \PYGdefault{n}{c}\PYGdefault{p}{);}
+	\PYGdefault{n}{a}\PYGdefault{p}{[}\PYGdefault{l+m+mi}{0}\PYGdefault{p}{]} \PYGdefault{o}{=} \PYGdefault{n}{g}\PYGdefault{p}{[}\PYGdefault{l+m+mi}{0}\PYGdefault{p}{];}
+	\PYGdefault{n}{b}\PYGdefault{p}{[}\PYGdefault{l+m+mi}{0}\PYGdefault{p}{]} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
+	\PYGdefault{k+kt}{int} \PYGdefault{n}{k} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
+	\PYGdefault{k}{for}\PYGdefault{p}{(}\PYGdefault{n}{j} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;} \PYGdefault{n}{j} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{n}{n}\PYGdefault{p}{;} \PYGdefault{n}{j}\PYGdefault{o}{++}\PYGdefault{p}{)\PYGdefaultZob{}}
+		\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{g}\PYGdefault{p}{[}\PYGdefault{n}{j}\PYGdefault{p}{]} \PYGdefault{o}{!=} \PYGdefault{n}{a}\PYGdefault{p}{[}\PYGdefault{n}{k}\PYGdefault{p}{])\PYGdefaultZob{}}
+			\PYGdefault{n}{k}\PYGdefault{o}{++}\PYGdefault{p}{;}
+			\PYGdefault{n}{a}\PYGdefault{p}{[}\PYGdefault{n}{k}\PYGdefault{p}{]} \PYGdefault{o}{=} \PYGdefault{n}{g}\PYGdefault{p}{[}\PYGdefault{n}{j}\PYGdefault{p}{];}
+			\PYGdefault{n}{b}\PYGdefault{p}{[}\PYGdefault{n}{k}\PYGdefault{p}{]} \PYGdefault{o}{=} \PYGdefault{n}{j}\PYGdefault{p}{;}
+		\PYGdefault{p}{\PYGdefaultZcb{}}	
+	\PYGdefault{p}{\PYGdefaultZcb{}}
+	\PYGdefault{n}{b}\PYGdefault{p}{[}\PYGdefault{o}{++}\PYGdefault{n}{k}\PYGdefault{p}{]} \PYGdefault{o}{=} \PYGdefault{n}{n}\PYGdefault{p}{;}
+
+	\PYGdefault{k+kt}{int} \PYGdefault{o}{*}\PYGdefault{n}{x\PYGdefaultZus{}d}\PYGdefault{p}{,} \PYGdefault{o}{*}\PYGdefault{n}{y\PYGdefaultZus{}d}\PYGdefault{p}{,} \PYGdefault{o}{*}\PYGdefault{n}{g\PYGdefaultZus{}d}\PYGdefault{p}{;}
+	\PYGdefault{k+kt}{int} \PYGdefault{o}{*}\PYGdefault{n}{a\PYGdefaultZus{}d}\PYGdefault{p}{,} \PYGdefault{o}{*}\PYGdefault{n}{b\PYGdefaultZus{}d}\PYGdefault{p}{;}
+	\PYGdefault{k+kt}{unsigned} \PYGdefault{k+kt}{long} \PYGdefault{o}{*}\PYGdefault{n}{N\PYGdefaultZus{}DISKS}\PYGdefault{p}{;}
+	\PYGdefault{k+kt}{unsigned} \PYGdefault{k+kt}{long} \PYGdefault{o}{*}\PYGdefault{n}{result}\PYGdefault{p}{;}
+
+	\PYGdefault{n}{result} \PYGdefault{o}{=} \PYGdefault{p}{(}\PYGdefault{k+kt}{unsigned} \PYGdefault{k+kt}{long}\PYGdefault{o}{*}\PYGdefault{p}{)} \PYGdefault{n}{malloc}\PYGdefault{p}{(}\PYGdefault{k}{sizeof}\PYGdefault{p}{(}\PYGdefault{k+kt}{long}\PYGdefault{p}{)} \PYGdefault{o}{*} \PYGdefault{n}{c}\PYGdefault{p}{);}
+
+	\PYGdefault{n}{printf}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}cudaMalloc and cudaMemcpy stage...}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{p}{);}
+	\PYGdefault{n}{cuda\PYGdefaultZus{}ret} \PYGdefault{o}{=} \PYGdefault{n}{cudaMalloc}\PYGdefault{p}{((}\PYGdefault{k+kt}{void} \PYGdefault{o}{**}\PYGdefault{p}{)} \PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{x\PYGdefaultZus{}d}\PYGdefault{p}{,} \PYGdefault{k}{sizeof}\PYGdefault{p}{(}\PYGdefault{k+kt}{int}\PYGdefault{p}{)} \PYGdefault{o}{*} \PYGdefault{n}{n}\PYGdefault{p}{);}
+	\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{cuda\PYGdefaultZus{}ret} \PYGdefault{o}{!=} \PYGdefault{n}{cudaSuccess}\PYGdefault{p}{)\PYGdefaultZob{}}
+		\PYGdefault{n}{printf}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{Checking cudaMalloc for x ...  \PYGdefaultZpc{}s in \PYGdefaultZpc{}s at line \PYGdefaultZpc{}d}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{p}{,} \PYGdefault{n}{cudaGetErrorString}\PYGdefault{p}{(}\PYGdefault{n}{cuda\PYGdefaultZus{}ret}\PYGdefault{p}{),} \PYGdefault{n}{\PYGdefaultZus{}\PYGdefaultZus{}FILE\PYGdefaultZus{}\PYGdefaultZus{}}\PYGdefault{p}{,} \PYGdefault{n}{\PYGdefaultZus{}\PYGdefaultZus{}LINE\PYGdefaultZus{}\PYGdefaultZus{}}\PYGdefault{p}{);}
+		\PYGdefault{n}{exit}\PYGdefault{p}{(}\PYGdefault{n}{EXIT\PYGdefaultZus{}FAILURE}\PYGdefault{p}{);}
+	\PYGdefault{p}{\PYGdefaultZcb{}}
+	\PYGdefault{n}{cuda\PYGdefaultZus{}ret} \PYGdefault{o}{=} \PYGdefault{n}{cudaMalloc}\PYGdefault{p}{((}\PYGdefault{k+kt}{void} \PYGdefault{o}{**}\PYGdefault{p}{)} \PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{y\PYGdefaultZus{}d}\PYGdefault{p}{,} \PYGdefault{k}{sizeof}\PYGdefault{p}{(}\PYGdefault{k+kt}{int}\PYGdefault{p}{)} \PYGdefault{o}{*} \PYGdefault{n}{n}\PYGdefault{p}{);}
+	\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{cuda\PYGdefaultZus{}ret} \PYGdefault{o}{!=} \PYGdefault{n}{cudaSuccess}\PYGdefault{p}{)\PYGdefaultZob{}}
+		\PYGdefault{n}{printf}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{Checking cudaMalloc for y ...  \PYGdefaultZpc{}s in \PYGdefaultZpc{}s at line \PYGdefaultZpc{}d}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{p}{,} \PYGdefault{n}{cudaGetErrorString}\PYGdefault{p}{(}\PYGdefault{n}{cuda\PYGdefaultZus{}ret}\PYGdefault{p}{),} \PYGdefault{n}{\PYGdefaultZus{}\PYGdefaultZus{}FILE\PYGdefaultZus{}\PYGdefaultZus{}}\PYGdefault{p}{,} \PYGdefault{n}{\PYGdefaultZus{}\PYGdefaultZus{}LINE\PYGdefaultZus{}\PYGdefaultZus{}}\PYGdefault{p}{);}
+		\PYGdefault{n}{exit}\PYGdefault{p}{(}\PYGdefault{n}{EXIT\PYGdefaultZus{}FAILURE}\PYGdefault{p}{);}
+	\PYGdefault{p}{\PYGdefaultZcb{}}
+	\PYGdefault{n}{cuda\PYGdefaultZus{}ret} \PYGdefault{o}{=} \PYGdefault{n}{cudaMalloc}\PYGdefault{p}{((}\PYGdefault{k+kt}{void} \PYGdefault{o}{**}\PYGdefault{p}{)} \PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{g\PYGdefaultZus{}d}\PYGdefault{p}{,} \PYGdefault{k}{sizeof}\PYGdefault{p}{(}\PYGdefault{k+kt}{int}\PYGdefault{p}{)} \PYGdefault{o}{*} \PYGdefault{n}{n}\PYGdefault{p}{);}
+	\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{cuda\PYGdefaultZus{}ret} \PYGdefault{o}{!=} \PYGdefault{n}{cudaSuccess}\PYGdefault{p}{)\PYGdefaultZob{}}
+		\PYGdefault{n}{printf}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{Checking cudaMalloc for g ...  \PYGdefaultZpc{}s in \PYGdefaultZpc{}s at line \PYGdefaultZpc{}d}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{p}{,} \PYGdefault{n}{cudaGetErrorString}\PYGdefault{p}{(}\PYGdefault{n}{cuda\PYGdefaultZus{}ret}\PYGdefault{p}{),} \PYGdefault{n}{\PYGdefaultZus{}\PYGdefaultZus{}FILE\PYGdefaultZus{}\PYGdefaultZus{}}\PYGdefault{p}{,} \PYGdefault{n}{\PYGdefaultZus{}\PYGdefaultZus{}LINE\PYGdefaultZus{}\PYGdefaultZus{}}\PYGdefault{p}{);}
+		\PYGdefault{n}{exit}\PYGdefault{p}{(}\PYGdefault{n}{EXIT\PYGdefaultZus{}FAILURE}\PYGdefault{p}{);}
+	\PYGdefault{p}{\PYGdefaultZcb{}}
+	\PYGdefault{n}{cuda\PYGdefaultZus{}ret} \PYGdefault{o}{=} \PYGdefault{n}{cudaMalloc}\PYGdefault{p}{((}\PYGdefault{k+kt}{void} \PYGdefault{o}{**}\PYGdefault{p}{)} \PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{N\PYGdefaultZus{}DISKS}\PYGdefault{p}{,} \PYGdefault{k}{sizeof}\PYGdefault{p}{(}\PYGdefault{k+kt}{long}\PYGdefault{p}{)} \PYGdefault{o}{*} \PYGdefault{n}{c}\PYGdefault{p}{);}
+	\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{cuda\PYGdefaultZus{}ret} \PYGdefault{o}{!=} \PYGdefault{n}{cudaSuccess}\PYGdefault{p}{)\PYGdefaultZob{}}
+		\PYGdefault{n}{printf}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{Checking cudaMalloc for N\PYGdefaultZus{}DISKS ...  \PYGdefaultZpc{}s in \PYGdefaultZpc{}s at line \PYGdefaultZpc{}d}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{p}{,} \PYGdefault{n}{cudaGetErrorString}\PYGdefault{p}{(}\PYGdefault{n}{cuda\PYGdefaultZus{}ret}\PYGdefault{p}{),} \PYGdefault{n}{\PYGdefaultZus{}\PYGdefaultZus{}FILE\PYGdefaultZus{}\PYGdefaultZus{}}\PYGdefault{p}{,} \PYGdefault{n}{\PYGdefaultZus{}\PYGdefaultZus{}LINE\PYGdefaultZus{}\PYGdefaultZus{}}\PYGdefault{p}{);}
+		\PYGdefault{n}{exit}\PYGdefault{p}{(}\PYGdefault{n}{EXIT\PYGdefaultZus{}FAILURE}\PYGdefault{p}{);}
+	\PYGdefault{p}{\PYGdefaultZcb{}}
+	\PYGdefault{n}{cuda\PYGdefaultZus{}ret} \PYGdefault{o}{=} \PYGdefault{n}{cudaMalloc}\PYGdefault{p}{((}\PYGdefault{k+kt}{void} \PYGdefault{o}{**}\PYGdefault{p}{)} \PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{a\PYGdefaultZus{}d}\PYGdefault{p}{,} \PYGdefault{k}{sizeof}\PYGdefault{p}{(}\PYGdefault{k+kt}{int}\PYGdefault{p}{)} \PYGdefault{o}{*} \PYGdefault{n}{c}\PYGdefault{p}{);}
+	\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{cuda\PYGdefaultZus{}ret} \PYGdefault{o}{!=} \PYGdefault{n}{cudaSuccess}\PYGdefault{p}{)\PYGdefaultZob{}}
+		\PYGdefault{n}{printf}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{Checking cudaMalloc for a ...  \PYGdefaultZpc{}s in \PYGdefaultZpc{}s at line \PYGdefaultZpc{}d}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{p}{,} \PYGdefault{n}{cudaGetErrorString}\PYGdefault{p}{(}\PYGdefault{n}{cuda\PYGdefaultZus{}ret}\PYGdefault{p}{),} \PYGdefault{n}{\PYGdefaultZus{}\PYGdefaultZus{}FILE\PYGdefaultZus{}\PYGdefaultZus{}}\PYGdefault{p}{,} \PYGdefault{n}{\PYGdefaultZus{}\PYGdefaultZus{}LINE\PYGdefaultZus{}\PYGdefaultZus{}}\PYGdefault{p}{);}
+		\PYGdefault{n}{exit}\PYGdefault{p}{(}\PYGdefault{n}{EXIT\PYGdefaultZus{}FAILURE}\PYGdefault{p}{);}
+	\PYGdefault{p}{\PYGdefaultZcb{}}
+	\PYGdefault{n}{cuda\PYGdefaultZus{}ret} \PYGdefault{o}{=} \PYGdefault{n}{cudaMalloc}\PYGdefault{p}{((}\PYGdefault{k+kt}{void} \PYGdefault{o}{**}\PYGdefault{p}{)} \PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{b\PYGdefaultZus{}d}\PYGdefault{p}{,} \PYGdefault{k}{sizeof}\PYGdefault{p}{(}\PYGdefault{k+kt}{int}\PYGdefault{p}{)} \PYGdefault{o}{*} \PYGdefault{n}{c}\PYGdefault{p}{);}
+	\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{cuda\PYGdefaultZus{}ret} \PYGdefault{o}{!=} \PYGdefault{n}{cudaSuccess}\PYGdefault{p}{)\PYGdefaultZob{}}
+		\PYGdefault{n}{printf}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{Checking cudaMalloc for b ...  \PYGdefaultZpc{}s in \PYGdefaultZpc{}s at line \PYGdefaultZpc{}d}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{p}{,} \PYGdefault{n}{cudaGetErrorString}\PYGdefault{p}{(}\PYGdefault{n}{cuda\PYGdefaultZus{}ret}\PYGdefault{p}{),} \PYGdefault{n}{\PYGdefaultZus{}\PYGdefaultZus{}FILE\PYGdefaultZus{}\PYGdefaultZus{}}\PYGdefault{p}{,} \PYGdefault{n}{\PYGdefaultZus{}\PYGdefaultZus{}LINE\PYGdefaultZus{}\PYGdefaultZus{}}\PYGdefault{p}{);}
+		\PYGdefault{n}{exit}\PYGdefault{p}{(}\PYGdefault{n}{EXIT\PYGdefaultZus{}FAILURE}\PYGdefault{p}{);}
+	\PYGdefault{p}{\PYGdefaultZcb{}}
+	\PYGdefault{n}{cudaDeviceSynchronize}\PYGdefault{p}{();}
+	\PYGdefault{n}{cuda\PYGdefaultZus{}ret} \PYGdefault{o}{=} \PYGdefault{n}{cudaMemcpy}\PYGdefault{p}{(}\PYGdefault{n}{x\PYGdefaultZus{}d}\PYGdefault{p}{,} \PYGdefault{n}{x}\PYGdefault{p}{,} \PYGdefault{k}{sizeof}\PYGdefault{p}{(}\PYGdefault{k+kt}{int}\PYGdefault{p}{)} \PYGdefault{o}{*} \PYGdefault{n}{n}\PYGdefault{p}{,} \PYGdefault{n}{cudaMemcpyHostToDevice}\PYGdefault{p}{);}
+	\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{cuda\PYGdefaultZus{}ret} \PYGdefault{o}{!=} \PYGdefault{n}{cudaSuccess}\PYGdefault{p}{)\PYGdefaultZob{}}
+		\PYGdefault{n}{printf}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{Checking cudaMemcpy for x\PYGdefaultZus{}d...  \PYGdefaultZpc{}s in \PYGdefaultZpc{}s at line \PYGdefaultZpc{}d}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{p}{,} \PYGdefault{n}{cudaGetErrorString}\PYGdefault{p}{(}\PYGdefault{n}{cuda\PYGdefaultZus{}ret}\PYGdefault{p}{),} \PYGdefault{n}{\PYGdefaultZus{}\PYGdefaultZus{}FILE\PYGdefaultZus{}\PYGdefaultZus{}}\PYGdefault{p}{,} \PYGdefault{n}{\PYGdefaultZus{}\PYGdefaultZus{}LINE\PYGdefaultZus{}\PYGdefaultZus{}}\PYGdefault{p}{);}
+		\PYGdefault{n}{exit}\PYGdefault{p}{(}\PYGdefault{n}{EXIT\PYGdefaultZus{}FAILURE}\PYGdefault{p}{);}
+	\PYGdefault{p}{\PYGdefaultZcb{}}
+	\PYGdefault{n}{cuda\PYGdefaultZus{}ret} \PYGdefault{o}{=} \PYGdefault{n}{cudaMemcpy}\PYGdefault{p}{(}\PYGdefault{n}{y\PYGdefaultZus{}d}\PYGdefault{p}{,} \PYGdefault{n}{y}\PYGdefault{p}{,} \PYGdefault{k}{sizeof}\PYGdefault{p}{(}\PYGdefault{k+kt}{int}\PYGdefault{p}{)} \PYGdefault{o}{*} \PYGdefault{n}{n}\PYGdefault{p}{,} \PYGdefault{n}{cudaMemcpyHostToDevice}\PYGdefault{p}{);}
+	\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{cuda\PYGdefaultZus{}ret} \PYGdefault{o}{!=} \PYGdefault{n}{cudaSuccess}\PYGdefault{p}{)\PYGdefaultZob{}}
+		\PYGdefault{n}{printf}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{Checking cudaMemcpy for y\PYGdefaultZus{}d...  \PYGdefaultZpc{}s in \PYGdefaultZpc{}s at line \PYGdefaultZpc{}d}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{p}{,} \PYGdefault{n}{cudaGetErrorString}\PYGdefault{p}{(}\PYGdefault{n}{cuda\PYGdefaultZus{}ret}\PYGdefault{p}{),} \PYGdefault{n}{\PYGdefaultZus{}\PYGdefaultZus{}FILE\PYGdefaultZus{}\PYGdefaultZus{}}\PYGdefault{p}{,} \PYGdefault{n}{\PYGdefaultZus{}\PYGdefaultZus{}LINE\PYGdefaultZus{}\PYGdefaultZus{}}\PYGdefault{p}{);}
+		\PYGdefault{n}{exit}\PYGdefault{p}{(}\PYGdefault{n}{EXIT\PYGdefaultZus{}FAILURE}\PYGdefault{p}{);}
+	\PYGdefault{p}{\PYGdefaultZcb{}}
+	\PYGdefault{n}{cuda\PYGdefaultZus{}ret} \PYGdefault{o}{=} \PYGdefault{n}{cudaMemcpy}\PYGdefault{p}{(}\PYGdefault{n}{g\PYGdefaultZus{}d}\PYGdefault{p}{,} \PYGdefault{n}{g}\PYGdefault{p}{,} \PYGdefault{k}{sizeof}\PYGdefault{p}{(}\PYGdefault{k+kt}{int}\PYGdefault{p}{)} \PYGdefault{o}{*} \PYGdefault{n}{n}\PYGdefault{p}{,} \PYGdefault{n}{cudaMemcpyHostToDevice}\PYGdefault{p}{);}
+	\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{cuda\PYGdefaultZus{}ret} \PYGdefault{o}{!=} \PYGdefault{n}{cudaSuccess}\PYGdefault{p}{)\PYGdefaultZob{}}
+		\PYGdefault{n}{printf}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{Checking cudaMemcpy for g\PYGdefaultZus{}d...  \PYGdefaultZpc{}s in \PYGdefaultZpc{}s at line \PYGdefaultZpc{}d}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{p}{,} \PYGdefault{n}{cudaGetErrorString}\PYGdefault{p}{(}\PYGdefault{n}{cuda\PYGdefaultZus{}ret}\PYGdefault{p}{),} \PYGdefault{n}{\PYGdefaultZus{}\PYGdefaultZus{}FILE\PYGdefaultZus{}\PYGdefaultZus{}}\PYGdefault{p}{,} \PYGdefault{n}{\PYGdefaultZus{}\PYGdefaultZus{}LINE\PYGdefaultZus{}\PYGdefaultZus{}}\PYGdefault{p}{);}
+		\PYGdefault{n}{exit}\PYGdefault{p}{(}\PYGdefault{n}{EXIT\PYGdefaultZus{}FAILURE}\PYGdefault{p}{);}
+	\PYGdefault{p}{\PYGdefaultZcb{}}
+	\PYGdefault{n}{cuda\PYGdefaultZus{}ret} \PYGdefault{o}{=} \PYGdefault{n}{cudaMemcpy}\PYGdefault{p}{(}\PYGdefault{n}{a\PYGdefaultZus{}d}\PYGdefault{p}{,} \PYGdefault{n}{a}\PYGdefault{p}{,} \PYGdefault{k}{sizeof}\PYGdefault{p}{(}\PYGdefault{k+kt}{int}\PYGdefault{p}{)} \PYGdefault{o}{*} \PYGdefault{n}{c}\PYGdefault{p}{,} \PYGdefault{n}{cudaMemcpyHostToDevice}\PYGdefault{p}{);}
+	\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{cuda\PYGdefaultZus{}ret} \PYGdefault{o}{!=} \PYGdefault{n}{cudaSuccess}\PYGdefault{p}{)\PYGdefaultZob{}}
+		\PYGdefault{n}{printf}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{Checking cudaMemcpy for a\PYGdefaultZus{}d...  \PYGdefaultZpc{}s in \PYGdefaultZpc{}s at line \PYGdefaultZpc{}d}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{p}{,} \PYGdefault{n}{cudaGetErrorString}\PYGdefault{p}{(}\PYGdefault{n}{cuda\PYGdefaultZus{}ret}\PYGdefault{p}{),} \PYGdefault{n}{\PYGdefaultZus{}\PYGdefaultZus{}FILE\PYGdefaultZus{}\PYGdefaultZus{}}\PYGdefault{p}{,} \PYGdefault{n}{\PYGdefaultZus{}\PYGdefaultZus{}LINE\PYGdefaultZus{}\PYGdefaultZus{}}\PYGdefault{p}{);}
+		\PYGdefault{n}{exit}\PYGdefault{p}{(}\PYGdefault{n}{EXIT\PYGdefaultZus{}FAILURE}\PYGdefault{p}{);}
+	\PYGdefault{p}{\PYGdefaultZcb{}}
+	\PYGdefault{n}{cuda\PYGdefaultZus{}ret} \PYGdefault{o}{=} \PYGdefault{n}{cudaMemcpy}\PYGdefault{p}{(}\PYGdefault{n}{b\PYGdefaultZus{}d}\PYGdefault{p}{,} \PYGdefault{n}{b}\PYGdefault{p}{,} \PYGdefault{k}{sizeof}\PYGdefault{p}{(}\PYGdefault{k+kt}{int}\PYGdefault{p}{)} \PYGdefault{o}{*} \PYGdefault{n}{c}\PYGdefault{p}{,} \PYGdefault{n}{cudaMemcpyHostToDevice}\PYGdefault{p}{);}
+	\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{cuda\PYGdefaultZus{}ret} \PYGdefault{o}{!=} \PYGdefault{n}{cudaSuccess}\PYGdefault{p}{)\PYGdefaultZob{}}
+		\PYGdefault{n}{printf}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{Checking cudaMemcpy for b\PYGdefaultZus{}d...  \PYGdefaultZpc{}s in \PYGdefaultZpc{}s at line \PYGdefaultZpc{}d}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{p}{,} \PYGdefault{n}{cudaGetErrorString}\PYGdefault{p}{(}\PYGdefault{n}{cuda\PYGdefaultZus{}ret}\PYGdefault{p}{),} \PYGdefault{n}{\PYGdefaultZus{}\PYGdefaultZus{}FILE\PYGdefaultZus{}\PYGdefaultZus{}}\PYGdefault{p}{,} \PYGdefault{n}{\PYGdefaultZus{}\PYGdefaultZus{}LINE\PYGdefaultZus{}\PYGdefaultZus{}}\PYGdefault{p}{);}
+		\PYGdefault{n}{exit}\PYGdefault{p}{(}\PYGdefault{n}{EXIT\PYGdefaultZus{}FAILURE}\PYGdefault{p}{);}
+	\PYGdefault{p}{\PYGdefaultZcb{}}
+	\PYGdefault{n}{cudaDeviceSynchronize}\PYGdefault{p}{();}
+	\PYGdefault{k}{const} \PYGdefault{n}{dim3} \PYGdefault{n}{grid}\PYGdefault{p}{(}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{,} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{,} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{);}
+	\PYGdefault{k}{const} \PYGdefault{n}{dim3} \PYGdefault{n}{block}\PYGdefault{p}{(}\PYGdefault{n}{k}\PYGdefault{p}{,} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{,} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{);}
+
+	\PYGdefault{c+c1}{// Calling the kernel... }
+	\PYGdefault{n}{printf}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}Running the kernel...}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{k=\PYGdefaultZpc{}d}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{p}{,} \PYGdefault{n}{k}\PYGdefault{p}{);}
+	\PYGdefault{n}{parallelBFE}\PYGdefault{o}{\PYGdefaultZlt{}\PYGdefaultZlt{}\PYGdefaultZlt{}}\PYGdefault{n}{grid}\PYGdefault{p}{,} \PYGdefault{n}{block}\PYGdefault{o}{\PYGdefaultZgt{}\PYGdefaultZgt{}\PYGdefaultZgt{}}\PYGdefault{p}{(}\PYGdefault{n}{x\PYGdefaultZus{}d}\PYGdefault{p}{,} \PYGdefault{n}{y\PYGdefaultZus{}d}\PYGdefault{p}{,} \PYGdefault{n}{g\PYGdefaultZus{}d}\PYGdefault{p}{,} \PYGdefault{n}{a\PYGdefaultZus{}d}\PYGdefault{p}{,} \PYGdefault{n}{b\PYGdefaultZus{}d}\PYGdefault{p}{,} \PYGdefault{n}{n}\PYGdefault{p}{,} \PYGdefault{n}{k}\PYGdefault{p}{,} \PYGdefault{n}{M}\PYGdefault{p}{,} \PYGdefault{n}{N}\PYGdefault{p}{,} \PYGdefault{n}{E2}\PYGdefault{p}{,} \PYGdefault{n}{N\PYGdefaultZus{}DISKS}\PYGdefault{p}{);}
+	
+	\PYGdefault{n}{cuda\PYGdefaultZus{}ret} \PYGdefault{o}{=} \PYGdefault{n}{cudaDeviceSynchronize}\PYGdefault{p}{();}
+	\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{cuda\PYGdefaultZus{}ret} \PYGdefault{o}{!=} \PYGdefault{n}{cudaSuccess}\PYGdefault{p}{)\PYGdefaultZob{}}
+		\PYGdefault{n}{printf}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{Error lunching kernel...  \PYGdefaultZpc{}s in \PYGdefaultZpc{}s at line \PYGdefaultZpc{}d}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{p}{,} \PYGdefault{n}{cudaGetErrorString}\PYGdefault{p}{(}\PYGdefault{n}{cuda\PYGdefaultZus{}ret}\PYGdefault{p}{),} \PYGdefault{n}{\PYGdefaultZus{}\PYGdefaultZus{}FILE\PYGdefaultZus{}\PYGdefaultZus{}}\PYGdefault{p}{,} \PYGdefault{n}{\PYGdefaultZus{}\PYGdefaultZus{}LINE\PYGdefaultZus{}\PYGdefaultZus{}}\PYGdefault{p}{);}
+		\PYGdefault{n}{exit}\PYGdefault{p}{(}\PYGdefault{n}{EXIT\PYGdefaultZus{}FAILURE}\PYGdefault{p}{);}
+	\PYGdefault{p}{\PYGdefaultZcb{}}
+	
+	\PYGdefault{n}{cuda\PYGdefaultZus{}ret} \PYGdefault{o}{=} \PYGdefault{n}{cudaMemcpy}\PYGdefault{p}{(}\PYGdefault{n}{result}\PYGdefault{p}{,} \PYGdefault{n}{N\PYGdefaultZus{}DISKS}\PYGdefault{p}{,} \PYGdefault{k}{sizeof}\PYGdefault{p}{(}\PYGdefault{k+kt}{long}\PYGdefault{p}{)} \PYGdefault{o}{*} \PYGdefault{n}{c}\PYGdefault{p}{,} \PYGdefault{n}{cudaMemcpyDeviceToHost}\PYGdefault{p}{);}
+	\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{cuda\PYGdefaultZus{}ret} \PYGdefault{o}{!=} \PYGdefault{n}{cudaSuccess}\PYGdefault{p}{)\PYGdefaultZob{}}
+		\PYGdefault{n}{printf}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{Checking cudaMemcpy for result...  \PYGdefaultZpc{}s in \PYGdefaultZpc{}s at line \PYGdefaultZpc{}d}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{p}{,} \PYGdefault{n}{cudaGetErrorString}\PYGdefault{p}{(}\PYGdefault{n}{cuda\PYGdefaultZus{}ret}\PYGdefault{p}{),} \PYGdefault{n}{\PYGdefaultZus{}\PYGdefaultZus{}FILE\PYGdefaultZus{}\PYGdefaultZus{}}\PYGdefault{p}{,} \PYGdefault{n}{\PYGdefaultZus{}\PYGdefaultZus{}LINE\PYGdefaultZus{}\PYGdefaultZus{}}\PYGdefault{p}{);}
+		\PYGdefault{n}{exit}\PYGdefault{p}{(}\PYGdefault{n}{EXIT\PYGdefaultZus{}FAILURE}\PYGdefault{p}{);}
+	\PYGdefault{p}{\PYGdefaultZcb{}}
+	\PYGdefault{n}{cudaDeviceSynchronize}\PYGdefault{p}{();}
+	
+	\PYGdefault{n}{printf}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{p}{);}
+	\PYGdefault{k}{for}\PYGdefault{p}{(}\PYGdefault{k+kt}{int} \PYGdefault{n}{j} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;} \PYGdefault{n}{j} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{n}{k}\PYGdefault{p}{;} \PYGdefault{n}{j}\PYGdefault{o}{++}\PYGdefault{p}{)\PYGdefaultZob{}}
+		\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{j} \PYGdefault{o}{\PYGdefaultZpc{}} \PYGdefault{n}{M} \PYGdefault{o}{==} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)} \PYGdefault{n}{printf}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{p}{);}	
+		\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{result}\PYGdefault{p}{[}\PYGdefault{n}{j}\PYGdefault{p}{]} \PYGdefault{o}{\PYGdefaultZgt{}=} \PYGdefault{n}{MU}\PYGdefault{p}{)\PYGdefaultZob{}}
+			\PYGdefault{n}{printf}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}\PYGdefaultZpc{}3d\PYGdefaultZhy{}\PYGdefaultZgt{}\PYGdefaultZpc{}3li  \PYGdefaultZdq{}}\PYGdefault{p}{,} \PYGdefault{n}{a}\PYGdefault{p}{[}\PYGdefault{n}{j}\PYGdefault{p}{],} \PYGdefault{n}{result}\PYGdefault{p}{[}\PYGdefault{n}{j}\PYGdefault{p}{]);}		
+		\PYGdefault{p}{\PYGdefaultZcb{}}
+	\PYGdefault{p}{\PYGdefaultZcb{}}
+	\PYGdefault{n}{printf}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{p}{);}
+
+	\PYGdefault{n}{cudaFree}\PYGdefault{p}{(}\PYGdefault{n}{x\PYGdefaultZus{}d}\PYGdefault{p}{);}
+	\PYGdefault{n}{cudaFree}\PYGdefault{p}{(}\PYGdefault{n}{y\PYGdefaultZus{}d}\PYGdefault{p}{);}
+	\PYGdefault{n}{cudaFree}\PYGdefault{p}{(}\PYGdefault{n}{g\PYGdefaultZus{}d}\PYGdefault{p}{);}
+	\PYGdefault{n}{cudaFree}\PYGdefault{p}{(}\PYGdefault{n}{N\PYGdefaultZus{}DISKS}\PYGdefault{p}{);}
+	
+	\PYGdefault{n}{free}\PYGdefault{p}{(}\PYGdefault{n}{x}\PYGdefault{p}{);}
+	\PYGdefault{n}{free}\PYGdefault{p}{(}\PYGdefault{n}{y}\PYGdefault{p}{);}
+	\PYGdefault{n}{free}\PYGdefault{p}{(}\PYGdefault{n}{g}\PYGdefault{p}{);}
+	\PYGdefault{n}{free}\PYGdefault{p}{(}\PYGdefault{n}{i}\PYGdefault{p}{);}
+	\PYGdefault{n}{free}\PYGdefault{p}{(}\PYGdefault{n}{result}\PYGdefault{p}{);}
+	
+	\PYGdefault{k}{return} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+\end{Verbatim}

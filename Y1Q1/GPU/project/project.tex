@@ -1,6 +1,7 @@
-\documentclass[a4paper,10pt]{scrartcl}
+\documentclass[10pt]{scrartcl}
 \usepackage[hmargin=2.5cm,vmargin=3cm]{geometry}
 \usepackage[utf8]{inputenc}
+\usepackage[square]{natbib}
 \usepackage{graphicx}
 \usepackage{hyperref}
 \hypersetup{
@@ -18,13 +19,39 @@ hidelinks
 \begin{document}
 
 \maketitle
+%\thispagestyle{empty}
+
+\section{Motivation}
+\begin{enumerate}
+ \item What is the problem you would like to solve?
+ 
+Recently increase use of location-aware devices (such as GPS, Smart-phones and RFID tags) has allowed the collection of a vast amount of data with a spatial component linked to them.  Different studies have focused in analyzing and mining this kind of collections \citep{leung_knowledge_2010}\citep{Miller_2001}.  In this area, trajectory datasets have emerged as an interesting field where diverse kind of patterns can be identified \citep{zheng_computing_2011}\citep{vieira_spatio-temporal_2013}.  For instance, authors have proposed techniques to discover motion spatial patterns such as moving clusters\citep{kalnis_discovering_2005}, convoys\citep{jeung_discovery_2008} and flocks \citep{benkert_reporting_2006}\citep{gudmundsson_computing_2006}.  In particular, \citep{vieira_-line_2009} and \citep{turdukulov_visual_2014} propose two novel algorithms to find moving flock patterns in very large spatio-temporal datasets.  
+ 
+ \item Why is it important?
+ 
+A flock pattern is defined as a group of entities which move together for a defined lapse of time \citep{benkert_reporting_2006}.  Applications to this kind of patterns are diverse and range from surveillance to integrated transport systems.  For example, \citep{turdukulov_visual_2014} explore the finding of this class of patterns to discover similarities between tropical cyclone paths. Also, \citep{calderon_mining_2011} finds moving flock patterns in iceberg trajectories to understand their movement behavior and how they related to changes in ocean's currents. 
+ 
+ \item What is your plan/outline of your solution?
+ 
+The algorithms proposed by \citep{vieira_-line_2009} and \citep{turdukulov_visual_2014} share the same initial strategy to detect flock patterns.  In that, first they find clusters of points which could be close enough to initiate a flock for each time interval.  This is a costly operation due to the large number of points and intervals to be analyzed.  The technique uses a grid-based index and a stencil (see figure~\ref{fig:grid}) to speed up the process but the complexity is still high.  My plan is to allow  individual threads to compute each of the stencils in the grid in parallel.
+
+\begin{figure}[h!]
+ \centering
+ \includegraphics[width=0.25\textwidth]{figures/bfe.png}
+ \caption{Grid-based index used in \citep{vieira_-line_2009}.}
+ \label{fig:grid}
+\end{figure}
+
+
+\end{enumerate}
 
 \section{Data}
- \begin{figure}
-  \centering
-  \includegraphics[width=\textwidth]{./output}
-  \caption{Data points.}\label{fig:data}
- \end{figure}
+%  \begin{figure}[h!]
+%   \centering
+%   \includegraphics[width=0.7\textwidth]{./grid}
+%   \caption{Data points.}\label{fig:grid}
+%  \end{figure}
+\includegraphics[width=\textwidth]{./grid}
 
 \section{Code}
 Full code and other materials are available at \cite{github}.
@@ -53,19 +80,45 @@ Full code and other materials are available at \cite{github}.
   linenos
   ]{bash}{outputs.sh}
 
-\section{Output}
- \begin{figure}
+\section{Profiler}
+ \begin{figure}[h!]
   \centering
   \includegraphics[width=\textwidth]{figures/nvvp_T1-E2K-M3.png}
-  \caption{NVVP performance analysis for T1-E2K-M3.}\label{fig:nvvp_T1-E2K-M3}
+  \caption{NVVP performance analysis for T1-E2K-M100.}\label{fig:nvvp_T1-E2K-M100}
  \end{figure}
 
+ \begin{figure}[h!]
+  \centering
+  \includegraphics[width=\textwidth]{figures/nvvp_T120-E2K-M100.png}
+  \caption{NVVP performance analysis for T120-E2K-M100.}\label{fig:nvvp_T120-E2K-M100}
+ \end{figure}
 
-\begin{thebibliography}{9}
-  \bibitem{github} 
-  Andres Calderon.
-  \textit{GitHub Personal Repository}, 2015. 
-  \url{https://github.com/aocalderon/PhD/tree/master/Y1Q1/GPU/lab3}.
-\end{thebibliography}
+ \begin{figure}[h!]
+  \centering
+  \includegraphics[width=\textwidth]{figures/nvvp_T120-E1K-M100.png}
+  \caption{NVVP performance analysis for T120-E1K-M100.}\label{fig:nvvp_T120-E1K-M100}
+ \end{figure}
+
+ \begin{figure}[h!]
+  \centering
+  \includegraphics[width=\textwidth]{figures/nvvp_T120-E800-M100.png}
+  \caption{NVVP performance analysis for T120-E800-M100.}\label{fig:nvvp_T120-E800-M100}
+ \end{figure}
+
+ \begin{figure}[h!]
+  \centering
+  \includegraphics[width=\textwidth]{figures/nvvp_T120-E600-M100.png}
+  \caption{NVVP performance analysis for T120-E600-M100.}\label{fig:nvvp_T120-E600-M100}
+ \end{figure}
+
+\bibliographystyle{plainnat}
+\bibliography{gpu}
+
+% \begin{thebibliography}{9}
+%   \bibitem{github} 
+%   Andres Calderon.
+%   \textit{GitHub Personal Repository}, 2015. 
+%   \url{https://github.com/aocalderon/PhD/tree/master/Y1Q1/GPU/lab3}.
+% \end{thebibliography}
 
 \end{document}
