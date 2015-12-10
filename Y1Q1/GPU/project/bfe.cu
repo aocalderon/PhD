@@ -168,8 +168,6 @@ int main(int argc,char *argv[]){
 		exit(EXIT_FAILURE);
 	}
 	cudaDeviceSynchronize();
-	//const dim3 dim_block(BLOCK_SIZE, BLOCK_SIZE, 1);
-	//const dim3 dim_grid(((n - 1) / BLOCK_SIZE) + 1, ((m - 1) / BLOCK_SIZE) + 1, 1);
 	const dim3 grid(1, 1, 1);
 	const dim3 block(k, 1, 1);
 
@@ -198,38 +196,8 @@ int main(int argc,char *argv[]){
 		}
 	}
 	printf("\n");
-	/*
-	int BLOCK_SIZE = 4;
-	const dim3 grid2(BLOCK_SIZE, BLOCK_SIZE, 1);
-	const dim3 block2(BLOCK_SIZE / N, BLOCK_SIZE / M, 1);
-
-	// Calling other the kernel... 
-	printf("Running the kernel...\nk=%d\n", k);
-	seeThreadIndex<<<grid2, block2>>>(a_d, b_d, k, M, N, N_DISKS);
-	cuda_ret = cudaDeviceSynchronize();
-	if(cuda_ret != cudaSuccess){
-		printf("\nError lunching kernel...  %s in %s at line %d\n", cudaGetErrorString(cuda_ret), __FILE__, __LINE__);
-		exit(EXIT_FAILURE);
-	}
-	
-	cuda_ret = cudaMemcpy(result, N_DISKS, sizeof(long) * c, cudaMemcpyDeviceToHost);
-	if(cuda_ret != cudaSuccess){
-		printf("\nChecking cudaMemcpy for result...  %s in %s at line %d\n", cudaGetErrorString(cuda_ret), __FILE__, __LINE__);
-		exit(EXIT_FAILURE);
-	}
-	cudaDeviceSynchronize();
-	printf("\n");
-	for(int j = 0; j < k; j++){
-		if(j % M == 0) printf("\n");	
-		if(result[j] >= MU){
-			printf("%3li  ", result[j]);		
-		}
-	}
-	printf("\n");
-	*/
 
 	cudaFree(x_d);
-
 	cudaFree(y_d);
 	cudaFree(g_d);
 	cudaFree(N_DISKS);

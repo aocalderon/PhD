@@ -22,7 +22,6 @@ __device__ int findPosition(const int *a, int k, int b, int top){
 }
 
 __global__ void parallelBFE(const int *x, const int *y, int *g, const int *a, const int *b, int n, int k, int M, int N, int E, unsigned long *N_DISKS){
-	//int t = blockIdx.x * blockDim.x + threadIdx.x;
 	int t = threadIdx.x;
 	//int px[250];
 	//int py[250];
@@ -144,13 +143,3 @@ __global__ void parallelBFE(const int *x, const int *y, int *g, const int *a, co
 	}
 	N_DISKS[t] = j;
 }
-
-__global__ void seeThreadIndex(const int *a_d, const int *b_d, int k, int M, int N, unsigned long *N_DISKS){
-	int tx = threadIdx.x;
-	int ty = threadIdx.y;
-	int col = blockIdx.x * blockDim.x + tx;
-	int row = blockIdx.y * blockDim.y + ty;
-
-	N_DISKS[row * M + col] = (unsigned long) tx;
-}
-
