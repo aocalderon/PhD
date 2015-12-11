@@ -19,10 +19,7 @@ int main(int argc,char *argv[]){
 	cudaError_t cuda_ret;
 	
 	FILE *in;
-	FILE *out;
 	in = fopen("oldenburg.csv", "r");
-	out = fopen("output.csv", "w");
-	fprintf(out, "oid;time;lat;lon;grid_id\n");
 	char line[1024];
 	int n = 0;
 	short time;
@@ -30,7 +27,8 @@ int main(int argc,char *argv[]){
 	int max_lat = INT_MIN; int min_lat = INT_MAX;
 	int max_lon = INT_MIN; int min_lon = INT_MAX;
 	int M = 0; 
-	int N = 0; 
+	int N = 0;
+	printf("Reading file with points..."); 
 	while (fgets(line, 1024, in)){
 		atoi(strtok(line, ";"));
 		if(atoi(strtok(NULL, ";\n")) > TIMESTAMP) continue;
@@ -66,9 +64,10 @@ int main(int argc,char *argv[]){
 		x[j] = lat;
 		y[j] = lon;
 		i[j] = j; 
-       	//printf("%d;%hi;%d;%d;%d\n", oid, time, lat, lon, g[j]);
+	       	//printf("%d;%hi;%d;%d;%d\n", oid, time, lat, lon, g[j]);
 		j++;
 	}
+	fclose(in);
 	printf("Number of points:\t%d\n", n);
 	printf("M x N : %d x %d\n", M, N);
 	int c = M * N;
@@ -171,7 +170,6 @@ int main(int argc,char *argv[]){
 	const dim3 grid(1, 1, 1);
 	const dim3 block(k, 1, 1);
 
-	// Calling the kernel... 
 	printf("Running the kernel...\nk=%d\n", k);
 	parallelBFE<<<grid, block>>>(x_d, y_d, g_d, a_d, b_d, n, k, M, N, E2, N_DISKS);
 	
@@ -188,6 +186,7 @@ int main(int argc,char *argv[]){
 	}
 	cudaDeviceSynchronize();
 	
+	printf("Printing the result...");
 	printf("\n");
 	for(int j = 0; j < k; j++){
 		if(j % M == 0) printf("\n");	
