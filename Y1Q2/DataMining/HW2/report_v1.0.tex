@@ -37,7 +37,7 @@ In order to accomplish the requirements of the homework, we have selected two da
 This dataset has 101 objects and 17 attributes. It records characteristics of 101 animals and groups the animals into one of 7 possible categories (mammal, bird, reptile, fish,
 amphibian, insect, and invertebrate). Most of the attributes are boolean and it has no missing values.
 
-\subsection[Seeds]{Seeds\footnote{\url{https://archive.ics.uci.edu/ml/datasets/seeds}}}
+\subsection[Seeds]{Seeds\footnote{\url{https://archive.ics.uci.edu/ml/datasets/seeds}}}\label{sec:seeds}
 This dataset contains 7 attributes and one class attribute referring to different characteristics of wheat's seeds.  The attribute values are real numbers that is why we had to normalize them, using the given command. The instances are categorized into 3 classes which define the three different varieties of wheat of kernels (Canadian, Rosa, Kama). For each class there are 70 instances, so the total number of records in this dataset is 210. There is not missing values in this data set.
 
 \section{The Code}
@@ -128,7 +128,7 @@ Line 1 uses the command \texttt{xlsread} to import our data (which we copy into 
 \subsection{Seeds}
 \begin{enumerate}
  \item Work out the default rate accuracy for the dataset, are you beating it? \\
- As we described above, the instances of this dataset are categorized into 3 classes and each class has the same number of elements. As a result, the default accuracy rate is 0.3333. Using the KNN classifier and dividing the whole dataset into half (training and test set), we beat the default accuracy as we achieve 0.9429.
+ As we described in section \ref{sec:seeds}, the instances of this dataset are categorized into 3 classes and each class has the same number of elements. As a result, the default accuracy rate is 0.3333. Using the KNN classifier and dividing the whole dataset into half (training and test set), we beat the default accuracy as we achieve 0.9429.
  
  \item Make the training data smaller (maybe half its size) and measure the accuracy again. Did it change? Why? \\ 
  We, also, tried to decrease the training set, to see what happens with the accuracy. Firstly, we decreased it by half and the accuracy dropped to 0.9048. We, even, decreased the training set to its quarter and we got 0.8571 accuracy. The results show, that by decreasing the training set, we get lower accuracy. This happens because our model needs more training to be more accurate. However, we observed that the performance of the model is very good even with less training data. 
