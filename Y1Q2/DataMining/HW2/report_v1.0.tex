@@ -35,10 +35,10 @@ In order to accomplish the requirements of the homework, we have selected two da
 
 \subsection[Zoo]{Zoo\footnote{\url{https://archive.ics.uci.edu/ml/datasets/Zoo}}}
 This dataset has 101 objects and 17 attributes. It records characteristics of 101 animals and groups the animals into one of 7 possible categories (mammal, bird, reptile, fish,
-amphibian, insect, and invertebrate). Most of the attributes are boolean.
+amphibian, insect, and invertebrate). Most of the attributes are boolean and it has no missing values.
 
 \subsection[Seeds]{Seeds\footnote{\url{https://archive.ics.uci.edu/ml/datasets/seeds}}}
-This dataset contains 7 attributes and one class attribute referring to different characteristics of wheat's seeds.  The attribute values are real numbers that is why we had to normalize them, using the given command. The instances are categorized into 3 classes which define the three different varieties of wheat of kernels (Canadian, Rosa, Kama). For each class there are 70 instances, so the total number of records in this dataset is 210.
+This dataset contains 7 attributes and one class attribute referring to different characteristics of wheat's seeds.  The attribute values are real numbers that is why we had to normalize them, using the given command. The instances are categorized into 3 classes which define the three different varieties of wheat of kernels (Canadian, Rosa, Kama). For each class there are 70 instances, so the total number of records in this dataset is 210. There is not missing values in this data set.
 
 \section{The Code}
 To apply the kNN classifier, the data sets must be divided into two sections: test data set and train data set.  We divided the datasets into two halves, so for Zoo we used the first 50 instances as test set and the instances from 51 to 101 as train set.  Similarly, for Seeds we used the first 105 instances as test set and the remaining as train set.  
@@ -70,7 +70,7 @@ Figure \ref{fig:code} shows the code used to run the kNN classifier.  We follow 
 
 Line 1 uses the command \texttt{xlsread} to import our data (which we copy into the \texttt{.xlsx} file).  In order to generate random orderings (permutations), we shuffle the rows in our data using the \texttt{randperm} command (line 2). Line 3 omits the first column from our attributes because it contains the animals' names and it is unique for each animal. The last column is also omitted because it is the class type. So out test and train sets columns are from 2 to 16 as show lines 3 and 4. In line 5, the group set includes only the last column (since classification is based on this class type).  We compute the class type of our test set by running line 6. To calculate the accuracy, we have to compare the class labels we obtained with the original class label. Lines 7 to 9 use the command \texttt{classperf} to compute and print the accuracy.
 
-\section{Answer to questions}
+\section{The Answers}
 \subsection{Zoo}
 \begin{enumerate}
  \item Work out the default rate accuracy for the dataset, are you beating it? \\
