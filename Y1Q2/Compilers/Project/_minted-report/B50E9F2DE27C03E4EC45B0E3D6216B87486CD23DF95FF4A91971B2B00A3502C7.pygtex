@@ -1,0 +1,11 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+    \PYGdefault{n}{zoo} \PYGdefault{p}{=} \PYGdefault{n}{xlsread} \PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZsq{}zoo.xlsx\PYGdefaultZsq{}}\PYGdefault{p}{);}
+    \PYGdefault{n}{zoo\PYGdefaultZus{}RandomRows} \PYGdefault{p}{=} \PYGdefault{n}{zoo} \PYGdefault{p}{(}\PYGdefault{n}{randperm} \PYGdefault{p}{(}\PYGdefault{l+m+mi}{101}\PYGdefault{p}{),:);}
+    \PYGdefault{n}{test} \PYGdefault{p}{=} \PYGdefault{n}{zoo\PYGdefaultZus{}RandomRows} \PYGdefault{p}{(}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{:}\PYGdefault{l+m+mi}{50}\PYGdefault{p}{,}\PYGdefault{l+m+mi}{2}\PYGdefault{p}{:}\PYGdefault{l+m+mi}{16}\PYGdefault{p}{);}
+    \PYGdefault{n}{train} \PYGdefault{p}{=} \PYGdefault{n}{zoo\PYGdefaultZus{}RandomRows} \PYGdefault{p}{(}\PYGdefault{l+m+mi}{51}\PYGdefault{p}{:}\PYGdefault{k}{end}\PYGdefault{p}{,} \PYGdefault{l+m+mi}{2}\PYGdefault{p}{:}\PYGdefault{l+m+mi}{16}\PYGdefault{p}{);}
+    \PYGdefault{n}{group} \PYGdefault{p}{=} \PYGdefault{n}{zoo\PYGdefaultZus{}RandomRows} \PYGdefault{p}{(}\PYGdefault{l+m+mi}{51}\PYGdefault{p}{:}\PYGdefault{k}{end}\PYGdefault{p}{,}\PYGdefault{l+m+mi}{17}\PYGdefault{p}{);}
+    \PYGdefault{n}{class} \PYGdefault{p}{=} \PYGdefault{n}{knnclassify}\PYGdefault{p}{(}\PYGdefault{n}{test}\PYGdefault{p}{,} \PYGdefault{n}{train}\PYGdefault{p}{,} \PYGdefault{n}{group}\PYGdefault{p}{);}
+    \PYGdefault{n}{true\PYGdefaultZus{}label}\PYGdefault{p}{=} \PYGdefault{n}{zoo\PYGdefaultZus{}RandomRows}\PYGdefault{p}{(}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{:}\PYGdefault{l+m+mi}{50}\PYGdefault{p}{,}\PYGdefault{l+m+mi}{17}\PYGdefault{p}{);} \PYGdefault{o}{//}\PYGdefault{n}{last} \PYGdefault{n}{column} \PYGdefault{n}{is} \PYGdefault{n}{class} \PYGdefault{n}{type}
+    \PYGdefault{n}{cp}\PYGdefault{p}{=}\PYGdefault{n}{classperf}\PYGdefault{p}{(}\PYGdefault{n}{true\PYGdefaultZus{}label}\PYGdefault{p}{,}\PYGdefault{n}{class}\PYGdefault{p}{);}
+    \PYGdefault{n}{cp}\PYGdefault{p}{.}\PYGdefault{n}{CorrectRate}
+\end{Verbatim}
