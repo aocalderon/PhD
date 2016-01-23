@@ -1,0 +1,145 @@
+\documentclass{article}\usepackage[]{graphicx}\usepackage[]{color}
+%% maxwidth is the original width if it is less than linewidth
+%% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+\makeatletter
+\def\maxwidth{ %
+  \ifdim\Gin@nat@width>\linewidth
+    \linewidth
+  \else
+    \Gin@nat@width
+  \fi
+}
+\makeatother
+
+\definecolor{fgcolor}{rgb}{0.345, 0.345, 0.345}
+\newcommand{\hlnum}[1]{\textcolor[rgb]{0.686,0.059,0.569}{#1}}%
+\newcommand{\hlstr}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
+\newcommand{\hlcom}[1]{\textcolor[rgb]{0.678,0.584,0.686}{\textit{#1}}}%
+\newcommand{\hlopt}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hlstd}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
+\newcommand{\hlkwa}[1]{\textcolor[rgb]{0.161,0.373,0.58}{\textbf{#1}}}%
+\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.69,0.353,0.396}{#1}}%
+\newcommand{\hlkwc}[1]{\textcolor[rgb]{0.333,0.667,0.333}{#1}}%
+\newcommand{\hlkwd}[1]{\textcolor[rgb]{0.737,0.353,0.396}{\textbf{#1}}}%
+
+\usepackage{framed}
+\makeatletter
+\newenvironment{kframe}{%
+ \def\at@end@of@kframe{}%
+ \ifinner\ifhmode%
+  \def\at@end@of@kframe{\end{minipage}}%
+  \begin{minipage}{\columnwidth}%
+ \fi\fi%
+ \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+ \colorbox{shadecolor}{##1}\hskip-\fboxsep
+     % There is no \\@totalrightmargin, so:
+     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+ \MakeFramed {\advance\hsize-\width
+   \@totalleftmargin\z@ \linewidth\hsize
+   \@setminipage}}%
+ {\par\unskip\endMakeFramed%
+ \at@end@of@kframe}
+\makeatother
+
+\definecolor{shadecolor}{rgb}{.97, .97, .97}
+\definecolor{messagecolor}{rgb}{0, 0, 0}
+\definecolor{warningcolor}{rgb}{1, 0, 1}
+\definecolor{errorcolor}{rgb}{1, 0, 0}
+\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
+
+\usepackage{alltt}
+\usepackage{graphicx}
+\usepackage{minted}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\hypersetup{
+colorlinks=false,
+hidelinks
+}
+
+
+\title{Milestone 1}
+\author{Andres Calderon \\ acald013@ucr.edu}
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\begin{document}
+\maketitle
+
+\section{Introduction}
+This report describes the initial steps in order to accomplish the final project in the course. The main goal of the project is to perform a reliability analysis of a machine learning algorithm (kNN).  During this first milestone it is intedend to provide a flexible implementation of the kNN algorithm, a mechanism to inject random errors in the calculation of the distance metric and a brief analisys of the impact of an unreliable distance calculation.
+
+\section{A flexible implementation of kNN}
+There are many open source implementations of the kNN algorithm under different programming languages.  This report uses the R Project for Statistical Computing\footnote{https://www.r-project.org/} platform using especifically the knnflex\footnote{\url{http://ftp.uni-bayreuth.de/math/statlib/R/CRAN/src/contrib/Descriptions/knnflex.html}} package. The knnflex package allows a more flexible implementation of the distance metric as well the oportunity to code custom functions for aggregations and tie handlers.  In addition, it uses the caret package to compute the confusion matrix and associated statistics for the model fit.
+
+\subsection{A quick classification example}
+The code in figure \ref{fig:code} illustrates the use of knnflex to classify a small random set of features.  In lines 5 to 10 it sets the number of instances and a random seed, create two attributes with random numbers (x1 and x2) and a binary class (y).  Lines 11 and 12 divede the data set in training and testing set (75\% and 25\% respectively). Line 17 call the kdd.dist function which will generate a distance matrix among all the instances in the data set. Line 18 perform the classification calling the knn.predict function.  It takes the training and testing datasets, the distance matrix, the number of neighbors to be taken into account and the aggregation method to pick the class between them.  
+
+Finally, line 22 calls the confusionMatrix function to retrieve the accuracy and other statistics from the model (figure \ref{fig:cm}). Lines 14 and 20 plots the initial instances in the training set and the result of the classification for the instances in the testing set.  Figures show the results respectively.
+
+\begin{figure}
+ \centering
+ \inputminted[
+  fontsize=\footnotesize,
+  tabsize=2,
+  breaklines,
+  xleftmargin=15mm,
+  frame=single,
+  linenos
+  ]{r}{example.R}
+ \caption{A quick code example}\label{fig:code}
+\end{figure}
+
+
+
+\begin{figure}
+ \centering
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{confusionMatrix}\hlstd{(y[test],preds)}
+\end{alltt}
+\begin{verbatim}
+## Confusion Matrix and Statistics
+## 
+##           Reference
+## Prediction  0  1
+##          0 27  0
+##          1  0 23
+##                                      
+##                Accuracy : 1          
+##                  95% CI : (0.9289, 1)
+##     No Information Rate : 0.54       
+##     P-Value [Acc > NIR] : 4.166e-14  
+##                                      
+##                   Kappa : 1          
+##  Mcnemar's Test P-Value : NA         
+##                                      
+##             Sensitivity : 1.00       
+##             Specificity : 1.00       
+##          Pos Pred Value : 1.00       
+##          Neg Pred Value : 1.00       
+##              Prevalence : 0.54       
+##          Detection Rate : 0.54       
+##    Detection Prevalence : 0.54       
+##       Balanced Accuracy : 1.00       
+##                                      
+##        'Positive' Class : 0          
+## 
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+ \caption{Confusion matrix}\label{fig:cm}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.6\textwidth]{ex1}
+  \caption{Instances in training set.}\label{fig:train}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.6\textwidth]{ex2}
+  \caption{Results for instances in testing set.}\label{fig:test}
+\end{figure}
+
+\end{document}
