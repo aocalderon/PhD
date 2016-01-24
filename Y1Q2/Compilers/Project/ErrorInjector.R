@@ -9,7 +9,7 @@ injectError <- function(kdist, p = 0.02){
         random <- runif(1, mn, mx)
         kdist[i,j] <- random
         kdist[j,i] <- random
-        print(paste(i,j))
+        # print(paste(i,j))
       }
     }
   }
