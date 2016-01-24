@@ -24,7 +24,7 @@ There are many open source implementations of the kNN algorithm under different 
 \subsection{A quick classification example}
 The code in figure \ref{fig:code} illustrates the use of knnflex to classify a small random set of features.  In lines 5 to 10 it sets the number of instances and a random seed, create two attributes with random numbers (x1 and x2) and a binary class (y).  Lines 11 and 12 divede the data set in training and testing set (75\% and 25\% respectively). Line 17 call the kdd.dist function which will generate a distance matrix among all the instances in the data set. Line 18 perform the classification calling the knn.predict function.  It takes the training and testing datasets, the distance matrix, the number of neighbors to be taken into account and the aggregation method to pick the class between them.  
 
-Finally, line 22 calls the confusionMatrix function to retrieve the accuracy and other statistics from the model (figure \ref{fig:cm}). Lines 14 and 20 plots the initial instances in the training set and the result of the classification for the instances in the testing set.  Figures show the results respectively.
+Finally, line 22 calls the confusionMatrix function to retrieve the accuracy and other statistics from the model (figure \ref{fig:cm}). Lines 14 and 20 plot the initial instances in the training set and the result of the classification for the instances in the testing set.  Figures show the results respectively.
 
 \begin{figure}
  \centering
@@ -57,7 +57,7 @@ preds <- knn.predict(train,test,y,kdist)
 
 \begin{figure}
  \centering
-<<example2>>=
+<<example2, size='footnotesize'>>=
 confusionMatrix(y[test],preds)
 @
  \caption{Confusion matrix}\label{fig:cm}
@@ -74,5 +74,70 @@ confusionMatrix(y[test],preds)
   \includegraphics[width=0.6\textwidth]{ex2}
   \caption{Results for instances in testing set.}\label{fig:test}
 \end{figure}
+
+\section{Error injector}
+The code in figure \ref{fig:injector} takes the distance matrix generated in line 17 of figure \ref{fig:code} and introduces random errors.  A distance is changed according to a probability passed as second parameter. By default this value is set to 2\%.
+
+\begin{figure}
+ \centering
+ \inputminted[
+  fontsize=\footnotesize,
+  tabsize=2,
+  breaklines,
+  xleftmargin=15mm,
+  frame=single,
+  linenos
+  ]{r}{ErrorInjector.R}
+ \caption{Code for error injection}\label{fig:injector}
+\end{figure}
+
+For example, given the small 5x5 distance matrix shown in figure \ref{fig:kdist}, it can be seen the effect of the injectError function.  It shows that in position (1,2) an error was injected.
+
+\begin{figure}
+ \centering
+ \inputminted[
+  fontsize=\footnotesize,
+  tabsize=2,
+  breaklines,
+  xleftmargin=15mm,
+  frame=single
+  ]{r}{kdist.txt}
+ \caption{Error injection example}\label{fig:kdist}
+\end{figure}
+
+\section{Simulations}
+The code in figure \ref{fig:iris} is used to perform a simulation using the iris data set.  The original accuracy is stored in the line 13. Then, it runs 1000 iterations where errors are injected to the distance matrix and new predictions are performed.  The accuracies for the new experiments are stored in an array (line 22).  The last 5 lines display a summary of statistics for the run and plot the results (figures \ref{fig:output} and \ref{fig:sim}). From figure \ref{fig:output} we can see that mean of the accuracies during the run is the same that the original accuracy, the standard deviation of the run was just 0.002 and in 95\% of the cases kNN still gives the correct results.   
+
+\begin{figure}
+ \centering
+ \inputminted[
+  fontsize=\footnotesize,
+  tabsize=2,
+  breaklines,
+  xleftmargin=15mm,
+  frame=single,
+  linenos
+  ]{r}{simulation.R}
+ \caption{Simulation in the iris data set}\label{fig:iris}
+\end{figure}
+
+\begin{figure}
+ \centering
+ \inputminted[
+  fontsize=\footnotesize,
+  tabsize=2,
+  breaklines,
+  xleftmargin=15mm,
+  frame=single
+  ]{r}{sim.txt}
+ \caption{Error injection example}\label{fig:output}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\textwidth]{sim}
+  \caption{Accuracies after error injection.  Red line shows the original accuracy.}\label{fig:sim}
+\end{figure}
+
 
 \end{document}

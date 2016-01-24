@@ -1,0 +1,24 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGdefault{k+kn}{require}\PYGdefault{p}{(}knnflex\PYGdefault{p}{)}
+\PYGdefault{k+kn}{require}\PYGdefault{p}{(}caret\PYGdefault{p}{)}
+
+\PYGdefault{c+c1}{\PYGdefaultZsh{} a quick classification example}
+n \PYGdefault{o}{\PYGdefaultZlt{}\PYGdefaultZhy{}} \PYGdefault{l+m}{5}
+\PYGdefault{k+kp}{set.seed}\PYGdefault{p}{(}\PYGdefault{l+m}{123}\PYGdefault{p}{)}
+x1 \PYGdefault{o}{\PYGdefaultZlt{}\PYGdefaultZhy{}} \PYGdefault{k+kt}{c}\PYGdefault{p}{(}rnorm\PYGdefault{p}{(}n\PYGdefault{o}{/}\PYGdefault{l+m}{2}\PYGdefault{p}{,}mean\PYGdefault{o}{=}\PYGdefault{l+m}{2.5}\PYGdefault{p}{),}rnorm\PYGdefault{p}{(}n\PYGdefault{o}{/}\PYGdefault{l+m}{2}\PYGdefault{p}{,}mean\PYGdefault{o}{=}\PYGdefault{l+m}{7.5}\PYGdefault{p}{))}
+x2 \PYGdefault{o}{\PYGdefaultZlt{}\PYGdefaultZhy{}} \PYGdefault{k+kt}{c}\PYGdefault{p}{(}rnorm\PYGdefault{p}{(}n\PYGdefault{o}{/}\PYGdefault{l+m}{2}\PYGdefault{p}{,}mean\PYGdefault{o}{=}\PYGdefault{l+m}{7.5}\PYGdefault{p}{),}rnorm\PYGdefault{p}{(}n\PYGdefault{o}{/}\PYGdefault{l+m}{2}\PYGdefault{p}{,}mean\PYGdefault{o}{=}\PYGdefault{l+m}{2.5}\PYGdefault{p}{))}
+x  \PYGdefault{o}{\PYGdefaultZlt{}\PYGdefaultZhy{}} \PYGdefault{k+kp}{cbind}\PYGdefault{p}{(}x1\PYGdefault{p}{,}x2\PYGdefault{p}{)}
+y \PYGdefault{o}{\PYGdefaultZlt{}\PYGdefaultZhy{}} \PYGdefault{k+kt}{c}\PYGdefault{p}{(}\PYGdefault{k+kp}{rep}\PYGdefault{p}{(}\PYGdefault{l+m}{1}\PYGdefault{p}{,}n\PYGdefault{o}{/}\PYGdefault{l+m}{2}\PYGdefault{p}{),}\PYGdefault{k+kp}{rep}\PYGdefault{p}{(}\PYGdefault{l+m}{0}\PYGdefault{p}{,}n\PYGdefault{o}{/}\PYGdefault{l+m}{2}\PYGdefault{p}{))}
+train \PYGdefault{o}{\PYGdefaultZlt{}\PYGdefaultZhy{}} \PYGdefault{k+kp}{sample}\PYGdefault{p}{(}\PYGdefault{l+m}{1}\PYGdefault{o}{:}n\PYGdefault{p}{,}n\PYGdefault{o}{*}\PYGdefault{l+m}{0.75}\PYGdefault{p}{)}
+test \PYGdefault{o}{\PYGdefaultZlt{}\PYGdefaultZhy{}} \PYGdefault{p}{(}\PYGdefault{l+m}{1}\PYGdefault{o}{:}n\PYGdefault{p}{)[}\PYGdefault{o}{\PYGdefaultZhy{}}train\PYGdefault{p}{]}
+\PYGdefault{c+c1}{\PYGdefaultZsh{} plot the training cases}
+plot\PYGdefault{p}{(}x1\PYGdefault{p}{[}train\PYGdefault{p}{],}x2\PYGdefault{p}{[}train\PYGdefault{p}{],}col\PYGdefault{o}{=}y\PYGdefault{p}{[}train\PYGdefault{p}{]}\PYGdefault{l+m}{+1}\PYGdefault{p}{,}xlab\PYGdefault{o}{=}\PYGdefault{l+s}{\PYGdefaultZdq{}x1\PYGdefaultZdq{}}\PYGdefault{p}{,}ylab\PYGdefault{o}{=}\PYGdefault{l+s}{\PYGdefaultZdq{}x2\PYGdefaultZdq{}}
+     \PYGdefault{p}{,}xlim\PYGdefault{o}{=}\PYGdefault{k+kt}{c}\PYGdefault{p}{(}\PYGdefault{l+m}{\PYGdefaultZhy{}1}\PYGdefault{p}{,}\PYGdefault{l+m}{10}\PYGdefault{p}{),}ylim\PYGdefault{o}{=}\PYGdefault{k+kt}{c}\PYGdefault{p}{(}\PYGdefault{l+m}{\PYGdefaultZhy{}1}\PYGdefault{p}{,}\PYGdefault{l+m}{10}\PYGdefault{p}{))}
+\PYGdefault{c+c1}{\PYGdefaultZsh{} predict the other cases}
+kdist \PYGdefault{o}{\PYGdefaultZlt{}\PYGdefaultZhy{}} knn.dist\PYGdefault{p}{(}x\PYGdefault{p}{)}
+preds \PYGdefault{o}{\PYGdefaultZlt{}\PYGdefaultZhy{}} knn.predict\PYGdefault{p}{(}train\PYGdefault{p}{,}test\PYGdefault{p}{,}y\PYGdefault{p}{,}kdist\PYGdefault{p}{,}k\PYGdefault{o}{=}\PYGdefault{l+m}{3}\PYGdefault{p}{,}agg.meth\PYGdefault{o}{=}\PYGdefault{l+s}{\PYGdefaultZdq{}majority\PYGdefaultZdq{}}\PYGdefault{p}{)}
+\PYGdefault{c+c1}{\PYGdefaultZsh{} add the predictions to the plot}
+points\PYGdefault{p}{(}x1\PYGdefault{p}{[}test\PYGdefault{p}{],}x2\PYGdefault{p}{[}test\PYGdefault{p}{],}col\PYGdefault{o}{=}\PYGdefault{k+kp}{as.integer}\PYGdefault{p}{(}preds\PYGdefault{p}{)}\PYGdefault{l+m}{+1}\PYGdefault{p}{,}pch\PYGdefault{o}{=}\PYGdefault{l+s}{\PYGdefaultZdq{}+\PYGdefaultZdq{}}\PYGdefault{p}{)}
+\PYGdefault{c+c1}{\PYGdefaultZsh{} display the confusion matrix}
+confusionMatrix\PYGdefault{p}{(}y\PYGdefault{p}{[}test\PYGdefault{p}{],}preds\PYGdefault{p}{)}
+\end{Verbatim}

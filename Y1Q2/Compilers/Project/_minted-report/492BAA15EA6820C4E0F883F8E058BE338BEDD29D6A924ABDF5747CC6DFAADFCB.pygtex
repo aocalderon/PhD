@@ -1,0 +1,32 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGdefault{k+kn}{require}\PYGdefault{p}{(}knnflex\PYGdefault{p}{)}
+\PYGdefault{k+kn}{require}\PYGdefault{p}{(}caret\PYGdefault{p}{)}
+
+n \PYGdefault{o}{\PYGdefaultZlt{}\PYGdefaultZhy{}} \PYGdefault{k+kp}{nrow}\PYGdefault{p}{(}iris\PYGdefault{p}{)}
+x \PYGdefault{o}{\PYGdefaultZlt{}\PYGdefaultZhy{}} iris\PYGdefault{p}{[,}\PYGdefault{l+m}{1}\PYGdefault{o}{:}\PYGdefault{l+m}{4}\PYGdefault{p}{]}
+y \PYGdefault{o}{\PYGdefaultZlt{}\PYGdefaultZhy{}} iris\PYGdefault{p}{[,}\PYGdefault{l+m}{5}\PYGdefault{p}{]}
+train \PYGdefault{o}{\PYGdefaultZlt{}\PYGdefaultZhy{}} \PYGdefault{k+kp}{sample}\PYGdefault{p}{(}\PYGdefault{l+m}{1}\PYGdefault{o}{:}n\PYGdefault{p}{,}n\PYGdefault{o}{*}\PYGdefault{l+m}{0.5}\PYGdefault{p}{)}
+test \PYGdefault{o}{\PYGdefaultZlt{}\PYGdefaultZhy{}} \PYGdefault{p}{(}\PYGdefault{l+m}{1}\PYGdefault{o}{:}n\PYGdefault{p}{)[}\PYGdefault{o}{\PYGdefaultZhy{}}train\PYGdefault{p}{]}
+kdist \PYGdefault{o}{\PYGdefaultZlt{}\PYGdefaultZhy{}} knn.dist\PYGdefault{p}{(}x\PYGdefault{p}{)}
+preds \PYGdefault{o}{\PYGdefaultZlt{}\PYGdefaultZhy{}} knn.predict\PYGdefault{p}{(}train\PYGdefault{p}{,}test\PYGdefault{p}{,}y\PYGdefault{p}{,}kdist\PYGdefault{p}{)}
+cm \PYGdefault{o}{\PYGdefaultZlt{}\PYGdefaultZhy{}} confusionMatrix\PYGdefault{p}{(}y\PYGdefault{p}{[}test\PYGdefault{p}{],}preds\PYGdefault{p}{)}
+
+accuracy\PYGdefaultZus{}orig \PYGdefault{o}{\PYGdefaultZlt{}\PYGdefaultZhy{}} cm\PYGdefault{o}{\PYGdefaultZdl{}}overall\PYGdefault{p}{[}\PYGdefault{l+s}{\PYGdefaultZsq{}Accuracy\PYGdefaultZsq{}}\PYGdefault{p}{]}
+
+runs \PYGdefault{o}{\PYGdefaultZlt{}\PYGdefaultZhy{}} \PYGdefault{l+m}{1000}
+accuracy\PYGdefaultZus{}error \PYGdefault{o}{\PYGdefaultZlt{}\PYGdefaultZhy{}} \PYGdefault{k+kt}{c}\PYGdefault{p}{()}
+\PYGdefault{k+kr}{for}\PYGdefault{p}{(}i \PYGdefault{k+kr}{in} \PYGdefault{l+m}{1}\PYGdefault{o}{:}runs\PYGdefault{p}{)\PYGdefaultZob{}}
+  kdist\PYGdefaultZus{}error \PYGdefault{o}{\PYGdefaultZlt{}\PYGdefaultZhy{}} injectError\PYGdefault{p}{(}kdist\PYGdefault{p}{,} \PYGdefault{l+m}{0.02}\PYGdefault{p}{)}
+  preds\PYGdefaultZus{}error \PYGdefault{o}{\PYGdefaultZlt{}\PYGdefaultZhy{}} knn.predict\PYGdefault{p}{(}train\PYGdefault{p}{,}test\PYGdefault{p}{,}y\PYGdefault{p}{,}kdist\PYGdefaultZus{}error\PYGdefault{p}{)}
+  cm\PYGdefaultZus{}error \PYGdefault{o}{\PYGdefaultZlt{}\PYGdefaultZhy{}} confusionMatrix\PYGdefault{p}{(}y\PYGdefault{p}{[}test\PYGdefault{p}{],}preds\PYGdefaultZus{}error\PYGdefault{p}{)}
+  
+  accuracy\PYGdefaultZus{}error \PYGdefault{o}{\PYGdefaultZlt{}\PYGdefaultZhy{}} \PYGdefault{k+kt}{c}\PYGdefault{p}{(}accuracy\PYGdefaultZus{}error\PYGdefault{p}{,} cm\PYGdefaultZus{}error\PYGdefault{o}{\PYGdefaultZdl{}}overall\PYGdefault{p}{[}\PYGdefault{l+s}{\PYGdefaultZsq{}Accuracy\PYGdefaultZsq{}}\PYGdefault{p}{])}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+
+\PYGdefault{k+kp}{print}\PYGdefault{p}{(}\PYGdefault{k+kp}{paste}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}Original accuracy=\PYGdefaultZdq{}}\PYGdefault{p}{,}accuracy\PYGdefaultZus{}orig\PYGdefault{p}{))}
+\PYGdefault{k+kp}{print}\PYGdefault{p}{(}\PYGdefault{k+kp}{summary}\PYGdefault{p}{(}accuracy\PYGdefaultZus{}error\PYGdefault{p}{))}
+\PYGdefault{k+kp}{print}\PYGdefault{p}{(}sd\PYGdefault{p}{(}accuracy\PYGdefaultZus{}error\PYGdefault{p}{))}
+\PYGdefault{k+kp}{print}\PYGdefault{p}{(}\PYGdefault{k+kp}{length}\PYGdefault{p}{(}accuracy\PYGdefaultZus{}error\PYGdefault{p}{[}accuracy\PYGdefaultZus{}error \PYGdefault{o}{==} accuracy\PYGdefaultZus{}orig\PYGdefault{p}{])} \PYGdefault{o}{/} runs\PYGdefault{p}{)}
+plot\PYGdefault{p}{(}accuracy\PYGdefaultZus{}error\PYGdefault{p}{,} cex\PYGdefault{o}{=}\PYGdefault{l+m}{0.5}\PYGdefault{p}{)}
+abline\PYGdefault{p}{(}h \PYGdefault{o}{=} accuracy\PYGdefaultZus{}orig\PYGdefault{p}{,} col\PYGdefault{o}{=}\PYGdefault{l+s}{\PYGdefaultZsq{}red\PYGdefaultZsq{}}\PYGdefault{p}{,} cex\PYGdefault{o}{=}\PYGdefault{l+m}{0.2}\PYGdefault{p}{)}
+\end{Verbatim}

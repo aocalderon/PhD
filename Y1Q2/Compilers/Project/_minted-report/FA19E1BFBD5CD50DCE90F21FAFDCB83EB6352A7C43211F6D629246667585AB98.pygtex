@@ -1,0 +1,19 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+injectError \PYGdefault{o}{\PYGdefaultZlt{}\PYGdefaultZhy{}} \PYGdefault{k+kr}{function}\PYGdefault{p}{(}kdist\PYGdefault{p}{,} p \PYGdefault{o}{=} \PYGdefault{l+m}{0.02}\PYGdefault{p}{)\PYGdefaultZob{}}
+  n \PYGdefault{o}{\PYGdefaultZlt{}\PYGdefaultZhy{}} \PYGdefault{k+kp}{nrow}\PYGdefault{p}{(}kdist\PYGdefault{p}{)}
+  m \PYGdefault{o}{\PYGdefaultZlt{}\PYGdefaultZhy{}} n
+  mn \PYGdefault{o}{\PYGdefaultZlt{}\PYGdefaultZhy{}} \PYGdefault{l+m}{.}Machine\PYGdefault{o}{\PYGdefaultZdl{}}double.xmin
+  mx \PYGdefault{o}{\PYGdefaultZlt{}\PYGdefaultZhy{}} \PYGdefault{l+m}{.}Machine\PYGdefault{o}{\PYGdefaultZdl{}}double.xmax
+  \PYGdefault{k+kr}{for}\PYGdefault{p}{(}i \PYGdefault{k+kr}{in} \PYGdefault{l+m}{1}\PYGdefault{o}{:}\PYGdefault{p}{(}m\PYGdefault{l+m}{\PYGdefaultZhy{}1}\PYGdefault{p}{))\PYGdefaultZob{}}
+    \PYGdefault{k+kr}{for}\PYGdefault{p}{(}j \PYGdefault{k+kr}{in} \PYGdefault{p}{(}i\PYGdefault{l+m}{+1}\PYGdefault{p}{)}\PYGdefault{o}{:}n\PYGdefault{p}{)\PYGdefaultZob{}}
+      \PYGdefault{k+kr}{if}\PYGdefault{p}{(}runif\PYGdefault{p}{(}\PYGdefault{l+m}{1}\PYGdefault{p}{)} \PYGdefault{o}{\PYGdefaultZlt{}} p\PYGdefault{p}{)\PYGdefaultZob{}}
+        random \PYGdefault{o}{\PYGdefaultZlt{}\PYGdefaultZhy{}} runif\PYGdefault{p}{(}\PYGdefault{l+m}{1}\PYGdefault{p}{,} mn\PYGdefault{p}{,} mx\PYGdefault{p}{)}
+        kdist\PYGdefault{p}{[}i\PYGdefault{p}{,}j\PYGdefault{p}{]} \PYGdefault{o}{\PYGdefaultZlt{}\PYGdefaultZhy{}} random
+        kdist\PYGdefault{p}{[}j\PYGdefault{p}{,}i\PYGdefault{p}{]} \PYGdefault{o}{\PYGdefaultZlt{}\PYGdefaultZhy{}} random
+        \PYGdefault{k+kp}{print}\PYGdefault{p}{(}\PYGdefault{k+kp}{paste}\PYGdefault{p}{(}i\PYGdefault{p}{,}j\PYGdefault{p}{))}
+      \PYGdefault{p}{\PYGdefaultZcb{}}
+    \PYGdefault{p}{\PYGdefaultZcb{}}
+  \PYGdefault{p}{\PYGdefaultZcb{}}
+  \PYGdefault{k+kr}{return}\PYGdefault{p}{(}kdist\PYGdefault{p}{)}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+\end{Verbatim}
