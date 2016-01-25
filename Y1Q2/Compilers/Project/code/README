@@ -1,0 +1,25 @@
+Once in an R terminal, first install knnflex package...
+
+install.packages("knnflex.tar.gz", repos = NULL, type="source")
+
+then ensure you have the caret package...
+
+install.packages("caret")
+
+Then, you can run the scripts mentioned in the report using 'source'.  For example, to run the quick classification example, type:
+
+source('example.R')
+
+To run the simulation, first you have to run the 'injectError' function in the following file:
+
+source('ErrorInjector.R')
+
+Then, just type:
+
+source('simulation.R')
+
+Once you have run the simulation, you can generate the density plot with:
+
+source('density.R')
+
+Enjoy =D
