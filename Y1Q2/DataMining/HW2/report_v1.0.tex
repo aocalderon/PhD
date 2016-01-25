@@ -31,11 +31,11 @@ hidelinks
 \normalsize
 
 \section{The Data}
-In order to accomplish the requirements of the homework, we have selected two dataset from UC Irvine Machine Learning Repository\cite{repo}.  We follow to describe briefly each one of them.
+In order to accomplish the requirements of the homework, we have selected two dataset from UC Irvine Machine Learning Repository\cite{repo}.  At the following sections, we briefly describe each one of them.
 
 \subsection[Zoo]{Zoo\footnote{\url{https://archive.ics.uci.edu/ml/datasets/Zoo}}}
 This dataset has 101 objects and 17 attributes. It records characteristics of 101 animals and groups the animals into one of 7 possible categories (mammal, bird, reptile, fish,
-amphibian, insect, and invertebrate). Most of the attributes are boolean and it has no missing values.
+amphibian, insect, and invertebrate).  These 7 categories are represented by integers from 1 to 7 accordingly.  Most of the attributes are boolean and it has no missing values.
 
 \subsection[Seeds]{Seeds\footnote{\url{https://archive.ics.uci.edu/ml/datasets/seeds}}}\label{sec:seeds}
 This dataset contains 7 attributes and one class attribute referring to different characteristics of wheat's seeds.  The attribute values are real numbers that is why we had to normalize them, using the given command. The instances are categorized into 3 classes which define the three different varieties of wheat of kernels (Canadian, Rosa, Kama). For each class there are 70 instances, so the total number of records in this dataset is 210. There is not missing values in this data set.
@@ -80,7 +80,7 @@ Line 1 uses the command \texttt{xlsread} to import our data (which we copy into 
  After making the training set half its size the accuracy became 0.8800.  So, the bigger the training data set is, the more accurate results are, because our model is more trained. 
  
  \item Try removing some features, one by one. Can you find one that when removed makes no difference (or makes things better)? Can you find one that when removed makes the accuracy much worst? \\
- Table \ref{tab:acc1} summarizes the results. So, there are some features in this data set that do not change the accuracy, and such features are irrelevant to the data set. While, the feature 2,5,11 and 14 are relevant to the data set. Also, another observation to note is: Removal of no feature, improves the accuracy. There are some features that when removed made the accuracy worse but not much worse.  
+ Table \ref{tab:acc1} summarizes the results. So, there are some features in this data set that do not change the accuracy, and such features are irrelevant to the data set. While, the feature 2,5,11 and 14 are relevant to the data set. Also, another observation to note is: Removal of no feature, improves the accuracy \textit{(There is no feature that improves the accuracy if it is removed)}. There are some features that when removed made the accuracy worse but not much worse.  
 
  \begin{table}[h!]
  \centering
@@ -134,7 +134,7 @@ Line 1 uses the command \texttt{xlsread} to import our data (which we copy into 
  We, also, tried to decrease the training set, to see what happens with the accuracy. Firstly, we decreased it by half and the accuracy dropped to 0.9048. We, even, decreased the training set to its quarter and we got 0.8571 accuracy. The results show, that by decreasing the training set, we get lower accuracy. This happens because our model needs more training to be more accurate. However, we observed that the performance of the model is very good even with less training data. 
  
  \item Try removing some features, one by one. Can you find one that when removed makes no difference (or makes things better)? \\
- Table \ref{tab:acc3} summarizes the results. Attributes 1,2,3 and 5 are irrelevant during classification, leave them out do not affect the accuracy. Removing attributes 6 o 7 decreases the accuracy, so we can conclude they are relevant to the process.  On the other hand, removing attribute 4 will increase the accuracy of the classifier.
+ Table \ref{tab:acc3} summarizes the results. Attributes 1,2,3 and 5 are irrelevant during classification, leave them out do not affect the accuracy. Removing attributes 6 or 7 decreases the accuracy, so we can conclude they are relevant to the process.  On the other hand, removing attribute 4 will increase the accuracy of the classifier.
 
  \begin{table}[h!]
  \centering
@@ -155,7 +155,7 @@ Line 1 uses the command \texttt{xlsread} to import our data (which we copy into 
  \end{table}
 
  \item Add one feature column that contains just random numbers (use randn), what happened the accuracy? \\
- Table \ref{tab:acc4} shows the accuracy after adding 1, 2 and 4 random features.  Although more than 800 random features were added, the accuracy did not decrease down to the default rate.
+ Table \ref{tab:acc4} shows the accuracy after adding 1, 2 and 4 random features.  Although more than 800 random features were added, the accuracy did not decrease down to the default rate.  The lowest value for the accuracy was 0.5700.
  \begin{table}[h!]
  \centering
  \begin{tabular}{cl}
