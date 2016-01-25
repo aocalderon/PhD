@@ -26,6 +26,6 @@ print(paste("Original accuracy=",accuracy_orig))
 print(summary(accuracy_error))
 print(sd(accuracy_error))
 print(length(accuracy_error[accuracy_error == accuracy_orig]) / runs)
-plot(accuracy_error, cex=0.5)
+plot(accuracy_error, cex=0.5,xlab="Run",ylab="Accuracy")
 abline(h = accuracy_orig, col='red', cex=0.2)
 
