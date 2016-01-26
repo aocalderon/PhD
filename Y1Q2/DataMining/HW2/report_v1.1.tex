@@ -155,16 +155,17 @@ Line 1 uses the command \texttt{xlsread} to import our data (which we copy into 
  \end{table}
 
  \item Add one feature column that contains just random numbers (use randn), what happened the accuracy? \\
- Table \ref{tab:acc4} shows the accuracy after adding 1, 2 and 4 random features.  Although more than 800 random features were added, the accuracy did not decrease down to the default rate.  The lowest value for the accuracy was 0.5700.
+ Table \ref{tab:acc4} shows the accuracy after adding 1, 2 and 4 random features.  After than 62 random features, the accuracy decreased down to the default rate.  
+ 
  \begin{table}[h!]
  \centering
  \begin{tabular}{cl}
   \toprule
   \textbf{Random features} & \textbf{Accuracy} \\
   \midrule
-  1 & 0.7524 \\ 
-  2 & 0.8190 \\
-  4 & 0.8000 \\
+  1 & 0.9143 \\ 
+  2 & 0.9524 \\
+  4 & 0.8762 \\
   \bottomrule
  \end{tabular}
  \caption{Accuracy in Seeds after adding random features.}\label{tab:acc4}
