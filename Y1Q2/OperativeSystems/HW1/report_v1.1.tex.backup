@@ -12,7 +12,7 @@ hidelinks
 \usepackage{xcolor}
 \usepackage{lineno}
 
-\title{Assigment 1}
+\title{Lab 1 Report}
 \author{
    Christina Pavlopoulou\\
   \small \texttt{cpavl001@ucr.edu}
@@ -24,21 +24,221 @@ hidelinks
   \small \texttt{acald013@ucr.edu}
 }
 \begin{document}
+\maketitle
+
+\section{Adding a system call}\label{sec:sc}
+What files we changed to solve each part?
+we changed the following files:
+\begin{enumerate}
+ \item proc.h
+ \item proc.c
+ \item syscall.h
+ \item syscall.c
+ \item sysproc.c 
+ \item user.h
+ \item defs.h
+ \item usys.S
+ \item Makefile
+\end{enumerate}
+
+In proc.h file we added an integer variable inside the proc structure.
+
+ \begin{minted}[
+  fontsize=\footnotesize,
+  tabsize=2,
+  breaklines,
+  xleftmargin=15mm,
+  frame=single,
+  linenos
+  ]{c}
+    struct proc {
+      int counter;
+      .
+      .
+      .
+    }
+\end{minted}
+
+In proc.c file, inside the fork() function, after allocating process, we initialized counter variable of proc structure to zero.
+ \begin{minted}[
+  fontsize=\footnotesize,
+  tabsize=2,
+  breaklines,
+  xleftmargin=15mm,
+  frame=single,
+  linenos
+  ]{c}
+    int fork(void){
+      struct proc *np;
+      if((np = allocproc()) == 0)
+        return -1;
+      np -> counter=0;
+    }
+\end{minted}
+
+In syscall.h file, we define the position of the system call vector that connect to our implementation.
+ \begin{minted}[
+  fontsize=\footnotesize,
+  tabsize=2,
+  breaklines,
+  xleftmargin=15mm,
+  frame=single,
+  linenos
+  ]{c}
+    # define SYS_counter 22
+\end{minted}
+
+In syscall.c file,we define externally the function that connect the shell and the kernel, use the position defined in syscall.h to add the function to the system call vector.
+ \begin{minted}[
+  fontsize=\footnotesize,
+  tabsize=2,
+  breaklines,
+  xleftmargin=15mm,
+  frame=single,
+  linenos
+  ]{c}
+    extern int sys_counter(void);
+    static int (*syscalls[])(void) = {
+      .
+      .
+      .
+    [SYS_counter] sys_counter, };
+    
+    void syscall(void)
+    {
+      sys_counter();
+    }
+\end{minted}
+
+In sysproc.c, we added the real implementation of our system call method.
+ \begin{minted}[
+  fontsize=\footnotesize,
+  tabsize=2,
+  breaklines,
+  xleftmargin=15mm,
+  frame=single,
+  linenos
+  ]{c}
+    int sys_counter(void){
+      proc-> counter++;
+      return proc->counter;
+    }
+\end{minted}
+
+In user.h file, we defined the function that can be called through the shell.  Our system call function prototype.
+ \begin{minted}[
+  fontsize=\footnotesize,
+  tabsize=2,
+  breaklines,
+  xleftmargin=15mm,
+  frame=single,
+  linenos
+  ]{c}
+      int counter(void);
+\end{minted}
+
+In defs.h file, we added a forward declaration for our new system call under proc.c section.
+ \begin{minted}[
+  fontsize=\footnotesize,
+  tabsize=2,
+  breaklines,
+  xleftmargin=15mm,
+  frame=single,
+  linenos
+  ]{c}
+    int counter(void);
+\end{minted}
+
+In usys.S, we used the macro to connect the call of user to the system call function.
+ \begin{minted}[
+  fontsize=\footnotesize,
+  tabsize=2,
+  breaklines,
+  xleftmargin=15mm,
+  frame=single,
+  linenos
+  ]{c}
+    SYSCALL(counter)
+\end{minted}
+
+In Makefile file, we link the program. Under UPROGS= section we added our program.
+ \begin{minted}[
+  fontsize=\footnotesize,
+  tabsize=2,
+  breaklines,
+  xleftmargin=15mm,
+  frame=single,
+  linenos
+  ]{c}
+    UPROGS=\
+     _count\
+\end{minted}
+
+Finally, we added count.c file as follows:
+ \begin{minted}[
+  fontsize=\footnotesize,
+  tabsize=2,
+  breaklines,
+  xleftmargin=15mm,
+  frame=single,
+  linenos
+  ]{c++}
+    #include ”types.h”
+    #include ”user.h”
+    #include ”syscall.h”
+    
+    int main()
+      printf(1,”my system call %d \n”, counter());
+      return 0;
+    }
+\end{minted}
+
+Our output is:
+
+ \begin{minted}[
+  fontsize=\footnotesize,
+  tabsize=2,
+  breaklines,
+  xleftmargin=15mm,
+  frame=single,
+  linenos
+  ]{bash}
+    my system call 4
+\end{minted}
+
+
+Figure \ref{fig:fig1} shows our output.  We can see that our process outputs 4 as the number of its system calls.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.6\textwidth]{fig1.png}
+  \caption{First Terminal Results.}\label{fig:fig1}
+\end{figure}
+
+\section{Lottery Scheduler and ticket inflation}
+\subsection{Lottery Scheduler}
+In the second part of the lab we had to implement the lottery scheduler. In the lottery scheduler, the user assigns to each process a number of tickets. We decided to assign one ticket by default to each process. For a process to win the lottery, it should have the ticket that the lottery generates. We generate the winning ticket using a random number generator function. To find the winner, we iterate through the tickets of all the processes until we find the winning ticket. 
+\par Now that we described the procedure of the lottery scheduler, we need to explain which parts of the code we changed to implement it. Firstly, we modify the proc structure in the proc.h file to add two new variables: tickets (the number of tickets) and wins (the number of lottery wins). Then, we assigned the default numbers of tickets (to one) in the function allocproc of the proc.c file. All the other changes were implemented in the function scheduler of the proc.c file. At first, we iterated through all the processes, to find the  total of all the tickets (getTotalTickets function in the proc.c). Then, we implemented a second iteration in which we look for the winner process. We find the number of tickets accumulated till the process that we currently are and we check if this number is greater or equal to the random number that the random number generator has produced (randomGen function in the proc.c). If this is true, then we found the winner process, otherwise we continue our search. 
+
+\subsection{Ticket Inflation}
+In this part of the assignment we implemented the ticket inflation. In the ticket inflation, if the user notices that a process that she needs does not win as much as she wants, she could increase  the number of its tickets. We do that by adding a system call which increases the number of tickets of the process that invokes it. 
+
+\par Our system call is called sys\_numtickets and it is implemented in the sysproc.c file. We increase by one the number of tickets that the process already has and we return its current ticket numbers. We also had to make this system call visible to the syscall.c file. Then, we added it in the syscall.h, user.h, defs.h and usys.S files as it is described in section \ref{sec:sc}.
+
 \section{Tests}
 
-We design two tests to evaluate the validity of our implementation. The main idea is to run processes which  perform long loops, allocate different amount of ticket to each of them and output their performance in fixed intervals of time.  We implement a number of system calls in the sysproc.c file to achive these goals.
+We design two tests to evaluate the validity of our implementation. The main idea is to run processes which  perform long loops, allocate different amount of ticket to each of them and output their performance in fixed intervals of time.  We implement a number of system calls in the sysproc.c file to achieve these goals.  In addition, we modify the number of CPUs in the Makefile to work with just one CPU.
 
 \subsection{System calls}
 A first system call (top) was implemented to run the procdump function every 5 seconds. We modify the default procdump function (at the end of proc.c) to output information about the running and runnable processes.  Specifically, it shows the pid, name, tickets and number of lottery wins of each of the process. This system call receives as parameters the number of requested outputs and its number of tickets.  We use the first parameter to set how many samples we want to collect during the test.
 
-A second system call (secs) will return the instant in which this system call was invoked.  It uses the cmostime function and structs provide by the date.h and lapic.c files.  For convinience, it just returns the number of seconds during the current hour.
+A second system call (secs) will return the instant in which this system call was invoked.  It uses the cmostime function and rtcdate structure provide by the date.h and lapic.c files.  For convenience, it just returns the number of seconds during the current hour.
 
-A third system call (work) will recieve two parameters: a number of iterations for the loop and a number of tickets to be assigned for the current process.  It just will performs a simple asignation during the number of specified iterations.
+A third system call (work) will receive two parameters: a number of iterations for the loop and a number of tickets to be assigned for the current process.  It will just perform a simple assignation during the number of specified iterations.
 
 \subsection{Test 1. Ticket allocation and fairness share}
 The first test evaluates the ratio of the ticket allocation.  We implement a command line function (file test.c) that runs the system call work.  Three processes were launched with different number of tickets running at the same time (using the \& wildcard).  The selected ratio was 8:3:1.  Figure \ref{fig:test1} shows the details of the setting for this test. Figure \ref{fig:test1a} shows the number of lotteries each process wins during a 200 seconds test. 
 
-\setcounter{figure}{2}  
 \begin{figure}
   \centering
   \includegraphics[width=0.6\textwidth]{test1.png}
