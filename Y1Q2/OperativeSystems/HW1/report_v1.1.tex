@@ -1,0 +1,89 @@
+\documentclass[10pt]{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage[left=2cm, right=2cm, top=2cm, bottom=3cm]{geometry}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\hypersetup{
+colorlinks=false,
+hidelinks
+}
+\usepackage{minted}
+\usepackage{xcolor}
+\usepackage{lineno}
+
+\title{Assigment 1}
+\author{
+   Christina Pavlopoulou\\
+  \small \texttt{cpavl001@ucr.edu}
+  \and
+   Niloufar Hosseini Pour\\
+  \small \texttt{nhoss003@ucr.edu}
+  \and
+   Andres Calderon\\
+  \small \texttt{acald013@ucr.edu}
+}
+\begin{document}
+\tiny
+\maketitle
+\normalsize
+
+\section{Tests}
+
+We design two tests to evaluate the validity of our implementation. The main idea is to run processes which  perform long loops, allocate different amount of ticket to each of them and output their performance in fixed intervals of time.  We implement a number of system calls in the sysproc.c file to achive these goals.
+
+\subsection{System calls}
+A first system call (top) was implemented to run the procdump function every 5 seconds. We modify the default procdump function (at the end of proc.c) to output information about the running and runnable processes.  Specifically, it shows the pid, name, tickets and number of lottery wins of each of the process. This system call receives as parameters the number of requested outputs and its number of tickets.  We use the first parameter to set how many samples we want to collect during the test.
+
+A second system call (secs) will return the instant in which this system call was invoked.  It uses the cmostime function and structs provide by the date.h and lapic.c files.  For convinience, it just returns the number of seconds during the current hour.
+
+A third system call (work) will recieve two parameters: a number of iterations for the loop and a number of tickets to be assigned for the current process.  It just will performs a simple asignation during the number of specified iterations.
+
+\subsection{Test 1. Ticket allocation and fairness share}
+The first test evaluates the ratio of the ticket allocation.  We implement a command line function (file test.c) that runs the system call work.  Three processes were launched with different number of tickets running at the same time (using the \& wildcard).  The selected ratio was 8:3:1.  Figure \ref{fig:test1} shows the details of the setting for this test. Figure \ref{fig:test1a} shows the number of lotteries each process wins during a 200 seconds test. 
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.6\textwidth]{test1.png}
+  \caption{Details of the settings for test 1.}\label{fig:test1}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.6\textwidth]{test1a}
+  \caption{Lottery wins for three different processes. The proportional ration was 8:3:1.}\label{fig:test1a}
+\end{figure}
+
+In order to test the fairness share of the allocation, we plot the proportion of lottery wins for each process.  For a ratio of 8:3:1 the expected proportions are 0.666, 0.250 and 0.083.  Figure \ref{fig:test1b} illustrates the results.  We can see that at the beginning of the test the proportions suffer some fluctuations but, as the number of lotteries increase, the proportions remains constant around the expected values.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.6\textwidth]{test1b}
+  \caption{Lottery wins for three different processes. The proportional ratio was 8:3:1.}\label{fig:test1b}
+\end{figure}
+
+\subsection{Test 2. Ticket inflation}
+To test ticket inflation we implement a command line function (file test2.c) which runs a long loop.  We track the number of iterations inside the loop and call the numtickets system call (section XX) every 1000000 iterations to increase its number of tickets. Then, we launch two process: test2 (starting with 2 tickets) and top, which remains with a fixed number of tickets.  Figure \ref{fig:test2a} shows the settings for this test.  
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.6\textwidth]{test2c.png}
+  \caption{Details of the settings for test 2.}\label{fig:test2a}
+\end{figure}
+
+Figure \ref{fig:test2b} illustrate the number of lottery wins for the two processes.  We can see that the process with ticket inflation increases faster its number of wins according to the increase in its number of tickets.  The probability of the fixed-ticket process of winning lotteries start to decrease compared with the increase number of tickets of the inflation process.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.6\textwidth]{test2}
+  \caption{Response from two processes with different ticket allocation (Fixed vs Inflation).}\label{fig:test2b}
+\end{figure}
+
+% \begin{thebibliography}{9}
+% 
+% \bibitem{repo} 
+% Lichman, M. (2013). UCI Machine Learning Repository [\url{http://archive.ics.uci.edu/ml}]. Irvine, CA: University of California, School of Information and Computer Science.
+% 
+% \end{thebibliography}
+
+\end{document}
