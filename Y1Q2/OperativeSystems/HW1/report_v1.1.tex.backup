@@ -12,19 +12,18 @@ hidelinks
 \usepackage{xcolor}
 \usepackage{lineno}
 
-\title{Part 2}
+\title{Assigment 1}
+\author{
+   Christina Pavlopoulou\\
+  \small \texttt{cpavl001@ucr.edu}
+  \and
+   Niloufar Hosseini Pour\\
+  \small \texttt{nhoss003@ucr.edu}
+  \and
+   Andres Calderon\\
+  \small \texttt{acald013@ucr.edu}
+}
 \begin{document}
-\maketitle
-\setcounter{section}{3}
-\section*{.}
-\subsection{Lottery Scheduler}
-In the second part of the lab we had to implement the lottery scheduler. In the lottery scheduler, the user assigns to each process a number of tickets. We decided to assign one ticket by default to each process. For a process to win the lottery, it should have the ticket that the lottery generates. We generate the winning ticket using a random number generator function. To find the winner, we iterate through the tickets of all the processes until we find the winning ticket. 
-\par Now that we described the procedure of the lottery scheduler, we need to explain which parts of the code we changed to implement it. Firstly, we assigned the default numbers of tickets (to one) in the function allocproc of the proc.c file. All the other changes were implemented in the function scheduler of the proc.c file. At first, we iterated through all the processes, to find the  total of all the tickets (getTotalTickets function in the proc.c). Then, we implemented a second iteration in which we look for the winner process. We find the number of tickets accumulated till the process that we currently are and we check if this number is greater or equal to the random number that the random number generator has produced (randomGen function in the proc.c). If this is true, then we found the winner process, otherwise we continue our search. 
-
-\subsection{Ticket Inflation}
-In this part of the assignment we implemented the ticket inflation. In the ticket inflation, if the user notices that a process that she needs does not win as much as she wants, she could increase increase the number of its tickets. We do that by adding a system call which increases the number of tickets of the process that invokes it. 
-
-\par Our system call is called sys\_numtickets and it is implemented in the sysproc.c file. We increase by one the number of tickets that the process already has and we return its current ticket numbers. We also had to make this system call visible to the syscall.c file. Then, we added it in the syscall.h, user.h, defs.h and usys.S files. 
 \section{Tests}
 
 We design two tests to evaluate the validity of our implementation. The main idea is to run processes which  perform long loops, allocate different amount of ticket to each of them and output their performance in fixed intervals of time.  We implement a number of system calls in the sysproc.c file to achive these goals.
