@@ -22,7 +22,7 @@ data$p3 <- data$w3 / data$total
 data$p8 <- data$w8 / data$total
 pdf('test1b.pdf')
 plot(data$time,data$p1,ylim=c(0.05,0.7),pch=24,bg=4,cex=0.5,col=4
-     ,xlab='Time (sec)',ylab='Probability')
+     ,xlab='Time (sec)',ylab='Proportion share')
 abline(h=(1/12),col=4)
 text(150,0.12,'1 ticket (p=0.083)',cex=0.8,col=4)
 points(data$time,data$p3,pch=23,bg=3,cex=0.5,col=3)

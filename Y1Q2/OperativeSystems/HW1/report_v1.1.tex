@@ -27,21 +27,20 @@ hidelinks
 \maketitle
 
 \section{Adding a system call}\label{sec:sc}
-What files we changed to solve each part?
-we changed the following files:
+What files we changed to solve each part? we changed the following files:
 \begin{enumerate}
- \item proc.h
- \item proc.c
- \item syscall.h
- \item syscall.c
- \item sysproc.c 
- \item user.h
- \item defs.h
- \item usys.S
- \item Makefile
+ \item \texttt{proc.h}
+ \item \texttt{proc.c}
+ \item \texttt{syscall.h}
+ \item \texttt{syscall.c}
+ \item \texttt{sysproc.c}
+ \item \texttt{user.h}
+ \item \texttt{defs.h}
+ \item \texttt{usys.S}
+ \item \texttt{Makefile}
 \end{enumerate}
 
-In proc.h file we added an integer variable inside the proc structure.
+In \texttt{proc.h} file we added an integer variable inside the \textit{proc} structure.
 
  \begin{minted}[
   fontsize=\footnotesize,
@@ -59,7 +58,7 @@ In proc.h file we added an integer variable inside the proc structure.
     }
 \end{minted}
 
-In proc.c file, inside the fork() function, after allocating process, we initialized counter variable of proc structure to zero.
+In \texttt{proc.c} file, inside the \textit{fork} function, after allocating process, we initialized counter variable of \textit{proc} structure to zero.
  \begin{minted}[
   fontsize=\footnotesize,
   tabsize=2,
@@ -76,7 +75,7 @@ In proc.c file, inside the fork() function, after allocating process, we initial
     }
 \end{minted}
 
-In syscall.h file, we define the position of the system call vector that connect to our implementation.
+In \texttt{syscall.h} file, we define the position of the system call vector that connect to our implementation.
  \begin{minted}[
   fontsize=\footnotesize,
   tabsize=2,
@@ -88,7 +87,7 @@ In syscall.h file, we define the position of the system call vector that connect
     # define SYS_counter 22
 \end{minted}
 
-In syscall.c file,we define externally the function that connect the shell and the kernel, use the position defined in syscall.h to add the function to the system call vector.
+In \texttt{syscall.c} file,we define externally the function that connect the shell and the kernel, use the position defined in \texttt{syscall.h} to add the function to the system call vector.
  \begin{minted}[
   fontsize=\footnotesize,
   tabsize=2,
@@ -110,7 +109,7 @@ In syscall.c file,we define externally the function that connect the shell and t
     }
 \end{minted}
 
-In sysproc.c, we added the real implementation of our system call method.
+In \texttt{sysproc.c}, we added the real implementation of our system call method.
  \begin{minted}[
   fontsize=\footnotesize,
   tabsize=2,
@@ -125,7 +124,7 @@ In sysproc.c, we added the real implementation of our system call method.
     }
 \end{minted}
 
-In user.h file, we defined the function that can be called through the shell.  Our system call function prototype.
+In \texttt{user.h} file, we defined the function that can be called through the shell.  Our system call function prototype.
  \begin{minted}[
   fontsize=\footnotesize,
   tabsize=2,
@@ -137,7 +136,7 @@ In user.h file, we defined the function that can be called through the shell.  O
       int counter(void);
 \end{minted}
 
-In defs.h file, we added a forward declaration for our new system call under proc.c section.
+In \texttt{defs.h} file, we added a forward declaration for our new system call under \texttt{proc.c} section.
  \begin{minted}[
   fontsize=\footnotesize,
   tabsize=2,
@@ -149,7 +148,7 @@ In defs.h file, we added a forward declaration for our new system call under pro
     int counter(void);
 \end{minted}
 
-In usys.S, we used the macro to connect the call of user to the system call function.
+In \texttt{usys.S}, we used the macro to connect the call of user to the system call function.
  \begin{minted}[
   fontsize=\footnotesize,
   tabsize=2,
@@ -161,7 +160,7 @@ In usys.S, we used the macro to connect the call of user to the system call func
     SYSCALL(counter)
 \end{minted}
 
-In Makefile file, we link the program. Under UPROGS= section we added our program.
+In \texttt{Makefile} file, we link the program. Under \textit{UPROGS=} section we added our program.
  \begin{minted}[
   fontsize=\footnotesize,
   tabsize=2,
@@ -174,7 +173,7 @@ In Makefile file, we link the program. Under UPROGS= section we added our progra
      _count\
 \end{minted}
 
-Finally, we added count.c file as follows:
+Finally, we added \texttt{count.c} file as follows:
  \begin{minted}[
   fontsize=\footnotesize,
   tabsize=2,
@@ -218,26 +217,26 @@ Figure \ref{fig:fig1} shows our output.  We can see that our process outputs 4 a
 \section{Lottery Scheduler and ticket inflation}
 \subsection{Lottery Scheduler}
 In the second part of the lab we had to implement the lottery scheduler. In the lottery scheduler, the user assigns to each process a number of tickets. We decided to assign one ticket by default to each process. For a process to win the lottery, it should have the ticket that the lottery generates. We generate the winning ticket using a random number generator function. To find the winner, we iterate through the tickets of all the processes until we find the winning ticket. 
-\par Now that we described the procedure of the lottery scheduler, we need to explain which parts of the code we changed to implement it. Firstly, we modify the proc structure in the proc.h file to add two new variables: tickets (the number of tickets) and wins (the number of lottery wins). Then, we assigned the default numbers of tickets (to one) in the function allocproc of the proc.c file. All the other changes were implemented in the function scheduler of the proc.c file. At first, we iterated through all the processes, to find the  total of all the tickets (getTotalTickets function in the proc.c). Then, we implemented a second iteration in which we look for the winner process. We find the number of tickets accumulated till the process that we currently are and we check if this number is greater or equal to the random number that the random number generator has produced (randomGen function in the proc.c). If this is true, then we found the winner process, otherwise we continue our search. 
+\par Now that we described the procedure of the lottery scheduler, we need to explain which parts of the code we changed to implement it. Firstly, we modify the \textit{proc} structure in the \texttt{proc.h} file to add two new variables: \textit{tickets} (the number of tickets) and \textit{wins} (the number of lottery wins). Then, we assigned the default numbers of tickets (to one) in the function \textit{allocproc} of the \texttt{proc.c} file. All the other changes were implemented in the function scheduler of the \texttt{proc.c} file. At first, we iterated through all the processes, to find the  total of all the tickets (\textit{getTotalTickets} function in the \texttt{proc.c}). Then, we implemented a second iteration in which we look for the winner process. We find the number of tickets accumulated till the process that we currently are and we check if this number is greater or equal to the random number that the random number generator has produced (\textit{randomGen} function in the \texttt{proc.c}). If this is true, then we found the winner process, otherwise we continue our search. Every time a process wins a lottery, we increment its value of \textit{wins} by 1.
 
 \subsection{Ticket Inflation}\label{sec:ti}
 In this part of the assignment we implemented the ticket inflation. In the ticket inflation, if the user notices that a process that she needs does not win as much as she wants, she could increase  the number of its tickets. We do that by adding a system call which increases the number of tickets of the process that invokes it. 
 
-\par Our system call is called sys\_numtickets and it is implemented in the sysproc.c file. We increase by one the number of tickets that the process already has and we return its current ticket numbers. We also had to make this system call visible to the syscall.c file. Then, we added it in the syscall.h, user.h, defs.h and usys.S files as it is described in section \ref{sec:sc}.
+\par Our system call is called \textit{sys\_numtickets} and it is implemented in the \texttt{sysproc.c} file. We increase by one the number of tickets that the process already has and we return its current ticket numbers. We also had to make this system call visible to the \texttt{syscall.c} file. Then, we added it in the \texttt{syscall.h}, \texttt{user.h}, \texttt{defs.h} and \texttt{usys.S} files as it is described in section \ref{sec:sc}.
 
 \section{Tests}
 
-We design two tests to evaluate the validity of our implementation. The main idea is to run processes which  perform long loops, allocate different amount of ticket to each of them and output their performance in fixed intervals of time.  We implement a number of system calls in the sysproc.c file to achieve these goals.  In addition, we modify the number of CPUs in the Makefile to work with just one CPU.
+We design two tests to evaluate the validity of our implementation. The main idea is to run processes which  perform long loops, allocate different amount of ticket to each of them and output their performance in fixed intervals of time.  We implement a number of system calls in the \texttt{sysproc.c} file to achieve these goals.  In addition, we modify the number of CPUs in the \texttt{Makefile} to work with just one CPU.
 
 \subsection{System calls}
-A first system call (top) was implemented to run the procdump function every 5 seconds. We modify the default procdump function (at the end of proc.c) to output information about the running and runnable processes.  Specifically, it shows the pid, name, tickets and number of lottery wins of each of the process. This system call receives as parameters the number of requested outputs and its number of tickets.  We use the first parameter to set how many samples we want to collect during the test.
+A first system call (\textit{top}) was implemented to run the \textit{procdump} function every 5 seconds. We modify the default \textit{procdump} function (at the end of \texttt{proc.c}) to output information about the running and runnable processes.  Specifically, it shows the pid, name, tickets and number of lottery wins of each of the process. This system call receives as parameters the number of requested outputs and its number of tickets.  We use the first parameter to set how many samples we want to collect during the test.
 
-A second system call (secs) will return the instant in which this system call was invoked.  It uses the cmostime function and rtcdate structure provide by the date.h and lapic.c files.  For convenience, it just returns the number of seconds during the current hour.
+A second system call (\textit{secs}) will return the instant in which this system call was invoked.  It uses the \textit{cmostime} function and \textit{rtcdate} structure provide by the \texttt{date.h} and \texttt{lapic.c} files.  For convenience, it just returns the number of seconds during the current hour.
 
-A third system call (work) will receive two parameters: a number of iterations for the loop and a number of tickets to be assigned for the current process.  It will just perform a simple assignation during the number of specified iterations.
+A third system call (\textit{work}) will receive two parameters: a number of iterations for the loop and a number of tickets to be assigned for the current process.  It will just perform a simple assignation during the number of specified iterations.
 
 \subsection{Test 1. Ticket allocation and fairness share}
-The first test evaluates the ratio of the ticket allocation.  We implement a command line function (file test.c) that runs the system call work.  Three processes were launched with different number of tickets running at the same time (using the \& wildcard).  The selected ratio was 8:3:1.  Figure \ref{fig:test1} shows the details of the setting for this test. Figure \ref{fig:test1a} shows the number of lotteries each process wins during a 200 seconds test. 
+The first test evaluates the ratio of the ticket allocation.  We implement a command line function (file \texttt{test.c}) that runs the system call \textit{work}.  Three processes were launched with different number of tickets running at the same time (using the \& wildcard).  The selected ratio was 8:3:1.  Figure \ref{fig:test1} shows the details of the setting for this test. Figure \ref{fig:test1a} shows the number of lotteries each process wins during a 200 seconds test. 
 
 \begin{figure}
   \centering
@@ -256,11 +255,11 @@ In order to test the fairness share of the allocation, we plot the proportion of
 \begin{figure}
   \centering
   \includegraphics[width=0.6\textwidth]{test1b}
-  \caption{Lottery wins for three different processes. The proportional ratio was 8:3:1.}\label{fig:test1b}
+  \caption{Proportion share for three different processes. The horizontal lines show the expected values.}\label{fig:test1b}
 \end{figure}
 
 \subsection{Test 2. Ticket inflation}
-To test ticket inflation we implement a command line function (file test2.c) which runs a long loop.  We track the number of iterations inside the loop and call the numtickets system call (section \ref{sec:ti}) every 1000000 iterations to increase its number of tickets. Then, we launch two process: test2 (starting with 2 tickets) and top, which remains with a fixed number of tickets.  Figure \ref{fig:test2a} shows the settings for this test.  
+To test ticket inflation we implement a command line function (file \texttt{test2.c}) which runs a long loop.  We track the number of iterations inside the loop and call the \textit{numtickets} system call (section \ref{sec:ti}) every 1000000 iterations to increase its number of tickets. Then, we launch two process: \textit{test2} (starting with 2 tickets) and \textit{top}, which remains with a fixed number of tickets.  Figure \ref{fig:test2a} shows the settings for this test.  
 
 \begin{figure}
   \centering

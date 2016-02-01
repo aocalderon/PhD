@@ -27,8 +27,7 @@ hidelinks
 \maketitle
 
 \section{Adding a system call}\label{sec:sc}
-What files we changed to solve each part?
-we changed the following files:
+What files we changed to solve each part? we changed the following files:
 \begin{enumerate}
  \item proc.h
  \item proc.c
@@ -220,7 +219,7 @@ Figure \ref{fig:fig1} shows our output.  We can see that our process outputs 4 a
 In the second part of the lab we had to implement the lottery scheduler. In the lottery scheduler, the user assigns to each process a number of tickets. We decided to assign one ticket by default to each process. For a process to win the lottery, it should have the ticket that the lottery generates. We generate the winning ticket using a random number generator function. To find the winner, we iterate through the tickets of all the processes until we find the winning ticket. 
 \par Now that we described the procedure of the lottery scheduler, we need to explain which parts of the code we changed to implement it. Firstly, we modify the proc structure in the proc.h file to add two new variables: tickets (the number of tickets) and wins (the number of lottery wins). Then, we assigned the default numbers of tickets (to one) in the function allocproc of the proc.c file. All the other changes were implemented in the function scheduler of the proc.c file. At first, we iterated through all the processes, to find the  total of all the tickets (getTotalTickets function in the proc.c). Then, we implemented a second iteration in which we look for the winner process. We find the number of tickets accumulated till the process that we currently are and we check if this number is greater or equal to the random number that the random number generator has produced (randomGen function in the proc.c). If this is true, then we found the winner process, otherwise we continue our search. 
 
-\subsection{Ticket Inflation}
+\subsection{Ticket Inflation}\label{sec:ti}
 In this part of the assignment we implemented the ticket inflation. In the ticket inflation, if the user notices that a process that she needs does not win as much as she wants, she could increase  the number of its tickets. We do that by adding a system call which increases the number of tickets of the process that invokes it. 
 
 \par Our system call is called sys\_numtickets and it is implemented in the sysproc.c file. We increase by one the number of tickets that the process already has and we return its current ticket numbers. We also had to make this system call visible to the syscall.c file. Then, we added it in the syscall.h, user.h, defs.h and usys.S files as it is described in section \ref{sec:sc}.
@@ -256,11 +255,11 @@ In order to test the fairness share of the allocation, we plot the proportion of
 \begin{figure}
   \centering
   \includegraphics[width=0.6\textwidth]{test1b}
-  \caption{Lottery wins for three different processes. The proportional ratio was 8:3:1.}\label{fig:test1b}
+  \caption{Proportional ratio for three different processes. The horizontal lines show the expected values.}\label{fig:test1b}
 \end{figure}
 
 \subsection{Test 2. Ticket inflation}
-To test ticket inflation we implement a command line function (file test2.c) which runs a long loop.  We track the number of iterations inside the loop and call the numtickets system call (section XX) every 1000000 iterations to increase its number of tickets. Then, we launch two process: test2 (starting with 2 tickets) and top, which remains with a fixed number of tickets.  Figure \ref{fig:test2a} shows the settings for this test.  
+To test ticket inflation we implement a command line function (file test2.c) which runs a long loop.  We track the number of iterations inside the loop and call the numtickets system call (section \ref{sec:ti}) every 1000000 iterations to increase its number of tickets. Then, we launch two process: test2 (starting with 2 tickets) and top, which remains with a fixed number of tickets.  Figure \ref{fig:test2a} shows the settings for this test.  
 
 \begin{figure}
   \centering
@@ -268,7 +267,7 @@ To test ticket inflation we implement a command line function (file test2.c) whi
   \caption{Details of the settings for test 2.}\label{fig:test2a}
 \end{figure}
 
-Figure \ref{fig:test2b} illustrate the number of lottery wins for the two processes.  We can see that the process with ticket inflation increases faster its number of wins according to the increase in its number of tickets.  The probability of the fixed-ticket process of winning lotteries start to decrease compared with the increase number of tickets of the inflation process.
+Figure \ref{fig:test2b} illustrates the number of lottery wins for the two processes.  We can see that the process with ticket inflation increases faster its number of wins proportionally to the increase of its number of tickets.  The probability of the fixed-ticket process of winning lotteries start to decrease compared with the increase number of tickets of the inflation process.
 
 \begin{figure}
   \centering
