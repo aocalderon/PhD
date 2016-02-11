@@ -2,8 +2,8 @@ require(knnflex)
 require(caret)
 
 # a quick classification example
-n <- 200
-set.seed(123)
+n <- 2000
+# set.seed(123)
 x1 <- c(rnorm(n/2,mean=2.5),rnorm(n/2,mean=7.5))
 x2 <- c(rnorm(n/2,mean=7.5),rnorm(n/2,mean=2.5))
 x  <- cbind(x1,x2)
@@ -12,11 +12,16 @@ train <- sample(1:n,n*0.75)
 test <- (1:n)[-train]
 # plot the training cases
 plot(x1[train],x2[train],col=y[train]+1,xlab="x1",ylab="x2"
-     ,xlim=c(-1,10),ylim=c(-1,10))
+     ,xlim=c(-1,15),ylim=c(-1,15))
 # predict the other cases
 kdist <- knn.dist(x)
-preds <- knn.predict(train,test,y,kdist,k=3,agg.meth="majority")
+# preds <- knn.predict(train,test,y,kdist,k=3,agg.meth="majority")
 # add the predictions to the plot
-points(x1[test],x2[test],col=as.integer(preds)+1,pch="+")
+# points(x1[test],x2[test],col=as.integer(preds)+1,pch="+")
+
+kdist_error <- injectErrorDummy(kdist, 0.02)
+preds_error <- knn.predict(train,test,y,kdist_error,k=5,agg.meth="majority")
+points(x1[test],x2[test],col=as.integer(preds_error)+1,pch="+")
+
 # display the confusion matrix
 confusionMatrix(y[test],preds)
