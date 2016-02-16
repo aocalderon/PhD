@@ -23,11 +23,14 @@ for(k in seq(1,9,2)){
     kdist_error <- injectError(kdist, p)
     preds_error <- knn.predict(train,test,y,kdist_error,k=k, agg.meth = "majority")
     accuracy_error <- getAccuracy(y[test],preds_error)
-    print(paste(accuracy_orig,accuracy_error,accuracy_orig-accuracy_error))
     as <- c(as, accuracy_error)
   }
   
   data <- data.frame(p=range, Accuracy=as)
+  pdf(paste0("figures/Zoo_k",k,".pdf"), 7.83, 5.17)
   plotSpline(data, k)
   abline(h = accuracy_orig, col='blue', cex=0.1, lty=3)
+  text(0.97,accuracy_orig-0.03,paste("acc=",round(accuracy_orig,2)),cex=0.6,col="blue")
+  dev.off()
+  print(k)
 }

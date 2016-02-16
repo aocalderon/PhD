@@ -33,7 +33,7 @@ plotSpline = function(data, k, plotExtras = F){
   lmfit = fit.p.spline(data$Accuracy,X,lambda=lambda)
   
   ## Overlay the fitted line on the plot of the raw data
-  lines(data$p,lmfit$fit,col="red",lwd=2,lty=3)
+  lines(data$p,lmfit$fit,col="red",lwd=1,lty=2)
   if(plotExtras){
     plot(data$p,lmfit$resid,xlab="p",ylab="Residual") 
     abline(h=0)
