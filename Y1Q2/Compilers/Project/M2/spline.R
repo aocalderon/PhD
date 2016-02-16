@@ -17,9 +17,9 @@ fit.p.spline = function(y,X,lambda=0){
               fitted.values=fit))
 }
 
-plotSpline = function(data, plotExtras = F){
+plotSpline = function(data, k, plotExtras = F){
   ## Plot the raw data
-  plot(data,main="",xlab="p",ylab="Accuracy",pch=21,bg=1,cex=0.4)
+  plot(data,main=paste("k = ", k),xlab="p",ylab="Accuracy",pch=21,bg=1,cex=0.4)
   
   ## Set the degree of the model, define the knots, and generate the
   ## design matrix
@@ -41,7 +41,3 @@ plotSpline = function(data, plotExtras = F){
     abline(h=0)    
   }
 }
-
-## Load the data set
-data <- data.frame(p=seq(0.1,1,0.01), Accuracy=as)
-plotSpline(data)
