@@ -1,6 +1,5 @@
 injectError <- function(kdist, p = 0.02){
   
-  set.seed(456)
   n <- nrow(kdist)
   m <- n
   mn <- .Machine$double.xmin
