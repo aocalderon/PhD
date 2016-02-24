@@ -1,0 +1,100 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGdefault{c+cp}{\PYGdefaultZsh{}include \PYGdefaultZdq{}types.h\PYGdefaultZdq{}}
+\PYGdefault{c+cp}{\PYGdefaultZsh{}include \PYGdefaultZdq{}x86.h\PYGdefaultZdq{}}
+\PYGdefault{c+cp}{\PYGdefaultZsh{}include \PYGdefaultZdq{}defs.h\PYGdefaultZdq{}}
+\PYGdefault{c+cp}{\PYGdefaultZsh{}include \PYGdefaultZdq{}date.h\PYGdefaultZdq{}}
+\PYGdefault{c+cp}{\PYGdefaultZsh{}include \PYGdefaultZdq{}param.h\PYGdefaultZdq{}}
+\PYGdefault{c+cp}{\PYGdefaultZsh{}include \PYGdefaultZdq{}memlayout.h\PYGdefaultZdq{}}
+\PYGdefault{c+cp}{\PYGdefaultZsh{}include \PYGdefaultZdq{}mmu.h\PYGdefaultZdq{}}
+\PYGdefault{c+cp}{\PYGdefaultZsh{}include \PYGdefaultZdq{}proc.h\PYGdefaultZdq{}}
+
+\PYGdefault{k+kt}{int}
+\PYGdefault{n+nf}{sys\PYGdefaultZus{}fork}\PYGdefault{p}{(}\PYGdefault{k+kt}{void}\PYGdefault{p}{)}
+\PYGdefault{p}{\PYGdefaultZob{}}
+  \PYGdefault{k}{return} \PYGdefault{n}{fork}\PYGdefault{p}{();}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+
+\PYGdefault{k+kt}{int}
+\PYGdefault{n+nf}{sys\PYGdefaultZus{}exit}\PYGdefault{p}{(}\PYGdefault{k+kt}{void}\PYGdefault{p}{)}
+\PYGdefault{p}{\PYGdefaultZob{}}
+  \PYGdefault{n}{exit}\PYGdefault{p}{();}
+  \PYGdefault{k}{return} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}  \PYGdefault{c+c1}{// not reached}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+
+\PYGdefault{k+kt}{int}
+\PYGdefault{n+nf}{sys\PYGdefaultZus{}wait}\PYGdefault{p}{(}\PYGdefault{k+kt}{void}\PYGdefault{p}{)}
+\PYGdefault{p}{\PYGdefaultZob{}}
+  \PYGdefault{k}{return} \PYGdefault{n}{wait}\PYGdefault{p}{();}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+
+\PYGdefault{k+kt}{int}
+\PYGdefault{n+nf}{sys\PYGdefaultZus{}kill}\PYGdefault{p}{(}\PYGdefault{k+kt}{void}\PYGdefault{p}{)}
+\PYGdefault{p}{\PYGdefaultZob{}}
+  \PYGdefault{k+kt}{int} \PYGdefault{n}{pid}\PYGdefault{p}{;}
+
+  \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{argint}\PYGdefault{p}{(}\PYGdefault{l+m+mi}{0}\PYGdefault{p}{,} \PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{pid}\PYGdefault{p}{)} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)}
+    \PYGdefault{k}{return} \PYGdefault{o}{\PYGdefaultZhy{}}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{;}
+  \PYGdefault{k}{return} \PYGdefault{n}{kill}\PYGdefault{p}{(}\PYGdefault{n}{pid}\PYGdefault{p}{);}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+
+\PYGdefault{k+kt}{int}
+\PYGdefault{n+nf}{sys\PYGdefaultZus{}getpid}\PYGdefault{p}{(}\PYGdefault{k+kt}{void}\PYGdefault{p}{)}
+\PYGdefault{p}{\PYGdefaultZob{}}
+  \PYGdefault{k}{return} \PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{pid}\PYGdefault{p}{;}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+
+\PYGdefault{k+kt}{int}
+\PYGdefault{n+nf}{sys\PYGdefaultZus{}sbrk}\PYGdefault{p}{(}\PYGdefault{k+kt}{void}\PYGdefault{p}{)}
+\PYGdefault{p}{\PYGdefaultZob{}}
+  \PYGdefault{k+kt}{int} \PYGdefault{n}{addr}\PYGdefault{p}{;}
+  \PYGdefault{k+kt}{int} \PYGdefault{n}{n}\PYGdefault{p}{;}
+
+  \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{argint}\PYGdefault{p}{(}\PYGdefault{l+m+mi}{0}\PYGdefault{p}{,} \PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{n}\PYGdefault{p}{)} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)}
+    \PYGdefault{k}{return} \PYGdefault{o}{\PYGdefaultZhy{}}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{;}
+  \PYGdefault{n}{addr} \PYGdefault{o}{=} \PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{sz}\PYGdefault{p}{;}
+  \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{growproc}\PYGdefault{p}{(}\PYGdefault{n}{n}\PYGdefault{p}{)} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)}
+    \PYGdefault{k}{return} \PYGdefault{o}{\PYGdefaultZhy{}}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{;}
+  \PYGdefault{k}{return} \PYGdefault{n}{addr}\PYGdefault{p}{;}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+
+\PYGdefault{k+kt}{int}
+\PYGdefault{n+nf}{sys\PYGdefaultZus{}sleep}\PYGdefault{p}{(}\PYGdefault{k+kt}{void}\PYGdefault{p}{)}
+\PYGdefault{p}{\PYGdefaultZob{}}
+  \PYGdefault{k+kt}{int} \PYGdefault{n}{n}\PYGdefault{p}{;}
+  \PYGdefault{n}{uint} \PYGdefault{n}{ticks0}\PYGdefault{p}{;}
+  
+  \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{argint}\PYGdefault{p}{(}\PYGdefault{l+m+mi}{0}\PYGdefault{p}{,} \PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{n}\PYGdefault{p}{)} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)}
+    \PYGdefault{k}{return} \PYGdefault{o}{\PYGdefaultZhy{}}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{;}
+  \PYGdefault{n}{acquire}\PYGdefault{p}{(}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{tickslock}\PYGdefault{p}{);}
+  \PYGdefault{n}{ticks0} \PYGdefault{o}{=} \PYGdefault{n}{ticks}\PYGdefault{p}{;}
+  \PYGdefault{k}{while}\PYGdefault{p}{(}\PYGdefault{n}{ticks} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{n}{ticks0} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{n}{n}\PYGdefault{p}{)\PYGdefaultZob{}}
+    \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{killed}\PYGdefault{p}{)\PYGdefaultZob{}}
+      \PYGdefault{n}{release}\PYGdefault{p}{(}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{tickslock}\PYGdefault{p}{);}
+      \PYGdefault{k}{return} \PYGdefault{o}{\PYGdefaultZhy{}}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{;}
+    \PYGdefault{p}{\PYGdefaultZcb{}}
+    \PYGdefault{n}{sleep}\PYGdefault{p}{(}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{ticks}\PYGdefault{p}{,} \PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{tickslock}\PYGdefault{p}{);}
+  \PYGdefault{p}{\PYGdefaultZcb{}}
+  \PYGdefault{n}{release}\PYGdefault{p}{(}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{tickslock}\PYGdefault{p}{);}
+  \PYGdefault{k}{return} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+
+\PYGdefault{c+c1}{// return how many clock tick interrupts have occurred}
+\PYGdefault{c+c1}{// since start.}
+\PYGdefault{k+kt}{int}
+\PYGdefault{n+nf}{sys\PYGdefaultZus{}uptime}\PYGdefault{p}{(}\PYGdefault{k+kt}{void}\PYGdefault{p}{)}
+\PYGdefault{p}{\PYGdefaultZob{}}
+  \PYGdefault{n}{uint} \PYGdefault{n}{xticks}\PYGdefault{p}{;}
+  
+  \PYGdefault{n}{acquire}\PYGdefault{p}{(}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{tickslock}\PYGdefault{p}{);}
+  \PYGdefault{n}{xticks} \PYGdefault{o}{=} \PYGdefault{n}{ticks}\PYGdefault{p}{;}
+  \PYGdefault{n}{release}\PYGdefault{p}{(}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{tickslock}\PYGdefault{p}{);}
+  \PYGdefault{k}{return} \PYGdefault{n}{xticks}\PYGdefault{p}{;}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+
+\PYGdefault{k+kt}{int} \PYGdefault{n+nf}{sys\PYGdefaultZus{}null}\PYGdefault{p}{()\PYGdefaultZob{}}
+	\PYGdefault{k+kt}{int} \PYGdefault{o}{*}\PYGdefault{n}{f}\PYGdefault{p}{;}
+	
+	\PYGdefault{n}{argptr}\PYGdefault{p}{(}\PYGdefault{l+m+mi}{0}\PYGdefault{p}{,} \PYGdefault{p}{(}\PYGdefault{k+kt}{void}\PYGdefault{o}{*}\PYGdefault{p}{)}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{f}\PYGdefault{p}{,} \PYGdefault{l+m+mi}{2}\PYGdefault{o}{*}\PYGdefault{k}{sizeof}\PYGdefault{p}{(}\PYGdefault{n}{f}\PYGdefault{p}{[}\PYGdefault{l+m+mi}{0}\PYGdefault{p}{]));}
+	\PYGdefault{k}{return} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+\end{Verbatim}

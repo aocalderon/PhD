@@ -8,11 +8,9 @@ colorlinks=false,
 hidelinks
 }
 \usepackage{minted}
-\usepackage{xcolor}
-\usepackage{amsmath}
 \usepackage{placeins}
 
-\setlength{\parindent}{2em}
+\setlength{\parindent}{1em}
 \setlength{\parskip}{0.5em}
 
 
@@ -38,9 +36,9 @@ In \texttt{xv6}, user code is loaded into the first part of the address space. A
 For resolving this problem, we changed 3 files (\texttt{exec.c}, \texttt{vm.c} and \texttt{Makefile}) in order to start from second page in the page table instead of first page.
 
 \begin{enumerate}
- \item \texttt{exec.c}: In \texttt{exec.c} file, we changed size instead of 0 to 4096 (\texttt{PGSIZE}), so address space will get filled from second page.  We make the change at line 39 of listing \ref{lst:exec} (\texttt{sz=PGSIZE} instead of \texttt{sz=0}).
- \item \texttt{vm.c}: In \texttt{copyuvm} function, where a copy of the parent process's page table is given to the child, we start the \texttt{for loop} from second page (\texttt{PGSIZE}) instead of 0.  See line 319 at listing \ref{lst:vm}.
- \item \texttt{Makefile}: In \texttt{Makefile}, entry point of user programs is set. So, we have to make the first page invalid, meaning where the first instruction is set to 0, and change the entry point to the next page at ``\texttt{0x1000}''. So we set \texttt{init} and \texttt{forktest} to start from second page (\texttt{0x1000}). See lines XX and XX at listing \ref{lst:makefile}.
+ \item \texttt{exec.c}: In \texttt{exec.c} file, we changed size instead of \texttt{0} to \texttt{4096} (\texttt{PGSIZE}), so address space will get filled from second page.  We make the change at line 39 of listing \ref{lst:exec} (\texttt{sz=PGSIZE} instead of \texttt{sz=0}).
+ \item \texttt{vm.c}: In \texttt{copyuvm} function, where a copy of the parent process's page table is given to the child, we start the \texttt{for loop} from second page (\texttt{PGSIZE}) instead of \texttt{0}.  See line 319 at listing \ref{lst:vm}.
+ \item \texttt{Makefile}: In \texttt{Makefile}, entry point of user programs is set. So, we have to make the first page invalid, meaning where the first instruction is set to \texttt{0}, and change the entry point to the next page at ``\texttt{0x1000}''. So we set \texttt{init} and \texttt{forktest} to start from second page (\texttt{0x1000}). See lines 140 and 147 at listing \ref{lst:makefile}.
 \end{enumerate}
 
 After changing all these, we tested our user code (a code that tries to access a null pointer) shown in listing \ref{lst:test1}, and now we see that the process has been trapped and killed (figure \ref{fig:test1}).
@@ -103,6 +101,10 @@ After changing all these, we tested our user code (a code that tries to access a
 \FloatBarrier
 
 \section{Null pointer at system call.}
+For the second part of lab 2, we made some changes in \texttt{syscall.c} file. Specifically, we added an \texttt{if} clause in function \texttt{argptr} to check if we point at \texttt{0}. If this is true, then we have an exception. The change is shown between lines 64 and 67 at listing \ref{lst:syscall}. The reason that we make these changes is that now that we changed \texttt{xv6} so that each process does not start from the zero address, we, also, need to ensure that we pass to kernel a correct pointer via system calls. Without the changes, \texttt{xv6} checks only if the pointer lies between the process address space. However, we should add a check that returns an exception if the pointer points to \texttt{0}.  
+
+We tested our implementation by executing a system call that passes a pointer to \texttt{0}, using the code in listing \ref{lst:test2}, and we got an exception. The output can be seen in figure \ref{fig:test2}.  However, when we pass pointer to somewhere else (inside the process address space) the system call is executed normally. 
+
 
 \begin{listing}
   \inputminted[
@@ -114,7 +116,7 @@ After changing all these, we tested our user code (a code that tries to access a
     lastline=69,
     linenos
   ]{c}{xv6-public/syscall.c}
-  \caption{Changes in syscall.c file.}\label{lst:syscall}
+  \caption{Changes in \texttt{syscall.c} file.}\label{lst:syscall}
 \end{listing}
 
 \begin{listing}
@@ -124,12 +126,12 @@ After changing all these, we tested our user code (a code that tries to access a
     frame=single,
     linenos
   ]{c}{xv6-public/test2.c}
-  \caption{Test for null pointer catching at system call (test2.c file).}\label{lst:test2}
+  \caption{Test for null pointer catching at system call (\texttt{test2.c} file).}\label{lst:test2}
 \end{listing}
 
 \begin{figure}
   \centering
-  \includegraphics[width=1\textwidth]{figures/test2.png}
+  \includegraphics[width=0.8\textwidth]{figures/test2.png}
   \caption{Output of test 2.}\label{fig:test2}
 \end{figure}
 
