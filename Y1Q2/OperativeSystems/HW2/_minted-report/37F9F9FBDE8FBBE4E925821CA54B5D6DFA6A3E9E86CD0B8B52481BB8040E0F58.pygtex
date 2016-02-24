@@ -1,0 +1,281 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGdefault{n+nv}{OBJS} \PYGdefault{o}{=} \PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	bio.o\PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	console.o\PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	exec.o\PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	file.o\PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	fs.o\PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	ide.o\PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	ioapic.o\PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	kalloc.o\PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	kbd.o\PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	lapic.o\PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	log.o\PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	main.o\PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	mp.o\PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	picirq.o\PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	pipe.o\PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	proc.o\PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	spinlock.o\PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	string.o\PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	swtch.o\PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	syscall.o\PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	sysfile.o\PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	sysproc.o\PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	timer.o\PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	trapasm.o\PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	trap.o\PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	uart.o\PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	vectors.o\PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	vm.o\PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+
+\PYGdefault{c}{\PYGdefaultZsh{} Cross\PYGdefaultZhy{}compiling (e.g., on Mac OS X)}
+\PYGdefault{c}{\PYGdefaultZsh{} TOOLPREFIX = i386\PYGdefaultZhy{}jos\PYGdefaultZhy{}elf}
+
+\PYGdefault{c}{\PYGdefaultZsh{} Using native tools (e.g., on X86 Linux)}
+\PYGdefault{c}{\PYGdefaultZsh{}TOOLPREFIX = }
+
+\PYGdefault{c}{\PYGdefaultZsh{} Try to infer the correct TOOLPREFIX if not set}
+ifndef TOOLPREFIX
+TOOLPREFIX :\PYGdefault{o}{=} \PYGdefault{k}{\PYGdefaultZdl{}(}shell \PYGdefault{k}{if} i386\PYGdefaultZhy{}jos\PYGdefaultZhy{}elf\PYGdefaultZhy{}objdump \PYGdefaultZhy{}i 2\PYGdefaultZgt{}\PYGdefault{p}{\PYGdefaultZam{}}\PYGdefault{l+m}{1} \PYGdefault{p}{|} grep \PYGdefault{l+s+s1}{\PYGdefaultZsq{}\PYGdefaultZca{}elf32\PYGdefaultZhy{}i386\PYGdefaultZdl{}\PYGdefaultZdl{}\PYGdefaultZsq{}} \PYGdefaultZgt{}/dev/null 2\PYGdefaultZgt{}\PYGdefault{p}{\PYGdefaultZam{}}1\PYGdefault{p}{;} \PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	\PYGdefault{k}{then} \PYGdefault{n+nb}{echo} \PYGdefault{l+s+s1}{\PYGdefaultZsq{}i386\PYGdefaultZhy{}jos\PYGdefaultZhy{}elf\PYGdefaultZhy{}\PYGdefaultZsq{}}\PYGdefault{p}{;} \PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	\PYGdefault{k}{elif} objdump \PYGdefaultZhy{}i 2\PYGdefaultZgt{}\PYGdefault{p}{\PYGdefaultZam{}}\PYGdefault{l+m}{1} \PYGdefault{p}{|} grep \PYGdefault{l+s+s1}{\PYGdefaultZsq{}elf32\PYGdefaultZhy{}i386\PYGdefaultZsq{}} \PYGdefaultZgt{}/dev/null 2\PYGdefaultZgt{}\PYGdefault{p}{\PYGdefaultZam{}}1\PYGdefault{p}{;} \PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	\PYGdefault{k}{then} \PYGdefault{n+nb}{echo} \PYGdefault{l+s+s1}{\PYGdefaultZsq{}\PYGdefaultZsq{}}\PYGdefault{p}{;} \PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	\PYGdefault{k}{else} \PYGdefault{n+nb}{echo} \PYGdefault{l+s+s2}{\PYGdefaultZdq{}***\PYGdefaultZdq{}} 1\PYGdefaultZgt{}\PYGdefault{p}{\PYGdefaultZam{}}2\PYGdefault{p}{;} \PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	\PYGdefault{n+nb}{echo} \PYGdefault{l+s+s2}{\PYGdefaultZdq{}*** Error: Couldn\PYGdefaultZsq{}t find an i386\PYGdefaultZhy{}*\PYGdefaultZhy{}elf version of GCC/binutils.\PYGdefaultZdq{}} 1\PYGdefaultZgt{}\PYGdefault{p}{\PYGdefaultZam{}}2\PYGdefault{p}{;} \PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	\PYGdefault{n+nb}{echo} \PYGdefault{l+s+s2}{\PYGdefaultZdq{}*** Is the directory with i386\PYGdefaultZhy{}jos\PYGdefaultZhy{}elf\PYGdefaultZhy{}gcc in your PATH?\PYGdefaultZdq{}} 1\PYGdefaultZgt{}\PYGdefault{p}{\PYGdefaultZam{}}2\PYGdefault{p}{;} \PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	\PYGdefault{n+nb}{echo} \PYGdefault{l+s+s2}{\PYGdefaultZdq{}*** If your i386\PYGdefaultZhy{}*\PYGdefaultZhy{}elf toolchain is installed with a command\PYGdefaultZdq{}} 1\PYGdefaultZgt{}\PYGdefault{p}{\PYGdefaultZam{}}2\PYGdefault{p}{;} \PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	\PYGdefault{n+nb}{echo} \PYGdefault{l+s+s2}{\PYGdefaultZdq{}*** prefix other than \PYGdefaultZsq{}i386\PYGdefaultZhy{}jos\PYGdefaultZhy{}elf\PYGdefaultZhy{}\PYGdefaultZsq{}, set your TOOLPREFIX\PYGdefaultZdq{}} 1\PYGdefaultZgt{}\PYGdefault{p}{\PYGdefaultZam{}}2\PYGdefault{p}{;} \PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	\PYGdefault{n+nb}{echo} \PYGdefault{l+s+s2}{\PYGdefaultZdq{}*** environment variable to that prefix and run \PYGdefaultZsq{}make\PYGdefaultZsq{} again.\PYGdefaultZdq{}} 1\PYGdefaultZgt{}\PYGdefault{p}{\PYGdefaultZam{}}2\PYGdefault{p}{;} \PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	\PYGdefault{n+nb}{echo} \PYGdefault{l+s+s2}{\PYGdefaultZdq{}*** To turn off this error, run \PYGdefaultZsq{}gmake TOOLPREFIX= ...\PYGdefaultZsq{}.\PYGdefaultZdq{}} 1\PYGdefaultZgt{}\PYGdefault{p}{\PYGdefaultZam{}}2\PYGdefault{p}{;} \PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	\PYGdefault{n+nb}{echo} \PYGdefault{l+s+s2}{\PYGdefaultZdq{}***\PYGdefaultZdq{}} 1\PYGdefaultZgt{}\PYGdefault{p}{\PYGdefaultZam{}}2\PYGdefault{p}{;} \PYGdefault{n+nb}{exit }1\PYGdefault{p}{;} \PYGdefault{k}{fi)}
+endif
+
+\PYGdefault{c}{\PYGdefaultZsh{} If the makefile can\PYGdefaultZsq{}t find QEMU, specify its path here}
+\PYGdefault{c}{\PYGdefaultZsh{} QEMU = qemu\PYGdefaultZhy{}system\PYGdefaultZhy{}i386}
+
+\PYGdefault{c}{\PYGdefaultZsh{} Try to infer the correct QEMU}
+ifndef QEMU
+\PYGdefault{n+nv}{QEMU} \PYGdefault{o}{=} \PYGdefault{k}{\PYGdefaultZdl{}(}shell \PYGdefault{k}{if} which qemu \PYGdefaultZgt{} /dev/null\PYGdefault{p}{;} \PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	\PYGdefault{k}{then} \PYGdefault{n+nb}{echo }qemu\PYGdefault{p}{;} \PYGdefault{n+nb}{exit}\PYGdefault{p}{;} \PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	\PYGdefault{k}{elif} which qemu\PYGdefaultZhy{}system\PYGdefaultZhy{}i386 \PYGdefaultZgt{} /dev/null\PYGdefault{p}{;} \PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	\PYGdefault{k}{then} \PYGdefault{n+nb}{echo }qemu\PYGdefaultZhy{}system\PYGdefaultZhy{}i386\PYGdefault{p}{;} \PYGdefault{n+nb}{exit}\PYGdefault{p}{;} \PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	\PYGdefault{k}{else} \PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	\PYGdefault{n+nv}{qemu}\PYGdefault{o}{=}/Applications/Q.app/Contents/MacOS/i386\PYGdefaultZhy{}softmmu.app/Contents/MacOS/i386\PYGdefaultZhy{}softmmu\PYGdefault{p}{;} \PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	\PYGdefault{k}{if} \PYGdefault{n+nb}{test} \PYGdefaultZhy{}x \PYGdefault{n+nv}{\PYGdefaultZdl{}\PYGdefaultZdl{}}qemu\PYGdefault{p}{;} \PYGdefault{k}{then} \PYGdefault{n+nb}{echo} \PYGdefault{n+nv}{\PYGdefaultZdl{}\PYGdefaultZdl{}}qemu\PYGdefault{p}{;} \PYGdefault{n+nb}{exit}\PYGdefault{p}{;} \PYGdefault{k}{fi}\PYGdefault{p}{;} \PYGdefault{k}{fi}\PYGdefault{p}{;} \PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	\PYGdefault{n+nb}{echo} \PYGdefault{l+s+s2}{\PYGdefaultZdq{}***\PYGdefaultZdq{}} 1\PYGdefaultZgt{}\PYGdefault{p}{\PYGdefaultZam{}}2\PYGdefault{p}{;} \PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	\PYGdefault{n+nb}{echo} \PYGdefault{l+s+s2}{\PYGdefaultZdq{}*** Error: Couldn\PYGdefaultZsq{}t find a working QEMU executable.\PYGdefaultZdq{}} 1\PYGdefaultZgt{}\PYGdefault{p}{\PYGdefaultZam{}}2\PYGdefault{p}{;} \PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	\PYGdefault{n+nb}{echo} \PYGdefault{l+s+s2}{\PYGdefaultZdq{}*** Is the directory containing the qemu binary in your PATH\PYGdefaultZdq{}} 1\PYGdefaultZgt{}\PYGdefault{p}{\PYGdefaultZam{}}2\PYGdefault{p}{;} \PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	\PYGdefault{n+nb}{echo} \PYGdefault{l+s+s2}{\PYGdefaultZdq{}*** or have you tried setting the QEMU variable in Makefile?\PYGdefaultZdq{}} 1\PYGdefaultZgt{}\PYGdefault{p}{\PYGdefaultZam{}}2\PYGdefault{p}{;} \PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	\PYGdefault{n+nb}{echo} \PYGdefault{l+s+s2}{\PYGdefaultZdq{}***\PYGdefaultZdq{}} 1\PYGdefaultZgt{}\PYGdefault{p}{\PYGdefaultZam{}}2\PYGdefault{p}{;} \PYGdefault{n+nb}{exit }1\PYGdefault{k}{)}
+endif
+
+\PYGdefault{n+nv}{CC} \PYGdefault{o}{=} \PYGdefault{k}{\PYGdefaultZdl{}(}TOOLPREFIX\PYGdefault{k}{)}gcc
+\PYGdefault{n+nv}{AS} \PYGdefault{o}{=} \PYGdefault{k}{\PYGdefaultZdl{}(}TOOLPREFIX\PYGdefault{k}{)}gas
+\PYGdefault{n+nv}{LD} \PYGdefault{o}{=} \PYGdefault{k}{\PYGdefaultZdl{}(}TOOLPREFIX\PYGdefault{k}{)}ld
+\PYGdefault{n+nv}{OBJCOPY} \PYGdefault{o}{=} \PYGdefault{k}{\PYGdefaultZdl{}(}TOOLPREFIX\PYGdefault{k}{)}objcopy
+\PYGdefault{n+nv}{OBJDUMP} \PYGdefault{o}{=} \PYGdefault{k}{\PYGdefaultZdl{}(}TOOLPREFIX\PYGdefault{k}{)}objdump
+\PYGdefault{c}{\PYGdefaultZsh{}CFLAGS = \PYGdefaultZhy{}fno\PYGdefaultZhy{}pic \PYGdefaultZhy{}static \PYGdefaultZhy{}fno\PYGdefaultZhy{}builtin \PYGdefaultZhy{}fno\PYGdefaultZhy{}strict\PYGdefaultZhy{}aliasing \PYGdefaultZhy{}O2 \PYGdefaultZhy{}Wall \PYGdefaultZhy{}MD \PYGdefaultZhy{}ggdb \PYGdefaultZhy{}m32 \PYGdefaultZhy{}Werror \PYGdefaultZhy{}fno\PYGdefaultZhy{}omit\PYGdefaultZhy{}frame\PYGdefaultZhy{}pointer}
+\PYGdefault{n+nv}{CFLAGS} \PYGdefault{o}{=} \PYGdefaultZhy{}fno\PYGdefaultZhy{}pic \PYGdefaultZhy{}static \PYGdefaultZhy{}fno\PYGdefaultZhy{}builtin \PYGdefaultZhy{}fno\PYGdefaultZhy{}strict\PYGdefaultZhy{}aliasing \PYGdefaultZhy{}fvar\PYGdefaultZhy{}tracking \PYGdefaultZhy{}fvar\PYGdefaultZhy{}tracking\PYGdefaultZhy{}assignments \PYGdefaultZhy{}O0 \PYGdefaultZhy{}g \PYGdefaultZhy{}Wall \PYGdefaultZhy{}MD \PYGdefaultZhy{}gdwarf\PYGdefaultZhy{}2 \PYGdefaultZhy{}m32 \PYGdefaultZhy{}Werror \PYGdefaultZhy{}fno\PYGdefaultZhy{}omit\PYGdefaultZhy{}frame\PYGdefaultZhy{}pointer
+CFLAGS +\PYGdefault{o}{=} \PYGdefault{k}{\PYGdefaultZdl{}(}shell \PYGdefault{k}{\PYGdefaultZdl{}(}CC\PYGdefault{k}{)} \PYGdefaultZhy{}fno\PYGdefaultZhy{}stack\PYGdefaultZhy{}protector \PYGdefaultZhy{}E \PYGdefaultZhy{}x c /dev/null \PYGdefaultZgt{}/dev/null 2\PYGdefaultZgt{}\PYGdefault{p}{\PYGdefaultZam{}}\PYGdefault{l+m}{1} \PYGdefault{o}{\PYGdefaultZam{}\PYGdefaultZam{}} \PYGdefault{n+nb}{echo} \PYGdefaultZhy{}fno\PYGdefaultZhy{}stack\PYGdefaultZhy{}protector\PYGdefault{k}{)}
+\PYGdefault{n+nv}{ASFLAGS} \PYGdefault{o}{=} \PYGdefaultZhy{}m32 \PYGdefaultZhy{}gdwarf\PYGdefaultZhy{}2 \PYGdefaultZhy{}Wa,\PYGdefaultZhy{}divide
+\PYGdefault{c}{\PYGdefaultZsh{} FreeBSD ld wants ``elf\PYGdefaultZus{}i386\PYGdefaultZus{}fbsd\PYGdefaultZsq{}\PYGdefaultZsq{}}
+LDFLAGS +\PYGdefault{o}{=} \PYGdefaultZhy{}m \PYGdefault{k}{\PYGdefaultZdl{}(}shell \PYGdefault{k}{\PYGdefaultZdl{}(}LD\PYGdefault{k}{)} \PYGdefaultZhy{}V \PYGdefault{p}{|} grep elf\PYGdefaultZus{}i386 2\PYGdefaultZgt{}/dev/null\PYGdefault{k}{)}
+
+xv6.img: bootblock kernel fs.img
+	dd \PYGdefault{k}{if}\PYGdefault{o}{=}/dev/zero \PYGdefault{n+nv}{of}\PYGdefault{o}{=}xv6.img \PYGdefault{n+nv}{count}\PYGdefault{o}{=}10000
+	dd \PYGdefault{k}{if}\PYGdefault{o}{=}bootblock \PYGdefault{n+nv}{of}\PYGdefault{o}{=}xv6.img \PYGdefault{n+nv}{conv}\PYGdefault{o}{=}notrunc
+	dd \PYGdefault{k}{if}\PYGdefault{o}{=}kernel \PYGdefault{n+nv}{of}\PYGdefault{o}{=}xv6.img \PYGdefault{n+nv}{seek}\PYGdefault{o}{=}\PYGdefault{l+m}{1} \PYGdefault{n+nv}{conv}\PYGdefault{o}{=}notrunc
+
+xv6memfs.img: bootblock kernelmemfs
+	dd \PYGdefault{k}{if}\PYGdefault{o}{=}/dev/zero \PYGdefault{n+nv}{of}\PYGdefault{o}{=}xv6memfs.img \PYGdefault{n+nv}{count}\PYGdefault{o}{=}10000
+	dd \PYGdefault{k}{if}\PYGdefault{o}{=}bootblock \PYGdefault{n+nv}{of}\PYGdefault{o}{=}xv6memfs.img \PYGdefault{n+nv}{conv}\PYGdefault{o}{=}notrunc
+	dd \PYGdefault{k}{if}\PYGdefault{o}{=}kernelmemfs \PYGdefault{n+nv}{of}\PYGdefault{o}{=}xv6memfs.img \PYGdefault{n+nv}{seek}\PYGdefault{o}{=}\PYGdefault{l+m}{1} \PYGdefault{n+nv}{conv}\PYGdefault{o}{=}notrunc
+
+bootblock: bootasm.S bootmain.c
+	\PYGdefault{k}{\PYGdefaultZdl{}(}CC\PYGdefault{k}{)} \PYGdefault{k}{\PYGdefaultZdl{}(}CFLAGS\PYGdefault{k}{)} \PYGdefaultZhy{}fno\PYGdefaultZhy{}pic \PYGdefaultZhy{}O \PYGdefaultZhy{}nostdinc \PYGdefaultZhy{}I. \PYGdefaultZhy{}c bootmain.c
+	\PYGdefault{k}{\PYGdefaultZdl{}(}CC\PYGdefault{k}{)} \PYGdefault{k}{\PYGdefaultZdl{}(}CFLAGS\PYGdefault{k}{)} \PYGdefaultZhy{}fno\PYGdefaultZhy{}pic \PYGdefaultZhy{}nostdinc \PYGdefaultZhy{}I. \PYGdefaultZhy{}c bootasm.S
+	\PYGdefault{k}{\PYGdefaultZdl{}(}LD\PYGdefault{k}{)} \PYGdefault{k}{\PYGdefaultZdl{}(}LDFLAGS\PYGdefault{k}{)} \PYGdefaultZhy{}N \PYGdefaultZhy{}e start \PYGdefaultZhy{}Ttext 0x7C00 \PYGdefaultZhy{}o bootblock.o bootasm.o bootmain.o
+	\PYGdefault{k}{\PYGdefaultZdl{}(}OBJDUMP\PYGdefault{k}{)} \PYGdefaultZhy{}S bootblock.o \PYGdefaultZgt{} bootblock.asm
+	\PYGdefault{k}{\PYGdefaultZdl{}(}OBJCOPY\PYGdefault{k}{)} \PYGdefaultZhy{}S \PYGdefaultZhy{}O binary \PYGdefaultZhy{}j .text bootblock.o bootblock
+	./sign.pl bootblock
+
+entryother: entryother.S
+	\PYGdefault{k}{\PYGdefaultZdl{}(}CC\PYGdefault{k}{)} \PYGdefault{k}{\PYGdefaultZdl{}(}CFLAGS\PYGdefault{k}{)} \PYGdefaultZhy{}fno\PYGdefaultZhy{}pic \PYGdefaultZhy{}nostdinc \PYGdefaultZhy{}I. \PYGdefaultZhy{}c entryother.S
+	\PYGdefault{k}{\PYGdefaultZdl{}(}LD\PYGdefault{k}{)} \PYGdefault{k}{\PYGdefaultZdl{}(}LDFLAGS\PYGdefault{k}{)} \PYGdefaultZhy{}N \PYGdefaultZhy{}e start \PYGdefaultZhy{}Ttext 0x7000 \PYGdefaultZhy{}o bootblockother.o entryother.o
+	\PYGdefault{k}{\PYGdefaultZdl{}(}OBJCOPY\PYGdefault{k}{)} \PYGdefaultZhy{}S \PYGdefaultZhy{}O binary \PYGdefaultZhy{}j .text bootblockother.o entryother
+	\PYGdefault{k}{\PYGdefaultZdl{}(}OBJDUMP\PYGdefault{k}{)} \PYGdefaultZhy{}S bootblockother.o \PYGdefaultZgt{} entryother.asm
+
+initcode: initcode.S
+	\PYGdefault{k}{\PYGdefaultZdl{}(}CC\PYGdefault{k}{)} \PYGdefault{k}{\PYGdefaultZdl{}(}CFLAGS\PYGdefault{k}{)} \PYGdefaultZhy{}nostdinc \PYGdefaultZhy{}I. \PYGdefaultZhy{}c initcode.S
+	\PYGdefault{k}{\PYGdefaultZdl{}(}LD\PYGdefault{k}{)} \PYGdefault{k}{\PYGdefaultZdl{}(}LDFLAGS\PYGdefault{k}{)} \PYGdefaultZhy{}N \PYGdefaultZhy{}e start \PYGdefaultZhy{}Ttext \PYGdefault{l+m}{0} \PYGdefaultZhy{}o initcode.out initcode.o
+	\PYGdefault{k}{\PYGdefaultZdl{}(}OBJCOPY\PYGdefault{k}{)} \PYGdefaultZhy{}S \PYGdefaultZhy{}O binary initcode.out initcode
+	\PYGdefault{k}{\PYGdefaultZdl{}(}OBJDUMP\PYGdefault{k}{)} \PYGdefaultZhy{}S initcode.o \PYGdefaultZgt{} initcode.asm
+
+kernel: \PYGdefault{k}{\PYGdefaultZdl{}(}OBJS\PYGdefault{k}{)} entry.o entryother initcode kernel.ld
+	\PYGdefault{k}{\PYGdefaultZdl{}(}LD\PYGdefault{k}{)} \PYGdefault{k}{\PYGdefaultZdl{}(}LDFLAGS\PYGdefault{k}{)} \PYGdefaultZhy{}T kernel.ld \PYGdefaultZhy{}o kernel entry.o \PYGdefault{k}{\PYGdefaultZdl{}(}OBJS\PYGdefault{k}{)} \PYGdefaultZhy{}b binary initcode entryother
+	\PYGdefault{k}{\PYGdefaultZdl{}(}OBJDUMP\PYGdefault{k}{)} \PYGdefaultZhy{}S kernel \PYGdefaultZgt{} kernel.asm
+	\PYGdefault{k}{\PYGdefaultZdl{}(}OBJDUMP\PYGdefault{k}{)} \PYGdefaultZhy{}t kernel \PYGdefault{p}{|} sed \PYGdefault{l+s+s1}{\PYGdefaultZsq{}1,/SYMBOL TABLE/d; s/ .* / /; /\PYGdefaultZca{}\PYGdefaultZdl{}\PYGdefaultZdl{}/d\PYGdefaultZsq{}} \PYGdefaultZgt{} kernel.sym
+
+\PYGdefault{c}{\PYGdefaultZsh{} kernelmemfs is a copy of kernel that maintains the}
+\PYGdefault{c}{\PYGdefaultZsh{} disk image in memory instead of writing to a disk.}
+\PYGdefault{c}{\PYGdefaultZsh{} This is not so useful for testing persistent storage or}
+\PYGdefault{c}{\PYGdefaultZsh{} exploring disk buffering implementations, but it is}
+\PYGdefault{c}{\PYGdefaultZsh{} great for testing the kernel on real hardware without}
+\PYGdefault{c}{\PYGdefaultZsh{} needing a scratch disk.}
+\PYGdefault{n+nv}{MEMFSOBJS} \PYGdefault{o}{=} \PYGdefault{k}{\PYGdefaultZdl{}(}filter\PYGdefaultZhy{}out ide.o,\PYGdefault{k}{\PYGdefaultZdl{}(}OBJS\PYGdefault{k}{))} memide.o
+kernelmemfs: \PYGdefault{k}{\PYGdefaultZdl{}(}MEMFSOBJS\PYGdefault{k}{)} entry.o entryother initcode kernel.ld fs.img
+	\PYGdefault{k}{\PYGdefaultZdl{}(}LD\PYGdefault{k}{)} \PYGdefault{k}{\PYGdefaultZdl{}(}LDFLAGS\PYGdefault{k}{)} \PYGdefaultZhy{}T kernel.ld \PYGdefaultZhy{}o kernelmemfs entry.o  \PYGdefault{k}{\PYGdefaultZdl{}(}MEMFSOBJS\PYGdefault{k}{)} \PYGdefaultZhy{}b binary initcode entryother fs.img
+	\PYGdefault{k}{\PYGdefaultZdl{}(}OBJDUMP\PYGdefault{k}{)} \PYGdefaultZhy{}S kernelmemfs \PYGdefaultZgt{} kernelmemfs.asm
+	\PYGdefault{k}{\PYGdefaultZdl{}(}OBJDUMP\PYGdefault{k}{)} \PYGdefaultZhy{}t kernelmemfs \PYGdefault{p}{|} sed \PYGdefault{l+s+s1}{\PYGdefaultZsq{}1,/SYMBOL TABLE/d; s/ .* / /; /\PYGdefaultZca{}\PYGdefaultZdl{}\PYGdefaultZdl{}/d\PYGdefaultZsq{}} \PYGdefaultZgt{} kernelmemfs.sym
+
+tags: \PYGdefault{k}{\PYGdefaultZdl{}(}OBJS\PYGdefault{k}{)} entryother.S \PYGdefaultZus{}init
+	etags *.S *.c
+
+vectors.S: vectors.pl
+	perl vectors.pl \PYGdefaultZgt{} vectors.S
+
+\PYGdefault{n+nv}{ULIB} \PYGdefault{o}{=} ulib.o usys.o printf.o umalloc.o
+
+\PYGdefaultZus{}\PYGdefaultZpc{}: \PYGdefaultZpc{}.o \PYGdefault{k}{\PYGdefaultZdl{}(}ULIB\PYGdefault{k}{)}
+	\PYGdefault{k}{\PYGdefaultZdl{}(}LD\PYGdefault{k}{)} \PYGdefault{k}{\PYGdefaultZdl{}(}LDFLAGS\PYGdefault{k}{)} \PYGdefaultZhy{}N \PYGdefaultZhy{}e main \PYGdefaultZhy{}Ttext 0x1000 \PYGdefaultZhy{}o \PYGdefault{n+nv}{\PYGdefaultZdl{}@} \PYGdefault{n+nv}{\PYGdefaultZdl{}\PYGdefaultZca{}}
+	\PYGdefault{k}{\PYGdefaultZdl{}(}OBJDUMP\PYGdefault{k}{)} \PYGdefaultZhy{}S \PYGdefault{n+nv}{\PYGdefaultZdl{}@} \PYGdefaultZgt{} \PYGdefault{n+nv}{\PYGdefaultZdl{}*}.asm
+	\PYGdefault{k}{\PYGdefaultZdl{}(}OBJDUMP\PYGdefault{k}{)} \PYGdefaultZhy{}t \PYGdefault{n+nv}{\PYGdefaultZdl{}@} \PYGdefault{p}{|} sed \PYGdefault{l+s+s1}{\PYGdefaultZsq{}1,/SYMBOL TABLE/d; s/ .* / /; /\PYGdefaultZca{}\PYGdefaultZdl{}\PYGdefaultZdl{}/d\PYGdefaultZsq{}} \PYGdefaultZgt{} \PYGdefault{n+nv}{\PYGdefaultZdl{}*}.sym
+
+\PYGdefaultZus{}forktest: forktest.o \PYGdefault{k}{\PYGdefaultZdl{}(}ULIB\PYGdefault{k}{)}
+	\PYGdefault{c}{\PYGdefaultZsh{} forktest has less library code linked in \PYGdefaultZhy{} needs to be small}
+	\PYGdefault{c}{\PYGdefaultZsh{} in order to be able to max out the proc table.}
+	\PYGdefault{k}{\PYGdefaultZdl{}(}LD\PYGdefault{k}{)} \PYGdefault{k}{\PYGdefaultZdl{}(}LDFLAGS\PYGdefault{k}{)} \PYGdefaultZhy{}N \PYGdefaultZhy{}e main \PYGdefaultZhy{}Ttext 0x1000 \PYGdefaultZhy{}o \PYGdefaultZus{}forktest forktest.o ulib.o usys.o
+	\PYGdefault{k}{\PYGdefaultZdl{}(}OBJDUMP\PYGdefault{k}{)} \PYGdefaultZhy{}S \PYGdefaultZus{}forktest \PYGdefaultZgt{} forktest.asm
+
+mkfs: mkfs.c fs.h
+	gcc \PYGdefaultZhy{}Werror \PYGdefaultZhy{}Wall \PYGdefaultZhy{}o mkfs mkfs.c
+
+\PYGdefault{c}{\PYGdefaultZsh{} Prevent deletion of intermediate files, e.g. cat.o, after first build, so}
+\PYGdefault{c}{\PYGdefaultZsh{} that disk image changes after first build are persistent until clean.  More}
+\PYGdefault{c}{\PYGdefaultZsh{} details:}
+\PYGdefault{c}{\PYGdefaultZsh{} http://www.gnu.org/software/make/manual/html\PYGdefaultZus{}node/Chained\PYGdefaultZhy{}Rules.html}
+.PRECIOUS: \PYGdefaultZpc{}.o
+
+\PYGdefault{n+nv}{UPROGS}\PYGdefault{o}{=}\PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	\PYGdefaultZus{}cat\PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	\PYGdefaultZus{}echo\PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	\PYGdefaultZus{}forktest\PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	\PYGdefaultZus{}grep\PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	\PYGdefaultZus{}init\PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	\PYGdefaultZus{}kill\PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	\PYGdefaultZus{}ln\PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	\PYGdefaultZus{}ls\PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	\PYGdefaultZus{}mkdir\PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	\PYGdefaultZus{}rm\PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	\PYGdefaultZus{}sh\PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	\PYGdefaultZus{}stressfs\PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	\PYGdefaultZus{}usertests\PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	\PYGdefaultZus{}wc\PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	\PYGdefaultZus{}zombie\PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	\PYGdefaultZus{}test1\PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	\PYGdefaultZus{}test2\PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+
+fs.img: mkfs README \PYGdefault{k}{\PYGdefaultZdl{}(}UPROGS\PYGdefault{k}{)}
+	./mkfs fs.img README \PYGdefault{k}{\PYGdefaultZdl{}(}UPROGS\PYGdefault{k}{)}
+
+\PYGdefaultZhy{}include *.d
+
+clean: 
+	rm \PYGdefaultZhy{}f *.tex *.dvi *.idx *.aux *.log *.ind *.ilg \PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	*.o *.d *.asm *.sym vectors.S bootblock entryother \PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	initcode initcode.out kernel xv6.img fs.img kernelmemfs mkfs \PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	.gdbinit \PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	\PYGdefault{k}{\PYGdefaultZdl{}(}UPROGS\PYGdefault{k}{)}
+
+\PYGdefault{c}{\PYGdefaultZsh{} make a printout}
+\PYGdefault{n+nv}{FILES} \PYGdefault{o}{=} \PYGdefault{k}{\PYGdefaultZdl{}(}shell grep \PYGdefaultZhy{}v \PYGdefault{l+s+s1}{\PYGdefaultZsq{}\PYGdefaultZca{}\PYGdefaultZbs{}\PYGdefaultZsh{}\PYGdefaultZsq{}} runoff.list\PYGdefault{k}{)}
+\PYGdefault{n+nv}{PRINT} \PYGdefault{o}{=} runoff.list runoff.spec README toc.hdr toc.ftr \PYGdefault{k}{\PYGdefaultZdl{}(}FILES\PYGdefault{k}{)}
+
+xv6.pdf: \PYGdefault{k}{\PYGdefaultZdl{}(}PRINT\PYGdefault{k}{)}
+	./runoff
+	ls \PYGdefaultZhy{}l xv6.pdf
+
+print: xv6.pdf
+
+\PYGdefault{c}{\PYGdefaultZsh{} run in emulators}
+
+bochs : fs.img xv6.img
+	\PYGdefault{k}{if} \PYGdefault{o}{[} ! \PYGdefaultZhy{}e .bochsrc \PYGdefault{o}{]}\PYGdefault{p}{;} \PYGdefault{k}{then} ln \PYGdefaultZhy{}s dot\PYGdefaultZhy{}bochsrc .bochsrc\PYGdefault{p}{;} \PYGdefault{k}{fi}
+	bochs \PYGdefaultZhy{}q
+
+\PYGdefault{c}{\PYGdefaultZsh{} try to generate a unique GDB port}
+\PYGdefault{n+nv}{GDBPORT} \PYGdefault{o}{=} \PYGdefault{k}{\PYGdefaultZdl{}(}shell expr \PYGdefault{l+s+sb}{`}id \PYGdefaultZhy{}u\PYGdefault{l+s+sb}{`} \PYGdefaultZpc{} \PYGdefault{l+m}{5000} + 25000\PYGdefault{k}{)}
+\PYGdefault{c}{\PYGdefaultZsh{} QEMU\PYGdefaultZsq{}s gdb stub command line changed in 0.11}
+\PYGdefault{n+nv}{QEMUGDB} \PYGdefault{o}{=} \PYGdefault{k}{\PYGdefaultZdl{}(}shell \PYGdefault{k}{if} \PYGdefault{k}{\PYGdefaultZdl{}(}QEMU\PYGdefault{k}{)} \PYGdefaultZhy{}help \PYGdefault{p}{|} grep \PYGdefaultZhy{}q \PYGdefault{l+s+s1}{\PYGdefaultZsq{}\PYGdefaultZca{}\PYGdefaultZhy{}gdb\PYGdefaultZsq{}}\PYGdefault{p}{;} \PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	\PYGdefault{k}{then} \PYGdefault{n+nb}{echo} \PYGdefault{l+s+s2}{\PYGdefaultZdq{}\PYGdefaultZhy{}gdb tcp::}\PYGdefault{k}{\PYGdefaultZdl{}(}GDBPORT\PYGdefault{k}{)}\PYGdefault{l+s+s2}{\PYGdefaultZdq{}}\PYGdefault{p}{;} \PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	\PYGdefault{k}{else} \PYGdefault{n+nb}{echo} \PYGdefault{l+s+s2}{\PYGdefaultZdq{}\PYGdefaultZhy{}s \PYGdefaultZhy{}p }\PYGdefault{k}{\PYGdefaultZdl{}(}GDBPORT\PYGdefault{k}{)}\PYGdefault{l+s+s2}{\PYGdefaultZdq{}}\PYGdefault{p}{;} \PYGdefault{k}{fi)}
+ifndef CPUS
+CPUS :\PYGdefault{o}{=} 2
+endif
+\PYGdefault{n+nv}{QEMUOPTS} \PYGdefault{o}{=} \PYGdefaultZhy{}hdb fs.img xv6.img \PYGdefaultZhy{}smp \PYGdefault{k}{\PYGdefaultZdl{}(}CPUS\PYGdefault{k}{)} \PYGdefaultZhy{}m \PYGdefault{l+m}{512} \PYGdefault{k}{\PYGdefaultZdl{}(}QEMUEXTRA\PYGdefault{k}{)}
+
+qemu: fs.img xv6.img
+	\PYGdefault{k}{\PYGdefaultZdl{}(}QEMU\PYGdefault{k}{)} \PYGdefaultZhy{}serial mon:stdio \PYGdefault{k}{\PYGdefaultZdl{}(}QEMUOPTS\PYGdefault{k}{)}
+
+qemu\PYGdefaultZhy{}memfs: xv6memfs.img
+	\PYGdefault{k}{\PYGdefaultZdl{}(}QEMU\PYGdefault{k}{)} xv6memfs.img \PYGdefaultZhy{}smp \PYGdefault{k}{\PYGdefaultZdl{}(}CPUS\PYGdefault{k}{)} \PYGdefaultZhy{}m 256
+
+qemu\PYGdefaultZhy{}nox: fs.img xv6.img
+	\PYGdefault{k}{\PYGdefaultZdl{}(}QEMU\PYGdefault{k}{)} \PYGdefaultZhy{}nographic \PYGdefault{k}{\PYGdefaultZdl{}(}QEMUOPTS\PYGdefault{k}{)}
+
+.gdbinit: .gdbinit.tmpl
+	sed \PYGdefault{l+s+s2}{\PYGdefaultZdq{}s/localhost:1234/localhost:}\PYGdefault{k}{\PYGdefaultZdl{}(}GDBPORT\PYGdefault{k}{)}\PYGdefault{l+s+s2}{/\PYGdefaultZdq{}} \PYGdefaultZlt{} \PYGdefault{n+nv}{\PYGdefaultZdl{}\PYGdefaultZca{}} \PYGdefaultZgt{} \PYGdefault{n+nv}{\PYGdefaultZdl{}@}
+
+qemu\PYGdefaultZhy{}gdb: fs.img xv6.img .gdbinit
+	@echo \PYGdefault{l+s+s2}{\PYGdefaultZdq{}*** Now run \PYGdefaultZsq{}gdb\PYGdefaultZsq{}.\PYGdefaultZdq{}} 1\PYGdefaultZgt{}\PYGdefault{p}{\PYGdefaultZam{}}2
+	\PYGdefault{k}{\PYGdefaultZdl{}(}QEMU\PYGdefault{k}{)} \PYGdefaultZhy{}serial mon:stdio \PYGdefault{k}{\PYGdefaultZdl{}(}QEMUOPTS\PYGdefault{k}{)} \PYGdefaultZhy{}S \PYGdefault{k}{\PYGdefaultZdl{}(}QEMUGDB\PYGdefault{k}{)}
+
+qemu\PYGdefaultZhy{}nox\PYGdefaultZhy{}gdb: fs.img xv6.img .gdbinit
+	@echo \PYGdefault{l+s+s2}{\PYGdefaultZdq{}*** Now run \PYGdefaultZsq{}gdb\PYGdefaultZsq{}.\PYGdefaultZdq{}} 1\PYGdefaultZgt{}\PYGdefault{p}{\PYGdefaultZam{}}2
+	\PYGdefault{k}{\PYGdefaultZdl{}(}QEMU\PYGdefault{k}{)} \PYGdefaultZhy{}nographic \PYGdefault{k}{\PYGdefaultZdl{}(}QEMUOPTS\PYGdefault{k}{)} \PYGdefaultZhy{}S \PYGdefault{k}{\PYGdefaultZdl{}(}QEMUGDB\PYGdefault{k}{)}
+
+\PYGdefault{c}{\PYGdefaultZsh{} CUT HERE}
+\PYGdefault{c}{\PYGdefaultZsh{} prepare dist for students}
+\PYGdefault{c}{\PYGdefaultZsh{} after running make dist, probably want to}
+\PYGdefault{c}{\PYGdefaultZsh{} rename it to rev0 or rev1 or so on and then}
+\PYGdefault{c}{\PYGdefaultZsh{} check in that version.}
+
+\PYGdefault{n+nv}{EXTRA}\PYGdefault{o}{=}\PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	mkfs.c ulib.c user.h cat.c echo.c forktest.c grep.c kill.c\PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	ln.c ls.c mkdir.c rm.c stressfs.c usertests.c wc.c zombie.c\PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	printf.c umalloc.c\PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	README dot\PYGdefaultZhy{}bochsrc *.pl toc.* runoff runoff1 runoff.list\PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	.gdbinit.tmpl gdbutil\PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+
+dist:
+	rm \PYGdefaultZhy{}rf dist
+	mkdir dist
+	\PYGdefault{k}{for} i in \PYGdefault{k}{\PYGdefaultZdl{}(}FILES\PYGdefault{k}{)}\PYGdefault{p}{;} \PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	\PYGdefault{k}{do} \PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+		grep \PYGdefaultZhy{}v PAGEBREAK \PYGdefault{n+nv}{\PYGdefaultZdl{}\PYGdefaultZdl{}}i \PYGdefaultZgt{}dist/\PYGdefault{n+nv}{\PYGdefaultZdl{}\PYGdefaultZdl{}}i\PYGdefault{p}{;} \PYGdefault{l+s+se}{\PYGdefaultZbs{}}
+	\PYGdefault{k}{done}
+	sed \PYGdefault{l+s+s1}{\PYGdefaultZsq{}/CUT HERE/,\PYGdefaultZdl{}\PYGdefaultZdl{}d\PYGdefaultZsq{}} Makefile \PYGdefaultZgt{}dist/Makefile
+	\PYGdefault{n+nb}{echo} \PYGdefaultZgt{}dist/runoff.spec
+	cp \PYGdefault{k}{\PYGdefaultZdl{}(}EXTRA\PYGdefault{k}{)} dist
+
+dist\PYGdefaultZhy{}test:
+	rm \PYGdefaultZhy{}rf dist
+	make dist
+	rm \PYGdefaultZhy{}rf dist\PYGdefaultZhy{}test
+	mkdir dist\PYGdefaultZhy{}test
+	cp dist/* dist\PYGdefaultZhy{}test
+	\PYGdefault{n+nb}{cd }dist\PYGdefaultZhy{}test\PYGdefault{p}{;} \PYGdefault{k}{\PYGdefaultZdl{}(}MAKE\PYGdefault{k}{)} print
+	\PYGdefault{n+nb}{cd }dist\PYGdefaultZhy{}test\PYGdefault{p}{;} \PYGdefault{k}{\PYGdefaultZdl{}(}MAKE\PYGdefault{k}{)} bochs \PYGdefault{o}{||} \PYGdefault{n+nb}{true}
+\PYGdefault{n+nb}{	cd }dist\PYGdefaultZhy{}test\PYGdefault{p}{;} \PYGdefault{k}{\PYGdefaultZdl{}(}MAKE\PYGdefault{k}{)} qemu
+
+\PYGdefault{c}{\PYGdefaultZsh{} update this rule (change rev\PYGdefaultZsh{}) when it is time to}
+\PYGdefault{c}{\PYGdefaultZsh{} make a new revision.}
+tar:
+	rm \PYGdefaultZhy{}rf /tmp/xv6
+	mkdir \PYGdefaultZhy{}p /tmp/xv6
+	cp dist/* dist/.gdbinit.tmpl /tmp/xv6
+	\PYGdefault{o}{(}\PYGdefault{n+nb}{cd} /tmp\PYGdefault{p}{;} tar cf \PYGdefaultZhy{} xv6\PYGdefault{o}{)} \PYGdefault{p}{|} gzip \PYGdefaultZgt{}xv6\PYGdefaultZhy{}rev9.tar.gz  \PYGdefault{c}{\PYGdefaultZsh{} the next one will be 9 (6/27/15)}
+
+.PHONY: dist\PYGdefaultZhy{}test dist
+\end{Verbatim}

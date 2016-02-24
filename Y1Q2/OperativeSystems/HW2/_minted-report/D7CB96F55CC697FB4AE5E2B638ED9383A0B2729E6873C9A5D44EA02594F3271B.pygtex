@@ -1,0 +1,147 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGdefault{c+cp}{\PYGdefaultZsh{}include \PYGdefaultZdq{}types.h\PYGdefaultZdq{}}
+\PYGdefault{c+cp}{\PYGdefaultZsh{}include \PYGdefaultZdq{}defs.h\PYGdefaultZdq{}}
+\PYGdefault{c+cp}{\PYGdefaultZsh{}include \PYGdefaultZdq{}param.h\PYGdefaultZdq{}}
+\PYGdefault{c+cp}{\PYGdefaultZsh{}include \PYGdefaultZdq{}memlayout.h\PYGdefaultZdq{}}
+\PYGdefault{c+cp}{\PYGdefaultZsh{}include \PYGdefaultZdq{}mmu.h\PYGdefaultZdq{}}
+\PYGdefault{c+cp}{\PYGdefaultZsh{}include \PYGdefaultZdq{}proc.h\PYGdefaultZdq{}}
+\PYGdefault{c+cp}{\PYGdefaultZsh{}include \PYGdefaultZdq{}x86.h\PYGdefaultZdq{}}
+\PYGdefault{c+cp}{\PYGdefaultZsh{}include \PYGdefaultZdq{}syscall.h\PYGdefaultZdq{}}
+
+\PYGdefault{c+c1}{// User code makes a system call with INT T\PYGdefaultZus{}SYSCALL.}
+\PYGdefault{c+c1}{// System call number in \PYGdefaultZpc{}eax.}
+\PYGdefault{c+c1}{// Arguments on the stack, from the user call to the C}
+\PYGdefault{c+c1}{// library system call function. The saved user \PYGdefaultZpc{}esp points}
+\PYGdefault{c+c1}{// to a saved program counter, and then the first argument.}
+
+\PYGdefault{c+c1}{// Fetch the int at addr from the current process.}
+\PYGdefault{k+kt}{int}
+\PYGdefault{n+nf}{fetchint}\PYGdefault{p}{(}\PYGdefault{n}{uint} \PYGdefault{n}{addr}\PYGdefault{p}{,} \PYGdefault{k+kt}{int} \PYGdefault{o}{*}\PYGdefault{n}{ip}\PYGdefault{p}{)}
+\PYGdefault{p}{\PYGdefaultZob{}}
+  \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{addr} \PYGdefault{o}{\PYGdefaultZgt{}=} \PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{sz} \PYGdefault{o}{||} \PYGdefault{n}{addr}\PYGdefault{o}{+}\PYGdefault{l+m+mi}{4} \PYGdefault{o}{\PYGdefaultZgt{}} \PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{sz}\PYGdefault{p}{)}
+    \PYGdefault{k}{return} \PYGdefault{o}{\PYGdefaultZhy{}}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{;}
+  \PYGdefault{o}{*}\PYGdefault{n}{ip} \PYGdefault{o}{=} \PYGdefault{o}{*}\PYGdefault{p}{(}\PYGdefault{k+kt}{int}\PYGdefault{o}{*}\PYGdefault{p}{)(}\PYGdefault{n}{addr}\PYGdefault{p}{);}
+  \PYGdefault{k}{return} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+
+\PYGdefault{c+c1}{// Fetch the nul\PYGdefaultZhy{}terminated string at addr from the current process.}
+\PYGdefault{c+c1}{// Doesn\PYGdefaultZsq{}t actually copy the string \PYGdefaultZhy{} just sets *pp to point at it.}
+\PYGdefault{c+c1}{// Returns length of string, not including nul.}
+\PYGdefault{k+kt}{int}
+\PYGdefault{n+nf}{fetchstr}\PYGdefault{p}{(}\PYGdefault{n}{uint} \PYGdefault{n}{addr}\PYGdefault{p}{,} \PYGdefault{k+kt}{char} \PYGdefault{o}{**}\PYGdefault{n}{pp}\PYGdefault{p}{)}
+\PYGdefault{p}{\PYGdefaultZob{}}
+  \PYGdefault{k+kt}{char} \PYGdefault{o}{*}\PYGdefault{n}{s}\PYGdefault{p}{,} \PYGdefault{o}{*}\PYGdefault{n}{ep}\PYGdefault{p}{;}
+
+  \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{addr} \PYGdefault{o}{\PYGdefaultZgt{}=} \PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{sz}\PYGdefault{p}{)}
+    \PYGdefault{k}{return} \PYGdefault{o}{\PYGdefaultZhy{}}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{;}
+  \PYGdefault{o}{*}\PYGdefault{n}{pp} \PYGdefault{o}{=} \PYGdefault{p}{(}\PYGdefault{k+kt}{char}\PYGdefault{o}{*}\PYGdefault{p}{)}\PYGdefault{n}{addr}\PYGdefault{p}{;}
+  \PYGdefault{n}{ep} \PYGdefault{o}{=} \PYGdefault{p}{(}\PYGdefault{k+kt}{char}\PYGdefault{o}{*}\PYGdefault{p}{)}\PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{sz}\PYGdefault{p}{;}
+  \PYGdefault{k}{for}\PYGdefault{p}{(}\PYGdefault{n}{s} \PYGdefault{o}{=} \PYGdefault{o}{*}\PYGdefault{n}{pp}\PYGdefault{p}{;} \PYGdefault{n}{s} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{n}{ep}\PYGdefault{p}{;} \PYGdefault{n}{s}\PYGdefault{o}{++}\PYGdefault{p}{)}
+    \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{o}{*}\PYGdefault{n}{s} \PYGdefault{o}{==} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)}
+      \PYGdefault{k}{return} \PYGdefault{n}{s} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{o}{*}\PYGdefault{n}{pp}\PYGdefault{p}{;}
+  \PYGdefault{k}{return} \PYGdefault{o}{\PYGdefaultZhy{}}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{;}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+
+\PYGdefault{c+c1}{// Fetch the nth 32\PYGdefaultZhy{}bit system call argument.}
+\PYGdefault{k+kt}{int}
+\PYGdefault{n+nf}{argint}\PYGdefault{p}{(}\PYGdefault{k+kt}{int} \PYGdefault{n}{n}\PYGdefault{p}{,} \PYGdefault{k+kt}{int} \PYGdefault{o}{*}\PYGdefault{n}{ip}\PYGdefault{p}{)}
+\PYGdefault{p}{\PYGdefaultZob{}}
+  \PYGdefault{k}{return} \PYGdefault{n}{fetchint}\PYGdefault{p}{(}\PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{tf}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{esp} \PYGdefault{o}{+} \PYGdefault{l+m+mi}{4} \PYGdefault{o}{+} \PYGdefault{l+m+mi}{4}\PYGdefault{o}{*}\PYGdefault{n}{n}\PYGdefault{p}{,} \PYGdefault{n}{ip}\PYGdefault{p}{);}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+
+\PYGdefault{c+c1}{// Fetch the nth word\PYGdefaultZhy{}sized system call argument as a pointer}
+\PYGdefault{c+c1}{// to a block of memory of size n bytes.  Check that the pointer}
+\PYGdefault{c+c1}{// lies within the process address space.}
+\PYGdefault{k+kt}{int}
+\PYGdefault{n+nf}{argptr}\PYGdefault{p}{(}\PYGdefault{k+kt}{int} \PYGdefault{n}{n}\PYGdefault{p}{,} \PYGdefault{k+kt}{char} \PYGdefault{o}{**}\PYGdefault{n}{pp}\PYGdefault{p}{,} \PYGdefault{k+kt}{int} \PYGdefault{n}{size}\PYGdefault{p}{)}
+\PYGdefault{p}{\PYGdefaultZob{}}
+  \PYGdefault{k+kt}{int} \PYGdefault{n}{i}\PYGdefault{p}{;}
+  
+  \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{argint}\PYGdefault{p}{(}\PYGdefault{n}{n}\PYGdefault{p}{,} \PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{i}\PYGdefault{p}{)} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)}
+    \PYGdefault{k}{return} \PYGdefault{o}{\PYGdefaultZhy{}}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{;}
+  \PYGdefault{k}{if}\PYGdefault{p}{((}\PYGdefault{n}{uint}\PYGdefault{p}{)}\PYGdefault{n}{i} \PYGdefault{o}{\PYGdefaultZgt{}=} \PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{sz} \PYGdefault{o}{||} \PYGdefault{p}{(}\PYGdefault{n}{uint}\PYGdefault{p}{)}\PYGdefault{n}{i}\PYGdefault{o}{+}\PYGdefault{n}{size} \PYGdefault{o}{\PYGdefaultZgt{}} \PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{sz}\PYGdefault{p}{)}
+    \PYGdefault{k}{return} \PYGdefault{o}{\PYGdefaultZhy{}}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{;}
+  \PYGdefault{o}{*}\PYGdefault{n}{pp} \PYGdefault{o}{=} \PYGdefault{p}{(}\PYGdefault{k+kt}{char}\PYGdefault{o}{*}\PYGdefault{p}{)}\PYGdefault{n}{i}\PYGdefault{p}{;}
+  \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{o}{*}\PYGdefault{n}{pp} \PYGdefault{o}{==} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)\PYGdefaultZob{}}
+    \PYGdefault{n}{cprintf}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}Null Pointer Exception!!!}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{p}{);}
+    \PYGdefault{k}{return} \PYGdefault{o}{\PYGdefaultZhy{}}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{;}
+  \PYGdefault{p}{\PYGdefaultZcb{}}
+  \PYGdefault{k}{return} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+
+\PYGdefault{c+c1}{// Fetch the nth word\PYGdefaultZhy{}sized system call argument as a string pointer.}
+\PYGdefault{c+c1}{// Check that the pointer is valid and the string is nul\PYGdefaultZhy{}terminated.}
+\PYGdefault{c+c1}{// (There is no shared writable memory, so the string can\PYGdefaultZsq{}t change}
+\PYGdefault{c+c1}{// between this check and being used by the kernel.)}
+\PYGdefault{k+kt}{int}
+\PYGdefault{n+nf}{argstr}\PYGdefault{p}{(}\PYGdefault{k+kt}{int} \PYGdefault{n}{n}\PYGdefault{p}{,} \PYGdefault{k+kt}{char} \PYGdefault{o}{**}\PYGdefault{n}{pp}\PYGdefault{p}{)}
+\PYGdefault{p}{\PYGdefaultZob{}}
+  \PYGdefault{k+kt}{int} \PYGdefault{n}{addr}\PYGdefault{p}{;}
+  \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{argint}\PYGdefault{p}{(}\PYGdefault{n}{n}\PYGdefault{p}{,} \PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{addr}\PYGdefault{p}{)} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)}
+    \PYGdefault{k}{return} \PYGdefault{o}{\PYGdefaultZhy{}}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{;}
+  \PYGdefault{k}{return} \PYGdefault{n}{fetchstr}\PYGdefault{p}{(}\PYGdefault{n}{addr}\PYGdefault{p}{,} \PYGdefault{n}{pp}\PYGdefault{p}{);}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+
+\PYGdefault{k}{extern} \PYGdefault{k+kt}{int} \PYGdefault{n+nf}{sys\PYGdefaultZus{}chdir}\PYGdefault{p}{(}\PYGdefault{k+kt}{void}\PYGdefault{p}{);}
+\PYGdefault{k}{extern} \PYGdefault{k+kt}{int} \PYGdefault{n+nf}{sys\PYGdefaultZus{}close}\PYGdefault{p}{(}\PYGdefault{k+kt}{void}\PYGdefault{p}{);}
+\PYGdefault{k}{extern} \PYGdefault{k+kt}{int} \PYGdefault{n+nf}{sys\PYGdefaultZus{}dup}\PYGdefault{p}{(}\PYGdefault{k+kt}{void}\PYGdefault{p}{);}
+\PYGdefault{k}{extern} \PYGdefault{k+kt}{int} \PYGdefault{n+nf}{sys\PYGdefaultZus{}exec}\PYGdefault{p}{(}\PYGdefault{k+kt}{void}\PYGdefault{p}{);}
+\PYGdefault{k}{extern} \PYGdefault{k+kt}{int} \PYGdefault{n+nf}{sys\PYGdefaultZus{}exit}\PYGdefault{p}{(}\PYGdefault{k+kt}{void}\PYGdefault{p}{);}
+\PYGdefault{k}{extern} \PYGdefault{k+kt}{int} \PYGdefault{n+nf}{sys\PYGdefaultZus{}fork}\PYGdefault{p}{(}\PYGdefault{k+kt}{void}\PYGdefault{p}{);}
+\PYGdefault{k}{extern} \PYGdefault{k+kt}{int} \PYGdefault{n+nf}{sys\PYGdefaultZus{}fstat}\PYGdefault{p}{(}\PYGdefault{k+kt}{void}\PYGdefault{p}{);}
+\PYGdefault{k}{extern} \PYGdefault{k+kt}{int} \PYGdefault{n+nf}{sys\PYGdefaultZus{}getpid}\PYGdefault{p}{(}\PYGdefault{k+kt}{void}\PYGdefault{p}{);}
+\PYGdefault{k}{extern} \PYGdefault{k+kt}{int} \PYGdefault{n+nf}{sys\PYGdefaultZus{}kill}\PYGdefault{p}{(}\PYGdefault{k+kt}{void}\PYGdefault{p}{);}
+\PYGdefault{k}{extern} \PYGdefault{k+kt}{int} \PYGdefault{n+nf}{sys\PYGdefaultZus{}link}\PYGdefault{p}{(}\PYGdefault{k+kt}{void}\PYGdefault{p}{);}
+\PYGdefault{k}{extern} \PYGdefault{k+kt}{int} \PYGdefault{n+nf}{sys\PYGdefaultZus{}mkdir}\PYGdefault{p}{(}\PYGdefault{k+kt}{void}\PYGdefault{p}{);}
+\PYGdefault{k}{extern} \PYGdefault{k+kt}{int} \PYGdefault{n+nf}{sys\PYGdefaultZus{}mknod}\PYGdefault{p}{(}\PYGdefault{k+kt}{void}\PYGdefault{p}{);}
+\PYGdefault{k}{extern} \PYGdefault{k+kt}{int} \PYGdefault{n+nf}{sys\PYGdefaultZus{}open}\PYGdefault{p}{(}\PYGdefault{k+kt}{void}\PYGdefault{p}{);}
+\PYGdefault{k}{extern} \PYGdefault{k+kt}{int} \PYGdefault{n+nf}{sys\PYGdefaultZus{}pipe}\PYGdefault{p}{(}\PYGdefault{k+kt}{void}\PYGdefault{p}{);}
+\PYGdefault{k}{extern} \PYGdefault{k+kt}{int} \PYGdefault{n+nf}{sys\PYGdefaultZus{}read}\PYGdefault{p}{(}\PYGdefault{k+kt}{void}\PYGdefault{p}{);}
+\PYGdefault{k}{extern} \PYGdefault{k+kt}{int} \PYGdefault{n+nf}{sys\PYGdefaultZus{}sbrk}\PYGdefault{p}{(}\PYGdefault{k+kt}{void}\PYGdefault{p}{);}
+\PYGdefault{k}{extern} \PYGdefault{k+kt}{int} \PYGdefault{n+nf}{sys\PYGdefaultZus{}sleep}\PYGdefault{p}{(}\PYGdefault{k+kt}{void}\PYGdefault{p}{);}
+\PYGdefault{k}{extern} \PYGdefault{k+kt}{int} \PYGdefault{n+nf}{sys\PYGdefaultZus{}unlink}\PYGdefault{p}{(}\PYGdefault{k+kt}{void}\PYGdefault{p}{);}
+\PYGdefault{k}{extern} \PYGdefault{k+kt}{int} \PYGdefault{n+nf}{sys\PYGdefaultZus{}wait}\PYGdefault{p}{(}\PYGdefault{k+kt}{void}\PYGdefault{p}{);}
+\PYGdefault{k}{extern} \PYGdefault{k+kt}{int} \PYGdefault{n+nf}{sys\PYGdefaultZus{}write}\PYGdefault{p}{(}\PYGdefault{k+kt}{void}\PYGdefault{p}{);}
+\PYGdefault{k}{extern} \PYGdefault{k+kt}{int} \PYGdefault{n+nf}{sys\PYGdefaultZus{}uptime}\PYGdefault{p}{(}\PYGdefault{k+kt}{void}\PYGdefault{p}{);}
+\PYGdefault{k}{extern} \PYGdefault{k+kt}{int} \PYGdefault{n+nf}{sys\PYGdefaultZus{}null}\PYGdefault{p}{(}\PYGdefault{k+kt}{void}\PYGdefault{p}{);}
+
+\PYGdefault{k}{static} \PYGdefault{k+kt}{int} \PYGdefault{p}{(}\PYGdefault{o}{*}\PYGdefault{n}{syscalls}\PYGdefault{p}{[])(}\PYGdefault{k+kt}{void}\PYGdefault{p}{)} \PYGdefault{o}{=} \PYGdefault{p}{\PYGdefaultZob{}}
+\PYGdefault{p}{[}\PYGdefault{n}{SYS\PYGdefaultZus{}fork}\PYGdefault{p}{]}    \PYGdefault{n}{sys\PYGdefaultZus{}fork}\PYGdefault{p}{,}
+\PYGdefault{p}{[}\PYGdefault{n}{SYS\PYGdefaultZus{}exit}\PYGdefault{p}{]}    \PYGdefault{n}{sys\PYGdefaultZus{}exit}\PYGdefault{p}{,}
+\PYGdefault{p}{[}\PYGdefault{n}{SYS\PYGdefaultZus{}wait}\PYGdefault{p}{]}    \PYGdefault{n}{sys\PYGdefaultZus{}wait}\PYGdefault{p}{,}
+\PYGdefault{p}{[}\PYGdefault{n}{SYS\PYGdefaultZus{}pipe}\PYGdefault{p}{]}    \PYGdefault{n}{sys\PYGdefaultZus{}pipe}\PYGdefault{p}{,}
+\PYGdefault{p}{[}\PYGdefault{n}{SYS\PYGdefaultZus{}read}\PYGdefault{p}{]}    \PYGdefault{n}{sys\PYGdefaultZus{}read}\PYGdefault{p}{,}
+\PYGdefault{p}{[}\PYGdefault{n}{SYS\PYGdefaultZus{}kill}\PYGdefault{p}{]}    \PYGdefault{n}{sys\PYGdefaultZus{}kill}\PYGdefault{p}{,}
+\PYGdefault{p}{[}\PYGdefault{n}{SYS\PYGdefaultZus{}exec}\PYGdefault{p}{]}    \PYGdefault{n}{sys\PYGdefaultZus{}exec}\PYGdefault{p}{,}
+\PYGdefault{p}{[}\PYGdefault{n}{SYS\PYGdefaultZus{}fstat}\PYGdefault{p}{]}   \PYGdefault{n}{sys\PYGdefaultZus{}fstat}\PYGdefault{p}{,}
+\PYGdefault{p}{[}\PYGdefault{n}{SYS\PYGdefaultZus{}chdir}\PYGdefault{p}{]}   \PYGdefault{n}{sys\PYGdefaultZus{}chdir}\PYGdefault{p}{,}
+\PYGdefault{p}{[}\PYGdefault{n}{SYS\PYGdefaultZus{}dup}\PYGdefault{p}{]}     \PYGdefault{n}{sys\PYGdefaultZus{}dup}\PYGdefault{p}{,}
+\PYGdefault{p}{[}\PYGdefault{n}{SYS\PYGdefaultZus{}getpid}\PYGdefault{p}{]}  \PYGdefault{n}{sys\PYGdefaultZus{}getpid}\PYGdefault{p}{,}
+\PYGdefault{p}{[}\PYGdefault{n}{SYS\PYGdefaultZus{}sbrk}\PYGdefault{p}{]}    \PYGdefault{n}{sys\PYGdefaultZus{}sbrk}\PYGdefault{p}{,}
+\PYGdefault{p}{[}\PYGdefault{n}{SYS\PYGdefaultZus{}sleep}\PYGdefault{p}{]}   \PYGdefault{n}{sys\PYGdefaultZus{}sleep}\PYGdefault{p}{,}
+\PYGdefault{p}{[}\PYGdefault{n}{SYS\PYGdefaultZus{}uptime}\PYGdefault{p}{]}  \PYGdefault{n}{sys\PYGdefaultZus{}uptime}\PYGdefault{p}{,}
+\PYGdefault{p}{[}\PYGdefault{n}{SYS\PYGdefaultZus{}open}\PYGdefault{p}{]}    \PYGdefault{n}{sys\PYGdefaultZus{}open}\PYGdefault{p}{,}
+\PYGdefault{p}{[}\PYGdefault{n}{SYS\PYGdefaultZus{}write}\PYGdefault{p}{]}   \PYGdefault{n}{sys\PYGdefaultZus{}write}\PYGdefault{p}{,}
+\PYGdefault{p}{[}\PYGdefault{n}{SYS\PYGdefaultZus{}mknod}\PYGdefault{p}{]}   \PYGdefault{n}{sys\PYGdefaultZus{}mknod}\PYGdefault{p}{,}
+\PYGdefault{p}{[}\PYGdefault{n}{SYS\PYGdefaultZus{}unlink}\PYGdefault{p}{]}  \PYGdefault{n}{sys\PYGdefaultZus{}unlink}\PYGdefault{p}{,}
+\PYGdefault{p}{[}\PYGdefault{n}{SYS\PYGdefaultZus{}link}\PYGdefault{p}{]}    \PYGdefault{n}{sys\PYGdefaultZus{}link}\PYGdefault{p}{,}
+\PYGdefault{p}{[}\PYGdefault{n}{SYS\PYGdefaultZus{}mkdir}\PYGdefault{p}{]}   \PYGdefault{n}{sys\PYGdefaultZus{}mkdir}\PYGdefault{p}{,}
+\PYGdefault{p}{[}\PYGdefault{n}{SYS\PYGdefaultZus{}close}\PYGdefault{p}{]}   \PYGdefault{n}{sys\PYGdefaultZus{}close}\PYGdefault{p}{,}
+\PYGdefault{p}{[}\PYGdefault{n}{SYS\PYGdefaultZus{}null}\PYGdefault{p}{]}	  \PYGdefault{n}{sys\PYGdefaultZus{}null}\PYGdefault{p}{,}
+\PYGdefault{p}{\PYGdefaultZcb{};}
+
+\PYGdefault{k+kt}{void}
+\PYGdefault{n+nf}{syscall}\PYGdefault{p}{(}\PYGdefault{k+kt}{void}\PYGdefault{p}{)}
+\PYGdefault{p}{\PYGdefaultZob{}}
+  \PYGdefault{k+kt}{int} \PYGdefault{n}{num}\PYGdefault{p}{;}
+
+  \PYGdefault{n}{num} \PYGdefault{o}{=} \PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{tf}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{eax}\PYGdefault{p}{;}
+  \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{num} \PYGdefault{o}{\PYGdefaultZgt{}} \PYGdefault{l+m+mi}{0} \PYGdefault{o}{\PYGdefaultZam{}\PYGdefaultZam{}} \PYGdefault{n}{num} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{n}{NELEM}\PYGdefault{p}{(}\PYGdefault{n}{syscalls}\PYGdefault{p}{)} \PYGdefault{o}{\PYGdefaultZam{}\PYGdefaultZam{}} \PYGdefault{n}{syscalls}\PYGdefault{p}{[}\PYGdefault{n}{num}\PYGdefault{p}{])} \PYGdefault{p}{\PYGdefaultZob{}}
+    \PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{tf}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{eax} \PYGdefault{o}{=} \PYGdefault{n}{syscalls}\PYGdefault{p}{[}\PYGdefault{n}{num}\PYGdefault{p}{]();}
+  \PYGdefault{p}{\PYGdefaultZcb{}} \PYGdefault{k}{else} \PYGdefault{p}{\PYGdefaultZob{}}
+    \PYGdefault{n}{cprintf}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}\PYGdefaultZpc{}d \PYGdefaultZpc{}s: unknown sys call \PYGdefaultZpc{}d}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{p}{,}
+            \PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{pid}\PYGdefault{p}{,} \PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{name}\PYGdefault{p}{,} \PYGdefault{n}{num}\PYGdefault{p}{);}
+    \PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{tf}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{eax} \PYGdefault{o}{=} \PYGdefault{o}{\PYGdefaultZhy{}}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{;}
+  \PYGdefault{p}{\PYGdefaultZcb{}}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+\end{Verbatim}
