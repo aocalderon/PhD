@@ -16,15 +16,15 @@
 \gdef\HyperFirstAtBeginDocument#1{#1}
 \providecommand\HyField@AuxAddToFields[1]{}
 \providecommand\HyField@AuxAddToCoFields[2]{}
-\@writefile{toc}{\contentsline {section}{\numberline {1}Null pointer at command line.}{1}{section.1}}
-\@writefile{lol}{\contentsline {listing}{\numberline {1}{\ignorespaces Changes in \texttt  {exec.c} file.}}{1}{listing.1}}
-\newlabel{lst:exec}{{1}{1}{Null pointer at command line}{listing.1}{}}
-\@writefile{lol}{\contentsline {listing}{\numberline {2}{\ignorespaces Changes in \texttt  {vm.c} file.}}{2}{listing.2}}
-\newlabel{lst:vm}{{2}{2}{Null pointer at command line}{listing.2}{}}
-\@writefile{lol}{\contentsline {listing}{\numberline {3}{\ignorespaces Changes in \texttt  {Makefile}.}}{2}{listing.3}}
-\newlabel{lst:makefile}{{3}{2}{Null pointer at command line}{listing.3}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {1}Null pointer at user space.}{1}{section.1}}
+\@writefile{lol}{\contentsline {listing}{\numberline {1}{\ignorespaces Changes in \texttt  {exec.c} file. The \texttt  {sz} variable start at \texttt  {PGSIZE} now (line 39).}}{1}{listing.1}}
+\newlabel{lst:exec}{{1}{1}{Null pointer at user space}{listing.1}{}}
+\@writefile{lol}{\contentsline {listing}{\numberline {2}{\ignorespaces Changes in \texttt  {vm.c} file. The \texttt  {for loop} start at \texttt  {PGSIZE} (line 319).}}{2}{listing.2}}
+\newlabel{lst:vm}{{2}{2}{Null pointer at user space}{listing.2}{}}
+\@writefile{lol}{\contentsline {listing}{\numberline {3}{\ignorespaces Changes in \texttt  {Makefile}. We adjust the \texttt  {ULIB} parameters accordingly to start at \texttt  {PGSIZE} (\texttt  {0x1000})}}{2}{listing.3}}
+\newlabel{lst:makefile}{{3}{2}{Null pointer at user space}{listing.3}{}}
 \@writefile{lol}{\contentsline {listing}{\numberline {4}{\ignorespaces Test for null pointer catching at command line (\texttt  {test1.c} file).}}{2}{listing.4}}
-\newlabel{lst:test1}{{4}{2}{Null pointer at command line}{listing.4}{}}
+\newlabel{lst:test1}{{4}{2}{Null pointer at user space}{listing.4}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Output of test 1.}}{3}{figure.1}}
 \newlabel{fig:test1}{{1}{3}{Output of test 1}{figure.1}{}}
 \gdef\minted@oldcachelist{,
@@ -34,11 +34,14 @@
   37F9F9FBDE8FBBE4E925821CA54B5D6DFA6A3E9E86CD0B8B52481BB8040E0F58.pygtex,
   39C34492F954AD5F4ABBC8CDAD7B451FBC56AFD75217A01D63A7BD8263646383.pygtex,
   D7CB96F55CC697FB4AE5E2B638ED9383A0B2729E6873C9A5D44EA02594F3271B.pygtex,
-  BAB5593BC69F0D2AF8FC5357E98AF516CCD1AE0BF2091CC12EAC214A39C44241.pygtex}
+  BAB5593BC69F0D2AF8FC5357E98AF516CCD1AE0BF2091CC12EAC214A39C44241.pygtex,
+  D3272892FA461954D96AEADF820A0CD256EEC2FD189BE54DD665A663C71DA148.pygtex}
 \@writefile{toc}{\contentsline {section}{\numberline {2}Null pointer at system call.}{4}{section.2}}
-\@writefile{lol}{\contentsline {listing}{\numberline {5}{\ignorespaces Changes in \texttt  {syscall.c} file.}}{4}{listing.5}}
+\@writefile{lol}{\contentsline {listing}{\numberline {5}{\ignorespaces Checking a null pointer in \texttt  {syscall.c} file.}}{4}{listing.5}}
 \newlabel{lst:syscall}{{5}{4}{Null pointer at system call}{listing.5}{}}
 \@writefile{lol}{\contentsline {listing}{\numberline {6}{\ignorespaces Test for null pointer catching at system call (\texttt  {test2.c} file).}}{4}{listing.6}}
 \newlabel{lst:test2}{{6}{4}{Null pointer at system call}{listing.6}{}}
+\@writefile{lol}{\contentsline {listing}{\numberline {7}{\ignorespaces Adding the \texttt  {null} system call in \texttt  {sysproc.c} file.}}{4}{listing.7}}
+\newlabel{lst:sysproc}{{7}{4}{Null pointer at system call}{listing.7}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Output of test 2.}}{5}{figure.2}}
 \newlabel{fig:test2}{{2}{5}{Output of test 2}{figure.2}{}}

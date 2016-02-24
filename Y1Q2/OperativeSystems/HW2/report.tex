@@ -30,8 +30,8 @@ hidelinks
 \begin{document}
 \maketitle
 
-\section{Null pointer at command line.}
-In \texttt{xv6}, user code is loaded into the first part of the address space. Accordingly, when we dereference a null pointer,  because we start from the first page, first page is accessible for us so we will not get an exception, instead, we see some garbage value as the content of the dereferenced variable.
+\section{Null pointer at user space.}
+In \texttt{xv6}, user code is loaded into the first part of the address space. Accordingly, when we dereference a null pointer,  because we start from the first page, it is accessible for us so we will not get an exception, instead, we see the first bit of code as the content of the dereferenced variable.
 
 For resolving this problem, we changed 3 files (\texttt{exec.c}, \texttt{vm.c} and \texttt{Makefile}) in order to start from second page in the page table instead of first page.
 
@@ -53,7 +53,7 @@ After changing all these, we tested our user code (a code that tries to access a
     frame=single,
     linenos
   ]{c}{xv6-public/exec.c}
-  \caption{Changes in \texttt{exec.c} file.}\label{lst:exec}
+  \caption{Changes in \texttt{exec.c} file.  The \texttt{sz} variable start at \texttt{PGSIZE} now (line 39).}\label{lst:exec}
 \end{listing}
 
 \begin{listing}
@@ -66,7 +66,7 @@ After changing all these, we tested our user code (a code that tries to access a
     frame=single,
     linenos
   ]{c}{xv6-public/vm.c}
-  \caption{Changes in \texttt{vm.c} file.}\label{lst:vm}
+  \caption{Changes in \texttt{vm.c} file.  The \texttt{for loop} start at \texttt{PGSIZE} (line 319).}\label{lst:vm}
 \end{listing}
 
 \begin{listing}
@@ -79,7 +79,7 @@ After changing all these, we tested our user code (a code that tries to access a
     frame=single,
     linenos
   ]{bash}{xv6-public/Makefile}
-  \caption{Changes in \texttt{Makefile}.}\label{lst:makefile}
+  \caption{Changes in \texttt{Makefile}.  We adjust the \texttt{ULIB} parameters accordingly to start at \texttt{PGSIZE} (\texttt{0x1000})}\label{lst:makefile}
 \end{listing}
 
 \begin{listing}
@@ -101,9 +101,11 @@ After changing all these, we tested our user code (a code that tries to access a
 \FloatBarrier
 
 \section{Null pointer at system call.}
-For the second part of lab 2, we made some changes in \texttt{syscall.c} file. Specifically, we added an \texttt{if} clause in function \texttt{argptr} to check if we point at \texttt{0}. If this is true, then we have an exception. The change is shown between lines 64 and 67 at listing \ref{lst:syscall}. The reason that we make these changes is that now that we changed \texttt{xv6} so that each process does not start from the zero address, we, also, need to ensure that we pass to kernel a correct pointer via system calls. Without the changes, \texttt{xv6} checks only if the pointer lies between the process address space. However, we should add a check that returns an exception if the pointer points to \texttt{0}.  
+For the second part of lab 2, we made some changes in \texttt{syscall.c} file. Specifically, we added an \texttt{if} clause in function \texttt{argptr} to check if we point at \texttt{0}. If this is true, then we have an exception. The change is shown between lines 64 and 67 at listing \ref{lst:syscall}. 
 
-We tested our implementation by executing a system call that passes a pointer to \texttt{0}, using the code in listing \ref{lst:test2}, and we got an exception. The output can be seen in figure \ref{fig:test2}.  However, when we pass pointer to somewhere else (inside the process address space) the system call is executed normally. 
+The reason that we make these changes is that now that we changed \texttt{xv6} so that each process does not start from the zero address, we, also, need to ensure that we pass to kernel a correct pointer via system calls. Without the changes, \texttt{xv6} checks only if the pointer lies between the process address space. However, we should add a check that returns an exception if the pointer points to \texttt{0}.  
+
+We tested our implementation by executing a system call that passes a pointer to \texttt{0}, using the code in listing \ref{lst:test2}, and we got an exception. We add the \texttt{null} system call at the end of \texttt{sysproc.c} file in a similar fashion as it was done in the past lab  (see listing \ref{lst:sysproc}).  The output can be seen in figure \ref{fig:test2}.  However, when we pass the pointer to somewhere else (inside the process address space) the system call is executed normally. 
 
 
 \begin{listing}
@@ -116,7 +118,7 @@ We tested our implementation by executing a system call that passes a pointer to
     lastline=69,
     linenos
   ]{c}{xv6-public/syscall.c}
-  \caption{Changes in \texttt{syscall.c} file.}\label{lst:syscall}
+  \caption{Checking a null pointer in \texttt{syscall.c} file.}\label{lst:syscall}
 \end{listing}
 
 \begin{listing}
@@ -127,6 +129,19 @@ We tested our implementation by executing a system call that passes a pointer to
     linenos
   ]{c}{xv6-public/test2.c}
   \caption{Test for null pointer catching at system call (\texttt{test2.c} file).}\label{lst:test2}
+\end{listing}
+
+\begin{listing}
+  \inputminted[
+    fontsize=\footnotesize,
+    tabsize=2,
+    frame=single,
+    firstline=93,
+    firstnumber=93,
+    lastline=98,
+    linenos
+  ]{c}{xv6-public/sysproc.c}
+  \caption{Adding the \texttt{null} system call in \texttt{sysproc.c} file.}\label{lst:sysproc}
 \end{listing}
 
 \begin{figure}
