@@ -1,0 +1,122 @@
+\documentclass[a4paper,10pt]{scrartcl}
+\usepackage[hmargin=2.5cm,vmargin=3cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\hypersetup{
+colorlinks=false,
+hidelinks
+}
+\usepackage{minted}
+\usepackage{xcolor}
+\usepackage{amsmath}
+\usepackage{placeins}
+
+
+%opening
+\title{Lab 2 Report}
+\author{
+   Christina Pavlopoulou\\
+  \small \texttt{cpavl001@ucr.edu}
+  \and
+   Niloufar Hosseini Pour\\
+  \small \texttt{nhoss003@ucr.edu}
+  \and
+   Andres Calderon\\
+  \small \texttt{acald013@ucr.edu}
+}
+
+\begin{document}
+\maketitle
+
+\section{Null pointer at command line.}
+
+\begin{listing}
+  \inputminted[
+    fontsize=\footnotesize,
+    tabsize=2,
+    firstline=38,
+    firstnumber=38,
+    lastline=51,
+    frame=single,
+    linenos
+  ]{c}{xv6-public/exec.c}
+  \caption{Changes in exec.c file.}\label{lst:exec}
+\end{listing}
+
+\begin{listing}
+  \inputminted[
+    fontsize=\footnotesize,
+    tabsize=2,
+    firstline=307,
+    firstnumber=307,
+    lastline=337,
+    frame=single,
+    linenos
+  ]{c}{xv6-public/vm.c}
+  \caption{Changes in vm.c file.}\label{lst:vm}
+\end{listing}
+
+\begin{listing}
+  \inputminted[
+    fontsize=\footnotesize,
+    tabsize=2,
+    firstline=139,
+    firstnumber=139,
+    lastline=148,
+    frame=single,
+    linenos
+  ]{bash}{xv6-public/Makefile}
+  \caption{Changes in Makefile.}\label{lst:makefile}
+\end{listing}
+
+\begin{listing}
+  \inputminted[
+    fontsize=\footnotesize,
+    tabsize=2,
+    frame=single,
+    linenos
+  ]{c}{xv6-public/test1.c}
+  \caption{Test for null pointer catching at command line (test1.c file).}\label{lst:test1}
+\end{listing}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=1\textwidth]{figures/test1.png}
+  \caption{Output of test 1.}\label{fig:test1}
+\end{figure}
+
+\FloatBarrier
+
+\section{Null pointer at system call.}
+
+\begin{listing}
+  \inputminted[
+    fontsize=\footnotesize,
+    tabsize=2,
+    frame=single,
+    firstline=51,
+    firstnumber=51,
+    lastline=69,
+    linenos
+  ]{c}{xv6-public/syscall.c}
+  \caption{Changes in syscall.c file.}\label{lst:syscall}
+\end{listing}
+
+\begin{listing}
+  \inputminted[
+    fontsize=\footnotesize,
+    tabsize=2,
+    frame=single,
+    linenos
+  ]{c}{xv6-public/test2.c}
+  \caption{Test for null pointer catching at system call (test2.c file).}\label{lst:test2}
+\end{listing}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=1\textwidth]{figures/test2.png}
+  \caption{Output of test 2.}\label{fig:test2}
+\end{figure}
+
+\end{document}
