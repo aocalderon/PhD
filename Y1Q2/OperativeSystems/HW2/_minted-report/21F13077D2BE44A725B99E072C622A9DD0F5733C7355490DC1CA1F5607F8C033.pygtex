@@ -1,0 +1,387 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGdefault{c+cp}{\PYGdefaultZsh{}include \PYGdefaultZdq{}param.h\PYGdefaultZdq{}}
+\PYGdefault{c+cp}{\PYGdefaultZsh{}include \PYGdefaultZdq{}types.h\PYGdefaultZdq{}}
+\PYGdefault{c+cp}{\PYGdefaultZsh{}include \PYGdefaultZdq{}defs.h\PYGdefaultZdq{}}
+\PYGdefault{c+cp}{\PYGdefaultZsh{}include \PYGdefaultZdq{}x86.h\PYGdefaultZdq{}}
+\PYGdefault{c+cp}{\PYGdefaultZsh{}include \PYGdefaultZdq{}memlayout.h\PYGdefaultZdq{}}
+\PYGdefault{c+cp}{\PYGdefaultZsh{}include \PYGdefaultZdq{}mmu.h\PYGdefaultZdq{}}
+\PYGdefault{c+cp}{\PYGdefaultZsh{}include \PYGdefaultZdq{}proc.h\PYGdefaultZdq{}}
+\PYGdefault{c+cp}{\PYGdefaultZsh{}include \PYGdefaultZdq{}elf.h\PYGdefaultZdq{}}
+
+\PYGdefault{k}{extern} \PYGdefault{k+kt}{char} \PYGdefault{n}{data}\PYGdefault{p}{[];}  \PYGdefault{c+c1}{// defined by kernel.ld}
+\PYGdefault{k+kt}{pde\PYGdefaultZus{}t} \PYGdefault{o}{*}\PYGdefault{n}{kpgdir}\PYGdefault{p}{;}  \PYGdefault{c+c1}{// for use in scheduler()}
+\PYGdefault{k}{struct} \PYGdefault{n}{segdesc} \PYGdefault{n}{gdt}\PYGdefault{p}{[}\PYGdefault{n}{NSEGS}\PYGdefault{p}{];}
+
+\PYGdefault{c+c1}{// Set up CPU\PYGdefaultZsq{}s kernel segment descriptors.}
+\PYGdefault{c+c1}{// Run once on entry on each CPU.}
+\PYGdefault{k+kt}{void}
+\PYGdefault{n+nf}{seginit}\PYGdefault{p}{(}\PYGdefault{k+kt}{void}\PYGdefault{p}{)}
+\PYGdefault{p}{\PYGdefaultZob{}}
+  \PYGdefault{k}{struct} \PYGdefault{n}{cpu} \PYGdefault{o}{*}\PYGdefault{n}{c}\PYGdefault{p}{;}
+
+  \PYGdefault{c+c1}{// Map \PYGdefaultZdq{}logical\PYGdefaultZdq{} addresses to virtual addresses using identity map.}
+  \PYGdefault{c+c1}{// Cannot share a CODE descriptor for both kernel and user}
+  \PYGdefault{c+c1}{// because it would have to have DPL\PYGdefaultZus{}USR, but the CPU forbids}
+  \PYGdefault{c+c1}{// an interrupt from CPL=0 to DPL=3.}
+  \PYGdefault{n}{c} \PYGdefault{o}{=} \PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{cpus}\PYGdefault{p}{[}\PYGdefault{n}{cpunum}\PYGdefault{p}{()];}
+  \PYGdefault{n}{c}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{gdt}\PYGdefault{p}{[}\PYGdefault{n}{SEG\PYGdefaultZus{}KCODE}\PYGdefault{p}{]} \PYGdefault{o}{=} \PYGdefault{n}{SEG}\PYGdefault{p}{(}\PYGdefault{n}{STA\PYGdefaultZus{}X}\PYGdefault{o}{|}\PYGdefault{n}{STA\PYGdefaultZus{}R}\PYGdefault{p}{,} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{,} \PYGdefault{l+m+mh}{0xffffffff}\PYGdefault{p}{,} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{);}
+  \PYGdefault{n}{c}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{gdt}\PYGdefault{p}{[}\PYGdefault{n}{SEG\PYGdefaultZus{}KDATA}\PYGdefault{p}{]} \PYGdefault{o}{=} \PYGdefault{n}{SEG}\PYGdefault{p}{(}\PYGdefault{n}{STA\PYGdefaultZus{}W}\PYGdefault{p}{,} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{,} \PYGdefault{l+m+mh}{0xffffffff}\PYGdefault{p}{,} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{);}
+  \PYGdefault{n}{c}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{gdt}\PYGdefault{p}{[}\PYGdefault{n}{SEG\PYGdefaultZus{}UCODE}\PYGdefault{p}{]} \PYGdefault{o}{=} \PYGdefault{n}{SEG}\PYGdefault{p}{(}\PYGdefault{n}{STA\PYGdefaultZus{}X}\PYGdefault{o}{|}\PYGdefault{n}{STA\PYGdefaultZus{}R}\PYGdefault{p}{,} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{,} \PYGdefault{l+m+mh}{0xffffffff}\PYGdefault{p}{,} \PYGdefault{n}{DPL\PYGdefaultZus{}USER}\PYGdefault{p}{);}
+  \PYGdefault{n}{c}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{gdt}\PYGdefault{p}{[}\PYGdefault{n}{SEG\PYGdefaultZus{}UDATA}\PYGdefault{p}{]} \PYGdefault{o}{=} \PYGdefault{n}{SEG}\PYGdefault{p}{(}\PYGdefault{n}{STA\PYGdefaultZus{}W}\PYGdefault{p}{,} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{,} \PYGdefault{l+m+mh}{0xffffffff}\PYGdefault{p}{,} \PYGdefault{n}{DPL\PYGdefaultZus{}USER}\PYGdefault{p}{);}
+
+  \PYGdefault{c+c1}{// Map cpu, and curproc}
+  \PYGdefault{n}{c}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{gdt}\PYGdefault{p}{[}\PYGdefault{n}{SEG\PYGdefaultZus{}KCPU}\PYGdefault{p}{]} \PYGdefault{o}{=} \PYGdefault{n}{SEG}\PYGdefault{p}{(}\PYGdefault{n}{STA\PYGdefaultZus{}W}\PYGdefault{p}{,} \PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{c}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{cpu}\PYGdefault{p}{,} \PYGdefault{l+m+mi}{8}\PYGdefault{p}{,} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{);}
+
+  \PYGdefault{n}{lgdt}\PYGdefault{p}{(}\PYGdefault{n}{c}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{gdt}\PYGdefault{p}{,} \PYGdefault{k}{sizeof}\PYGdefault{p}{(}\PYGdefault{n}{c}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{gdt}\PYGdefault{p}{));}
+  \PYGdefault{n}{loadgs}\PYGdefault{p}{(}\PYGdefault{n}{SEG\PYGdefaultZus{}KCPU} \PYGdefault{o}{\PYGdefaultZlt{}\PYGdefaultZlt{}} \PYGdefault{l+m+mi}{3}\PYGdefault{p}{);}
+  
+  \PYGdefault{c+c1}{// Initialize cpu\PYGdefaultZhy{}local storage.}
+  \PYGdefault{n}{cpu} \PYGdefault{o}{=} \PYGdefault{n}{c}\PYGdefault{p}{;}
+  \PYGdefault{n}{proc} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+
+\PYGdefault{c+c1}{// Return the address of the PTE in page table pgdir}
+\PYGdefault{c+c1}{// that corresponds to virtual address va.  If alloc!=0,}
+\PYGdefault{c+c1}{// create any required page table pages.}
+\PYGdefault{k}{static} \PYGdefault{k+kt}{pte\PYGdefaultZus{}t} \PYGdefault{o}{*}
+\PYGdefault{n+nf}{walkpgdir}\PYGdefault{p}{(}\PYGdefault{k+kt}{pde\PYGdefaultZus{}t} \PYGdefault{o}{*}\PYGdefault{n}{pgdir}\PYGdefault{p}{,} \PYGdefault{k}{const} \PYGdefault{k+kt}{void} \PYGdefault{o}{*}\PYGdefault{n}{va}\PYGdefault{p}{,} \PYGdefault{k+kt}{int} \PYGdefault{n}{alloc}\PYGdefault{p}{)}
+\PYGdefault{p}{\PYGdefaultZob{}}
+  \PYGdefault{k+kt}{pde\PYGdefaultZus{}t} \PYGdefault{o}{*}\PYGdefault{n}{pde}\PYGdefault{p}{;}
+  \PYGdefault{k+kt}{pte\PYGdefaultZus{}t} \PYGdefault{o}{*}\PYGdefault{n}{pgtab}\PYGdefault{p}{;}
+
+  \PYGdefault{n}{pde} \PYGdefault{o}{=} \PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{pgdir}\PYGdefault{p}{[}\PYGdefault{n}{PDX}\PYGdefault{p}{(}\PYGdefault{n}{va}\PYGdefault{p}{)];}
+  \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{o}{*}\PYGdefault{n}{pde} \PYGdefault{o}{\PYGdefaultZam{}} \PYGdefault{n}{PTE\PYGdefaultZus{}P}\PYGdefault{p}{)\PYGdefaultZob{}}
+    \PYGdefault{n}{pgtab} \PYGdefault{o}{=} \PYGdefault{p}{(}\PYGdefault{k+kt}{pte\PYGdefaultZus{}t}\PYGdefault{o}{*}\PYGdefault{p}{)}\PYGdefault{n}{p2v}\PYGdefault{p}{(}\PYGdefault{n}{PTE\PYGdefaultZus{}ADDR}\PYGdefault{p}{(}\PYGdefault{o}{*}\PYGdefault{n}{pde}\PYGdefault{p}{));}
+  \PYGdefault{p}{\PYGdefaultZcb{}} \PYGdefault{k}{else} \PYGdefault{p}{\PYGdefaultZob{}}
+    \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{o}{!}\PYGdefault{n}{alloc} \PYGdefault{o}{||} \PYGdefault{p}{(}\PYGdefault{n}{pgtab} \PYGdefault{o}{=} \PYGdefault{p}{(}\PYGdefault{k+kt}{pte\PYGdefaultZus{}t}\PYGdefault{o}{*}\PYGdefault{p}{)}\PYGdefault{n}{kalloc}\PYGdefault{p}{())} \PYGdefault{o}{==} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)}
+      \PYGdefault{k}{return} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
+    \PYGdefault{c+c1}{// Make sure all those PTE\PYGdefaultZus{}P bits are zero.}
+    \PYGdefault{n}{memset}\PYGdefault{p}{(}\PYGdefault{n}{pgtab}\PYGdefault{p}{,} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{,} \PYGdefault{n}{PGSIZE}\PYGdefault{p}{);}
+    \PYGdefault{c+c1}{// The permissions here are overly generous, but they can}
+    \PYGdefault{c+c1}{// be further restricted by the permissions in the page table }
+    \PYGdefault{c+c1}{// entries, if necessary.}
+    \PYGdefault{o}{*}\PYGdefault{n}{pde} \PYGdefault{o}{=} \PYGdefault{n}{v2p}\PYGdefault{p}{(}\PYGdefault{n}{pgtab}\PYGdefault{p}{)} \PYGdefault{o}{|} \PYGdefault{n}{PTE\PYGdefaultZus{}P} \PYGdefault{o}{|} \PYGdefault{n}{PTE\PYGdefaultZus{}W} \PYGdefault{o}{|} \PYGdefault{n}{PTE\PYGdefaultZus{}U}\PYGdefault{p}{;}
+  \PYGdefault{p}{\PYGdefaultZcb{}}
+  \PYGdefault{k}{return} \PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{pgtab}\PYGdefault{p}{[}\PYGdefault{n}{PTX}\PYGdefault{p}{(}\PYGdefault{n}{va}\PYGdefault{p}{)];}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+
+\PYGdefault{c+c1}{// Create PTEs for virtual addresses starting at va that refer to}
+\PYGdefault{c+c1}{// physical addresses starting at pa. va and size might not}
+\PYGdefault{c+c1}{// be page\PYGdefaultZhy{}aligned.}
+\PYGdefault{k}{static} \PYGdefault{k+kt}{int}
+\PYGdefault{n+nf}{mappages}\PYGdefault{p}{(}\PYGdefault{k+kt}{pde\PYGdefaultZus{}t} \PYGdefault{o}{*}\PYGdefault{n}{pgdir}\PYGdefault{p}{,} \PYGdefault{k+kt}{void} \PYGdefault{o}{*}\PYGdefault{n}{va}\PYGdefault{p}{,} \PYGdefault{n}{uint} \PYGdefault{n}{size}\PYGdefault{p}{,} \PYGdefault{n}{uint} \PYGdefault{n}{pa}\PYGdefault{p}{,} \PYGdefault{k+kt}{int} \PYGdefault{n}{perm}\PYGdefault{p}{)}
+\PYGdefault{p}{\PYGdefaultZob{}}
+  \PYGdefault{k+kt}{char} \PYGdefault{o}{*}\PYGdefault{n}{a}\PYGdefault{p}{,} \PYGdefault{o}{*}\PYGdefault{n}{last}\PYGdefault{p}{;}
+  \PYGdefault{k+kt}{pte\PYGdefaultZus{}t} \PYGdefault{o}{*}\PYGdefault{n}{pte}\PYGdefault{p}{;}
+  
+  \PYGdefault{n}{a} \PYGdefault{o}{=} \PYGdefault{p}{(}\PYGdefault{k+kt}{char}\PYGdefault{o}{*}\PYGdefault{p}{)}\PYGdefault{n}{PGROUNDDOWN}\PYGdefault{p}{((}\PYGdefault{n}{uint}\PYGdefault{p}{)}\PYGdefault{n}{va}\PYGdefault{p}{);}
+  \PYGdefault{n}{last} \PYGdefault{o}{=} \PYGdefault{p}{(}\PYGdefault{k+kt}{char}\PYGdefault{o}{*}\PYGdefault{p}{)}\PYGdefault{n}{PGROUNDDOWN}\PYGdefault{p}{(((}\PYGdefault{n}{uint}\PYGdefault{p}{)}\PYGdefault{n}{va}\PYGdefault{p}{)} \PYGdefault{o}{+} \PYGdefault{n}{size} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{);}
+  \PYGdefault{k}{for}\PYGdefault{p}{(;;)\PYGdefaultZob{}}
+    \PYGdefault{k}{if}\PYGdefault{p}{((}\PYGdefault{n}{pte} \PYGdefault{o}{=} \PYGdefault{n}{walkpgdir}\PYGdefault{p}{(}\PYGdefault{n}{pgdir}\PYGdefault{p}{,} \PYGdefault{n}{a}\PYGdefault{p}{,} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{))} \PYGdefault{o}{==} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)}
+      \PYGdefault{k}{return} \PYGdefault{o}{\PYGdefaultZhy{}}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{;}
+    \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{o}{*}\PYGdefault{n}{pte} \PYGdefault{o}{\PYGdefaultZam{}} \PYGdefault{n}{PTE\PYGdefaultZus{}P}\PYGdefault{p}{)}
+      \PYGdefault{n}{panic}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}remap\PYGdefaultZdq{}}\PYGdefault{p}{);}
+    \PYGdefault{o}{*}\PYGdefault{n}{pte} \PYGdefault{o}{=} \PYGdefault{n}{pa} \PYGdefault{o}{|} \PYGdefault{n}{perm} \PYGdefault{o}{|} \PYGdefault{n}{PTE\PYGdefaultZus{}P}\PYGdefault{p}{;}
+    \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{a} \PYGdefault{o}{==} \PYGdefault{n}{last}\PYGdefault{p}{)}
+      \PYGdefault{k}{break}\PYGdefault{p}{;}
+    \PYGdefault{n}{a} \PYGdefault{o}{+=} \PYGdefault{n}{PGSIZE}\PYGdefault{p}{;}
+    \PYGdefault{n}{pa} \PYGdefault{o}{+=} \PYGdefault{n}{PGSIZE}\PYGdefault{p}{;}
+  \PYGdefault{p}{\PYGdefaultZcb{}}
+  \PYGdefault{k}{return} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+
+\PYGdefault{c+c1}{// There is one page table per process, plus one that\PYGdefaultZsq{}s used when}
+\PYGdefault{c+c1}{// a CPU is not running any process (kpgdir). The kernel uses the}
+\PYGdefault{c+c1}{// current process\PYGdefaultZsq{}s page table during system calls and interrupts;}
+\PYGdefault{c+c1}{// page protection bits prevent user code from using the kernel\PYGdefaultZsq{}s}
+\PYGdefault{c+c1}{// mappings.}
+\PYGdefault{c+c1}{// }
+\PYGdefault{c+c1}{// setupkvm() and exec() set up every page table like this:}
+\PYGdefault{c+c1}{//}
+\PYGdefault{c+c1}{//   0..KERNBASE: user memory (text+data+stack+heap), mapped to}
+\PYGdefault{c+c1}{//                phys memory allocated by the kernel}
+\PYGdefault{c+c1}{//   KERNBASE..KERNBASE+EXTMEM: mapped to 0..EXTMEM (for I/O space)}
+\PYGdefault{c+c1}{//   KERNBASE+EXTMEM..data: mapped to EXTMEM..V2P(data)}
+\PYGdefault{c+c1}{//                for the kernel\PYGdefaultZsq{}s instructions and r/o data}
+\PYGdefault{c+c1}{//   data..KERNBASE+PHYSTOP: mapped to V2P(data)..PHYSTOP, }
+\PYGdefault{c+c1}{//                                  rw data + free physical memory}
+\PYGdefault{c+c1}{//   0xfe000000..0: mapped direct (devices such as ioapic)}
+\PYGdefault{c+c1}{//}
+\PYGdefault{c+c1}{// The kernel allocates physical memory for its heap and for user memory}
+\PYGdefault{c+c1}{// between V2P(end) and the end of physical memory (PHYSTOP)}
+\PYGdefault{c+c1}{// (directly addressable from end..P2V(PHYSTOP)).}
+
+\PYGdefault{c+c1}{// This table defines the kernel\PYGdefaultZsq{}s mappings, which are present in}
+\PYGdefault{c+c1}{// every process\PYGdefaultZsq{}s page table.}
+\PYGdefault{k}{static} \PYGdefault{k}{struct} \PYGdefault{n}{kmap} \PYGdefault{p}{\PYGdefaultZob{}}
+  \PYGdefault{k+kt}{void} \PYGdefault{o}{*}\PYGdefault{n}{virt}\PYGdefault{p}{;}
+  \PYGdefault{n}{uint} \PYGdefault{n}{phys\PYGdefaultZus{}start}\PYGdefault{p}{;}
+  \PYGdefault{n}{uint} \PYGdefault{n}{phys\PYGdefaultZus{}end}\PYGdefault{p}{;}
+  \PYGdefault{k+kt}{int} \PYGdefault{n}{perm}\PYGdefault{p}{;}
+\PYGdefault{p}{\PYGdefaultZcb{}} \PYGdefault{n}{kmap}\PYGdefault{p}{[]} \PYGdefault{o}{=} \PYGdefault{p}{\PYGdefaultZob{}}
+ \PYGdefault{p}{\PYGdefaultZob{}} \PYGdefault{p}{(}\PYGdefault{k+kt}{void}\PYGdefault{o}{*}\PYGdefault{p}{)}\PYGdefault{n}{KERNBASE}\PYGdefault{p}{,} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{,}             \PYGdefault{n}{EXTMEM}\PYGdefault{p}{,}    \PYGdefault{n}{PTE\PYGdefaultZus{}W}\PYGdefault{p}{\PYGdefaultZcb{},} \PYGdefault{c+c1}{// I/O space}
+ \PYGdefault{p}{\PYGdefaultZob{}} \PYGdefault{p}{(}\PYGdefault{k+kt}{void}\PYGdefault{o}{*}\PYGdefault{p}{)}\PYGdefault{n}{KERNLINK}\PYGdefault{p}{,} \PYGdefault{n}{V2P}\PYGdefault{p}{(}\PYGdefault{n}{KERNLINK}\PYGdefault{p}{),} \PYGdefault{n}{V2P}\PYGdefault{p}{(}\PYGdefault{n}{data}\PYGdefault{p}{),} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{\PYGdefaultZcb{},}     \PYGdefault{c+c1}{// kern text+rodata}
+ \PYGdefault{p}{\PYGdefaultZob{}} \PYGdefault{p}{(}\PYGdefault{k+kt}{void}\PYGdefault{o}{*}\PYGdefault{p}{)}\PYGdefault{n}{data}\PYGdefault{p}{,}     \PYGdefault{n}{V2P}\PYGdefault{p}{(}\PYGdefault{n}{data}\PYGdefault{p}{),}     \PYGdefault{n}{PHYSTOP}\PYGdefault{p}{,}   \PYGdefault{n}{PTE\PYGdefaultZus{}W}\PYGdefault{p}{\PYGdefaultZcb{},} \PYGdefault{c+c1}{// kern data+memory}
+ \PYGdefault{p}{\PYGdefaultZob{}} \PYGdefault{p}{(}\PYGdefault{k+kt}{void}\PYGdefault{o}{*}\PYGdefault{p}{)}\PYGdefault{n}{DEVSPACE}\PYGdefault{p}{,} \PYGdefault{n}{DEVSPACE}\PYGdefault{p}{,}      \PYGdefault{l+m+mi}{0}\PYGdefault{p}{,}         \PYGdefault{n}{PTE\PYGdefaultZus{}W}\PYGdefault{p}{\PYGdefaultZcb{},} \PYGdefault{c+c1}{// more devices}
+\PYGdefault{p}{\PYGdefaultZcb{};}
+
+\PYGdefault{c+c1}{// Set up kernel part of a page table.}
+\PYGdefault{k+kt}{pde\PYGdefaultZus{}t}\PYGdefault{o}{*}
+\PYGdefault{n+nf}{setupkvm}\PYGdefault{p}{(}\PYGdefault{k+kt}{void}\PYGdefault{p}{)}
+\PYGdefault{p}{\PYGdefaultZob{}}
+  \PYGdefault{k+kt}{pde\PYGdefaultZus{}t} \PYGdefault{o}{*}\PYGdefault{n}{pgdir}\PYGdefault{p}{;}
+  \PYGdefault{k}{struct} \PYGdefault{n}{kmap} \PYGdefault{o}{*}\PYGdefault{n}{k}\PYGdefault{p}{;}
+
+  \PYGdefault{k}{if}\PYGdefault{p}{((}\PYGdefault{n}{pgdir} \PYGdefault{o}{=} \PYGdefault{p}{(}\PYGdefault{k+kt}{pde\PYGdefaultZus{}t}\PYGdefault{o}{*}\PYGdefault{p}{)}\PYGdefault{n}{kalloc}\PYGdefault{p}{())} \PYGdefault{o}{==} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)}
+    \PYGdefault{k}{return} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
+  \PYGdefault{n}{memset}\PYGdefault{p}{(}\PYGdefault{n}{pgdir}\PYGdefault{p}{,} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{,} \PYGdefault{n}{PGSIZE}\PYGdefault{p}{);}
+  \PYGdefault{k}{if} \PYGdefault{p}{(}\PYGdefault{n}{p2v}\PYGdefault{p}{(}\PYGdefault{n}{PHYSTOP}\PYGdefault{p}{)} \PYGdefault{o}{\PYGdefaultZgt{}} \PYGdefault{p}{(}\PYGdefault{k+kt}{void}\PYGdefault{o}{*}\PYGdefault{p}{)}\PYGdefault{n}{DEVSPACE}\PYGdefault{p}{)}
+    \PYGdefault{n}{panic}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}PHYSTOP too high\PYGdefaultZdq{}}\PYGdefault{p}{);}
+  \PYGdefault{k}{for}\PYGdefault{p}{(}\PYGdefault{n}{k} \PYGdefault{o}{=} \PYGdefault{n}{kmap}\PYGdefault{p}{;} \PYGdefault{n}{k} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{kmap}\PYGdefault{p}{[}\PYGdefault{n}{NELEM}\PYGdefault{p}{(}\PYGdefault{n}{kmap}\PYGdefault{p}{)];} \PYGdefault{n}{k}\PYGdefault{o}{++}\PYGdefault{p}{)}
+    \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{mappages}\PYGdefault{p}{(}\PYGdefault{n}{pgdir}\PYGdefault{p}{,} \PYGdefault{n}{k}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{virt}\PYGdefault{p}{,} \PYGdefault{n}{k}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{phys\PYGdefaultZus{}end} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{n}{k}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{phys\PYGdefaultZus{}start}\PYGdefault{p}{,} 
+                \PYGdefault{p}{(}\PYGdefault{n}{uint}\PYGdefault{p}{)}\PYGdefault{n}{k}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{phys\PYGdefaultZus{}start}\PYGdefault{p}{,} \PYGdefault{n}{k}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{perm}\PYGdefault{p}{)} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)}
+      \PYGdefault{k}{return} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
+  \PYGdefault{k}{return} \PYGdefault{n}{pgdir}\PYGdefault{p}{;}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+
+\PYGdefault{c+c1}{// Allocate one page table for the machine for the kernel address}
+\PYGdefault{c+c1}{// space for scheduler processes.}
+\PYGdefault{k+kt}{void}
+\PYGdefault{n+nf}{kvmalloc}\PYGdefault{p}{(}\PYGdefault{k+kt}{void}\PYGdefault{p}{)}
+\PYGdefault{p}{\PYGdefaultZob{}}
+  \PYGdefault{n}{kpgdir} \PYGdefault{o}{=} \PYGdefault{n}{setupkvm}\PYGdefault{p}{();}
+  \PYGdefault{n}{switchkvm}\PYGdefault{p}{();}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+
+\PYGdefault{c+c1}{// Switch h/w page table register to the kernel\PYGdefaultZhy{}only page table,}
+\PYGdefault{c+c1}{// for when no process is running.}
+\PYGdefault{k+kt}{void}
+\PYGdefault{n+nf}{switchkvm}\PYGdefault{p}{(}\PYGdefault{k+kt}{void}\PYGdefault{p}{)}
+\PYGdefault{p}{\PYGdefaultZob{}}
+  \PYGdefault{n}{lcr3}\PYGdefault{p}{(}\PYGdefault{n}{v2p}\PYGdefault{p}{(}\PYGdefault{n}{kpgdir}\PYGdefault{p}{));}   \PYGdefault{c+c1}{// switch to the kernel page table}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+
+\PYGdefault{c+c1}{// Switch TSS and h/w page table to correspond to process p.}
+\PYGdefault{k+kt}{void}
+\PYGdefault{n+nf}{switchuvm}\PYGdefault{p}{(}\PYGdefault{k}{struct} \PYGdefault{n}{proc} \PYGdefault{o}{*}\PYGdefault{n}{p}\PYGdefault{p}{)}
+\PYGdefault{p}{\PYGdefaultZob{}}
+  \PYGdefault{n}{pushcli}\PYGdefault{p}{();}
+  \PYGdefault{n}{cpu}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{gdt}\PYGdefault{p}{[}\PYGdefault{n}{SEG\PYGdefaultZus{}TSS}\PYGdefault{p}{]} \PYGdefault{o}{=} \PYGdefault{n}{SEG16}\PYGdefault{p}{(}\PYGdefault{n}{STS\PYGdefaultZus{}T32A}\PYGdefault{p}{,} \PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{cpu}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{ts}\PYGdefault{p}{,} \PYGdefault{k}{sizeof}\PYGdefault{p}{(}\PYGdefault{n}{cpu}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{ts}\PYGdefault{p}{)}\PYGdefault{o}{\PYGdefaultZhy{}}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{,} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{);}
+  \PYGdefault{n}{cpu}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{gdt}\PYGdefault{p}{[}\PYGdefault{n}{SEG\PYGdefaultZus{}TSS}\PYGdefault{p}{].}\PYGdefault{n}{s} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
+  \PYGdefault{n}{cpu}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{ts}\PYGdefault{p}{.}\PYGdefault{n}{ss0} \PYGdefault{o}{=} \PYGdefault{n}{SEG\PYGdefaultZus{}KDATA} \PYGdefault{o}{\PYGdefaultZlt{}\PYGdefaultZlt{}} \PYGdefault{l+m+mi}{3}\PYGdefault{p}{;}
+  \PYGdefault{n}{cpu}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{ts}\PYGdefault{p}{.}\PYGdefault{n}{esp0} \PYGdefault{o}{=} \PYGdefault{p}{(}\PYGdefault{n}{uint}\PYGdefault{p}{)}\PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{kstack} \PYGdefault{o}{+} \PYGdefault{n}{KSTACKSIZE}\PYGdefault{p}{;}
+  \PYGdefault{n}{ltr}\PYGdefault{p}{(}\PYGdefault{n}{SEG\PYGdefaultZus{}TSS} \PYGdefault{o}{\PYGdefaultZlt{}\PYGdefaultZlt{}} \PYGdefault{l+m+mi}{3}\PYGdefault{p}{);}
+  \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{pgdir} \PYGdefault{o}{==} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)}
+    \PYGdefault{n}{panic}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}switchuvm: no pgdir\PYGdefaultZdq{}}\PYGdefault{p}{);}
+  \PYGdefault{n}{lcr3}\PYGdefault{p}{(}\PYGdefault{n}{v2p}\PYGdefault{p}{(}\PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{pgdir}\PYGdefault{p}{));}  \PYGdefault{c+c1}{// switch to new address space}
+  \PYGdefault{n}{popcli}\PYGdefault{p}{();}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+
+\PYGdefault{c+c1}{// Load the initcode into address 0 of pgdir.}
+\PYGdefault{c+c1}{// sz must be less than a page.}
+\PYGdefault{k+kt}{void}
+\PYGdefault{n+nf}{inituvm}\PYGdefault{p}{(}\PYGdefault{k+kt}{pde\PYGdefaultZus{}t} \PYGdefault{o}{*}\PYGdefault{n}{pgdir}\PYGdefault{p}{,} \PYGdefault{k+kt}{char} \PYGdefault{o}{*}\PYGdefault{n}{init}\PYGdefault{p}{,} \PYGdefault{n}{uint} \PYGdefault{n}{sz}\PYGdefault{p}{)}
+\PYGdefault{p}{\PYGdefaultZob{}}
+  \PYGdefault{k+kt}{char} \PYGdefault{o}{*}\PYGdefault{n}{mem}\PYGdefault{p}{;}
+  
+  \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{sz} \PYGdefault{o}{\PYGdefaultZgt{}=} \PYGdefault{n}{PGSIZE}\PYGdefault{p}{)}
+    \PYGdefault{n}{panic}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}inituvm: more than a page\PYGdefaultZdq{}}\PYGdefault{p}{);}
+  \PYGdefault{n}{mem} \PYGdefault{o}{=} \PYGdefault{n}{kalloc}\PYGdefault{p}{();}
+  \PYGdefault{n}{memset}\PYGdefault{p}{(}\PYGdefault{n}{mem}\PYGdefault{p}{,} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{,} \PYGdefault{n}{PGSIZE}\PYGdefault{p}{);}
+  \PYGdefault{n}{mappages}\PYGdefault{p}{(}\PYGdefault{n}{pgdir}\PYGdefault{p}{,} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{,} \PYGdefault{n}{PGSIZE}\PYGdefault{p}{,} \PYGdefault{n}{v2p}\PYGdefault{p}{(}\PYGdefault{n}{mem}\PYGdefault{p}{),} \PYGdefault{n}{PTE\PYGdefaultZus{}W}\PYGdefault{o}{|}\PYGdefault{n}{PTE\PYGdefaultZus{}U}\PYGdefault{p}{);}
+  \PYGdefault{n}{memmove}\PYGdefault{p}{(}\PYGdefault{n}{mem}\PYGdefault{p}{,} \PYGdefault{n}{init}\PYGdefault{p}{,} \PYGdefault{n}{sz}\PYGdefault{p}{);}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+
+\PYGdefault{c+c1}{// Load a program segment into pgdir.  addr must be page\PYGdefaultZhy{}aligned}
+\PYGdefault{c+c1}{// and the pages from addr to addr+sz must already be mapped.}
+\PYGdefault{k+kt}{int}
+\PYGdefault{n+nf}{loaduvm}\PYGdefault{p}{(}\PYGdefault{k+kt}{pde\PYGdefaultZus{}t} \PYGdefault{o}{*}\PYGdefault{n}{pgdir}\PYGdefault{p}{,} \PYGdefault{k+kt}{char} \PYGdefault{o}{*}\PYGdefault{n}{addr}\PYGdefault{p}{,} \PYGdefault{k}{struct} \PYGdefault{n}{inode} \PYGdefault{o}{*}\PYGdefault{n}{ip}\PYGdefault{p}{,} \PYGdefault{n}{uint} \PYGdefault{n}{offset}\PYGdefault{p}{,} \PYGdefault{n}{uint} \PYGdefault{n}{sz}\PYGdefault{p}{)}
+\PYGdefault{p}{\PYGdefaultZob{}}
+  \PYGdefault{n}{uint} \PYGdefault{n}{i}\PYGdefault{p}{,} \PYGdefault{n}{pa}\PYGdefault{p}{,} \PYGdefault{n}{n}\PYGdefault{p}{;}
+  \PYGdefault{k+kt}{pte\PYGdefaultZus{}t} \PYGdefault{o}{*}\PYGdefault{n}{pte}\PYGdefault{p}{;}
+
+  \PYGdefault{k}{if}\PYGdefault{p}{((}\PYGdefault{n}{uint}\PYGdefault{p}{)} \PYGdefault{n}{addr} \PYGdefault{o}{\PYGdefaultZpc{}} \PYGdefault{n}{PGSIZE} \PYGdefault{o}{!=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)}
+    \PYGdefault{n}{panic}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}loaduvm: addr must be page aligned\PYGdefaultZdq{}}\PYGdefault{p}{);}
+  \PYGdefault{k}{for}\PYGdefault{p}{(}\PYGdefault{n}{i} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;} \PYGdefault{n}{i} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{n}{sz}\PYGdefault{p}{;} \PYGdefault{n}{i} \PYGdefault{o}{+=} \PYGdefault{n}{PGSIZE}\PYGdefault{p}{)\PYGdefaultZob{}}
+    \PYGdefault{k}{if}\PYGdefault{p}{((}\PYGdefault{n}{pte} \PYGdefault{o}{=} \PYGdefault{n}{walkpgdir}\PYGdefault{p}{(}\PYGdefault{n}{pgdir}\PYGdefault{p}{,} \PYGdefault{n}{addr}\PYGdefault{o}{+}\PYGdefault{n}{i}\PYGdefault{p}{,} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{))} \PYGdefault{o}{==} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)}
+      \PYGdefault{n}{panic}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}loaduvm: address should exist\PYGdefaultZdq{}}\PYGdefault{p}{);}
+    \PYGdefault{n}{pa} \PYGdefault{o}{=} \PYGdefault{n}{PTE\PYGdefaultZus{}ADDR}\PYGdefault{p}{(}\PYGdefault{o}{*}\PYGdefault{n}{pte}\PYGdefault{p}{);}
+    \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{sz} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{n}{i} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{n}{PGSIZE}\PYGdefault{p}{)}
+      \PYGdefault{n}{n} \PYGdefault{o}{=} \PYGdefault{n}{sz} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{n}{i}\PYGdefault{p}{;}
+    \PYGdefault{k}{else}
+      \PYGdefault{n}{n} \PYGdefault{o}{=} \PYGdefault{n}{PGSIZE}\PYGdefault{p}{;}
+    \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{readi}\PYGdefault{p}{(}\PYGdefault{n}{ip}\PYGdefault{p}{,} \PYGdefault{n}{p2v}\PYGdefault{p}{(}\PYGdefault{n}{pa}\PYGdefault{p}{),} \PYGdefault{n}{offset}\PYGdefault{o}{+}\PYGdefault{n}{i}\PYGdefault{p}{,} \PYGdefault{n}{n}\PYGdefault{p}{)} \PYGdefault{o}{!=} \PYGdefault{n}{n}\PYGdefault{p}{)}
+      \PYGdefault{k}{return} \PYGdefault{o}{\PYGdefaultZhy{}}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{;}
+  \PYGdefault{p}{\PYGdefaultZcb{}}
+  \PYGdefault{k}{return} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+
+\PYGdefault{c+c1}{// Allocate page tables and physical memory to grow process from oldsz to}
+\PYGdefault{c+c1}{// newsz, which need not be page aligned.  Returns new size or 0 on error.}
+\PYGdefault{k+kt}{int}
+\PYGdefault{n+nf}{allocuvm}\PYGdefault{p}{(}\PYGdefault{k+kt}{pde\PYGdefaultZus{}t} \PYGdefault{o}{*}\PYGdefault{n}{pgdir}\PYGdefault{p}{,} \PYGdefault{n}{uint} \PYGdefault{n}{oldsz}\PYGdefault{p}{,} \PYGdefault{n}{uint} \PYGdefault{n}{newsz}\PYGdefault{p}{)}
+\PYGdefault{p}{\PYGdefaultZob{}}
+  \PYGdefault{k+kt}{char} \PYGdefault{o}{*}\PYGdefault{n}{mem}\PYGdefault{p}{;}
+  \PYGdefault{n}{uint} \PYGdefault{n}{a}\PYGdefault{p}{;}
+
+  \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{newsz} \PYGdefault{o}{\PYGdefaultZgt{}=} \PYGdefault{n}{KERNBASE}\PYGdefault{p}{)}
+    \PYGdefault{k}{return} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
+  \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{newsz} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{n}{oldsz}\PYGdefault{p}{)}
+    \PYGdefault{k}{return} \PYGdefault{n}{oldsz}\PYGdefault{p}{;}
+
+  \PYGdefault{n}{a} \PYGdefault{o}{=} \PYGdefault{n}{PGROUNDUP}\PYGdefault{p}{(}\PYGdefault{n}{oldsz}\PYGdefault{p}{);}
+  \PYGdefault{k}{for}\PYGdefault{p}{(;} \PYGdefault{n}{a} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{n}{newsz}\PYGdefault{p}{;} \PYGdefault{n}{a} \PYGdefault{o}{+=} \PYGdefault{n}{PGSIZE}\PYGdefault{p}{)\PYGdefaultZob{}}
+    \PYGdefault{n}{mem} \PYGdefault{o}{=} \PYGdefault{n}{kalloc}\PYGdefault{p}{();}
+    \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{mem} \PYGdefault{o}{==} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)\PYGdefaultZob{}}
+      \PYGdefault{n}{cprintf}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}allocuvm out of memory}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{p}{);}
+      \PYGdefault{n}{deallocuvm}\PYGdefault{p}{(}\PYGdefault{n}{pgdir}\PYGdefault{p}{,} \PYGdefault{n}{newsz}\PYGdefault{p}{,} \PYGdefault{n}{oldsz}\PYGdefault{p}{);}
+      \PYGdefault{k}{return} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
+    \PYGdefault{p}{\PYGdefaultZcb{}}
+    \PYGdefault{n}{memset}\PYGdefault{p}{(}\PYGdefault{n}{mem}\PYGdefault{p}{,} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{,} \PYGdefault{n}{PGSIZE}\PYGdefault{p}{);}
+    \PYGdefault{n}{mappages}\PYGdefault{p}{(}\PYGdefault{n}{pgdir}\PYGdefault{p}{,} \PYGdefault{p}{(}\PYGdefault{k+kt}{char}\PYGdefault{o}{*}\PYGdefault{p}{)}\PYGdefault{n}{a}\PYGdefault{p}{,} \PYGdefault{n}{PGSIZE}\PYGdefault{p}{,} \PYGdefault{n}{v2p}\PYGdefault{p}{(}\PYGdefault{n}{mem}\PYGdefault{p}{),} \PYGdefault{n}{PTE\PYGdefaultZus{}W}\PYGdefault{o}{|}\PYGdefault{n}{PTE\PYGdefaultZus{}U}\PYGdefault{p}{);}
+  \PYGdefault{p}{\PYGdefaultZcb{}}
+  \PYGdefault{k}{return} \PYGdefault{n}{newsz}\PYGdefault{p}{;}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+
+\PYGdefault{c+c1}{// Deallocate user pages to bring the process size from oldsz to}
+\PYGdefault{c+c1}{// newsz.  oldsz and newsz need not be page\PYGdefaultZhy{}aligned, nor does newsz}
+\PYGdefault{c+c1}{// need to be less than oldsz.  oldsz can be larger than the actual}
+\PYGdefault{c+c1}{// process size.  Returns the new process size.}
+\PYGdefault{k+kt}{int}
+\PYGdefault{n+nf}{deallocuvm}\PYGdefault{p}{(}\PYGdefault{k+kt}{pde\PYGdefaultZus{}t} \PYGdefault{o}{*}\PYGdefault{n}{pgdir}\PYGdefault{p}{,} \PYGdefault{n}{uint} \PYGdefault{n}{oldsz}\PYGdefault{p}{,} \PYGdefault{n}{uint} \PYGdefault{n}{newsz}\PYGdefault{p}{)}
+\PYGdefault{p}{\PYGdefaultZob{}}
+  \PYGdefault{k+kt}{pte\PYGdefaultZus{}t} \PYGdefault{o}{*}\PYGdefault{n}{pte}\PYGdefault{p}{;}
+  \PYGdefault{n}{uint} \PYGdefault{n}{a}\PYGdefault{p}{,} \PYGdefault{n}{pa}\PYGdefault{p}{;}
+
+  \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{newsz} \PYGdefault{o}{\PYGdefaultZgt{}=} \PYGdefault{n}{oldsz}\PYGdefault{p}{)}
+    \PYGdefault{k}{return} \PYGdefault{n}{oldsz}\PYGdefault{p}{;}
+
+  \PYGdefault{n}{a} \PYGdefault{o}{=} \PYGdefault{n}{PGROUNDUP}\PYGdefault{p}{(}\PYGdefault{n}{newsz}\PYGdefault{p}{);}
+  \PYGdefault{k}{for}\PYGdefault{p}{(;} \PYGdefault{n}{a}  \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{n}{oldsz}\PYGdefault{p}{;} \PYGdefault{n}{a} \PYGdefault{o}{+=} \PYGdefault{n}{PGSIZE}\PYGdefault{p}{)\PYGdefaultZob{}}
+    \PYGdefault{n}{pte} \PYGdefault{o}{=} \PYGdefault{n}{walkpgdir}\PYGdefault{p}{(}\PYGdefault{n}{pgdir}\PYGdefault{p}{,} \PYGdefault{p}{(}\PYGdefault{k+kt}{char}\PYGdefault{o}{*}\PYGdefault{p}{)}\PYGdefault{n}{a}\PYGdefault{p}{,} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{);}
+    \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{o}{!}\PYGdefault{n}{pte}\PYGdefault{p}{)}
+      \PYGdefault{n}{a} \PYGdefault{o}{+=} \PYGdefault{p}{(}\PYGdefault{n}{NPTENTRIES} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{)} \PYGdefault{o}{*} \PYGdefault{n}{PGSIZE}\PYGdefault{p}{;}
+    \PYGdefault{k}{else} \PYGdefault{k}{if}\PYGdefault{p}{((}\PYGdefault{o}{*}\PYGdefault{n}{pte} \PYGdefault{o}{\PYGdefaultZam{}} \PYGdefault{n}{PTE\PYGdefaultZus{}P}\PYGdefault{p}{)} \PYGdefault{o}{!=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)\PYGdefaultZob{}}
+      \PYGdefault{n}{pa} \PYGdefault{o}{=} \PYGdefault{n}{PTE\PYGdefaultZus{}ADDR}\PYGdefault{p}{(}\PYGdefault{o}{*}\PYGdefault{n}{pte}\PYGdefault{p}{);}
+      \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{pa} \PYGdefault{o}{==} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)}
+        \PYGdefault{n}{panic}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}kfree\PYGdefaultZdq{}}\PYGdefault{p}{);}
+      \PYGdefault{k+kt}{char} \PYGdefault{o}{*}\PYGdefault{n}{v} \PYGdefault{o}{=} \PYGdefault{n}{p2v}\PYGdefault{p}{(}\PYGdefault{n}{pa}\PYGdefault{p}{);}
+      \PYGdefault{n}{kfree}\PYGdefault{p}{(}\PYGdefault{n}{v}\PYGdefault{p}{);}
+      \PYGdefault{o}{*}\PYGdefault{n}{pte} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
+    \PYGdefault{p}{\PYGdefaultZcb{}}
+  \PYGdefault{p}{\PYGdefaultZcb{}}
+  \PYGdefault{k}{return} \PYGdefault{n}{newsz}\PYGdefault{p}{;}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+
+\PYGdefault{c+c1}{// Free a page table and all the physical memory pages}
+\PYGdefault{c+c1}{// in the user part.}
+\PYGdefault{k+kt}{void}
+\PYGdefault{n+nf}{freevm}\PYGdefault{p}{(}\PYGdefault{k+kt}{pde\PYGdefaultZus{}t} \PYGdefault{o}{*}\PYGdefault{n}{pgdir}\PYGdefault{p}{)}
+\PYGdefault{p}{\PYGdefaultZob{}}
+  \PYGdefault{n}{uint} \PYGdefault{n}{i}\PYGdefault{p}{;}
+
+  \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{pgdir} \PYGdefault{o}{==} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)}
+    \PYGdefault{n}{panic}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}freevm: no pgdir\PYGdefaultZdq{}}\PYGdefault{p}{);}
+  \PYGdefault{n}{deallocuvm}\PYGdefault{p}{(}\PYGdefault{n}{pgdir}\PYGdefault{p}{,} \PYGdefault{n}{KERNBASE}\PYGdefault{p}{,} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{);}
+  \PYGdefault{k}{for}\PYGdefault{p}{(}\PYGdefault{n}{i} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;} \PYGdefault{n}{i} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{n}{NPDENTRIES}\PYGdefault{p}{;} \PYGdefault{n}{i}\PYGdefault{o}{++}\PYGdefault{p}{)\PYGdefaultZob{}}
+    \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{pgdir}\PYGdefault{p}{[}\PYGdefault{n}{i}\PYGdefault{p}{]} \PYGdefault{o}{\PYGdefaultZam{}} \PYGdefault{n}{PTE\PYGdefaultZus{}P}\PYGdefault{p}{)\PYGdefaultZob{}}
+      \PYGdefault{k+kt}{char} \PYGdefault{o}{*} \PYGdefault{n}{v} \PYGdefault{o}{=} \PYGdefault{n}{p2v}\PYGdefault{p}{(}\PYGdefault{n}{PTE\PYGdefaultZus{}ADDR}\PYGdefault{p}{(}\PYGdefault{n}{pgdir}\PYGdefault{p}{[}\PYGdefault{n}{i}\PYGdefault{p}{]));}
+      \PYGdefault{n}{kfree}\PYGdefault{p}{(}\PYGdefault{n}{v}\PYGdefault{p}{);}
+    \PYGdefault{p}{\PYGdefaultZcb{}}
+  \PYGdefault{p}{\PYGdefaultZcb{}}
+  \PYGdefault{n}{kfree}\PYGdefault{p}{((}\PYGdefault{k+kt}{char}\PYGdefault{o}{*}\PYGdefault{p}{)}\PYGdefault{n}{pgdir}\PYGdefault{p}{);}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+
+\PYGdefault{c+c1}{// Clear PTE\PYGdefaultZus{}U on a page. Used to create an inaccessible}
+\PYGdefault{c+c1}{// page beneath the user stack.}
+\PYGdefault{k+kt}{void}
+\PYGdefault{n+nf}{clearpteu}\PYGdefault{p}{(}\PYGdefault{k+kt}{pde\PYGdefaultZus{}t} \PYGdefault{o}{*}\PYGdefault{n}{pgdir}\PYGdefault{p}{,} \PYGdefault{k+kt}{char} \PYGdefault{o}{*}\PYGdefault{n}{uva}\PYGdefault{p}{)}
+\PYGdefault{p}{\PYGdefaultZob{}}
+  \PYGdefault{k+kt}{pte\PYGdefaultZus{}t} \PYGdefault{o}{*}\PYGdefault{n}{pte}\PYGdefault{p}{;}
+
+  \PYGdefault{n}{pte} \PYGdefault{o}{=} \PYGdefault{n}{walkpgdir}\PYGdefault{p}{(}\PYGdefault{n}{pgdir}\PYGdefault{p}{,} \PYGdefault{n}{uva}\PYGdefault{p}{,} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{);}
+  \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{pte} \PYGdefault{o}{==} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)}
+    \PYGdefault{n}{panic}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}clearpteu\PYGdefaultZdq{}}\PYGdefault{p}{);}
+  \PYGdefault{o}{*}\PYGdefault{n}{pte} \PYGdefault{o}{\PYGdefaultZam{}=} \PYGdefault{o}{\PYGdefaultZti{}}\PYGdefault{n}{PTE\PYGdefaultZus{}U}\PYGdefault{p}{;}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+
+\PYGdefault{c+c1}{// Given a parent process\PYGdefaultZsq{}s page table, create a copy}
+\PYGdefault{c+c1}{// of it for a child.}
+\PYGdefault{k+kt}{pde\PYGdefaultZus{}t}\PYGdefault{o}{*}
+\PYGdefault{n+nf}{copyuvm}\PYGdefault{p}{(}\PYGdefault{k+kt}{pde\PYGdefaultZus{}t} \PYGdefault{o}{*}\PYGdefault{n}{pgdir}\PYGdefault{p}{,} \PYGdefault{n}{uint} \PYGdefault{n}{sz}\PYGdefault{p}{)}
+\PYGdefault{p}{\PYGdefaultZob{}}
+  \PYGdefault{k+kt}{pde\PYGdefaultZus{}t} \PYGdefault{o}{*}\PYGdefault{n}{d}\PYGdefault{p}{;}
+  \PYGdefault{k+kt}{pte\PYGdefaultZus{}t} \PYGdefault{o}{*}\PYGdefault{n}{pte}\PYGdefault{p}{;}
+  \PYGdefault{n}{uint} \PYGdefault{n}{pa}\PYGdefault{p}{,} \PYGdefault{n}{i}\PYGdefault{p}{,} \PYGdefault{n}{flags}\PYGdefault{p}{;}
+  \PYGdefault{k+kt}{char} \PYGdefault{o}{*}\PYGdefault{n}{mem}\PYGdefault{p}{;}
+
+  \PYGdefault{k}{if}\PYGdefault{p}{((}\PYGdefault{n}{d} \PYGdefault{o}{=} \PYGdefault{n}{setupkvm}\PYGdefault{p}{())} \PYGdefault{o}{==} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)}
+    \PYGdefault{k}{return} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
+  \PYGdefault{k}{for}\PYGdefault{p}{(}\PYGdefault{n}{i} \PYGdefault{o}{=} \PYGdefault{n}{PGSIZE}\PYGdefault{p}{;} \PYGdefault{n}{i} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{n}{sz}\PYGdefault{p}{;} \PYGdefault{n}{i} \PYGdefault{o}{+=} \PYGdefault{n}{PGSIZE}\PYGdefault{p}{)\PYGdefaultZob{}}
+    \PYGdefault{k}{if}\PYGdefault{p}{((}\PYGdefault{n}{pte} \PYGdefault{o}{=} \PYGdefault{n}{walkpgdir}\PYGdefault{p}{(}\PYGdefault{n}{pgdir}\PYGdefault{p}{,} \PYGdefault{p}{(}\PYGdefault{k+kt}{void} \PYGdefault{o}{*}\PYGdefault{p}{)} \PYGdefault{n}{i}\PYGdefault{p}{,} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{))} \PYGdefault{o}{==} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)}
+      \PYGdefault{n}{panic}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}copyuvm: pte should exist\PYGdefaultZdq{}}\PYGdefault{p}{);}
+    \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{o}{!}\PYGdefault{p}{(}\PYGdefault{o}{*}\PYGdefault{n}{pte} \PYGdefault{o}{\PYGdefaultZam{}} \PYGdefault{n}{PTE\PYGdefaultZus{}P}\PYGdefault{p}{))}
+      \PYGdefault{n}{panic}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}copyuvm: page not present\PYGdefaultZdq{}}\PYGdefault{p}{);}
+    \PYGdefault{n}{pa} \PYGdefault{o}{=} \PYGdefault{n}{PTE\PYGdefaultZus{}ADDR}\PYGdefault{p}{(}\PYGdefault{o}{*}\PYGdefault{n}{pte}\PYGdefault{p}{);}
+    \PYGdefault{n}{flags} \PYGdefault{o}{=} \PYGdefault{n}{PTE\PYGdefaultZus{}FLAGS}\PYGdefault{p}{(}\PYGdefault{o}{*}\PYGdefault{n}{pte}\PYGdefault{p}{);}
+    \PYGdefault{k}{if}\PYGdefault{p}{((}\PYGdefault{n}{mem} \PYGdefault{o}{=} \PYGdefault{n}{kalloc}\PYGdefault{p}{())} \PYGdefault{o}{==} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)}
+      \PYGdefault{k}{goto} \PYGdefault{n}{bad}\PYGdefault{p}{;}
+    \PYGdefault{n}{memmove}\PYGdefault{p}{(}\PYGdefault{n}{mem}\PYGdefault{p}{,} \PYGdefault{p}{(}\PYGdefault{k+kt}{char}\PYGdefault{o}{*}\PYGdefault{p}{)}\PYGdefault{n}{p2v}\PYGdefault{p}{(}\PYGdefault{n}{pa}\PYGdefault{p}{),} \PYGdefault{n}{PGSIZE}\PYGdefault{p}{);}
+    \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{mappages}\PYGdefault{p}{(}\PYGdefault{n}{d}\PYGdefault{p}{,} \PYGdefault{p}{(}\PYGdefault{k+kt}{void}\PYGdefault{o}{*}\PYGdefault{p}{)}\PYGdefault{n}{i}\PYGdefault{p}{,} \PYGdefault{n}{PGSIZE}\PYGdefault{p}{,} \PYGdefault{n}{v2p}\PYGdefault{p}{(}\PYGdefault{n}{mem}\PYGdefault{p}{),} \PYGdefault{n}{flags}\PYGdefault{p}{)} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)}
+      \PYGdefault{k}{goto} \PYGdefault{n}{bad}\PYGdefault{p}{;}
+  \PYGdefault{p}{\PYGdefaultZcb{}}
+  \PYGdefault{k}{return} \PYGdefault{n}{d}\PYGdefault{p}{;}
+
+\PYGdefault{n+nl}{bad}\PYGdefault{p}{:}
+  \PYGdefault{n}{freevm}\PYGdefault{p}{(}\PYGdefault{n}{d}\PYGdefault{p}{);}
+  \PYGdefault{k}{return} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+
+\PYGdefault{c+c1}{//PAGEBREAK!}
+\PYGdefault{c+c1}{// Map user virtual address to kernel address.}
+\PYGdefault{k+kt}{char}\PYGdefault{o}{*}
+\PYGdefault{n+nf}{uva2ka}\PYGdefault{p}{(}\PYGdefault{k+kt}{pde\PYGdefaultZus{}t} \PYGdefault{o}{*}\PYGdefault{n}{pgdir}\PYGdefault{p}{,} \PYGdefault{k+kt}{char} \PYGdefault{o}{*}\PYGdefault{n}{uva}\PYGdefault{p}{)}
+\PYGdefault{p}{\PYGdefaultZob{}}
+  \PYGdefault{k+kt}{pte\PYGdefaultZus{}t} \PYGdefault{o}{*}\PYGdefault{n}{pte}\PYGdefault{p}{;}
+
+  \PYGdefault{n}{pte} \PYGdefault{o}{=} \PYGdefault{n}{walkpgdir}\PYGdefault{p}{(}\PYGdefault{n}{pgdir}\PYGdefault{p}{,} \PYGdefault{n}{uva}\PYGdefault{p}{,} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{);}
+  \PYGdefault{k}{if}\PYGdefault{p}{((}\PYGdefault{o}{*}\PYGdefault{n}{pte} \PYGdefault{o}{\PYGdefaultZam{}} \PYGdefault{n}{PTE\PYGdefaultZus{}P}\PYGdefault{p}{)} \PYGdefault{o}{==} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)}
+    \PYGdefault{k}{return} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
+  \PYGdefault{k}{if}\PYGdefault{p}{((}\PYGdefault{o}{*}\PYGdefault{n}{pte} \PYGdefault{o}{\PYGdefaultZam{}} \PYGdefault{n}{PTE\PYGdefaultZus{}U}\PYGdefault{p}{)} \PYGdefault{o}{==} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)}
+    \PYGdefault{k}{return} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
+  \PYGdefault{k}{return} \PYGdefault{p}{(}\PYGdefault{k+kt}{char}\PYGdefault{o}{*}\PYGdefault{p}{)}\PYGdefault{n}{p2v}\PYGdefault{p}{(}\PYGdefault{n}{PTE\PYGdefaultZus{}ADDR}\PYGdefault{p}{(}\PYGdefault{o}{*}\PYGdefault{n}{pte}\PYGdefault{p}{));}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+
+\PYGdefault{c+c1}{// Copy len bytes from p to user address va in page table pgdir.}
+\PYGdefault{c+c1}{// Most useful when pgdir is not the current page table.}
+\PYGdefault{c+c1}{// uva2ka ensures this only works for PTE\PYGdefaultZus{}U pages.}
+\PYGdefault{k+kt}{int}
+\PYGdefault{n+nf}{copyout}\PYGdefault{p}{(}\PYGdefault{k+kt}{pde\PYGdefaultZus{}t} \PYGdefault{o}{*}\PYGdefault{n}{pgdir}\PYGdefault{p}{,} \PYGdefault{n}{uint} \PYGdefault{n}{va}\PYGdefault{p}{,} \PYGdefault{k+kt}{void} \PYGdefault{o}{*}\PYGdefault{n}{p}\PYGdefault{p}{,} \PYGdefault{n}{uint} \PYGdefault{n}{len}\PYGdefault{p}{)}
+\PYGdefault{p}{\PYGdefaultZob{}}
+  \PYGdefault{k+kt}{char} \PYGdefault{o}{*}\PYGdefault{n}{buf}\PYGdefault{p}{,} \PYGdefault{o}{*}\PYGdefault{n}{pa0}\PYGdefault{p}{;}
+  \PYGdefault{n}{uint} \PYGdefault{n}{n}\PYGdefault{p}{,} \PYGdefault{n}{va0}\PYGdefault{p}{;}
+
+  \PYGdefault{n}{buf} \PYGdefault{o}{=} \PYGdefault{p}{(}\PYGdefault{k+kt}{char}\PYGdefault{o}{*}\PYGdefault{p}{)}\PYGdefault{n}{p}\PYGdefault{p}{;}
+  \PYGdefault{k}{while}\PYGdefault{p}{(}\PYGdefault{n}{len} \PYGdefault{o}{\PYGdefaultZgt{}} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)\PYGdefaultZob{}}
+    \PYGdefault{n}{va0} \PYGdefault{o}{=} \PYGdefault{p}{(}\PYGdefault{n}{uint}\PYGdefault{p}{)}\PYGdefault{n}{PGROUNDDOWN}\PYGdefault{p}{(}\PYGdefault{n}{va}\PYGdefault{p}{);}
+    \PYGdefault{n}{pa0} \PYGdefault{o}{=} \PYGdefault{n}{uva2ka}\PYGdefault{p}{(}\PYGdefault{n}{pgdir}\PYGdefault{p}{,} \PYGdefault{p}{(}\PYGdefault{k+kt}{char}\PYGdefault{o}{*}\PYGdefault{p}{)}\PYGdefault{n}{va0}\PYGdefault{p}{);}
+    \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{pa0} \PYGdefault{o}{==} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)}
+      \PYGdefault{k}{return} \PYGdefault{o}{\PYGdefaultZhy{}}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{;}
+    \PYGdefault{n}{n} \PYGdefault{o}{=} \PYGdefault{n}{PGSIZE} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{p}{(}\PYGdefault{n}{va} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{n}{va0}\PYGdefault{p}{);}
+    \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{n} \PYGdefault{o}{\PYGdefaultZgt{}} \PYGdefault{n}{len}\PYGdefault{p}{)}
+      \PYGdefault{n}{n} \PYGdefault{o}{=} \PYGdefault{n}{len}\PYGdefault{p}{;}
+    \PYGdefault{n}{memmove}\PYGdefault{p}{(}\PYGdefault{n}{pa0} \PYGdefault{o}{+} \PYGdefault{p}{(}\PYGdefault{n}{va} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{n}{va0}\PYGdefault{p}{),} \PYGdefault{n}{buf}\PYGdefault{p}{,} \PYGdefault{n}{n}\PYGdefault{p}{);}
+    \PYGdefault{n}{len} \PYGdefault{o}{\PYGdefaultZhy{}=} \PYGdefault{n}{n}\PYGdefault{p}{;}
+    \PYGdefault{n}{buf} \PYGdefault{o}{+=} \PYGdefault{n}{n}\PYGdefault{p}{;}
+    \PYGdefault{n}{va} \PYGdefault{o}{=} \PYGdefault{n}{va0} \PYGdefault{o}{+} \PYGdefault{n}{PGSIZE}\PYGdefault{p}{;}
+  \PYGdefault{p}{\PYGdefaultZcb{}}
+  \PYGdefault{k}{return} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+
+\PYGdefault{c+c1}{//PAGEBREAK!}
+\PYGdefault{c+c1}{// Blank page.}
+\PYGdefault{c+c1}{//PAGEBREAK!}
+\PYGdefault{c+c1}{// Blank page.}
+\PYGdefault{c+c1}{//PAGEBREAK!}
+\PYGdefault{c+c1}{// Blank page.}
+\end{Verbatim}

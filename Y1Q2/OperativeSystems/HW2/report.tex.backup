@@ -10,6 +10,11 @@ hidelinks
 \usepackage{minted}
 \usepackage{xcolor}
 \usepackage{amsmath}
+\usepackage{placeins}
+
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0.5em}
+
 
 %opening
 \title{Lab 2 Report}
@@ -28,6 +33,18 @@ hidelinks
 \maketitle
 
 \section{Null pointer at command line.}
+In \texttt{xv6}, user code is loaded into the first part of the address space. Accordingly, when we dereference a null pointer,  because we start from the first page, first page is accessible for us so we will not get an exception, instead, we see some garbage value as the content of the dereferenced variable.
+
+For resolving this problem, we changed 3 files (\texttt{exec.c}, \texttt{vm.c} and \texttt{Makefile}) in order to start from second page in the page table instead of first page.
+
+\begin{enumerate}
+ \item \texttt{exec.c}: In \texttt{exec.c} file, we changed size instead of 0 to 4096 (\texttt{PGSIZE}), so address space will get filled from second page.  We make the change at line 39 of listing \ref{lst:exec} (\texttt{sz=PGSIZE} instead of \texttt{sz=0}).
+ \item \texttt{vm.c}: In \texttt{copyuvm} function, where a copy of the parent process's page table is given to the child, we start the \texttt{for loop} from second page (\texttt{PGSIZE}) instead of 0.  See line 319 at listing \ref{lst:vm}.
+ \item \texttt{Makefile}: In \texttt{Makefile}, entry point of user programs is set. So, we have to make the first page invalid, meaning where the first instruction is set to 0, and change the entry point to the next page at ``\texttt{0x1000}''. So we set \texttt{init} and \texttt{forktest} to start from second page (\texttt{0x1000}). See lines XX and XX at listing \ref{lst:makefile}.
+\end{enumerate}
+
+After changing all these, we tested our user code (a code that tries to access a null pointer) shown in listing \ref{lst:test1}, and now we see that the process has been trapped and killed (figure \ref{fig:test1}).
+
 \begin{listing}
   \inputminted[
     fontsize=\footnotesize,
@@ -38,7 +55,7 @@ hidelinks
     frame=single,
     linenos
   ]{c}{xv6-public/exec.c}
-  \caption{Changes in exec.c file.}\label{lst:exec}
+  \caption{Changes in \texttt{exec.c} file.}\label{lst:exec}
 \end{listing}
 
 \begin{listing}
@@ -51,7 +68,7 @@ hidelinks
     frame=single,
     linenos
   ]{c}{xv6-public/vm.c}
-  \caption{Changes in vm.c file.}\label{lst:vm}
+  \caption{Changes in \texttt{vm.c} file.}\label{lst:vm}
 \end{listing}
 
 \begin{listing}
@@ -64,7 +81,7 @@ hidelinks
     frame=single,
     linenos
   ]{bash}{xv6-public/Makefile}
-  \caption{Changes in Makefile.}\label{lst:makefile}
+  \caption{Changes in \texttt{Makefile}.}\label{lst:makefile}
 \end{listing}
 
 \begin{listing}
@@ -74,14 +91,46 @@ hidelinks
     frame=single,
     linenos
   ]{c}{xv6-public/test1.c}
-  \caption{Test for null pointer catching at command line (test1.c).}\label{lst:test1}
+  \caption{Test for null pointer catching at command line (\texttt{test1.c} file).}\label{lst:test1}
 \end{listing}
 
 \begin{figure}
   \centering
-  \includegraphics[width=1\textwidth]{figures/test1.png}
+  \includegraphics[width=0.8\textwidth]{figures/test1.png}
   \caption{Output of test 1.}\label{fig:test1}
 \end{figure}
 
+\FloatBarrier
+
+\section{Null pointer at system call.}
+
+\begin{listing}
+  \inputminted[
+    fontsize=\footnotesize,
+    tabsize=2,
+    frame=single,
+    firstline=51,
+    firstnumber=51,
+    lastline=69,
+    linenos
+  ]{c}{xv6-public/syscall.c}
+  \caption{Changes in syscall.c file.}\label{lst:syscall}
+\end{listing}
+
+\begin{listing}
+  \inputminted[
+    fontsize=\footnotesize,
+    tabsize=2,
+    frame=single,
+    linenos
+  ]{c}{xv6-public/test2.c}
+  \caption{Test for null pointer catching at system call (test2.c file).}\label{lst:test2}
+\end{listing}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=1\textwidth]{figures/test2.png}
+  \caption{Output of test 2.}\label{fig:test2}
+\end{figure}
 
 \end{document}

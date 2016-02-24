@@ -1,0 +1,109 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGdefault{c+cp}{\PYGdefaultZsh{}include \PYGdefaultZdq{}types.h\PYGdefaultZdq{}}
+\PYGdefault{c+cp}{\PYGdefaultZsh{}include \PYGdefaultZdq{}param.h\PYGdefaultZdq{}}
+\PYGdefault{c+cp}{\PYGdefaultZsh{}include \PYGdefaultZdq{}memlayout.h\PYGdefaultZdq{}}
+\PYGdefault{c+cp}{\PYGdefaultZsh{}include \PYGdefaultZdq{}mmu.h\PYGdefaultZdq{}}
+\PYGdefault{c+cp}{\PYGdefaultZsh{}include \PYGdefaultZdq{}proc.h\PYGdefaultZdq{}}
+\PYGdefault{c+cp}{\PYGdefaultZsh{}include \PYGdefaultZdq{}defs.h\PYGdefaultZdq{}}
+\PYGdefault{c+cp}{\PYGdefaultZsh{}include \PYGdefaultZdq{}x86.h\PYGdefaultZdq{}}
+\PYGdefault{c+cp}{\PYGdefaultZsh{}include \PYGdefaultZdq{}elf.h\PYGdefaultZdq{}}
+
+\PYGdefault{k+kt}{int}
+\PYGdefault{n+nf}{exec}\PYGdefault{p}{(}\PYGdefault{k+kt}{char} \PYGdefault{o}{*}\PYGdefault{n}{path}\PYGdefault{p}{,} \PYGdefault{k+kt}{char} \PYGdefault{o}{**}\PYGdefault{n}{argv}\PYGdefault{p}{)}
+\PYGdefault{p}{\PYGdefaultZob{}}
+  \PYGdefault{k+kt}{char} \PYGdefault{o}{*}\PYGdefault{n}{s}\PYGdefault{p}{,} \PYGdefault{o}{*}\PYGdefault{n}{last}\PYGdefault{p}{;}
+  \PYGdefault{k+kt}{int} \PYGdefault{n}{i}\PYGdefault{p}{,} \PYGdefault{n}{off}\PYGdefault{p}{;}
+  \PYGdefault{n}{uint} \PYGdefault{n}{argc}\PYGdefault{p}{,} \PYGdefault{n}{sz}\PYGdefault{p}{,} \PYGdefault{n}{sp}\PYGdefault{p}{,} \PYGdefault{n}{ustack}\PYGdefault{p}{[}\PYGdefault{l+m+mi}{3}\PYGdefault{o}{+}\PYGdefault{n}{MAXARG}\PYGdefault{o}{+}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{];}
+  \PYGdefault{k}{struct} \PYGdefault{n}{elfhdr} \PYGdefault{n}{elf}\PYGdefault{p}{;}
+  \PYGdefault{k}{struct} \PYGdefault{n}{inode} \PYGdefault{o}{*}\PYGdefault{n}{ip}\PYGdefault{p}{;}
+  \PYGdefault{k}{struct} \PYGdefault{n}{proghdr} \PYGdefault{n}{ph}\PYGdefault{p}{;}
+  \PYGdefault{k+kt}{pde\PYGdefaultZus{}t} \PYGdefault{o}{*}\PYGdefault{n}{pgdir}\PYGdefault{p}{,} \PYGdefault{o}{*}\PYGdefault{n}{oldpgdir}\PYGdefault{p}{;}
+
+  \PYGdefault{n}{begin\PYGdefaultZus{}op}\PYGdefault{p}{();}
+  \PYGdefault{k}{if}\PYGdefault{p}{((}\PYGdefault{n}{ip} \PYGdefault{o}{=} \PYGdefault{n}{namei}\PYGdefault{p}{(}\PYGdefault{n}{path}\PYGdefault{p}{))} \PYGdefault{o}{==} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)\PYGdefaultZob{}}
+    \PYGdefault{n}{end\PYGdefaultZus{}op}\PYGdefault{p}{();}
+    \PYGdefault{k}{return} \PYGdefault{o}{\PYGdefaultZhy{}}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{;}
+  \PYGdefault{p}{\PYGdefaultZcb{}}
+  \PYGdefault{n}{ilock}\PYGdefault{p}{(}\PYGdefault{n}{ip}\PYGdefault{p}{);}
+  \PYGdefault{n}{pgdir} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
+
+  \PYGdefault{c+c1}{// Check ELF header}
+  \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{readi}\PYGdefault{p}{(}\PYGdefault{n}{ip}\PYGdefault{p}{,} \PYGdefault{p}{(}\PYGdefault{k+kt}{char}\PYGdefault{o}{*}\PYGdefault{p}{)}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{elf}\PYGdefault{p}{,} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{,} \PYGdefault{k}{sizeof}\PYGdefault{p}{(}\PYGdefault{n}{elf}\PYGdefault{p}{))} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{k}{sizeof}\PYGdefault{p}{(}\PYGdefault{n}{elf}\PYGdefault{p}{))}
+    \PYGdefault{k}{goto} \PYGdefault{n}{bad}\PYGdefault{p}{;}
+  \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{elf}\PYGdefault{p}{.}\PYGdefault{n}{magic} \PYGdefault{o}{!=} \PYGdefault{n}{ELF\PYGdefaultZus{}MAGIC}\PYGdefault{p}{)}
+    \PYGdefault{k}{goto} \PYGdefault{n}{bad}\PYGdefault{p}{;}
+
+  \PYGdefault{k}{if}\PYGdefault{p}{((}\PYGdefault{n}{pgdir} \PYGdefault{o}{=} \PYGdefault{n}{setupkvm}\PYGdefault{p}{())} \PYGdefault{o}{==} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)}
+    \PYGdefault{k}{goto} \PYGdefault{n}{bad}\PYGdefault{p}{;}
+
+  \PYGdefault{c+c1}{// Load program into memory.}
+  \PYGdefault{n}{sz} \PYGdefault{o}{=} \PYGdefault{n}{PGSIZE}\PYGdefault{p}{;}
+  \PYGdefault{k}{for}\PYGdefault{p}{(}\PYGdefault{n}{i}\PYGdefault{o}{=}\PYGdefault{l+m+mi}{0}\PYGdefault{p}{,} \PYGdefault{n}{off}\PYGdefault{o}{=}\PYGdefault{n}{elf}\PYGdefault{p}{.}\PYGdefault{n}{phoff}\PYGdefault{p}{;} \PYGdefault{n}{i}\PYGdefault{o}{\PYGdefaultZlt{}}\PYGdefault{n}{elf}\PYGdefault{p}{.}\PYGdefault{n}{phnum}\PYGdefault{p}{;} \PYGdefault{n}{i}\PYGdefault{o}{++}\PYGdefault{p}{,} \PYGdefault{n}{off}\PYGdefault{o}{+=}\PYGdefault{k}{sizeof}\PYGdefault{p}{(}\PYGdefault{n}{ph}\PYGdefault{p}{))\PYGdefaultZob{}}
+    \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{readi}\PYGdefault{p}{(}\PYGdefault{n}{ip}\PYGdefault{p}{,} \PYGdefault{p}{(}\PYGdefault{k+kt}{char}\PYGdefault{o}{*}\PYGdefault{p}{)}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{ph}\PYGdefault{p}{,} \PYGdefault{n}{off}\PYGdefault{p}{,} \PYGdefault{k}{sizeof}\PYGdefault{p}{(}\PYGdefault{n}{ph}\PYGdefault{p}{))} \PYGdefault{o}{!=} \PYGdefault{k}{sizeof}\PYGdefault{p}{(}\PYGdefault{n}{ph}\PYGdefault{p}{))}
+      \PYGdefault{k}{goto} \PYGdefault{n}{bad}\PYGdefault{p}{;}
+    \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{ph}\PYGdefault{p}{.}\PYGdefault{n}{type} \PYGdefault{o}{!=} \PYGdefault{n}{ELF\PYGdefaultZus{}PROG\PYGdefaultZus{}LOAD}\PYGdefault{p}{)}
+      \PYGdefault{k}{continue}\PYGdefault{p}{;}
+    \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{ph}\PYGdefault{p}{.}\PYGdefault{n}{memsz} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{n}{ph}\PYGdefault{p}{.}\PYGdefault{n}{filesz}\PYGdefault{p}{)}
+      \PYGdefault{k}{goto} \PYGdefault{n}{bad}\PYGdefault{p}{;}
+    \PYGdefault{k}{if}\PYGdefault{p}{((}\PYGdefault{n}{sz} \PYGdefault{o}{=} \PYGdefault{n}{allocuvm}\PYGdefault{p}{(}\PYGdefault{n}{pgdir}\PYGdefault{p}{,} \PYGdefault{n}{sz}\PYGdefault{p}{,} \PYGdefault{n}{ph}\PYGdefault{p}{.}\PYGdefault{n}{vaddr} \PYGdefault{o}{+} \PYGdefault{n}{ph}\PYGdefault{p}{.}\PYGdefault{n}{memsz}\PYGdefault{p}{))} \PYGdefault{o}{==} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)}
+      \PYGdefault{k}{goto} \PYGdefault{n}{bad}\PYGdefault{p}{;}
+    \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{loaduvm}\PYGdefault{p}{(}\PYGdefault{n}{pgdir}\PYGdefault{p}{,} \PYGdefault{p}{(}\PYGdefault{k+kt}{char}\PYGdefault{o}{*}\PYGdefault{p}{)}\PYGdefault{n}{ph}\PYGdefault{p}{.}\PYGdefault{n}{vaddr}\PYGdefault{p}{,} \PYGdefault{n}{ip}\PYGdefault{p}{,} \PYGdefault{n}{ph}\PYGdefault{p}{.}\PYGdefault{n}{off}\PYGdefault{p}{,} \PYGdefault{n}{ph}\PYGdefault{p}{.}\PYGdefault{n}{filesz}\PYGdefault{p}{)} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)}
+      \PYGdefault{k}{goto} \PYGdefault{n}{bad}\PYGdefault{p}{;}
+  \PYGdefault{p}{\PYGdefaultZcb{}}
+  \PYGdefault{n}{iunlockput}\PYGdefault{p}{(}\PYGdefault{n}{ip}\PYGdefault{p}{);}
+  \PYGdefault{n}{end\PYGdefaultZus{}op}\PYGdefault{p}{();}
+  \PYGdefault{n}{ip} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
+
+  \PYGdefault{c+c1}{// Allocate two pages at the next page boundary.}
+  \PYGdefault{c+c1}{// Make the first inaccessible.  Use the second as the user stack.}
+  \PYGdefault{n}{sz} \PYGdefault{o}{=} \PYGdefault{n}{PGROUNDUP}\PYGdefault{p}{(}\PYGdefault{n}{sz}\PYGdefault{p}{);}
+  \PYGdefault{k}{if}\PYGdefault{p}{((}\PYGdefault{n}{sz} \PYGdefault{o}{=} \PYGdefault{n}{allocuvm}\PYGdefault{p}{(}\PYGdefault{n}{pgdir}\PYGdefault{p}{,} \PYGdefault{n}{sz}\PYGdefault{p}{,} \PYGdefault{n}{sz} \PYGdefault{o}{+} \PYGdefault{l+m+mi}{2}\PYGdefault{o}{*}\PYGdefault{n}{PGSIZE}\PYGdefault{p}{))} \PYGdefault{o}{==} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)}
+    \PYGdefault{k}{goto} \PYGdefault{n}{bad}\PYGdefault{p}{;}
+  \PYGdefault{n}{clearpteu}\PYGdefault{p}{(}\PYGdefault{n}{pgdir}\PYGdefault{p}{,} \PYGdefault{p}{(}\PYGdefault{k+kt}{char}\PYGdefault{o}{*}\PYGdefault{p}{)(}\PYGdefault{n}{sz} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{l+m+mi}{2}\PYGdefault{o}{*}\PYGdefault{n}{PGSIZE}\PYGdefault{p}{));}
+  \PYGdefault{n}{sp} \PYGdefault{o}{=} \PYGdefault{n}{sz}\PYGdefault{p}{;}
+  
+  \PYGdefault{c+c1}{// Push argument strings, prepare rest of stack in ustack.}
+  \PYGdefault{k}{for}\PYGdefault{p}{(}\PYGdefault{n}{argc} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;} \PYGdefault{n}{argv}\PYGdefault{p}{[}\PYGdefault{n}{argc}\PYGdefault{p}{];} \PYGdefault{n}{argc}\PYGdefault{o}{++}\PYGdefault{p}{)} \PYGdefault{p}{\PYGdefaultZob{}}
+    \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{argc} \PYGdefault{o}{\PYGdefaultZgt{}=} \PYGdefault{n}{MAXARG}\PYGdefault{p}{)}
+      \PYGdefault{k}{goto} \PYGdefault{n}{bad}\PYGdefault{p}{;}
+    \PYGdefault{n}{sp} \PYGdefault{o}{=} \PYGdefault{p}{(}\PYGdefault{n}{sp} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{p}{(}\PYGdefault{n}{strlen}\PYGdefault{p}{(}\PYGdefault{n}{argv}\PYGdefault{p}{[}\PYGdefault{n}{argc}\PYGdefault{p}{])} \PYGdefault{o}{+} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{))} \PYGdefault{o}{\PYGdefaultZam{}} \PYGdefault{o}{\PYGdefaultZti{}}\PYGdefault{l+m+mi}{3}\PYGdefault{p}{;}
+    \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{copyout}\PYGdefault{p}{(}\PYGdefault{n}{pgdir}\PYGdefault{p}{,} \PYGdefault{n}{sp}\PYGdefault{p}{,} \PYGdefault{n}{argv}\PYGdefault{p}{[}\PYGdefault{n}{argc}\PYGdefault{p}{],} \PYGdefault{n}{strlen}\PYGdefault{p}{(}\PYGdefault{n}{argv}\PYGdefault{p}{[}\PYGdefault{n}{argc}\PYGdefault{p}{])} \PYGdefault{o}{+} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{)} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)}
+      \PYGdefault{k}{goto} \PYGdefault{n}{bad}\PYGdefault{p}{;}
+    \PYGdefault{n}{ustack}\PYGdefault{p}{[}\PYGdefault{l+m+mi}{3}\PYGdefault{o}{+}\PYGdefault{n}{argc}\PYGdefault{p}{]} \PYGdefault{o}{=} \PYGdefault{n}{sp}\PYGdefault{p}{;}
+  \PYGdefault{p}{\PYGdefaultZcb{}}
+  \PYGdefault{n}{ustack}\PYGdefault{p}{[}\PYGdefault{l+m+mi}{3}\PYGdefault{o}{+}\PYGdefault{n}{argc}\PYGdefault{p}{]} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
+
+  \PYGdefault{n}{ustack}\PYGdefault{p}{[}\PYGdefault{l+m+mi}{0}\PYGdefault{p}{]} \PYGdefault{o}{=} \PYGdefault{l+m+mh}{0xffffffff}\PYGdefault{p}{;}  \PYGdefault{c+c1}{// fake return PC}
+  \PYGdefault{n}{ustack}\PYGdefault{p}{[}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{]} \PYGdefault{o}{=} \PYGdefault{n}{argc}\PYGdefault{p}{;}
+  \PYGdefault{n}{ustack}\PYGdefault{p}{[}\PYGdefault{l+m+mi}{2}\PYGdefault{p}{]} \PYGdefault{o}{=} \PYGdefault{n}{sp} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{p}{(}\PYGdefault{n}{argc}\PYGdefault{o}{+}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{)}\PYGdefault{o}{*}\PYGdefault{l+m+mi}{4}\PYGdefault{p}{;}  \PYGdefault{c+c1}{// argv pointer}
+
+  \PYGdefault{n}{sp} \PYGdefault{o}{\PYGdefaultZhy{}=} \PYGdefault{p}{(}\PYGdefault{l+m+mi}{3}\PYGdefault{o}{+}\PYGdefault{n}{argc}\PYGdefault{o}{+}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{)} \PYGdefault{o}{*} \PYGdefault{l+m+mi}{4}\PYGdefault{p}{;}
+  \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{copyout}\PYGdefault{p}{(}\PYGdefault{n}{pgdir}\PYGdefault{p}{,} \PYGdefault{n}{sp}\PYGdefault{p}{,} \PYGdefault{n}{ustack}\PYGdefault{p}{,} \PYGdefault{p}{(}\PYGdefault{l+m+mi}{3}\PYGdefault{o}{+}\PYGdefault{n}{argc}\PYGdefault{o}{+}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{)}\PYGdefault{o}{*}\PYGdefault{l+m+mi}{4}\PYGdefault{p}{)} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)}
+    \PYGdefault{k}{goto} \PYGdefault{n}{bad}\PYGdefault{p}{;}
+
+  \PYGdefault{c+c1}{// Save program name for debugging.}
+  \PYGdefault{k}{for}\PYGdefault{p}{(}\PYGdefault{n}{last}\PYGdefault{o}{=}\PYGdefault{n}{s}\PYGdefault{o}{=}\PYGdefault{n}{path}\PYGdefault{p}{;} \PYGdefault{o}{*}\PYGdefault{n}{s}\PYGdefault{p}{;} \PYGdefault{n}{s}\PYGdefault{o}{++}\PYGdefault{p}{)}
+    \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{o}{*}\PYGdefault{n}{s} \PYGdefault{o}{==} \PYGdefault{l+s+sc}{\PYGdefaultZsq{}/\PYGdefaultZsq{}}\PYGdefault{p}{)}
+      \PYGdefault{n}{last} \PYGdefault{o}{=} \PYGdefault{n}{s}\PYGdefault{o}{+}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{;}
+  \PYGdefault{n}{safestrcpy}\PYGdefault{p}{(}\PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{name}\PYGdefault{p}{,} \PYGdefault{n}{last}\PYGdefault{p}{,} \PYGdefault{k}{sizeof}\PYGdefault{p}{(}\PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{name}\PYGdefault{p}{));}
+
+  \PYGdefault{c+c1}{// Commit to the user image.}
+  \PYGdefault{n}{oldpgdir} \PYGdefault{o}{=} \PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{pgdir}\PYGdefault{p}{;}
+  \PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{pgdir} \PYGdefault{o}{=} \PYGdefault{n}{pgdir}\PYGdefault{p}{;}
+  \PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{sz} \PYGdefault{o}{=} \PYGdefault{n}{sz}\PYGdefault{p}{;}
+  \PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{tf}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{eip} \PYGdefault{o}{=} \PYGdefault{n}{elf}\PYGdefault{p}{.}\PYGdefault{n}{entry}\PYGdefault{p}{;}  \PYGdefault{c+c1}{// main}
+  \PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{tf}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{esp} \PYGdefault{o}{=} \PYGdefault{n}{sp}\PYGdefault{p}{;}
+  \PYGdefault{n}{switchuvm}\PYGdefault{p}{(}\PYGdefault{n}{proc}\PYGdefault{p}{);}
+  \PYGdefault{n}{freevm}\PYGdefault{p}{(}\PYGdefault{n}{oldpgdir}\PYGdefault{p}{);}
+  \PYGdefault{k}{return} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
+
+ \PYGdefault{n+nl}{bad}\PYGdefault{p}{:}
+  \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{pgdir}\PYGdefault{p}{)}
+    \PYGdefault{n}{freevm}\PYGdefault{p}{(}\PYGdefault{n}{pgdir}\PYGdefault{p}{);}
+  \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{ip}\PYGdefault{p}{)\PYGdefaultZob{}}
+    \PYGdefault{n}{iunlockput}\PYGdefault{p}{(}\PYGdefault{n}{ip}\PYGdefault{p}{);}
+    \PYGdefault{n}{end\PYGdefaultZus{}op}\PYGdefault{p}{();}
+  \PYGdefault{p}{\PYGdefaultZcb{}}
+  \PYGdefault{k}{return} \PYGdefault{o}{\PYGdefaultZhy{}}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{;}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+\end{Verbatim}
