@@ -17,5 +17,5 @@ dr = 0.4
 a = 1 - dr
 b = 7
 c = 0
-lines(x,a*exp(b*(x-1))+c,col='green',lwd=2)
+lines(x,0.2*exp(b*(x-1))+c,col='green',lwd=2)
 
