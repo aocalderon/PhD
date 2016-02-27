@@ -22,7 +22,7 @@ hidelinks
 \begin{document}
 \maketitle
 
-\section{Formal reasoning.}
+\section{Formal reasoning.}\label{sec:formal}
 Table \ref{tab:desc} summarizes some of the attributes of the studied datasets. $dr$ refers to the default rate of the dataset and it is the number of elements of the most frequent value of the class.  It is taken as a reference for classifiers because any resulting accuracy should be better than the default rate, if not, it would be practically better to guess. $N$ refers to the number of available points for training the classifier. $C$ refers to the number of different classes in the dataset and $D$ refers to the number of dimensions or attributes. 
 
 \begin{table}[h]
@@ -88,20 +88,13 @@ We extend table \ref{tab:desc} by applying equations \ref{eq:2} and \ref{eq:3} t
  \centering
  \begin{tabular}{rcccccc}
   \toprule
-	& dr	& N	& C	& D 	& \boldmath$\alpha$	& \boldmath$\beta$	\\
+  & dr	& N	& C	& D 	& \boldmath$\alpha$	& \boldmath$\beta$	\\
   \midrule
-Cancer	& 0.63	& 398	& 2	& 32 	& \textbf{0.37}	& \textbf{74.20}	\\
-Iris	& 0.33	& 105	& 3	& 4 	& \textbf{0.67}	& \textbf{23.35}	\\
-Seeds	& 0.33	& 147	& 3	& 7 	& \textbf{0.67}	& \textbf{32.68}	\\
-Wine	& 0.40	& 125	& 3	& 13 	& \textbf{0.60}	& \textbf{24.97}	\\
-Zoo	& 0.41	& 71	& 7	& 17 	& \textbf{0.59}	& \textbf{6.00}	\\
-
-
-
-
-
-
-
+  Cancer& 0.63	& 398	& 2	& 32 	& \textbf{0.37}	& \textbf{74.20}	\\
+  Iris	& 0.33	& 105	& 3	& 4 	& \textbf{0.67}	& \textbf{23.35}	\\
+  Seeds	& 0.33	& 147	& 3	& 7 	& \textbf{0.67}	& \textbf{32.68}	\\
+  Wine	& 0.40	& 125	& 3	& 13 	& \textbf{0.60}	& \textbf{24.97}	\\
+  Zoo	& 0.41	& 71	& 7	& 17 	& \textbf{0.59}	& \textbf{6.00}		\\
   \bottomrule
  \end{tabular}
  \caption{$\alpha$ and $\beta$ from values on table \ref{tab:desc}.}\label{tab:extend}
@@ -141,5 +134,12 @@ Zoo	& 0.41	& 71	& 7	& 17 	& \textbf{0.59}	& \textbf{6.00}	\\
  \caption{Observed error rate compared to the fitted model for Zoo.}
  \label{fig:zoo}
 \end{figure}
+
+\section{Limitations}
+Analysis in section \ref{sec:formal} just takes into account basics components and it is far for optimal.  Among the additional considerations it would be important to include the impact of $k$ into the equation \ref{eq:3}.  Previous analysis tend to indicate that higher values of $k$ increase the impact of error rate modifying the slope of the curve.  It seems reasonable to include $k$ into equation \ref{eq:3} due to its role in the selection of the class for new points.  If it is required more points to take a decision, the impact of losing potential valuable points by error injection is higher.
+
+Another consideration is the probability distribution between different classes. In this analysis, we consider a uniform distribution of the available points among all the classes.  However, in many cases, a particular class is more frequent than the others. So, the assumption of $\frac{N}{C}$ is a generalization which is prone of improvement.
+
+Finally, the asymptotic nature of exponential functions makes difficult to model the initial states of the error rate.  In general, the error starts to increase gradually at the beginning before to start growth exponentially. $e^x$ equations run parallel to the x axis missing the initial slow increasing of the rate.
 
 \end{document}
