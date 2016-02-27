@@ -13,6 +13,11 @@ getAccuracy <- function(obs, pre){
   return(c/n)
 }
 
+data <- read.csv('zoo.csv', header = F)
+data <- data[,2:ncol(data)]
+
+class <- data[,ncol(data)]
+data <- apply(data[,-ncol(data)],2,normalize)
 
 
 
