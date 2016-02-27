@@ -1,0 +1,87 @@
+\documentclass{article}
+
+\usepackage{alltt}
+\usepackage{graphicx}
+\usepackage{minted}
+\usepackage{xcolor}
+\usepackage{placeins}
+\usepackage[margin=3cm]{geometry}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\hypersetup{
+colorlinks=false,
+hidelinks
+}
+
+
+\title{Milestone 3}
+\author{Andres Calderon \\ acald013@ucr.edu}
+\begin{document}
+\maketitle
+
+\section{Formal reasoning.}
+Figure Xa shows the difference in the accuracy results of kNN when the probability of error in the distance computation increase. Figure Xb show the error rate of the same implementation by just subtracting the value of the original accuracy (without error injection) and the values obtained in figure Xa.  We can see that the increasing rate of error described by figure Xb can be modeled by an exponential function using the equation $Err(p) = \alpha \times e^{\beta \times p}$.
+
+ \begin{table}
+ \centering
+ \begin{tabular}{rcccc}
+  \toprule
+	& \textbf{dr}	& \textbf{N}	& \textbf{C}	& \textbf{D} 	\\
+  \midrule
+Cancer	& 0.63	& 398	& 2	& 32 	\\
+Iris	& 0.33	& 105	& 3	& 4 	\\
+Seeds	& 0.33	& 147	& 3	& 7 	\\
+Wine	& 0.40	& 125	& 3	& 13 	\\
+Zoo	& 0.41	& 71	& 7	& 17 	\\
+  \bottomrule
+ \end{tabular}
+ \caption{Description of the datasets.}\label{tab:desc}
+ \end{table}
+ 
+
+Equation \ref{eq:1} illustrates the result.
+
+\begin{equation}
+  Err(p)=(1-dr) \times e^{\frac{N}{C} \times (1-dr) \times p}
+\end{equation}\label{eq:1}
+
+
+\section{Testing.}
+
+\begin{figure}
+ \centering
+ \includegraphics[width=0.9\textwidth]{./figures/cancer.pdf}
+ \caption{Observed error rate compared to the fitted model for Cancer.}
+ \label{fig:cancer}
+\end{figure}
+
+\begin{figure}
+ \centering
+ \includegraphics[width=0.9\textwidth]{./figures/iris.pdf}
+ \caption{Observed error rate compared to the fitted model for Iris.}
+ \label{fig:iris}
+\end{figure}
+
+\begin{figure}
+ \centering
+ \includegraphics[width=0.9\textwidth]{./figures/seeds.pdf}
+ \caption{Observed error rate compared to the fitted model for Seeds.}
+ \label{fig:seeds}
+\end{figure}
+
+\begin{figure}
+ \centering
+ \includegraphics[width=0.9\textwidth]{./figures/wine.pdf}
+ \caption{Observed error rate compared to the fitted model for Wine.}
+ \label{fig:wine}
+\end{figure}
+
+\begin{figure}
+ \centering
+ \includegraphics[width=0.9\textwidth]{./figures/zoo.pdf}
+ \caption{Observed error rate compared to the fitted model for Zoo.}
+ \label{fig:zoo}
+\end{figure}
+
+\end{document}
