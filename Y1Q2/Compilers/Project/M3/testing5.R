@@ -1,0 +1,7 @@
+y = as.matrix(read.table('Temp/k1_iris.dat'))
+x = seq(0.01,1,length.out = length(y))
+pdf("figures/errors.pdf", 7.83, 5.17)
+plot(x,y,type='l',col='red',lwd=2,xlab="p",ylab="Error rate", main = "k = 1")
+legend('topleft', legend=c("observed error"),inset=c(0.01,0.02)
+       ,col=c(2),lty=c(1),lwd=c(2),cex=0.9)
+dev.off()

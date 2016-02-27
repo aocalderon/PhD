@@ -22,10 +22,13 @@ hidelinks
 \begin{document}
 \maketitle
 
-\section{Formal reasoning.}\label{sec:formal}
-Table \ref{tab:desc} summarizes some of the attributes of the studied datasets. $dr$ refers to the default rate of the dataset and it is the number of elements of the most frequent value of the class.  It is taken as a reference for classifiers because any resulting accuracy should be better than the default rate, if not, it would be practically better to guess. $N$ refers to the number of available points for training the classifier. $C$ refers to the number of different classes in the dataset and $D$ refers to the number of dimensions or attributes. 
+\section{Introduction}
+This report describes the advances to accomplish the final project in the course. The main goal of the project is to perform a reliability analysis of a machine learning algorithm (kNN).  This third report leads towards a more formal reasoning and understanding of the impact of error injection during the distance calculation of kNN.  The main goal of the report is to discuss an initial formula that describe the behavior of the error rate, as well as its formulation and limitations.  The analysis and reasoning will be supported by the previous implementation presented in previous milestones.
 
-\begin{table}[h]
+\section{Formal reasoning.}\label{sec:formal}
+Table \ref{tab:desc} summarizes some of the attributes of the studied datasets. $dr$ refers to the default rate of the dataset and it is the ratio between the number of elements of the most frequent class and the size of the dataset.  It is taken as a reference for classifiers because any resulting accuracy should be better than this, if not, it would be practically better to guess. $N$ refers to the number of available points for training the classifier. $C$ refers to the number of different classes in the dataset and $D$ refers to the number of dimensions or attributes. 
+
+\begin{table}
  \centering
  \begin{tabular}{rcccc}
   \toprule
@@ -41,7 +44,7 @@ Zoo	& 0.41	& 71	& 7	& 17 	\\
  \caption{Description of the datasets.}\label{tab:desc}
 \end{table}
 
-Figure \ref{fig:a} shows the difference in the accuracy results of kNN when the probability of error in the distance computation increases. Figure \ref{fig:b} show the error rate of the same implementation by just subtracting the value of the original accuracy (without error injection) and the values obtained in figure \ref{fig:a}.  We can see that the increasing rate of error described by figure \ref{fig:b} can be modeled by an exponential function using the equation \ref{eq:1}. $\alpha$ will determine the highest point of the function and  $\beta$ will describe the slope and shape of the curve.
+Figure \ref{fig:a} shows the difference in the accuracy results of kNN when the probability of error during distance computation increases. Figure \ref{fig:b} show the error rate of the same implementation by just subtracting the value of the original accuracy (without error injection) and the values obtained in figure \ref{fig:a}.  We can see that the increasing error rate described by figure \ref{fig:b} can be modeled by an exponential function using the equation \ref{eq:1}. $\alpha$ will determine the highest point of the function and  $\beta$ will describe the slope and shape of the curve.
 
 \begin{equation}\label{eq:1}
   Err(p) = \alpha \times e^{\beta \times p}
@@ -67,13 +70,13 @@ In our case, $\alpha$ represents the maximum error rate of the function and it r
   \alpha = (1-dr)
 \end{equation}
 
-As we already mention, $\beta$ describes the shape of the curve and how fast increase the error rate together with the value of $p$. In the way that kNN works, the classification of each new point will depend on the number of available points ($N$) in the search space.  Similarly, the probability to belong to a specific class ($C$) (and specifically to the correct one) depends on how many members of that class are close enough to the new point. For simplicity, we will consider that the number of available points $N$ will distribute equally on the number of classes $C$, so the number of available points for each class will be $\frac{N}{C}$.  Now, we will have to consider that this number is also affected by the default rate ($dr$).  At the moment when $\frac{N}{C}$ would be below of $dr$, the classifier will start guessing. So, if many points from the correct class are affected for the error injection, the probabilities to misclassified the new point will increase.  From this reasoning we can model $\beta$ as: 
+As we already mention, $\beta$ describes the shape of the curve and how fast the error rate increases together with the value of $p$. In the way that kNN works, the classification of each new point will depend on the number of available points ($N$) in the search space.  Similarly, the probability to belong to a specific class ($C$) (and specifically to the correct one) depends on how many members of that class are close enough to the new point. For simplicity, we will consider that the number of available points $N$ will distribute equally on the number of classes $C$, so the number of available points for each class will be $\frac{N}{C}$.  Now, we will have to consider that this number is also affected by the default rate ($dr$).  At the moment when $\frac{N}{C}$ would be below of $dr$, the classifier will start guessing. So, if many points from the correct class are affected for the error injection, the probabilities to misclassified the new point will increase.  From this reasoning we can model $\beta$ as: 
 
 \begin{equation}\label{eq:3}
   \beta = \frac{N}{C} \times (1-dr)
 \end{equation}
 
-Equation \ref{eq:4} illustrates the final result after replacing equations \ref{eq:2} and \ref{eq:3} in equation \ref{eq:1}.
+Finally, equation \ref{eq:4} illustrates an initial formula for error rate modeling after replacing equations \ref{eq:2} and \ref{eq:3} in equation \ref{eq:1}.
 
 \begin{equation}\label{eq:4}
   Err(p)=(1-dr) \times e^{\frac{N}{C} \times (1-dr) \times p}
@@ -82,9 +85,9 @@ Equation \ref{eq:4} illustrates the final result after replacing equations \ref{
 
 \section{Testing.}
 
-We extend table \ref{tab:desc} by applying equations \ref{eq:2} and \ref{eq:3} to add columns $\alpha$ and $\beta$.  Figures from \ref{fig:cancer} to \ref{fig:zoo} show the corresponding fitting model by applying equation \ref{eq:4} respectively.
+We extend table \ref{tab:desc} by applying equations \ref{eq:2} and \ref{eq:3} to add columns $\alpha$ and $\beta$.  Figures from \ref{fig:cancer} to \ref{fig:zoo} show the corresponding fitting model by applying equation \ref{eq:4} respectively.  The figures compare the observed error rate for the studied datasets (continuous red line) and the plot of equation \ref{eq:4} using the corresponding parameters from table \ref{tab:desc} (dashed blue line).
 
-\begin{table}[h]
+\begin{table}
  \centering
  \begin{tabular}{rcccccc}
   \toprule
@@ -136,10 +139,10 @@ We extend table \ref{tab:desc} by applying equations \ref{eq:2} and \ref{eq:3} t
 \end{figure}
 
 \section{Limitations}
-Analysis in section \ref{sec:formal} just takes into account basics components and it is far for optimal.  Among the additional considerations it would be important to include the impact of $k$ into the equation \ref{eq:3}.  Previous analysis tend to indicate that higher values of $k$ increase the impact of error rate modifying the slope of the curve.  It seems reasonable to include $k$ into equation \ref{eq:3} due to its role in the selection of the class for new points.  If it is required more points to take a decision, the impact of losing potential valuable points by error injection is higher.
+Analysis in section \ref{sec:formal} just takes into account basic components and it is far for optimal.  Among the additional considerations it would be important to include the impact of $k$ into the equation \ref{eq:3}.  Previous analysis tend to indicate that higher values of $k$ increase the impact of error rate modifying the slope of the curve.  It seems reasonable to include $k$ into equation \ref{eq:3} due to its role in the selection of the class for new points.  If it is required more points to take a decision, the impact of losing potential valuable points by error injection is higher.
 
 Another consideration is the probability distribution between different classes. In this analysis, we consider a uniform distribution of the available points among all the classes.  However, in many cases, a particular class is more frequent than the others. So, the assumption of $\frac{N}{C}$ is a generalization which is prone of improvement.
 
-Finally, the asymptotic nature of exponential functions makes difficult to model the initial states of the error rate.  In general, the error starts to increase gradually at the beginning before to start growth exponentially. $e^x$ equations run parallel to the x axis missing the initial slow increasing of the rate.
+Finally, the asymptotic nature of exponential functions makes difficult to model the initial states of the error rate.  In general, the error starts to increase gradually at the beginning before to start growth exponentially. $e^x$ equations run parallel to the x axis missing the initial slow increase of the rate.
 
 \end{document}
