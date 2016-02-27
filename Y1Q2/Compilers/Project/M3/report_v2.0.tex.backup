@@ -82,6 +82,24 @@ Equation \ref{eq:4} illustrates the final result after replacing equations \ref{
 
 \section{Testing.}
 
+We extend table \ref{tab:desc} by applying equations \ref{eq:2} and \ref{eq:3} to add columns $\alpha$ and $\beta$.  Figures from \ref{fig:cancer} to \ref{fig:zoo} show the corresponding fitting model by applying equation \ref{eq:4} respectively.
+
+\begin{table}[h]
+ \centering
+ \begin{tabular}{rcccccc}
+  \toprule
+  & dr	& N	& C	& D 	& \boldmath$\alpha$	& \boldmath$\beta$	\\
+  \midrule
+  Cancer& 0.63	& 398	& 2	& 32 	& \textbf{0.37}	& \textbf{74.20}	\\
+  Iris	& 0.33	& 105	& 3	& 4 	& \textbf{0.67}	& \textbf{23.35}	\\
+  Seeds	& 0.33	& 147	& 3	& 7 	& \textbf{0.67}	& \textbf{32.68}	\\
+  Wine	& 0.40	& 125	& 3	& 13 	& \textbf{0.60}	& \textbf{24.97}	\\
+  Zoo	& 0.41	& 71	& 7	& 17 	& \textbf{0.59}	& \textbf{6.00}		\\
+  \bottomrule
+ \end{tabular}
+ \caption{$\alpha$ and $\beta$ from values on table \ref{tab:desc}.}\label{tab:extend}
+\end{table}
+
 \begin{figure}
  \centering
  \includegraphics[width=0.9\textwidth]{./figures/cancer.pdf}
@@ -116,5 +134,8 @@ Equation \ref{eq:4} illustrates the final result after replacing equations \ref{
  \caption{Observed error rate compared to the fitted model for Zoo.}
  \label{fig:zoo}
 \end{figure}
+
+\section{Limitations}
+Analysis in section \ref{sec:formal} just takes into account basics components and it is far for optimal.  Among the additional considerations it would be important to include the impact of $k$ into the equation \ref{eq:3}.  Previous analysis tend to indicate that higher values of $k$ 
 
 \end{document}
