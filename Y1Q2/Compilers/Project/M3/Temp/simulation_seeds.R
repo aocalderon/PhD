@@ -27,7 +27,8 @@ for(k in seq(1,1,2)){
     }
     as <- c(as, mean(accuracy_error))
   }
-  
+  e = accuracy_orig - as
+  write.table(e, 'k1_seeds.dat',col.names=F,row.names=F)
 #   data <- data.frame(p=range, Accuracy=as)
 #   pdf(paste0("figures/Seeds_k",k,".pdf"), 7.83, 5.17)
 #   plotSpline(data, k)

@@ -1,0 +1,23 @@
+a = c(0.63, 0.33, 0.33, 0.40, 0.41)
+b = c(74.2, 23.3, 32.7, 25.0, 6.0)
+
+y = as.matrix(read.table('Temp/k1_cancer.dat'))
+x = seq(0.01,1,length.out = length(y))
+plot(x,y,type='l',col='red',lwd=2)
+lines(x,(1-a[1])*exp(b[1]*(x-1))+c,col='green',lwd=2)
+
+y = as.matrix(read.table('Temp/k1_iris.dat'))
+plot(x,y,type='l',col='red',lwd=2)
+lines(x,(1-a[2])*exp(b[2]*(x-1))+c,col='green',lwd=2)
+
+y = as.matrix(read.table('Temp/k1_seeds.dat'))
+plot(x,y,type='l',col='red',lwd=2)
+lines(x,(1-a[3])*exp(b[3]*(x-1))+c,col='green',lwd=2)
+
+y = as.matrix(read.table('Temp/k1_wine.dat'))
+plot(x,y,type='l',col='red',lwd=2)
+lines(x,(1-a[4])*exp(b[4]*(x-1))+c,col='green',lwd=2)
+
+y = as.matrix(read.table('Temp/k1_zoo.dat'))
+plot(x,y,type='l',col='red',lwd=2)
+lines(x,(1-a[5])*exp(b[5]*(x-1))+c,col='green',lwd=2)

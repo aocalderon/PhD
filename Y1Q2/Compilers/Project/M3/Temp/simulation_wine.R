@@ -1,11 +1,11 @@
 require(knnflex)
 
-seeds <- read.csv('seeds.tsv', header = F, sep = '\t')
-n <- nrow(seeds)
-m <- ncol(seeds)
-x <- seeds[,1:(m-1)]
+wine <- read.csv('wine.csv', header = F)
+n <- nrow(wine)
+m <- ncol(wine)
+x <- wine[,2:m]
 x <- apply(x,2,normalize)
-y <- seeds[,m]
+y <- wine[,1]
 
 set.seed(456)
 train <- sample(1:n,n*0.7)
@@ -27,9 +27,10 @@ for(k in seq(1,1,2)){
     }
     as <- c(as, mean(accuracy_error))
   }
-  
+  e = accuracy_orig - as
+  write.table(e, 'k1_wine.dat',col.names=F,row.names=F)
 #   data <- data.frame(p=range, Accuracy=as)
-#   pdf(paste0("figures/Seeds_k",k,".pdf"), 7.83, 5.17)
+#   pdf(paste0("figures/Wine_k",k,".pdf"), 7.83, 5.17)
 #   plotSpline(data, k)
 #   abline(h = accuracy_orig, col='blue', cex=0.1, lty=3)
 #   text(0.97,accuracy_orig-0.05,paste("acc=",round(accuracy_orig,2)),cex=0.6,col="blue")
