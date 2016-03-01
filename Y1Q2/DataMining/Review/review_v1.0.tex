@@ -1,0 +1,135 @@
+\documentclass{article}
+
+\usepackage[margin=2cm]{geometry}
+\usepackage{enumerate}
+\usepackage{framed}
+\usepackage{hyperref}
+\hypersetup{
+colorlinks=false,
+hidelinks
+}
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0.5em}
+
+\title{Paper Review}
+\author{Andres Calderon \\ acald013@ucr.edu}
+\begin{document}
+\maketitle
+
+\section[Review form]{Review form\footnote{Selected option is in bold.}}
+\begin{enumerate}
+ \item Submission Category [as indicated by authors]
+ \begin{enumerate}[I]
+  \item Regular Research
+  \item Experiments and Analyses
+  \item Innovative Systems and Applications
+  \item Vision
+ \end{enumerate}
+ 
+ \item Relevance to SIGKDD
+ \begin{enumerate}[I]
+  \item High
+  \item \textbf{Adequate}
+  \item Should submit to alternative forum
+ \end{enumerate}
+
+ \item Overall Rating
+ \begin{enumerate}[I]
+  \item Strong Accept
+  \item \textbf{Accept}
+  \item Weak Accept
+  \item Weak Reject
+  \item Reject
+  \item Strong Reject
+ \end{enumerate}
+ 
+ \item Justification of your overall recommendation (one paragraph) \\ 
+ \begin{framed}
+ The paper exposes an interesting contribution.  It elaborates and proves in a clear way that \textit{w} is cardinal to obtain high quality clustering.  However, it makes some technical assumptions\footnotemark[2] which deserve more attention.
+ \end{framed}
+ \footnotetext[2]{Unfortunately, for this review we do not have access to the supporting website to check them.} 
+ 
+ \item List major strong points of the paper (if any) \\ 
+ \begin{framed}
+  \begin{itemize}
+    \item It presents and supports the importance of \textit{w} for computing $cDTW^w$ and time series clustering.
+    \item It uses a large number of datasets for empirical evaluation.
+    \item It states the contributions and elaborates each of them in a clear and organized way.
+  \end{itemize}
+ \end{framed}
+ 
+ \item List major weak points of the paper (if any) \\ 
+ \begin{framed}
+  \begin{itemize}
+    \item It presents evidence of particular datasets to illustrate specific issues.  However, there is few references to global statistics for all datasets.  For instance, it would be interesting to get the range, mean and standard deviation of the scores in section 4.1.  In a similar way, it would be important to know the average number of incorrect and correct user annotations for all datasets in sections 4.2 and 4.3 respectively.
+    \item It does not explain how the annotations were collected.  It remains unknown if it was done by a single annotator (maybe with previous experience in the dataset) or the sample's mean of a group of independent users. 
+    \item Algorithm in table 2 replaces real time series for warped versions of the objects that preceded them.  Although \textit{Dnew}' size is the same, it contains half of the initial time series.  It could lead to lose potential time series which could add value to the clustering. It is uncertain if the learned \textit{w} is applied to the original dataset (\textit{D}) or the new one (\textit{Dnew}).
+  \end{itemize}
+ \end{framed}
+
+ \item Significance
+ \begin{enumerate}[I]
+  \item High impact
+  \item \textbf{Substantive impact}
+  \item Incremental value
+ \end{enumerate} 
+ 
+ \item Novelty
+ \begin{enumerate}[I]
+  \item Highly Creative
+  \item \textbf{Interesting Approach}
+  \item Routine Exercise
+ \end{enumerate} 
+ 
+ \item Technical Merit
+ \begin{enumerate}[I]
+  \item \textbf{Strong}
+  \item Acceptable
+  \item Questionable
+  \item Major errors
+ \end{enumerate} 
+ 
+ \item Presentation
+ \begin{enumerate}[I]
+  \item \textbf{Clear}
+  \item Needs improvement
+  \item Unreadable
+ \end{enumerate}
+ 
+ \item Detailed Evaluation (Contribution, Pros/Cons, Errors); please number each point
+ \begin{framed}
+  \begin{enumerate}
+    \item The problem and contributions are clearly stated in the section 1.  
+    \item At the end of section 2.1, the sentence ``A typical constraint is the \textit{Sakoe-Chiba Band}, which express \textit{w} as ...'' needs a citation.
+    \item Table 1 use \texttt{loopCount} variable in line 3. Should it be \texttt{index}?
+    \item Function calls in table 2 and 3 are different.  Parameter \textit{p} in table 3 should be explained.
+    \item In section 4.4, after figure 14, the sentence ``Likewise, in an expanded tech report that augments the paper [12], ...''.  It seems you are using the wrong citation. It should be [10].
+    \item References [1] and [17] do not follow the same author notation that the other references.
+  \end{enumerate}
+ \end{framed}
+ 
+ \item Revision Recommendation (Do you think the submission can meet SIGKDD standards with a limited revision?)
+ \begin{enumerate}[I]
+  \item \textbf{Yes}
+  \item No
+  \item Already meets SIGKDD standards
+ \end{enumerate}
+ 
+ \item If revision is recommended, list specific revisions you seek from the Authors
+ \begin{framed}
+  \begin{itemize}
+    \item Elaborate on the issues discussed at item 6.
+  \end{itemize}
+ \end{framed}
+ 
+ \item Your confidence in this review
+ \begin{enumerate}[I]
+  \item Expert
+  \item High
+  \item \textbf{Medium}
+  \item Low
+ \end{enumerate}
+ 
+\end{enumerate}
+
+\end{document}
