@@ -2,17 +2,17 @@ allpools = read.csv('allpools.txt', header = F)
 allpools$V4 = as.factor(allpools$V4)
 names(allpools) = c('R','G','B','P')
 
-finalpools = read.csv('finalpools.txt', header = F)
-finalpools = finalpools[,3:5]
-names(finalpools) = c('R','G','B')
-
-model = 'knn' 
+model = 'knn' # knn - svm - ctree - naive - rpart - mlp
 
 M=fit(P~.,allpools,model=model, task='c')
 P=predict(M,finalpools)
 thepredictions = P
 
-thelabels = c(0,1,0,0,0,0,0,1,0,0,0,0,0,1,1,0,0,1,0)
+finalpools = read.csv('newfinal.txt', header = F)
+finalpools = finalpools[,3:5]
+names(finalpools) = c('R','G','B')
+
+thelabels = c(0,0,0,1,0,0,0,0,0,0,1,0,0,1,1,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0)
 thelabels=as.factor(thelabels)
 print(mmetric(thelabels,thepredictions,"CONF")$conf) # confusion matrix
 
