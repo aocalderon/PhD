@@ -1,0 +1,9 @@
+\documentclass[a4paper,12pt]{article}
+\begin{document}
+
+\section*{Validation}
+Firstly, we used these 38 points as our ground truth. Specifically, we defined two classes (pools and no pools) and we found which of the cells belong to each class. Then, for each one of the points, we try to find in which cell it belongs, by flooring its coordinates. If it belongs to a pool cell then we label it as 1. Otherwise, the label is 0. 
+\par Apart from the ground truth, we also, use the testing set as the validation set. We used the kNN classifier that we trained in the classification section and we classified the testing set. Thus, we acquired our validation set. 
+\par We used the ground truth and the validation set to find the probability scores. After that, we plot the roc curve by using the plotroc function of Matlab, with parameters the ground truth and the validation set. Finally, we calculated the AUC (0.8646) by using the perfcurve function of Matlab. 
+
+\end{document}

@@ -1,0 +1,6 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGdefault{n}{t}\PYGdefault{p}{=}\PYGdefault{n}{dlmread}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZsq{}truth.txt\PYGdefaultZsq{}}\PYGdefault{p}{)}
+\PYGdefault{n}{s}\PYGdefault{p}{=}\PYGdefault{n}{dlmread}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZsq{}scores.txt\PYGdefaultZsq{}}\PYGdefault{p}{)}
+\PYGdefault{n}{plotroc}\PYGdefault{p}{(}\PYGdefault{n}{t}\PYGdefault{p}{,}\PYGdefault{n}{s}\PYGdefault{p}{)}
+\PYGdefault{p}{[}\PYGdefault{n}{X}\PYGdefault{p}{,}\PYGdefault{n}{Y}\PYGdefault{p}{,}\PYGdefault{n}{T}\PYGdefault{p}{,}\PYGdefault{n}{AUC}\PYGdefault{p}{]} \PYGdefault{p}{=}\PYGdefault{n}{perfcurve}\PYGdefault{p}{(}\PYGdefault{n}{t}\PYGdefault{p}{(}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{,:),}\PYGdefault{n}{s}\PYGdefault{p}{(}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{,:),}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{);}
+\end{Verbatim}

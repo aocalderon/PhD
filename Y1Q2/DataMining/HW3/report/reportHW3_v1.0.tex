@@ -1,14 +1,10 @@
 \documentclass{article}
 
-\usepackage{alltt}
 \usepackage{graphicx}
-\usepackage{minted}
-\usepackage{xcolor}
-\usepackage{placeins}
 \usepackage[margin=3cm]{geometry}
-\usepackage{booktabs}
-\usepackage{subcaption}
-\usepackage{amsmath}
+\usepackage{appendix}
+\usepackage{placeins}
+\usepackage{minted}
 \usepackage{hyperref}
 \hypersetup{
 colorlinks=false,
@@ -25,47 +21,93 @@ hidelinks
    Andres Calderon\\
   \small \texttt{acald013@ucr.edu}
 }
+
 \begin{document}
 \maketitle
 
 \section{Data}
-EarthExplorer\footnote{\url{http://earthexplorer.usgs.gov/}} is a website where USGS makes available a large repository of satellite imagery for scientific purposes.  We downloaded a scene from a suburb of Riverside using the High Resolution Orthoimagery dataset.  The initial scene was large, so we sample two images (figures \ref{fig:image1} and \ref{fig:image2}) which collect enough and diverse types of objects.  For this assignment, we decided to classify pools.
+EarthExplorer\footnote{\url{http://earthexplorer.usgs.gov/}} is a website where the U.S. Geological Survey makes available a large repository of satellite imagery for scientific purposes.  We downloaded a scene from a suburb of Riverside using the High Resolution Orthoimagery dataset.  The initial scene was large, so we sample two images (figures \ref{fig:image1} and \ref{fig:image2}) which collect enough and diverse types of objects.  For this assignment, we decided to classify pools.
 
-\begin{figure}
+For the first image we collected a total of 100 points, 50 of them where pools and the remaining were not pools, as our training set (Listing \ref{lst:hw3}).
+
+\begin{figure}[h]
  \centering
- \includegraphics[trim=10 60 10 50 , clip, width=0.9\textwidth]{../figures/image1.pdf}
+ \includegraphics[trim=10 60 10 50 , clip, width=0.8\textwidth]{../figures/image1.pdf}
  \caption{First image used for training.}
  \label{fig:image1}
 \end{figure}
 
 \begin{figure}
  \centering
- \includegraphics[trim=10 60 10 50 , clip, width=0.9\textwidth]{../figures/image2.pdf}
+ \includegraphics[trim=10 60 10 50 , clip, width=0.8\textwidth]{../figures/image2.pdf}
  \caption{Second image used for validation.}
  \label{fig:image2}
 \end{figure}
 
-For the first image we collected a total of 100 points, 50 of them where pools and the remaining were not pools as our training set.
+\FloatBarrier
 
-\section{Classification}
-For the classification part, we trained a kNN classifier using the training set.  We used the rminer\footnote{\url{https://cran.r-project.org/web/packages/rminer/index.html}} package provided by the R project (\url{https://www.r-project.org/}) using the default parameters. 
+\section{Classification}\label{sec:class}
+For the classification part, we trained a \texttt{kNN} classifier using the training set.  We used the \texttt{rminer}\footnote{\url{https://cran.r-project.org/web/packages/rminer/index.html}} package, provided by the R project statistical software (\url{https://www.r-project.org/}), using the default parameters. 
 
 \section{Validation}
-For validation, we used the second image to collect a group of 50 points as our testing set. We created a grid of 50x50 pixels in which we checked how many of testing points belong to the same cell (figure \ref{fig:locations}). If more than one point belongs to the same cell, we keep just one of them. As a result, we kept 38 valid points. 
+For validation, we used the second image to collect a group of 50 points as our testing set. We created a grid of \texttt{50x50} pixels in which we checked how many of testing points belong to the same cell (figure \ref{fig:locations}). If more than one point belongs to the same cell, we keep just one of them. As a result, we kept 38 valid points. 
 
 \begin{figure}
  \centering
- \includegraphics[trim=80 60 70 50 , clip, width=1\textwidth]{../figures/grid3.pdf}
+ \includegraphics[trim=80 60 70 50 , clip, width=0.8\textwidth]{../figures/grid3.pdf}
  \caption{Locations for validation set in second image.}
  \label{fig:locations}
 \end{figure}
 
+Firstly, we used these 38 points as our ground truth. Specifically, we defined two classes (pools and no pools) and we found which of the cells belong to each class. Then, for each one of the points, we try to find in which cell it belongs, by flooring its coordinates. If it belongs to a pool cell then we label it as 1 (true positive). Otherwise, the label is 0 (false positive).  Listing \ref{lst:validation} shows the code we used. 
+
+Apart from the ground truth, we also, use the testing set as the validation set. We used the \texttt{kNN} classifier that we trained in section \ref{sec:class} and we classified the testing set to obtain the probability scores. After that, we plot the ROC curve (figure \ref{fig:roc}) by using the \texttt{plotroc} function of \texttt{Matlab}, with the ground truth and the scores as parameters. Finally, we calculated the \texttt{AUC} (0.8646) by using the \texttt{perfcurve} function of \texttt{Matlab} (Listing \ref{lst:ourroc}).
+
 \begin{figure}
  \centering
- \includegraphics[trim=80 150 70 50 , clip, width=0.7\textwidth]{../figures/roc.pdf}
- \caption{Locations for validation set in second image.}
+ \includegraphics[trim=80 150 70 50 , clip, width=0.5\textwidth]{../figures/roc.pdf}
+ \caption{ROC curve as result of the validation. The \texttt{AUC} of the curve is 0.8646.}
  \label{fig:roc}
 \end{figure}
-ROC
-AUC
+
+
+\FloatBarrier
+
+\newpage
+
+\begin{appendices}
+\section{Code}
+
+\begin{listing}
+  \inputminted[
+    fontsize=\footnotesize,
+    tabsize=2,
+    frame=single,
+    linenos
+  ]{matlab}{hw3.m}
+  \caption{Code for point collection.}\label{lst:hw3}
+\end{listing}
+
+\begin{listing}
+  \inputminted[
+    fontsize=\footnotesize,
+    tabsize=2,
+    frame=single,
+    linenos
+  ]{matlab}{validation.m}
+  \caption{Code for collection of true or false positive points.}\label{lst:validation}
+\end{listing}
+
+\begin{listing}
+  \inputminted[
+    fontsize=\footnotesize,
+    tabsize=2,
+    frame=single,
+    linenos
+  ]{matlab}{ourroc1.m}
+  \caption{Code for \texttt{ROC} and \texttt{AUC} computing.}\label{lst:ourroc}
+\end{listing}
+
+\end{appendices}
+
 \end{document}

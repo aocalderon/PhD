@@ -1,0 +1,36 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGdefault{k}{function}\PYGdefault{+w}{ }\PYGdefault{n+nf}{validation}\PYGdefault{p}{()}
+\PYGdefault{+w}{	}\PYGdefault{n}{validateset}\PYGdefault{p}{=}\PYGdefault{n}{dlmread}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZsq{}valpools.csv\PYGdefaultZsq{}}\PYGdefault{p}{);}
+	\PYGdefault{n}{truegrid}\PYGdefault{p}{=}\PYGdefault{n}{dlmread}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZsq{}newpools\PYGdefaultZus{}indeed.txt\PYGdefaultZsq{}}\PYGdefault{p}{);}
+	\PYGdefault{n}{truegridx}\PYGdefault{p}{=}\PYGdefault{n}{truegrid}\PYGdefault{p}{(:,}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{);}
+	\PYGdefault{n}{truegridy}\PYGdefault{p}{=}\PYGdefault{n}{truegrid}\PYGdefault{p}{(:,}\PYGdefault{l+m+mi}{2}\PYGdefault{p}{);}
+	\PYGdefault{n}{x} \PYGdefault{p}{=} \PYGdefault{n}{modulo}\PYGdefault{p}{(}\PYGdefault{n}{validateset}\PYGdefault{p}{(:,}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{));}
+	\PYGdefault{n}{y} \PYGdefault{p}{=} \PYGdefault{n}{modulo}\PYGdefault{p}{(}\PYGdefault{n}{validateset}\PYGdefault{p}{(:,}\PYGdefault{l+m+mi}{2}\PYGdefault{p}{));}
+	\PYGdefault{n}{validationgrids}\PYGdefault{p}{=}\PYGdefault{n}{horzcat}\PYGdefault{p}{(}\PYGdefault{n}{x}\PYGdefault{p}{,}\PYGdefault{n}{y}\PYGdefault{p}{);}
+	\PYGdefault{n}{poolmap}\PYGdefault{p}{=}\PYGdefault{n}{containers}\PYGdefault{p}{.}\PYGdefault{n}{Map}\PYGdefault{p}{();}
+
+	\PYGdefault{k}{for} \PYGdefault{n+nb}{i}\PYGdefault{p}{=}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{:}\PYGdefault{n+nb}{numel}\PYGdefault{p}{(}\PYGdefault{n}{x}\PYGdefault{p}{)}
+		\PYGdefault{n}{flag}\PYGdefault{p}{=}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{;}
+		\PYGdefault{k}{for} \PYGdefault{n+nb}{j}\PYGdefault{p}{=}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{:}\PYGdefault{n+nb}{numel}\PYGdefault{p}{(}\PYGdefault{n}{truegridx}\PYGdefault{p}{)}
+			\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{x}\PYGdefault{p}{(}\PYGdefault{n+nb}{i}\PYGdefault{p}{)}\PYGdefault{o}{==}\PYGdefault{n}{truegridx}\PYGdefault{p}{(}\PYGdefault{n+nb}{j}\PYGdefault{p}{)} \PYGdefault{o}{\PYGdefaultZam{}\PYGdefaultZam{}} \PYGdefault{n}{y}\PYGdefault{p}{(}\PYGdefault{n+nb}{i}\PYGdefault{p}{)}\PYGdefault{o}{==}\PYGdefault{n}{truegridy}\PYGdefault{p}{(}\PYGdefault{n+nb}{j}\PYGdefault{p}{))}
+				\PYGdefault{n}{key}\PYGdefault{p}{=}\PYGdefault{n}{sprintf}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZsq{}\PYGdefaultZpc{}d,\PYGdefaultZpc{}d\PYGdefaultZsq{}}\PYGdefault{p}{,}\PYGdefault{n}{x}\PYGdefault{p}{(}\PYGdefault{n+nb}{i}\PYGdefault{p}{),} \PYGdefault{n}{y}\PYGdefault{p}{(}\PYGdefault{n+nb}{i}\PYGdefault{p}{));}
+				\PYGdefault{n}{poolmap}\PYGdefault{p}{(}\PYGdefault{n}{key}\PYGdefault{p}{)=}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{;}
+				\PYGdefault{n}{flag}\PYGdefault{p}{=}\PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
+				\PYGdefault{k}{break}\PYGdefault{p}{;}
+			\PYGdefault{k}{end}
+		\PYGdefault{k}{end}
+		\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{flag}\PYGdefault{o}{==}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{)}
+			\PYGdefault{n}{key}\PYGdefault{p}{=}\PYGdefault{n}{sprintf}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZsq{}\PYGdefaultZpc{}d,\PYGdefaultZpc{}d\PYGdefaultZsq{}}\PYGdefault{p}{,}\PYGdefault{n}{x}\PYGdefault{p}{(}\PYGdefault{n+nb}{i}\PYGdefault{p}{),} \PYGdefault{n}{y}\PYGdefault{p}{(}\PYGdefault{n+nb}{i}\PYGdefault{p}{));}
+			\PYGdefault{n}{poolmap}\PYGdefault{p}{(}\PYGdefault{n}{key}\PYGdefault{p}{)=}\PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
+		\PYGdefault{k}{end}
+	\PYGdefault{k}{end}
+	\PYGdefault{n}{keys}\PYGdefault{p}{(}\PYGdefault{n}{poolmap}\PYGdefault{p}{)}
+	\PYGdefault{n}{values}\PYGdefault{p}{(}\PYGdefault{n}{poolmap}\PYGdefault{p}{)}
+
+\PYGdefault{k}{	function}[x]\PYGdefault{p}{=}\PYGdefault{n+nf}{modulo}\PYGdefault{p}{(}x\PYGdefault{p}{)}
+\PYGdefault{+w}{		}\PYGdefault{k}{for} \PYGdefault{n+nb}{i}\PYGdefault{p}{=}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{:}\PYGdefault{n+nb}{numel}\PYGdefault{p}{(}\PYGdefault{n}{x}\PYGdefault{p}{)}
+			\PYGdefault{n}{x}\PYGdefault{p}{(}\PYGdefault{n+nb}{i}\PYGdefault{p}{)=}\PYGdefault{n}{x}\PYGdefault{p}{(}\PYGdefault{n+nb}{i}\PYGdefault{p}{)}\PYGdefault{o}{\PYGdefaultZhy{}}\PYGdefault{n+nb}{mod}\PYGdefault{p}{(}\PYGdefault{n}{x}\PYGdefault{p}{(}\PYGdefault{n+nb}{i}\PYGdefault{p}{),}\PYGdefault{l+m+mi}{50}\PYGdefault{p}{);}
+		\PYGdefault{k}{end}
+	\PYGdefault{k}{end}
+\PYGdefault{k}{end}
+\end{Verbatim}
