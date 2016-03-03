@@ -48,30 +48,10 @@ EarthExplorer\footnote{\url{http://earthexplorer.usgs.gov/}} is a website where 
 For the first image we collected a total of 100 points, 50 of them where pools and the remaining were not pools as our training set.
 
 \section{Classification}
-For the classification part, we trained a kNN classifier using the training set.  We used the rminer\footnote{\url{https://cran.r-project.org/web/packages/rminer/index.html}} package provided by the R project (\url{https://www.r-project.org/}) using the default parameters. 
-
-\begin{figure}
- \centering
- \includegraphics[trim=80 60 70 50 , clip, width=1\textwidth]{../figures/grid2.pdf}
- \caption{Details of the grid displayed in second image for validation.}
- \label{fig:grid}
-\end{figure}
-
-\begin{figure}
- \centering
- \includegraphics[trim=80 60 70 50 , clip, width=1\textwidth]{../figures/grid3.pdf}
- \caption{Locations for validation set in second image.}
- \label{fig:locations}
-\end{figure}
+For the classification part, we trained a \texttt{kNN} classifier using the training set.  We used the \texttt{rminer}\footnote{\url{https://cran.r-project.org/web/packages/rminer/index.html}} package, provided by the R project statistical software (\url{https://www.r-project.org/}), using the default parameters. 
 
 \section{Validation}
-
-\begin{figure}
- \centering
- \includegraphics[trim=80 60 70 50 , clip, width=1\textwidth]{../figures/grid2.pdf}
- \caption{Details of the grid displayed in second image for validation.}
- \label{fig:grid}
-\end{figure}
+For validation, we used the second image to collect a group of 50 points as our testing set. We created a grid of \texttt{50x50} pixels in which we checked how many of testing points belong to the same cell (figure \ref{fig:locations}). If more than one point belongs to the same cell, we keep just one of them. As a result, we kept 38 valid points. 
 
 \begin{figure}
  \centering
@@ -79,13 +59,16 @@ For the classification part, we trained a kNN classifier using the training set.
  \caption{Locations for validation set in second image.}
  \label{fig:locations}
 \end{figure}
+
+Firstly, we used these 38 points as our ground truth. Specifically, we defined two classes (pools and no pools) and we found which of the cells belong to each class. Then, for each one of the points, we try to find in which cell it belongs, by flooring its coordinates. If it belongs to a pool cell then we label it as 1. Otherwise, the label is 0. 
+\par Apart from the ground truth, we also, use the testing set as the validation set. We used the \texttt{kNN} classifier that we trained in the classification section and we classified the testing set. Thus, we acquired our validation set. 
+\par We used the ground truth and the validation set to find the probability scores. After that, we plot the ROC curve by using the \texttt{plotroc} function of \texttt{Matlab}, with parameters the ground truth and the validation set. Finally, we calculated the AUC (0.8646) by using the \texttt{perfcurve} function of \texttt{Matlab}.
 
 \begin{figure}
  \centering
  \includegraphics[trim=80 150 70 50 , clip, width=0.7\textwidth]{../figures/roc.pdf}
- \caption{Locations for validation set in second image.}
+ \caption{ROC curve as result of the validation. The AUC of the curve is 0.8646.}
  \label{fig:roc}
 \end{figure}
-ROC
-AUC
+
 \end{document}

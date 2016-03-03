@@ -1,0 +1,25 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGdefault{k}{function}\PYGdefault{+w}{ }\PYGdefault{n+nf}{hw3}\PYGdefault{p}{()}
+\PYGdefault{+w}{	}\PYGdefault{n}{im}\PYGdefault{p}{=}\PYGdefault{n}{imread}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZsq{}pools3b.tif\PYGdefaultZsq{}}\PYGdefault{p}{);}
+	\PYGdefault{n}{im}\PYGdefault{p}{=}\PYGdefault{n}{im}\PYGdefault{p}{(:,:,}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{:}\PYGdefault{l+m+mi}{3}\PYGdefault{p}{);}
+	\PYGdefault{n}{image}\PYGdefault{p}{(}\PYGdefault{n}{im}\PYGdefault{p}{)}
+	\PYGdefault{p}{[}\PYGdefault{n}{x}\PYGdefault{p}{,}\PYGdefault{n}{y}\PYGdefault{p}{]=}\PYGdefault{n}{ginput}\PYGdefault{p}{(}\PYGdefault{l+m+mi}{50}\PYGdefault{p}{)}
+	\PYGdefault{n}{dlmwrite}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZsq{}coords.txt\PYGdefaultZsq{}}\PYGdefault{p}{,}\PYGdefault{n}{horzcat}\PYGdefault{p}{(}\PYGdefault{n}{x}\PYGdefault{p}{,}\PYGdefault{n}{y}\PYGdefault{p}{))}
+	\PYGdefault{n}{d} \PYGdefault{p}{=} \PYGdefault{n}{function1}\PYGdefault{p}{(}\PYGdefault{n}{x}\PYGdefault{p}{,}\PYGdefault{n}{y}\PYGdefault{p}{);}
+	\PYGdefault{n}{display}\PYGdefault{p}{(}\PYGdefault{n}{d}\PYGdefault{p}{)}
+	\PYGdefault{n}{dlmwrite}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZsq{}newvalpools2.txt\PYGdefaultZsq{}}\PYGdefault{p}{,}\PYGdefault{n}{d}\PYGdefault{p}{)}
+
+\PYGdefault{k}{	function}[data]\PYGdefault{p}{=}\PYGdefault{n+nf}{function1}\PYGdefault{p}{(}x,y\PYGdefault{p}{)}
+\PYGdefault{+w}{		}\PYGdefault{k}{for} \PYGdefault{n+nb}{i}\PYGdefault{p}{=}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{:}\PYGdefault{n+nb}{numel}\PYGdefault{p}{(}\PYGdefault{n}{x}\PYGdefault{p}{)}
+			\PYGdefault{n}{x1}\PYGdefault{p}{=}\PYGdefault{n}{x}\PYGdefault{p}{(}\PYGdefault{n+nb}{i}\PYGdefault{p}{);}
+			\PYGdefault{n}{y1}\PYGdefault{p}{=}\PYGdefault{n}{y}\PYGdefault{p}{(}\PYGdefault{n+nb}{i}\PYGdefault{p}{);}
+			\PYGdefault{n}{red}\PYGdefault{p}{(}\PYGdefault{n+nb}{i}\PYGdefault{p}{)=}\PYGdefault{n}{im}\PYGdefault{p}{(}\PYGdefault{n+nb}{round}\PYGdefault{p}{(}\PYGdefault{n}{y1}\PYGdefault{p}{),}\PYGdefault{n+nb}{round}\PYGdefault{p}{(}\PYGdefault{n}{x1}\PYGdefault{p}{),}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{);}
+			\PYGdefault{n}{green}\PYGdefault{p}{(}\PYGdefault{n+nb}{i}\PYGdefault{p}{)=}\PYGdefault{n}{im}\PYGdefault{p}{(}\PYGdefault{n+nb}{round}\PYGdefault{p}{(}\PYGdefault{n}{y1}\PYGdefault{p}{),}\PYGdefault{n+nb}{round}\PYGdefault{p}{(}\PYGdefault{n}{x1}\PYGdefault{p}{),}\PYGdefault{l+m+mi}{2}\PYGdefault{p}{);}
+			\PYGdefault{n}{blue}\PYGdefault{p}{(}\PYGdefault{n+nb}{i}\PYGdefault{p}{)=}\PYGdefault{n}{im}\PYGdefault{p}{(}\PYGdefault{n+nb}{round}\PYGdefault{p}{(}\PYGdefault{n}{y1}\PYGdefault{p}{),}\PYGdefault{n+nb}{round}\PYGdefault{p}{(}\PYGdefault{n}{x1}\PYGdefault{p}{),}\PYGdefault{l+m+mi}{3}\PYGdefault{p}{);}
+			\PYGdefault{n}{class}\PYGdefault{p}{(}\PYGdefault{n+nb}{i}\PYGdefault{p}{)=}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{;}
+		\PYGdefault{k}{end}
+		\PYGdefault{n}{data}\PYGdefault{p}{=[}\PYGdefault{n}{red}\PYGdefault{p}{;}\PYGdefault{n}{green}\PYGdefault{p}{;}\PYGdefault{n}{blue}\PYGdefault{p}{;}\PYGdefault{n}{class}\PYGdefault{p}{];}
+		\PYGdefault{n}{data}\PYGdefault{p}{=}\PYGdefault{n}{transpose}\PYGdefault{p}{(}\PYGdefault{n}{data}\PYGdefault{p}{);}
+	\PYGdefault{k}{end}
+\PYGdefault{k}{end}
+\end{Verbatim}
