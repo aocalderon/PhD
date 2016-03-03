@@ -1,0 +1,91 @@
+\documentclass{article}
+
+\usepackage{alltt}
+\usepackage{graphicx}
+\usepackage{minted}
+\usepackage{xcolor}
+\usepackage{placeins}
+\usepackage[margin=3cm]{geometry}
+\usepackage{booktabs}
+\usepackage{subcaption}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\hypersetup{
+colorlinks=false,
+hidelinks
+}
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0.5em}
+
+\title{Homework 3 Report}
+\author{
+   Christina Pavlopoulou\\
+  \small \texttt{cpavl001@ucr.edu}
+  \and
+   Andres Calderon\\
+  \small \texttt{acald013@ucr.edu}
+}
+\begin{document}
+\maketitle
+
+\section{Data}
+EarthExplorer\footnote{\url{http://earthexplorer.usgs.gov/}} is a website where USGS makes available a large repository of satellite imagery for scientific purposes.  We downloaded a scene from a suburb of Riverside using the High Resolution Orthoimagery dataset.  The initial scene was large, so we sample two images (figures \ref{fig:image1} and \ref{fig:image2}) which collect enough and diverse types of objects.  For this assignment, we decided to classify pools.
+
+\begin{figure}
+ \centering
+ \includegraphics[trim=10 60 10 50 , clip, width=0.9\textwidth]{../figures/image1.pdf}
+ \caption{First image used for training.}
+ \label{fig:image1}
+\end{figure}
+
+\begin{figure}
+ \centering
+ \includegraphics[trim=10 60 10 50 , clip, width=0.9\textwidth]{../figures/image2.pdf}
+ \caption{Second image used for validation.}
+ \label{fig:image2}
+\end{figure}
+
+For the first image we collected a total of 100 points, 50 of them where pools and the remaining were not pools as our training set.
+
+\section{Classification}
+For the classification part, we trained a kNN classifier using the training set.  We used the rminer\footnote{\url{https://cran.r-project.org/web/packages/rminer/index.html}} package provided by the R project (\url{https://www.r-project.org/}) using the default parameters. 
+
+\begin{figure}
+ \centering
+ \includegraphics[trim=80 60 70 50 , clip, width=1\textwidth]{../figures/grid2.pdf}
+ \caption{Details of the grid displayed in second image for validation.}
+ \label{fig:grid}
+\end{figure}
+
+\begin{figure}
+ \centering
+ \includegraphics[trim=80 60 70 50 , clip, width=1\textwidth]{../figures/grid3.pdf}
+ \caption{Locations for validation set in second image.}
+ \label{fig:locations}
+\end{figure}
+
+\section{Validation}
+
+\begin{figure}
+ \centering
+ \includegraphics[trim=80 60 70 50 , clip, width=1\textwidth]{../figures/grid2.pdf}
+ \caption{Details of the grid displayed in second image for validation.}
+ \label{fig:grid}
+\end{figure}
+
+\begin{figure}
+ \centering
+ \includegraphics[trim=80 60 70 50 , clip, width=1\textwidth]{../figures/grid3.pdf}
+ \caption{Locations for validation set in second image.}
+ \label{fig:locations}
+\end{figure}
+
+\begin{figure}
+ \centering
+ \includegraphics[trim=80 150 70 50 , clip, width=0.7\textwidth]{../figures/roc.pdf}
+ \caption{Locations for validation set in second image.}
+ \label{fig:roc}
+\end{figure}
+ROC
+AUC
+\end{document}
