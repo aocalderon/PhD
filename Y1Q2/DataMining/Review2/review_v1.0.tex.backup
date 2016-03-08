@@ -1,0 +1,140 @@
+\documentclass{article}
+
+\usepackage[margin=2cm]{geometry}
+\usepackage{enumerate}
+\usepackage{framed}
+\usepackage{hyperref}
+\hypersetup{
+colorlinks=false,
+hidelinks
+}
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0.5em}
+
+\title{Paper Review}
+\author{Andres Calderon \\ acald013@ucr.edu}
+\begin{document}
+\maketitle
+
+\section[Review form]{Review form\footnote{Selected option is in bold.}}
+\begin{enumerate}
+ \item Submission Category [as indicated by authors]
+ \begin{enumerate}[I]
+  \item Regular Research
+  \item Experiments and Analyses
+  \item Innovative Systems and Applications
+  \item Vision
+ \end{enumerate}
+ 
+ \item Relevance to SIGKDD
+ \begin{enumerate}[I]
+  \item High
+  \item \textbf{Adequate}
+  \item Should submit to alternative forum
+ \end{enumerate}
+
+ \item Overall Rating
+ \begin{enumerate}[I]
+  \item Strong Accept
+  \item Accept
+  \item Weak Accept
+  \item Weak Reject
+  \item \textbf{Reject}
+  \item Strong Reject
+ \end{enumerate}
+ 
+ \item Justification of your overall recommendation (one paragraph) \\ 
+ \begin{framed}
+  The paper introduces a novel approach to detecting multiple periods for events from time series.  It is successful in proving the importance and complexity of the problem as well as proposing a suitable solution.  However, there are substantial weaknesses during the experimental evaluation which deserve considerable attention.
+ \end{framed}
+ 
+ \item List major strong points of the paper (if any) \\ 
+ \begin{framed}
+  \begin{itemize}
+    \item It states clearly the importance of multiple periodicity detection under difficult, but real, situations such as incompleteness and irregularity in the observations.
+    \item It presents a set of definitions and equations that help to develop a scoring function to measure the quality of the periods.
+    \item It proves that finding the periods which maximize the scoring function is an NP-hard problem.
+    \item It proposes a suitable heuristic algorithm to solve the problem. 
+  \end{itemize}
+ \end{framed}
+ 
+ \item List major weak points of the paper (if any) \\ 
+ \begin{framed}
+  \begin{itemize}
+    \item The evaluation section is strongly based on synthetically generated datasets. Although it states the steps for data generation, it fails to explain why it uses specific parameters and sets default values.  It also assumes uniform distribution and probabilities which certainly deserve more explanation.
+    \item Even though it considers real data sets, the discussion around them is rather simple. It focuses on finding just two particular periods and it claims that TiCom is the only one able to find them.  It is unknown if there are more periods in the datasets that TiCom is unable to find but other methods can.
+    \item The study is not reproducible. Neither data nor implementations are available for evaluation.
+  \end{itemize}
+ \end{framed}
+
+ \item Significance
+ \begin{enumerate}[I]
+  \item High impact
+  \item \textbf{Substantive impact}
+  \item Incremental value
+ \end{enumerate} 
+ 
+ \item Novelty
+ \begin{enumerate}[I]
+  \item Highly Creative
+  \item \textbf{Interesting Approach}
+  \item Routine Exercise
+ \end{enumerate} 
+ 
+ \item Technical Merit
+ \begin{enumerate}[I]
+  \item Strong
+  \item Acceptable
+  \item \textbf{Questionable}
+  \item Major errors
+ \end{enumerate} 
+ 
+ \item Presentation
+ \begin{enumerate}[I]
+  \item Clear
+  \item \textbf{Needs improvement}
+  \item Unreadable
+ \end{enumerate}
+ 
+ \item Detailed Evaluation (Contribution, Pros/Cons, Errors); please number each point
+ \begin{framed}
+  \begin{enumerate}
+    \item It states challenges, problem and contributions clearly in section 1.
+    \item Pros: It proposes a general framework for periodicity detection, proves that deals with the current problem is not trivial and design a (theoretical) effective and efficient solution.
+    \item Cons: It fails to evaluate appropriately the proposed algorithm.
+    \item There is a typo in definition 4.  It should be ``\textit{... pattern p ...}'' instead of ``\textit{... patter p ...}''.
+    \item Figure 3 does not match the example from figure 2. For example, the text refers to timeslot $P_{[7:2]}$ but the figure shows $P_{[7:1]}$. 
+    \item First paragraph in section 4.2 refers to ``Definition 7'' which does not exits.  It should be Definition 6.
+    \item In Algorithm 1, the symbol $\boldmath\emptyset$ should be more appropriate to denote the empty set instead of $\boldmath\Phi$ (phi).
+    \item There is a typo in last paragraph of section 4.2. It should be  ``\textit{... we can reduce the vertex cover problem ...}'' instead of ``\textit{... we can reduce the the vertex cover problem ...}''.
+    \item Last paragraph in section 4.3 refers to ``Equation 6'' which does not exits.
+    \item It would be very useful additional examples and elaboration in the concepts explained at the end of section 4.3.
+    \item There is a typo in paragraph 4 of section 5.2. It should be ``If aligning the observations ...'' instead of ``If aligning the obesevations ...''.
+  \end{enumerate}
+ \end{framed}
+ 
+ \item Revision Recommendation (Do you think the submission can meet SIGKDD standards with a limited revision?)
+ \begin{enumerate}[I]
+  \item \textbf{Yes}
+  \item No
+  \item Already meets SIGKDD standards
+ \end{enumerate}
+ 
+ \item If revision is recommended, list specific revisions you seek from the Authors
+ \begin{framed}
+  \begin{itemize}
+    \item The experimental section needs to be rethought. It would be important to apply similar experiments but now focusing on real data. 
+  \end{itemize}
+ \end{framed}
+ 
+ \item Your confidence in this review
+ \begin{enumerate}[I]
+  \item Expert
+  \item High
+  \item \textbf{Medium}
+  \item Low
+ \end{enumerate}
+ 
+\end{enumerate}
+
+\end{document}
