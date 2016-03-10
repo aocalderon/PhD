@@ -1,0 +1,5 @@
+system.time(source('simulation_iris.R'))
+system.time(source('simulation_zoo.R'))
+#system.time(source('simulation_seeds.R'))
+#system.time(source('simulation_wine.R'))
+#system.time(source('simulation_cancer.R'))
