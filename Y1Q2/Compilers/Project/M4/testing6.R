@@ -16,7 +16,7 @@ plotSpline2 = function(x, y, dataset, k, plotExtras = F){
 }
 
 datasets = c('iris', 'zoo', 'seeds', 'wine', 'cancer')
-datasets = c('iris', 'seeds', 'wine')
+datasets = c('iris', 'zoo', 'seeds', 'wine')
 ani.options(interval=0.5,autobrowse=F)
 
 for(dataset in datasets[1:length(datasets)]){
@@ -35,6 +35,6 @@ for(dataset in datasets[1:length(datasets)]){
   }, movie.name = paste0(dataset,".gif"))
 }
 for(dataset in datasets[1:length(datasets)]){
-  file.copy(sprintf('%s.gif',dataset),sprintf('Temp2/%s.gif',dataset))
+  file.copy(sprintf('%s.gif',dataset),sprintf('Temp2/%s.gif',dataset), overwrite = T)
   file.remove(sprintf('%s.gif',dataset))
 }
