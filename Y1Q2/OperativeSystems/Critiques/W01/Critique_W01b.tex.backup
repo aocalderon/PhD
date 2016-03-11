@@ -1,0 +1,36 @@
+\documentclass[a4paper,10pt]{scrartcl}
+\usepackage[hmargin=2.5cm,vmargin=3cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\hypersetup{
+colorlinks=false,
+hidelinks
+}
+
+%opening
+\title{Critique Week 1}
+\author{Andres Calderon - SID:861243796}
+
+\begin{document}
+
+\maketitle
+\section*{SPIN - An Extensible Microkernel for Application-specific Operating System Services (Bershad, 1995)}
+The paper recognizes the evolving environment of current computers systems, which is still true.  Certainly, there are new needs for each more exigent applications and systems and Operative Systems should evolve accordingly in order to support those requirements. The authors proposes SPIN with the intention of address the requirements of the ``coming generation of \textit{resource-intense} applications''. The main idea of SPIN is that specific services and resources should be loaded as code sequences and installed in the kernel at runtime. It will allow different implementations and alternatives of existing interfaces according to the application's needs.
+
+SPIN tenet is adaptability.  It support it through an extensible microkernel where its application-specific components are called spindles.  The advantage of use spindles is that it allows the customization of interfaces and implementations for just those required kernel services. It is worth to note that authors states: ``By allowing applications to participate in the implementation of services, we permit them to make informed decisions about their resources requirements''.  That gives some degree of responsibility to developers taking into account that they will know much better which kind of requirements should cover.
+
+Spin deals with resources management through two-level of resource allocation: system and user allocators.  The former manages global resources, such as CPUs or network interfaces, while the latter manages private resources previously acquired.  Just the system allocator is able to reclaim resources when they are needed. Also, it is interesting to note that although each application can implement its own allocator, they are free to use default policies.
+
+Adaptability is the key principle in SPIN. The best way to achieve it is using an actual programing language that allows application to define and install new interfaces at kernel level. The main concern around this is how to perform secure compilation without penalize performance.  Type safety and well-define interfaces are proposed to ensure legal operations but more advanced techniques and compilation technology are needed to ensure good performance.
+
+Similarly to exokernel, the principle
+
+% \begin{thebibliography}{9}
+% \bibitem{github} 
+% Andres Calderon.
+% \textit{GitHub Personal Repository}, 2015. 
+% \url{https://github.com/aocalderon/PhD/tree/master/Y1Q1/GPU/lab3}.
+% \end{thebibliography}
+
+\end{document}

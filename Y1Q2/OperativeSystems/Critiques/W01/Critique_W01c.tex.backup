@@ -1,0 +1,37 @@
+\documentclass[a4paper,10pt]{scrartcl}
+\usepackage[hmargin=2.5cm,vmargin=3cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\hypersetup{
+colorlinks=false,
+hidelinks
+}
+
+%opening
+\title{Critique Week 1}
+\author{Andres Calderon - SID:861243796}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+
+\section*{On Micro-Kernel Construction (Liedtke, 1995)}
+The paper addresses the notion that $\mu$-kernels are inefficient and lack of flexibility.  The author presents solid evidence through well-organized experiments and rationale to refute those arguments.  This study conducts a conceptual analysis of main $\mu$-kernel concepts, their flexibility and performance.  Finally, it explains why $\mu$-kernels should be accepted inherently not portable and makes interesting comparisons with new $\mu$-kernels developments at that time.
+
+The discussion starts exploring key concepts that a kernel should implement, namely address spaces, threads and IPC and unique identifiers.  They are the minimal primitives which could ensure the principles of independence and integrity.  The details explained by each of these concepts are later used to illustrate their flexibility in the implementation of diverse applications such as memory managers, pagers or device drivers. As a conclusion the author states that just a small set of primitives lead to abstractions which stress the flexibility of the system.
+
+Later, the paper addresses performance issues related with switching costs (particularly kernel-user, address space and thread switches) and memory effects. In general, the discussion lead to conclude that ``mode switches are not a serious conceptual problem but an implementation one''. Similarly, though a careful analysis, the author shows that memory system degradation in $\mu$-kernels is not substantiated and it is related to a specific implementation.
+
+
+
+Personally, I think it is a very well structure paper.  It introduces some assumptions (facts \& rumors) and addressed them in a quite organized manner.  Conclusions at the end of each sections are concise and based on clear and well elaborated evidence. Although some details are too technical and comparisons with platforms at the time are no longer valid, the deployment of the experiments and analysis of the results are sufficiently strong.  It is clear that the key ideas of $\mu$-kernels are solid and proper and tested implementations are needed during construction in order to take real advantage of the $\mu$-kernel concepts.   
+
+% \begin{thebibliography}{9}
+% \bibitem{github} 
+% Andres Calderon.
+% \textit{GitHub Personal Repository}, 2015. 
+% \url{https://github.com/aocalderon/PhD/tree/master/Y1Q1/GPU/lab3}.
+% \end{thebibliography}
+
+\end{document}

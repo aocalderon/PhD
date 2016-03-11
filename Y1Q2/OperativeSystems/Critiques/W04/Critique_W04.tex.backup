@@ -1,0 +1,37 @@
+\documentclass[a4paper,10pt]{scrartcl}
+\usepackage[hmargin=2.5cm,vmargin=3cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\hypersetup{
+colorlinks=false,
+hidelinks
+}
+
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0.5em}
+
+%opening
+\title{Critique Week 4}
+\author{Andres Calderon - SID:861243796}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+
+\section*{Transactional Memory - Architecture Support for Lock-Free Data Structures (Herlihy and Moss, 1993)}
+The paper introduces transactional memory (TM), a novel multiprocessor  architecture designed to address common problems of traditional locking techniques.  It extends the cache coherence protocol by defining custom read-modify-write operations.  One important goal of the author was that TM should be at least as efficient and easy to use as previous methods.
+
+There are three main problems in locking: priority inversion, convoying and deadlocks.  TM attempts to address the problems using transactions and a set of primitive instructions.  A transaction is a finite sequence of machine instructions with two important properties: serializability and atomicity. TM provides primitive instructions for accessing memory (LX, LTX and ST) and manipulating transaction state (COMMIT, ABORT and VALIDATE).  TM avoids the use of locks by using (1) LT or LTX to read, (2) VALIDATE to check consistency, (3) ST to modify, and (4) COMMIT to make the changes permanent.  
+
+The authors note that the concept of transaction is similar to the data bases concept.  The main difference is that a TM transaction is a short-lived activity.  It should last less than a quantum a make few location accesses.
+
+The paper provides an implementation by modifying standard multiprocessor cache coherence protocols.  They extend snoopy caches and network-based architectures.
+% \begin{thebibliography}{9}
+% \bibitem{github} 
+% Andres Calderon.
+% \textit{GitHub Personal Repository}, 2015. 
+% \url{https://github.com/aocalderon/PhD/tree/master/Y1Q1/GPU/lab3}.
+% \end{thebibliography}
+
+\end{document}
