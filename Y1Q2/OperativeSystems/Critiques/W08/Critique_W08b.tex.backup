@@ -1,0 +1,36 @@
+\documentclass[a4paper,10pt]{scrartcl}
+\usepackage[hmargin=2.5cm,vmargin=3cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\hypersetup{
+colorlinks=false,
+hidelinks
+}
+
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0.5em}
+
+%opening
+\title{Critique Week 8}
+\author{Andres Calderon - SID:861243796}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+
+\section*{The Hadoop Distributed File System (Shvachko et al, 2010)}
+The paper describes the main components of Hadoop and its distributed file system HDFS.  Following the parallel nature of Hadoop, and related applications as MapReduce, HDFS should provide scalability, computation and storage capacity, and bandwidth support.  The paper focuses on details about the architecture and file I/O operations  and replica management of HDFS.
+
+The description focuses on the main components: the NameNode, DataNodes and the HDFS client.  Overall, at reading, the HDFS client contacts the NameNode for closest locations of DataNodes containing the requested blocks.  At writing, client asks the NameNode to provide (usually) three DataNodes to hold block replicas, then they are written in a pipeline fashion.  Reliability is cardinal in the HDFS architecture, so it provides an Image and Journal approach to create checkpoints as persistent records of the file system.  It also provide CheckpointNode and BackupNode role for the NameNode to manage and support backup and recovery procedures. 
+
+
+
+% \begin{thebibliography}{9}
+% \bibitem{github} 
+% Andres Calderon.
+% \textit{GitHub Personal Repository}, 2015. 
+% \url{https://github.com/aocalderon/PhD/tree/master/Y1Q1/GPU/lab3}.
+% \end{thebibliography}
+
+\end{document}

@@ -1,0 +1,25 @@
+\documentclass[a4paper,10pt]{scrartcl}
+\usepackage[utf8]{inputenc}
+
+%opening
+\title{Paper Critique}
+\author{Andres Calderon}
+
+\begin{document}
+
+\maketitle
+
+\section*{Lottery Scheduling...}
+Diverse requests and varying importance in user applications make scheduling a complex and challeging task. Notions of priority, fair share, microeconomics, market-based and statistical matching have been proposed in the past but still show important drawbacks. This paper introduces lottery scheduling as a novel randomized resource allocation mechanism.
+
+In lottery scheduling, resources rights  are represented by lottery tickets in a similar way as money in computational economics. At each resource allocation, a lottery is hold and the resource is granted to the winning ticket. As allocation is proportional to the number of tickets, statistical distributions prevent starvation since any client will eventually win a lottery.  Lottery scheduling has proved to be extremely responsive.
+
+Tickets are first-class objects that may be transfered in messages allowing the implementation of concepts such as ticket transfers, inflation, compensation and currencies. In particular, currencies are useful for the protection, flexibility, naming and sharing of resources rights. This explicit representation provides a convenient foundation for a modular resource management.
+
+The paper presents a prototype and implementation of a lottery scheduler for the Mach 3.0 microkernel. Together with this, the study also presents a series of experiements to illustrate the advantage of fairness and flexible control in client-server and multimedia applications.  The results also stresses the small overhead of the implementation and how currencies promote local isolation and facilitates modular resource management.  
+
+Finally, the paper highligth how this mechanism can be used to manage many diverse resources such as processor time, I/O bandwidth and access to locks.  Indeed, the authors states that, in general, ``[...] a lottery can be used to allocate resources whereever queueing is necessary for resource access''.
+
+In my opinion, the main idea of the paper seems logical and practical.  It is interesting how they apply common concepts for the economic field to the management of computational resources.  It proves that ideas as currencies, transfers and inflation could be used to manage valuable resources handled by operating system.  Examples in sections 4 and 5 are clear and appropiate to clarify the concepts presented in section 2 and 3.  The fact that the same mechanism can be used to manage others kinds a resources is also a plus.  
+
+\end{document}

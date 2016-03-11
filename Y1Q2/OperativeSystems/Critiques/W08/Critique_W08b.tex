@@ -1,0 +1,38 @@
+\documentclass[a4paper,10pt]{scrartcl}
+\usepackage[hmargin=2.5cm,vmargin=3cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\hypersetup{
+colorlinks=false,
+hidelinks
+}
+
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0.5em}
+
+%opening
+\title{Critique Week 8}
+\author{Andres Calderon - SID:861243796}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+
+\section*{The Hadoop Distributed File System (Shvachko et al, 2010)}
+The paper describes the main components of Hadoop and its distributed file system HDFS.  Following the parallel nature of Hadoop, and related applications like MapReduce, HDFS should provide scalability, computation and storage capacity, and bandwidth support.  The paper focuses on details about the architecture and file I/O operations  and replica management of HDFS.
+
+The description focuses on the main components: the \texttt{NameNode}, \texttt{DataNodes} and the HDFS client.  Overall, at reading, the HDFS client contacts the \texttt{NameNode} for closest locations of \texttt{DataNodes} containing the requested blocks.  At writing, client asks the \texttt{NameNode} to provide (usually) three \texttt{DataNodes} to hold block replicas, then they are written in a pipeline fashion.  Reliability is cardinal in the HDFS architecture, so it provides an Image and Journal approach to create checkpoints as persistent records of the file system.  It also provides \texttt{CheckpointNode} and \texttt{BackupNode} roles for the \texttt{NameNode} to manage and support backup and recovery procedures. 
+
+To provide a stable environment, HDFS should support safe file I/O operations and replica management.  HDFS allows multiple readers and a single writer at the same time by implementing a leasing duration time and an ordered pipeline to minimize total network distance.  The replication management takes into account the topology distribution of the \texttt{DataNodes} in the network.  The main idea is to maximize data reliability and availability without compromise performance.  A good replica placement policy should also pay attention to bandwidth utilization and balance of disk use.
+
+The previous sections describe well-known concepts around 2010 when there were many resources and plenty of bibliography about the Hadoop ecosystem. In my opinion, I found more interesting sections IV and V. The details of a real-world case study at Yahoo! bring more understanding of the capabilities and power of the HDFS in action.  In a similar way, the future work section at that time describes some limitations and desirable features that actually were implemented in posterior versions of the platform such as support to multiple \texttt{namespaces} and \texttt{NameNodes}.
+
+% \begin{thebibliography}{9}
+% \bibitem{github} 
+% Andres Calderon.
+% \textit{GitHub Personal Repository}, 2015. 
+% \url{https://github.com/aocalderon/PhD/tree/master/Y1Q1/GPU/lab3}.
+% \end{thebibliography}
+
+\end{document}
