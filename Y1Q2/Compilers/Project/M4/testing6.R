@@ -1,3 +1,5 @@
+require(animation)
+
 plotSpline2 = function(x, y, dataset, k, plotExtras = F){
   K = 100   # Number of knots
   knots = (1:K)/(K+1)
@@ -16,7 +18,7 @@ plotSpline2 = function(x, y, dataset, k, plotExtras = F){
 }
 
 datasets = c('iris', 'zoo', 'seeds', 'wine', 'cancer')
-datasets = c('iris', 'zoo', 'seeds', 'wine')
+#datasets = c('iris', 'zoo', 'seeds', 'wine')
 ani.options(interval=0.5,autobrowse=F)
 
 for(dataset in datasets[1:length(datasets)]){
