@@ -283,8 +283,8 @@
         \PYGdefault{n}{pid} \PYGdefault{o}{=} \PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{pid}\PYGdefault{p}{;}
         \PYGdefault{n}{kfree}\PYGdefault{p}{(}\PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{kstack}\PYGdefault{p}{);}
         \PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{kstack} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
-        \PYGdefault{c+c1}{// We free the address space just if it is not a clone process}
-        \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{pid} \PYGdefault{o}{\PYGdefaultZgt{}} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)\PYGdefaultZob{}}
+		\PYGdefault{c+c1}{// We free the address space just if it is not a clone process}
+		\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{pid} \PYGdefault{o}{\PYGdefaultZgt{}} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)\PYGdefaultZob{}}
 			\PYGdefault{n}{freevm}\PYGdefault{p}{(}\PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{pgdir}\PYGdefault{p}{);}
 		\PYGdefault{p}{\PYGdefaultZcb{}}
         \PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{state} \PYGdefault{o}{=} \PYGdefault{n}{UNUSED}\PYGdefault{p}{;}

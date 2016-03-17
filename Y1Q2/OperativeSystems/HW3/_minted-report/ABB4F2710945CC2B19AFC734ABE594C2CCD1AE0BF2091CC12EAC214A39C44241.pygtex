@@ -8,7 +8,6 @@
 \PYGdefault{k}{struct} \PYGdefault{n}{anderson\PYGdefaultZus{}lock} \PYGdefault{n}{our\PYGdefaultZus{}lock}\PYGdefault{p}{;}
 
 \PYGdefault{k+kt}{void} \PYGdefault{o}{*}\PYGdefault{n+nf}{my\PYGdefaultZus{}function}\PYGdefault{p}{(}\PYGdefault{k+kt}{void} \PYGdefault{o}{*}\PYGdefault{n}{arg}\PYGdefault{p}{)\PYGdefaultZob{}}
-	\PYGdefault{c+c1}{//int i;}
 	\PYGdefault{k+kt}{int} \PYGdefault{n}{j} \PYGdefault{o}{=} \PYGdefault{p}{(}\PYGdefault{k+kt}{int}\PYGdefault{p}{)}\PYGdefault{n}{arg}\PYGdefault{p}{;}
 	\PYGdefault{k+kt}{int} \PYGdefault{n}{k}\PYGdefault{p}{;}
 	\PYGdefault{k}{for}\PYGdefault{p}{(;;)\PYGdefaultZob{}}
@@ -20,7 +19,6 @@
 			\PYGdefault{n}{printf}\PYGdefault{p}{(}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{,}\PYGdefault{l+s}{\PYGdefaultZdq{}It is turn \PYGdefaultZpc{}d, I am thread \PYGdefaultZpc{}d and I have the frisbee...}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{p}{,} \PYGdefault{n}{x}\PYGdefault{p}{,} \PYGdefault{n}{j}\PYGdefault{p}{);}
 			\PYGdefault{n}{x} \PYGdefault{o}{=} \PYGdefault{n}{x} \PYGdefault{o}{+} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{;}
 		\PYGdefault{n}{release\PYGdefaultZus{}anderson\PYGdefaultZus{}lock}\PYGdefault{p}{(}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{our\PYGdefaultZus{}lock}\PYGdefault{p}{,} \PYGdefault{n}{k}\PYGdefault{p}{);}
-		\PYGdefault{c+c1}{//sleep(100);}
 	\PYGdefault{p}{\PYGdefaultZcb{}}
 	\PYGdefault{k}{return} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
 \PYGdefault{p}{\PYGdefaultZcb{}}
