@@ -1,4 +1,5 @@
 require(animation)
+source('spline.R')
 
 plotSpline2 = function(x, y, dataset, k, plotExtras = F){
   K = 100   # Number of knots

@@ -1,0 +1,525 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGdefault{c+cp}{\PYGdefaultZsh{}include \PYGdefaultZdq{}types.h\PYGdefaultZdq{}}
+\PYGdefault{c+cp}{\PYGdefaultZsh{}include \PYGdefaultZdq{}defs.h\PYGdefaultZdq{}}
+\PYGdefault{c+cp}{\PYGdefaultZsh{}include \PYGdefaultZdq{}param.h\PYGdefaultZdq{}}
+\PYGdefault{c+cp}{\PYGdefaultZsh{}include \PYGdefaultZdq{}memlayout.h\PYGdefaultZdq{}}
+\PYGdefault{c+cp}{\PYGdefaultZsh{}include \PYGdefaultZdq{}mmu.h\PYGdefaultZdq{}}
+\PYGdefault{c+cp}{\PYGdefaultZsh{}include \PYGdefaultZdq{}x86.h\PYGdefaultZdq{}}
+\PYGdefault{c+cp}{\PYGdefaultZsh{}include \PYGdefaultZdq{}proc.h\PYGdefaultZdq{}}
+\PYGdefault{c+cp}{\PYGdefaultZsh{}include \PYGdefaultZdq{}spinlock.h\PYGdefaultZdq{}}
+
+\PYGdefault{k}{struct} \PYGdefault{p}{\PYGdefaultZob{}}
+  \PYGdefault{k}{struct} \PYGdefault{n}{spinlock} \PYGdefault{n}{lock}\PYGdefault{p}{;}
+  \PYGdefault{k}{struct} \PYGdefault{n}{proc} \PYGdefault{n}{proc}\PYGdefault{p}{[}\PYGdefault{n}{NPROC}\PYGdefault{p}{];}
+\PYGdefault{p}{\PYGdefaultZcb{}} \PYGdefault{n}{ptable}\PYGdefault{p}{;}
+
+\PYGdefault{k}{static} \PYGdefault{k}{struct} \PYGdefault{n}{proc} \PYGdefault{o}{*}\PYGdefault{n}{initproc}\PYGdefault{p}{;}
+
+\PYGdefault{k+kt}{int} \PYGdefault{n}{nextpid} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{;}
+\PYGdefault{k}{extern} \PYGdefault{k+kt}{void} \PYGdefault{n+nf}{forkret}\PYGdefault{p}{(}\PYGdefault{k+kt}{void}\PYGdefault{p}{);}
+\PYGdefault{k}{extern} \PYGdefault{k+kt}{void} \PYGdefault{n+nf}{trapret}\PYGdefault{p}{(}\PYGdefault{k+kt}{void}\PYGdefault{p}{);}
+
+\PYGdefault{k}{static} \PYGdefault{k+kt}{void} \PYGdefault{n+nf}{wakeup1}\PYGdefault{p}{(}\PYGdefault{k+kt}{void} \PYGdefault{o}{*}\PYGdefault{n}{chan}\PYGdefault{p}{);}
+
+\PYGdefault{k+kt}{void}
+\PYGdefault{n+nf}{pinit}\PYGdefault{p}{(}\PYGdefault{k+kt}{void}\PYGdefault{p}{)}
+\PYGdefault{p}{\PYGdefaultZob{}}
+  \PYGdefault{n}{initlock}\PYGdefault{p}{(}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{ptable}\PYGdefault{p}{.}\PYGdefault{n}{lock}\PYGdefault{p}{,} \PYGdefault{l+s}{\PYGdefaultZdq{}ptable\PYGdefaultZdq{}}\PYGdefault{p}{);}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+
+\PYGdefault{c+c1}{//PAGEBREAK: 32}
+\PYGdefault{c+c1}{// Look in the process table for an UNUSED proc.}
+\PYGdefault{c+c1}{// If found, change state to EMBRYO and initialize}
+\PYGdefault{c+c1}{// state required to run in the kernel.}
+\PYGdefault{c+c1}{// Otherwise return 0.}
+\PYGdefault{k}{static} \PYGdefault{k}{struct} \PYGdefault{n}{proc}\PYGdefault{o}{*}
+\PYGdefault{n+nf}{allocproc}\PYGdefault{p}{(}\PYGdefault{k+kt}{void}\PYGdefault{p}{)}
+\PYGdefault{p}{\PYGdefaultZob{}}
+  \PYGdefault{k}{struct} \PYGdefault{n}{proc} \PYGdefault{o}{*}\PYGdefault{n}{p}\PYGdefault{p}{;}
+  \PYGdefault{k+kt}{char} \PYGdefault{o}{*}\PYGdefault{n}{sp}\PYGdefault{p}{;}
+
+  \PYGdefault{n}{acquire}\PYGdefault{p}{(}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{ptable}\PYGdefault{p}{.}\PYGdefault{n}{lock}\PYGdefault{p}{);}
+  \PYGdefault{k}{for}\PYGdefault{p}{(}\PYGdefault{n}{p} \PYGdefault{o}{=} \PYGdefault{n}{ptable}\PYGdefault{p}{.}\PYGdefault{n}{proc}\PYGdefault{p}{;} \PYGdefault{n}{p} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{ptable}\PYGdefault{p}{.}\PYGdefault{n}{proc}\PYGdefault{p}{[}\PYGdefault{n}{NPROC}\PYGdefault{p}{];} \PYGdefault{n}{p}\PYGdefault{o}{++}\PYGdefault{p}{)}
+    \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{state} \PYGdefault{o}{==} \PYGdefault{n}{UNUSED}\PYGdefault{p}{)}
+      \PYGdefault{k}{goto} \PYGdefault{n}{found}\PYGdefault{p}{;}
+  \PYGdefault{n}{release}\PYGdefault{p}{(}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{ptable}\PYGdefault{p}{.}\PYGdefault{n}{lock}\PYGdefault{p}{);}
+  \PYGdefault{k}{return} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
+
+\PYGdefault{n+nl}{found}\PYGdefault{p}{:}
+  \PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{state} \PYGdefault{o}{=} \PYGdefault{n}{EMBRYO}\PYGdefault{p}{;}
+  \PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{pid} \PYGdefault{o}{=} \PYGdefault{n}{nextpid}\PYGdefault{o}{++}\PYGdefault{p}{;}
+  \PYGdefault{n}{release}\PYGdefault{p}{(}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{ptable}\PYGdefault{p}{.}\PYGdefault{n}{lock}\PYGdefault{p}{);}
+
+  \PYGdefault{c+c1}{// Allocate kernel stack.}
+  \PYGdefault{k}{if}\PYGdefault{p}{((}\PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{kstack} \PYGdefault{o}{=} \PYGdefault{n}{kalloc}\PYGdefault{p}{())} \PYGdefault{o}{==} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)\PYGdefaultZob{}}
+    \PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{state} \PYGdefault{o}{=} \PYGdefault{n}{UNUSED}\PYGdefault{p}{;}
+    \PYGdefault{k}{return} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
+  \PYGdefault{p}{\PYGdefaultZcb{}}
+  \PYGdefault{n}{sp} \PYGdefault{o}{=} \PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{kstack} \PYGdefault{o}{+} \PYGdefault{n}{KSTACKSIZE}\PYGdefault{p}{;}
+  
+  \PYGdefault{c+c1}{// Leave room for trap frame.}
+  \PYGdefault{n}{sp} \PYGdefault{o}{\PYGdefaultZhy{}=} \PYGdefault{k}{sizeof} \PYGdefault{o}{*}\PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{tf}\PYGdefault{p}{;}
+  \PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{tf} \PYGdefault{o}{=} \PYGdefault{p}{(}\PYGdefault{k}{struct} \PYGdefault{n}{trapframe}\PYGdefault{o}{*}\PYGdefault{p}{)}\PYGdefault{n}{sp}\PYGdefault{p}{;}
+  
+  \PYGdefault{c+c1}{// Set up new context to start executing at forkret,}
+  \PYGdefault{c+c1}{// which returns to trapret.}
+  \PYGdefault{n}{sp} \PYGdefault{o}{\PYGdefaultZhy{}=} \PYGdefault{l+m+mi}{4}\PYGdefault{p}{;}
+  \PYGdefault{o}{*}\PYGdefault{p}{(}\PYGdefault{n}{uint}\PYGdefault{o}{*}\PYGdefault{p}{)}\PYGdefault{n}{sp} \PYGdefault{o}{=} \PYGdefault{p}{(}\PYGdefault{n}{uint}\PYGdefault{p}{)}\PYGdefault{n}{trapret}\PYGdefault{p}{;}
+
+  \PYGdefault{n}{sp} \PYGdefault{o}{\PYGdefaultZhy{}=} \PYGdefault{k}{sizeof} \PYGdefault{o}{*}\PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{context}\PYGdefault{p}{;}
+  \PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{context} \PYGdefault{o}{=} \PYGdefault{p}{(}\PYGdefault{k}{struct} \PYGdefault{n}{context}\PYGdefault{o}{*}\PYGdefault{p}{)}\PYGdefault{n}{sp}\PYGdefault{p}{;}
+  \PYGdefault{n}{memset}\PYGdefault{p}{(}\PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{context}\PYGdefault{p}{,} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{,} \PYGdefault{k}{sizeof} \PYGdefault{o}{*}\PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{context}\PYGdefault{p}{);}
+  \PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{context}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{eip} \PYGdefault{o}{=} \PYGdefault{p}{(}\PYGdefault{n}{uint}\PYGdefault{p}{)}\PYGdefault{n}{forkret}\PYGdefault{p}{;}
+
+  \PYGdefault{k}{return} \PYGdefault{n}{p}\PYGdefault{p}{;}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+
+\PYGdefault{c+c1}{//PAGEBREAK: 32}
+\PYGdefault{c+c1}{// Set up first user process.}
+\PYGdefault{k+kt}{void}
+\PYGdefault{n+nf}{userinit}\PYGdefault{p}{(}\PYGdefault{k+kt}{void}\PYGdefault{p}{)}
+\PYGdefault{p}{\PYGdefaultZob{}}
+  \PYGdefault{k}{struct} \PYGdefault{n}{proc} \PYGdefault{o}{*}\PYGdefault{n}{p}\PYGdefault{p}{;}
+  \PYGdefault{k}{extern} \PYGdefault{k+kt}{char} \PYGdefault{n}{\PYGdefaultZus{}binary\PYGdefaultZus{}initcode\PYGdefaultZus{}start}\PYGdefault{p}{[],} \PYGdefault{n}{\PYGdefaultZus{}binary\PYGdefaultZus{}initcode\PYGdefaultZus{}size}\PYGdefault{p}{[];}
+  
+  \PYGdefault{n}{p} \PYGdefault{o}{=} \PYGdefault{n}{allocproc}\PYGdefault{p}{();}
+  \PYGdefault{n}{initproc} \PYGdefault{o}{=} \PYGdefault{n}{p}\PYGdefault{p}{;}
+  \PYGdefault{k}{if}\PYGdefault{p}{((}\PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{pgdir} \PYGdefault{o}{=} \PYGdefault{n}{setupkvm}\PYGdefault{p}{())} \PYGdefault{o}{==} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)}
+    \PYGdefault{n}{panic}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}userinit: out of memory?\PYGdefaultZdq{}}\PYGdefault{p}{);}
+  \PYGdefault{n}{inituvm}\PYGdefault{p}{(}\PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{pgdir}\PYGdefault{p}{,} \PYGdefault{n}{\PYGdefaultZus{}binary\PYGdefaultZus{}initcode\PYGdefaultZus{}start}\PYGdefault{p}{,} \PYGdefault{p}{(}\PYGdefault{k+kt}{int}\PYGdefault{p}{)}\PYGdefault{n}{\PYGdefaultZus{}binary\PYGdefaultZus{}initcode\PYGdefaultZus{}size}\PYGdefault{p}{);}
+  \PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{sz} \PYGdefault{o}{=} \PYGdefault{n}{PGSIZE}\PYGdefault{p}{;}
+  \PYGdefault{n}{memset}\PYGdefault{p}{(}\PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{tf}\PYGdefault{p}{,} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{,} \PYGdefault{k}{sizeof}\PYGdefault{p}{(}\PYGdefault{o}{*}\PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{tf}\PYGdefault{p}{));}
+  \PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{tf}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{cs} \PYGdefault{o}{=} \PYGdefault{p}{(}\PYGdefault{n}{SEG\PYGdefaultZus{}UCODE} \PYGdefault{o}{\PYGdefaultZlt{}\PYGdefaultZlt{}} \PYGdefault{l+m+mi}{3}\PYGdefault{p}{)} \PYGdefault{o}{|} \PYGdefault{n}{DPL\PYGdefaultZus{}USER}\PYGdefault{p}{;}
+  \PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{tf}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{ds} \PYGdefault{o}{=} \PYGdefault{p}{(}\PYGdefault{n}{SEG\PYGdefaultZus{}UDATA} \PYGdefault{o}{\PYGdefaultZlt{}\PYGdefaultZlt{}} \PYGdefault{l+m+mi}{3}\PYGdefault{p}{)} \PYGdefault{o}{|} \PYGdefault{n}{DPL\PYGdefaultZus{}USER}\PYGdefault{p}{;}
+  \PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{tf}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{es} \PYGdefault{o}{=} \PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{tf}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{ds}\PYGdefault{p}{;}
+  \PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{tf}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{ss} \PYGdefault{o}{=} \PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{tf}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{ds}\PYGdefault{p}{;}
+  \PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{tf}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{eflags} \PYGdefault{o}{=} \PYGdefault{n}{FL\PYGdefaultZus{}IF}\PYGdefault{p}{;}
+  \PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{tf}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{esp} \PYGdefault{o}{=} \PYGdefault{n}{PGSIZE}\PYGdefault{p}{;}
+  \PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{tf}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{eip} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}  \PYGdefault{c+c1}{// beginning of initcode.S}
+
+  \PYGdefault{n}{safestrcpy}\PYGdefault{p}{(}\PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{name}\PYGdefault{p}{,} \PYGdefault{l+s}{\PYGdefaultZdq{}initcode\PYGdefaultZdq{}}\PYGdefault{p}{,} \PYGdefault{k}{sizeof}\PYGdefault{p}{(}\PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{name}\PYGdefault{p}{));}
+  \PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{cwd} \PYGdefault{o}{=} \PYGdefault{n}{namei}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}/\PYGdefaultZdq{}}\PYGdefault{p}{);}
+
+  \PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{state} \PYGdefault{o}{=} \PYGdefault{n}{RUNNABLE}\PYGdefault{p}{;}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+
+\PYGdefault{c+c1}{// Grow current process\PYGdefaultZsq{}s memory by n bytes.}
+\PYGdefault{c+c1}{// Return 0 on success, \PYGdefaultZhy{}1 on failure.}
+\PYGdefault{k+kt}{int}
+\PYGdefault{n+nf}{growproc}\PYGdefault{p}{(}\PYGdefault{k+kt}{int} \PYGdefault{n}{n}\PYGdefault{p}{)}
+\PYGdefault{p}{\PYGdefaultZob{}}
+  \PYGdefault{n}{uint} \PYGdefault{n}{sz}\PYGdefault{p}{;}
+  
+  \PYGdefault{n}{sz} \PYGdefault{o}{=} \PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{sz}\PYGdefault{p}{;}
+  \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{n} \PYGdefault{o}{\PYGdefaultZgt{}} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)\PYGdefaultZob{}}
+    \PYGdefault{k}{if}\PYGdefault{p}{((}\PYGdefault{n}{sz} \PYGdefault{o}{=} \PYGdefault{n}{allocuvm}\PYGdefault{p}{(}\PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{pgdir}\PYGdefault{p}{,} \PYGdefault{n}{sz}\PYGdefault{p}{,} \PYGdefault{n}{sz} \PYGdefault{o}{+} \PYGdefault{n}{n}\PYGdefault{p}{))} \PYGdefault{o}{==} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)}
+      \PYGdefault{k}{return} \PYGdefault{o}{\PYGdefaultZhy{}}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{;}
+  \PYGdefault{p}{\PYGdefaultZcb{}} \PYGdefault{k}{else} \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{n} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)\PYGdefaultZob{}}
+    \PYGdefault{k}{if}\PYGdefault{p}{((}\PYGdefault{n}{sz} \PYGdefault{o}{=} \PYGdefault{n}{deallocuvm}\PYGdefault{p}{(}\PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{pgdir}\PYGdefault{p}{,} \PYGdefault{n}{sz}\PYGdefault{p}{,} \PYGdefault{n}{sz} \PYGdefault{o}{+} \PYGdefault{n}{n}\PYGdefault{p}{))} \PYGdefault{o}{==} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)}
+      \PYGdefault{k}{return} \PYGdefault{o}{\PYGdefaultZhy{}}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{;}
+  \PYGdefault{p}{\PYGdefaultZcb{}}
+  \PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{sz} \PYGdefault{o}{=} \PYGdefault{n}{sz}\PYGdefault{p}{;}
+  \PYGdefault{n}{switchuvm}\PYGdefault{p}{(}\PYGdefault{n}{proc}\PYGdefault{p}{);}
+  \PYGdefault{k}{return} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+
+\PYGdefault{c+c1}{// Create a new process copying p as the parent.}
+\PYGdefault{c+c1}{// Sets up stack to return as if from system call.}
+\PYGdefault{c+c1}{// Caller must set state of returned proc to RUNNABLE.}
+\PYGdefault{k+kt}{int}
+\PYGdefault{n+nf}{fork}\PYGdefault{p}{(}\PYGdefault{k+kt}{void}\PYGdefault{p}{)}
+\PYGdefault{p}{\PYGdefaultZob{}}
+  \PYGdefault{k+kt}{int} \PYGdefault{n}{i}\PYGdefault{p}{,} \PYGdefault{n}{pid}\PYGdefault{p}{;}
+  \PYGdefault{k}{struct} \PYGdefault{n}{proc} \PYGdefault{o}{*}\PYGdefault{n}{np}\PYGdefault{p}{;}
+
+  \PYGdefault{c+c1}{// Allocate process.}
+  \PYGdefault{k}{if}\PYGdefault{p}{((}\PYGdefault{n}{np} \PYGdefault{o}{=} \PYGdefault{n}{allocproc}\PYGdefault{p}{())} \PYGdefault{o}{==} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)}
+    \PYGdefault{k}{return} \PYGdefault{o}{\PYGdefaultZhy{}}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{;}
+
+  \PYGdefault{c+c1}{// Copy process state from p.}
+  \PYGdefault{k}{if}\PYGdefault{p}{((}\PYGdefault{n}{np}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{pgdir} \PYGdefault{o}{=} \PYGdefault{n}{copyuvm}\PYGdefault{p}{(}\PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{pgdir}\PYGdefault{p}{,} \PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{sz}\PYGdefault{p}{))} \PYGdefault{o}{==} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)\PYGdefaultZob{}}
+    \PYGdefault{n}{kfree}\PYGdefault{p}{(}\PYGdefault{n}{np}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{kstack}\PYGdefault{p}{);}
+    \PYGdefault{n}{np}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{kstack} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
+    \PYGdefault{n}{np}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{state} \PYGdefault{o}{=} \PYGdefault{n}{UNUSED}\PYGdefault{p}{;}
+    \PYGdefault{k}{return} \PYGdefault{o}{\PYGdefaultZhy{}}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{;}
+  \PYGdefault{p}{\PYGdefaultZcb{}}
+  \PYGdefault{n}{np}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{sz} \PYGdefault{o}{=} \PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{sz}\PYGdefault{p}{;}
+  \PYGdefault{n}{np}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{parent} \PYGdefault{o}{=} \PYGdefault{n}{proc}\PYGdefault{p}{;}
+  \PYGdefault{o}{*}\PYGdefault{n}{np}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{tf} \PYGdefault{o}{=} \PYGdefault{o}{*}\PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{tf}\PYGdefault{p}{;}
+
+  \PYGdefault{c+c1}{// Clear \PYGdefaultZpc{}eax so that fork returns 0 in the child.}
+  \PYGdefault{n}{np}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{tf}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{eax} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
+
+  \PYGdefault{k}{for}\PYGdefault{p}{(}\PYGdefault{n}{i} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;} \PYGdefault{n}{i} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{n}{NOFILE}\PYGdefault{p}{;} \PYGdefault{n}{i}\PYGdefault{o}{++}\PYGdefault{p}{)}
+    \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{ofile}\PYGdefault{p}{[}\PYGdefault{n}{i}\PYGdefault{p}{])}
+      \PYGdefault{n}{np}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{ofile}\PYGdefault{p}{[}\PYGdefault{n}{i}\PYGdefault{p}{]} \PYGdefault{o}{=} \PYGdefault{n}{filedup}\PYGdefault{p}{(}\PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{ofile}\PYGdefault{p}{[}\PYGdefault{n}{i}\PYGdefault{p}{]);}
+  \PYGdefault{n}{np}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{cwd} \PYGdefault{o}{=} \PYGdefault{n}{idup}\PYGdefault{p}{(}\PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{cwd}\PYGdefault{p}{);}
+
+  \PYGdefault{n}{safestrcpy}\PYGdefault{p}{(}\PYGdefault{n}{np}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{name}\PYGdefault{p}{,} \PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{name}\PYGdefault{p}{,} \PYGdefault{k}{sizeof}\PYGdefault{p}{(}\PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{name}\PYGdefault{p}{));}
+ 
+  \PYGdefault{n}{pid} \PYGdefault{o}{=} \PYGdefault{n}{np}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{pid}\PYGdefault{p}{;}
+
+  \PYGdefault{c+c1}{// lock to force the compiler to emit the np\PYGdefaultZhy{}\PYGdefaultZgt{}state write last.}
+  \PYGdefault{n}{acquire}\PYGdefault{p}{(}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{ptable}\PYGdefault{p}{.}\PYGdefault{n}{lock}\PYGdefault{p}{);}
+  \PYGdefault{n}{np}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{state} \PYGdefault{o}{=} \PYGdefault{n}{RUNNABLE}\PYGdefault{p}{;}
+  \PYGdefault{n}{release}\PYGdefault{p}{(}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{ptable}\PYGdefault{p}{.}\PYGdefault{n}{lock}\PYGdefault{p}{);}
+  
+  \PYGdefault{k}{return} \PYGdefault{n}{pid}\PYGdefault{p}{;}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+
+\PYGdefault{k+kt}{int} \PYGdefault{n+nf}{clone}\PYGdefault{p}{(}\PYGdefault{k+kt}{void}\PYGdefault{p}{)\PYGdefaultZob{}}
+  \PYGdefault{k+kt}{char} \PYGdefault{o}{*}\PYGdefault{n}{ustack}\PYGdefault{p}{;}
+  \PYGdefault{k+kt}{int} \PYGdefault{n}{i}\PYGdefault{p}{,} \PYGdefault{n}{pid}\PYGdefault{p}{;}
+  \PYGdefault{k+kt}{int} \PYGdefault{n}{size}\PYGdefault{p}{;}
+  \PYGdefault{k}{struct} \PYGdefault{n}{proc} \PYGdefault{o}{*}\PYGdefault{n}{np}\PYGdefault{p}{;}
+
+  \PYGdefault{k}{if}\PYGdefault{p}{((}\PYGdefault{n}{np} \PYGdefault{o}{=} \PYGdefault{n}{allocproc}\PYGdefault{p}{())} \PYGdefault{o}{==} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)}
+    \PYGdefault{k}{return} \PYGdefault{o}{\PYGdefaultZhy{}}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{;}
+  
+  \PYGdefault{c+c1}{//We take the arguments for size and user stack  }
+  \PYGdefault{n}{argint}\PYGdefault{p}{(}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{,}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{size}\PYGdefault{p}{);}
+  \PYGdefault{n}{argptr}\PYGdefault{p}{(}\PYGdefault{l+m+mi}{0}\PYGdefault{p}{,}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{ustack}\PYGdefault{p}{,} \PYGdefault{n}{size}\PYGdefault{p}{);}
+
+  \PYGdefault{c+c1}{//We share the same address space}
+  \PYGdefault{n}{np}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{pgdir} \PYGdefault{o}{=} \PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{pgdir}\PYGdefault{p}{;}
+  \PYGdefault{n}{np}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{sz} \PYGdefault{o}{=} \PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{sz}\PYGdefault{p}{;}
+  \PYGdefault{n}{np}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{parent} \PYGdefault{o}{=} \PYGdefault{n}{proc}\PYGdefault{p}{;}
+  \PYGdefault{o}{*}\PYGdefault{n}{np}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{tf} \PYGdefault{o}{=} \PYGdefault{o}{*}\PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{tf}\PYGdefault{p}{;}
+  
+  \PYGdefault{c+c1}{// We align the address stack}
+  \PYGdefault{n}{ustack} \PYGdefault{o}{=} \PYGdefault{p}{(}\PYGdefault{k+kt}{char}\PYGdefault{o}{*}\PYGdefault{p}{)}\PYGdefault{n}{PGROUNDUP}\PYGdefault{p}{((}\PYGdefault{n}{uint}\PYGdefault{p}{)}\PYGdefault{n}{ustack}\PYGdefault{p}{);}
+  
+  \PYGdefault{c+c1}{// We point the esp and ebp pointers to the new user stack}
+  \PYGdefault{n}{np}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{tf}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{esp} \PYGdefault{o}{=} \PYGdefault{p}{(}\PYGdefault{n}{uint}\PYGdefault{p}{)}\PYGdefault{n}{ustack} \PYGdefault{o}{+} \PYGdefault{p}{(}\PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{tf}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{esp} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{n}{PGROUNDDOWN}\PYGdefault{p}{(}\PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{tf}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{esp}\PYGdefault{p}{));}
+  \PYGdefault{n}{np}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{tf}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{ebp} \PYGdefault{o}{=} \PYGdefault{p}{(}\PYGdefault{n}{uint}\PYGdefault{p}{)}\PYGdefault{n}{ustack} \PYGdefault{o}{+} \PYGdefault{p}{(}\PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{tf}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{ebp} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{n}{PGROUNDDOWN}\PYGdefault{p}{(}\PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{tf}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{ebp}\PYGdefault{p}{));}
+  
+  \PYGdefault{c+c1}{// We calculate the number of addresses we have to copy to new user stack}
+  \PYGdefault{n}{uint} \PYGdefault{n}{usize} \PYGdefault{o}{=} \PYGdefault{n}{size} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{p}{(}\PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{tf}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{esp} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{n}{PGROUNDDOWN}\PYGdefault{p}{(}\PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{tf}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{esp}\PYGdefault{p}{));}
+  \PYGdefault{c+c1}{// We copy them}
+  \PYGdefault{n}{memmove}\PYGdefault{p}{((}\PYGdefault{k+kt}{void} \PYGdefault{o}{*}\PYGdefault{p}{)(}\PYGdefault{n}{np}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{tf}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{esp}\PYGdefault{p}{),} \PYGdefault{p}{(}\PYGdefault{k}{const} \PYGdefault{k+kt}{void} \PYGdefault{o}{*}\PYGdefault{p}{)(}\PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{tf}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{esp}\PYGdefault{p}{),} \PYGdefault{n}{usize}\PYGdefault{p}{);}
+  \PYGdefault{c+c1}{// We mark the clone processes with a \PYGdefaultZhy{}1}
+  \PYGdefault{n}{np}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{tf}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{eax} \PYGdefault{o}{=} \PYGdefault{o}{\PYGdefaultZhy{}}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{;}
+
+  \PYGdefault{k}{for}\PYGdefault{p}{(}\PYGdefault{n}{i} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;} \PYGdefault{n}{i} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{n}{NOFILE}\PYGdefault{p}{;} \PYGdefault{n}{i}\PYGdefault{o}{++}\PYGdefault{p}{)}
+    \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{ofile}\PYGdefault{p}{[}\PYGdefault{n}{i}\PYGdefault{p}{])}
+      \PYGdefault{n}{np}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{ofile}\PYGdefault{p}{[}\PYGdefault{n}{i}\PYGdefault{p}{]} \PYGdefault{o}{=} \PYGdefault{n}{filedup}\PYGdefault{p}{(}\PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{ofile}\PYGdefault{p}{[}\PYGdefault{n}{i}\PYGdefault{p}{]);}
+  \PYGdefault{n}{np}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{cwd} \PYGdefault{o}{=} \PYGdefault{n}{idup}\PYGdefault{p}{(}\PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{cwd}\PYGdefault{p}{);}
+  
+  \PYGdefault{n}{safestrcpy}\PYGdefault{p}{(}\PYGdefault{n}{np}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{name}\PYGdefault{p}{,} \PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{name}\PYGdefault{p}{,} \PYGdefault{k}{sizeof}\PYGdefault{p}{(}\PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{name}\PYGdefault{p}{));}
+ 
+  \PYGdefault{n}{pid} \PYGdefault{o}{=} \PYGdefault{n}{np}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{pid}\PYGdefault{p}{;}
+  \PYGdefault{n}{np}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{pid} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
+
+  \PYGdefault{n}{acquire}\PYGdefault{p}{(}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{ptable}\PYGdefault{p}{.}\PYGdefault{n}{lock}\PYGdefault{p}{);}
+  \PYGdefault{n}{np}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{state} \PYGdefault{o}{=} \PYGdefault{n}{RUNNABLE}\PYGdefault{p}{;}
+  \PYGdefault{n}{release}\PYGdefault{p}{(}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{ptable}\PYGdefault{p}{.}\PYGdefault{n}{lock}\PYGdefault{p}{);}
+  
+  \PYGdefault{k}{return} \PYGdefault{n}{pid}\PYGdefault{p}{;}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+
+\PYGdefault{c+c1}{// Exit the current process.  Does not return.}
+\PYGdefault{c+c1}{// An exited process remains in the zombie state}
+\PYGdefault{c+c1}{// until its parent calls wait() to find out it exited.}
+\PYGdefault{k+kt}{void}
+\PYGdefault{n+nf}{exit}\PYGdefault{p}{(}\PYGdefault{k+kt}{void}\PYGdefault{p}{)}
+\PYGdefault{p}{\PYGdefaultZob{}}
+  \PYGdefault{k}{struct} \PYGdefault{n}{proc} \PYGdefault{o}{*}\PYGdefault{n}{p}\PYGdefault{p}{;}
+  \PYGdefault{k+kt}{int} \PYGdefault{n}{fd}\PYGdefault{p}{;}
+
+  \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{proc} \PYGdefault{o}{==} \PYGdefault{n}{initproc}\PYGdefault{p}{)}
+    \PYGdefault{n}{panic}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}init exiting\PYGdefaultZdq{}}\PYGdefault{p}{);}
+
+  \PYGdefault{c+c1}{// Close all open files.}
+  \PYGdefault{k}{for}\PYGdefault{p}{(}\PYGdefault{n}{fd} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;} \PYGdefault{n}{fd} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{n}{NOFILE}\PYGdefault{p}{;} \PYGdefault{n}{fd}\PYGdefault{o}{++}\PYGdefault{p}{)\PYGdefaultZob{}}
+    \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{ofile}\PYGdefault{p}{[}\PYGdefault{n}{fd}\PYGdefault{p}{])\PYGdefaultZob{}}
+      \PYGdefault{n}{fileclose}\PYGdefault{p}{(}\PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{ofile}\PYGdefault{p}{[}\PYGdefault{n}{fd}\PYGdefault{p}{]);}
+      \PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{ofile}\PYGdefault{p}{[}\PYGdefault{n}{fd}\PYGdefault{p}{]} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
+    \PYGdefault{p}{\PYGdefaultZcb{}}
+  \PYGdefault{p}{\PYGdefaultZcb{}}
+
+  \PYGdefault{n}{begin\PYGdefaultZus{}op}\PYGdefault{p}{();}
+  \PYGdefault{n}{iput}\PYGdefault{p}{(}\PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{cwd}\PYGdefault{p}{);}
+  \PYGdefault{n}{end\PYGdefaultZus{}op}\PYGdefault{p}{();}
+  \PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{cwd} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
+  
+  \PYGdefault{n}{acquire}\PYGdefault{p}{(}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{ptable}\PYGdefault{p}{.}\PYGdefault{n}{lock}\PYGdefault{p}{);}
+
+  \PYGdefault{c+c1}{// Parent might be sleeping in wait().}
+  \PYGdefault{n}{wakeup1}\PYGdefault{p}{(}\PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{parent}\PYGdefault{p}{);}
+
+  \PYGdefault{c+c1}{// Pass abandoned children to init.}
+  \PYGdefault{k}{for}\PYGdefault{p}{(}\PYGdefault{n}{p} \PYGdefault{o}{=} \PYGdefault{n}{ptable}\PYGdefault{p}{.}\PYGdefault{n}{proc}\PYGdefault{p}{;} \PYGdefault{n}{p} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{ptable}\PYGdefault{p}{.}\PYGdefault{n}{proc}\PYGdefault{p}{[}\PYGdefault{n}{NPROC}\PYGdefault{p}{];} \PYGdefault{n}{p}\PYGdefault{o}{++}\PYGdefault{p}{)\PYGdefaultZob{}}
+    \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{parent} \PYGdefault{o}{==} \PYGdefault{n}{proc}\PYGdefault{p}{)\PYGdefaultZob{}}
+      \PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{parent} \PYGdefault{o}{=} \PYGdefault{n}{initproc}\PYGdefault{p}{;}
+      \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{state} \PYGdefault{o}{==} \PYGdefault{n}{ZOMBIE}\PYGdefault{p}{)}
+        \PYGdefault{n}{wakeup1}\PYGdefault{p}{(}\PYGdefault{n}{initproc}\PYGdefault{p}{);}
+    \PYGdefault{p}{\PYGdefaultZcb{}}
+  \PYGdefault{p}{\PYGdefaultZcb{}}
+
+  \PYGdefault{c+c1}{// Jump into the scheduler, never to return.}
+  \PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{state} \PYGdefault{o}{=} \PYGdefault{n}{ZOMBIE}\PYGdefault{p}{;}
+  \PYGdefault{n}{sched}\PYGdefault{p}{();}
+  \PYGdefault{n}{panic}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}zombie exit\PYGdefaultZdq{}}\PYGdefault{p}{);}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+
+\PYGdefault{c+c1}{// Wait for a child process to exit and return its pid.}
+\PYGdefault{c+c1}{// Return \PYGdefaultZhy{}1 if this process has no children.}
+\PYGdefault{k+kt}{int}
+\PYGdefault{n+nf}{wait}\PYGdefault{p}{(}\PYGdefault{k+kt}{void}\PYGdefault{p}{)}
+\PYGdefault{p}{\PYGdefaultZob{}}
+  \PYGdefault{k}{struct} \PYGdefault{n}{proc} \PYGdefault{o}{*}\PYGdefault{n}{p}\PYGdefault{p}{;}
+  \PYGdefault{k+kt}{int} \PYGdefault{n}{havekids}\PYGdefault{p}{,} \PYGdefault{n}{pid}\PYGdefault{p}{;}
+
+  \PYGdefault{n}{acquire}\PYGdefault{p}{(}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{ptable}\PYGdefault{p}{.}\PYGdefault{n}{lock}\PYGdefault{p}{);}
+  \PYGdefault{k}{for}\PYGdefault{p}{(;;)\PYGdefaultZob{}}
+    \PYGdefault{c+c1}{// Scan through table looking for zombie children.}
+    \PYGdefault{n}{havekids} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
+    \PYGdefault{k}{for}\PYGdefault{p}{(}\PYGdefault{n}{p} \PYGdefault{o}{=} \PYGdefault{n}{ptable}\PYGdefault{p}{.}\PYGdefault{n}{proc}\PYGdefault{p}{;} \PYGdefault{n}{p} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{ptable}\PYGdefault{p}{.}\PYGdefault{n}{proc}\PYGdefault{p}{[}\PYGdefault{n}{NPROC}\PYGdefault{p}{];} \PYGdefault{n}{p}\PYGdefault{o}{++}\PYGdefault{p}{)\PYGdefaultZob{}}
+      \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{parent} \PYGdefault{o}{!=} \PYGdefault{n}{proc}\PYGdefault{p}{)}
+        \PYGdefault{k}{continue}\PYGdefault{p}{;}
+      \PYGdefault{n}{havekids} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{;}
+      \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{state} \PYGdefault{o}{==} \PYGdefault{n}{ZOMBIE}\PYGdefault{p}{)\PYGdefaultZob{}}
+        \PYGdefault{c+c1}{// Found one.}
+        \PYGdefault{n}{pid} \PYGdefault{o}{=} \PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{pid}\PYGdefault{p}{;}
+        \PYGdefault{n}{kfree}\PYGdefault{p}{(}\PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{kstack}\PYGdefault{p}{);}
+        \PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{kstack} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
+        \PYGdefault{c+c1}{// We free the address space just if it is not a clone process}
+        \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{pid} \PYGdefault{o}{\PYGdefaultZgt{}} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)\PYGdefaultZob{}}
+			\PYGdefault{n}{freevm}\PYGdefault{p}{(}\PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{pgdir}\PYGdefault{p}{);}
+		\PYGdefault{p}{\PYGdefaultZcb{}}
+        \PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{state} \PYGdefault{o}{=} \PYGdefault{n}{UNUSED}\PYGdefault{p}{;}
+        \PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{pid} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
+        \PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{parent} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
+        \PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{name}\PYGdefault{p}{[}\PYGdefault{l+m+mi}{0}\PYGdefault{p}{]} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
+        \PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{killed} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
+        \PYGdefault{n}{release}\PYGdefault{p}{(}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{ptable}\PYGdefault{p}{.}\PYGdefault{n}{lock}\PYGdefault{p}{);}
+        \PYGdefault{k}{return} \PYGdefault{n}{pid}\PYGdefault{p}{;}
+      \PYGdefault{p}{\PYGdefaultZcb{}}
+    \PYGdefault{p}{\PYGdefaultZcb{}}
+
+    \PYGdefault{c+c1}{// No point waiting if we don\PYGdefaultZsq{}t have any children.}
+    \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{o}{!}\PYGdefault{n}{havekids} \PYGdefault{o}{||} \PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{killed}\PYGdefault{p}{)\PYGdefaultZob{}}
+      \PYGdefault{n}{release}\PYGdefault{p}{(}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{ptable}\PYGdefault{p}{.}\PYGdefault{n}{lock}\PYGdefault{p}{);}
+      \PYGdefault{k}{return} \PYGdefault{o}{\PYGdefaultZhy{}}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{;}
+    \PYGdefault{p}{\PYGdefaultZcb{}}
+
+    \PYGdefault{c+c1}{// Wait for children to exit.  (See wakeup1 call in proc\PYGdefaultZus{}exit.)}
+    \PYGdefault{n}{sleep}\PYGdefault{p}{(}\PYGdefault{n}{proc}\PYGdefault{p}{,} \PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{ptable}\PYGdefault{p}{.}\PYGdefault{n}{lock}\PYGdefault{p}{);}  \PYGdefault{c+c1}{//DOC: wait\PYGdefaultZhy{}sleep}
+  \PYGdefault{p}{\PYGdefaultZcb{}}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+
+\PYGdefault{c+c1}{//PAGEBREAK: 42}
+\PYGdefault{c+c1}{// Per\PYGdefaultZhy{}CPU process scheduler.}
+\PYGdefault{c+c1}{// Each CPU calls scheduler() after setting itself up.}
+\PYGdefault{c+c1}{// Scheduler never returns.  It loops, doing:}
+\PYGdefault{c+c1}{//  \PYGdefaultZhy{} choose a process to run}
+\PYGdefault{c+c1}{//  \PYGdefaultZhy{} swtch to start running that process}
+\PYGdefault{c+c1}{//  \PYGdefaultZhy{} eventually that process transfers control}
+\PYGdefault{c+c1}{//      via swtch back to the scheduler.}
+\PYGdefault{k+kt}{void}
+\PYGdefault{n+nf}{scheduler}\PYGdefault{p}{(}\PYGdefault{k+kt}{void}\PYGdefault{p}{)}
+\PYGdefault{p}{\PYGdefaultZob{}}
+  \PYGdefault{k}{struct} \PYGdefault{n}{proc} \PYGdefault{o}{*}\PYGdefault{n}{p}\PYGdefault{p}{;}
+
+  \PYGdefault{k}{for}\PYGdefault{p}{(;;)\PYGdefaultZob{}}
+    \PYGdefault{c+c1}{// Enable interrupts on this processor.}
+    \PYGdefault{n}{sti}\PYGdefault{p}{();}
+
+    \PYGdefault{c+c1}{// Loop over process table looking for process to run.}
+    \PYGdefault{n}{acquire}\PYGdefault{p}{(}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{ptable}\PYGdefault{p}{.}\PYGdefault{n}{lock}\PYGdefault{p}{);}
+    \PYGdefault{k}{for}\PYGdefault{p}{(}\PYGdefault{n}{p} \PYGdefault{o}{=} \PYGdefault{n}{ptable}\PYGdefault{p}{.}\PYGdefault{n}{proc}\PYGdefault{p}{;} \PYGdefault{n}{p} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{ptable}\PYGdefault{p}{.}\PYGdefault{n}{proc}\PYGdefault{p}{[}\PYGdefault{n}{NPROC}\PYGdefault{p}{];} \PYGdefault{n}{p}\PYGdefault{o}{++}\PYGdefault{p}{)\PYGdefaultZob{}}
+      \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{state} \PYGdefault{o}{!=} \PYGdefault{n}{RUNNABLE}\PYGdefault{p}{)}
+        \PYGdefault{k}{continue}\PYGdefault{p}{;}
+
+      \PYGdefault{c+c1}{// Switch to chosen process.  It is the process\PYGdefaultZsq{}s job}
+      \PYGdefault{c+c1}{// to release ptable.lock and then reacquire it}
+      \PYGdefault{c+c1}{// before jumping back to us.}
+      \PYGdefault{n}{proc} \PYGdefault{o}{=} \PYGdefault{n}{p}\PYGdefault{p}{;}
+      \PYGdefault{n}{switchuvm}\PYGdefault{p}{(}\PYGdefault{n}{p}\PYGdefault{p}{);}
+      \PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{state} \PYGdefault{o}{=} \PYGdefault{n}{RUNNING}\PYGdefault{p}{;}
+      \PYGdefault{n}{swtch}\PYGdefault{p}{(}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{cpu}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{scheduler}\PYGdefault{p}{,} \PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{context}\PYGdefault{p}{);}
+      \PYGdefault{n}{switchkvm}\PYGdefault{p}{();}
+
+      \PYGdefault{c+c1}{// Process is done running for now.}
+      \PYGdefault{c+c1}{// It should have changed its p\PYGdefaultZhy{}\PYGdefaultZgt{}state before coming back.}
+      \PYGdefault{n}{proc} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
+    \PYGdefault{p}{\PYGdefaultZcb{}}
+    \PYGdefault{n}{release}\PYGdefault{p}{(}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{ptable}\PYGdefault{p}{.}\PYGdefault{n}{lock}\PYGdefault{p}{);}
+
+  \PYGdefault{p}{\PYGdefaultZcb{}}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+
+\PYGdefault{c+c1}{// Enter scheduler.  Must hold only ptable.lock}
+\PYGdefault{c+c1}{// and have changed proc\PYGdefaultZhy{}\PYGdefaultZgt{}state.}
+\PYGdefault{k+kt}{void}
+\PYGdefault{n+nf}{sched}\PYGdefault{p}{(}\PYGdefault{k+kt}{void}\PYGdefault{p}{)}
+\PYGdefault{p}{\PYGdefaultZob{}}
+  \PYGdefault{k+kt}{int} \PYGdefault{n}{intena}\PYGdefault{p}{;}
+
+  \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{o}{!}\PYGdefault{n}{holding}\PYGdefault{p}{(}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{ptable}\PYGdefault{p}{.}\PYGdefault{n}{lock}\PYGdefault{p}{))}
+    \PYGdefault{n}{panic}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}sched ptable.lock\PYGdefaultZdq{}}\PYGdefault{p}{);}
+  \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{cpu}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{ncli} \PYGdefault{o}{!=} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{)}
+    \PYGdefault{n}{panic}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}sched locks\PYGdefaultZdq{}}\PYGdefault{p}{);}
+  \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{state} \PYGdefault{o}{==} \PYGdefault{n}{RUNNING}\PYGdefault{p}{)}
+    \PYGdefault{n}{panic}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}sched running\PYGdefaultZdq{}}\PYGdefault{p}{);}
+  \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{readeflags}\PYGdefault{p}{()}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{FL\PYGdefaultZus{}IF}\PYGdefault{p}{)}
+    \PYGdefault{n}{panic}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}sched interruptible\PYGdefaultZdq{}}\PYGdefault{p}{);}
+  \PYGdefault{n}{intena} \PYGdefault{o}{=} \PYGdefault{n}{cpu}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{intena}\PYGdefault{p}{;}
+  \PYGdefault{n}{swtch}\PYGdefault{p}{(}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{context}\PYGdefault{p}{,} \PYGdefault{n}{cpu}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{scheduler}\PYGdefault{p}{);}
+  \PYGdefault{n}{cpu}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{intena} \PYGdefault{o}{=} \PYGdefault{n}{intena}\PYGdefault{p}{;}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+
+\PYGdefault{c+c1}{// Give up the CPU for one scheduling round.}
+\PYGdefault{k+kt}{void}
+\PYGdefault{n+nf}{yield}\PYGdefault{p}{(}\PYGdefault{k+kt}{void}\PYGdefault{p}{)}
+\PYGdefault{p}{\PYGdefaultZob{}}
+  \PYGdefault{n}{acquire}\PYGdefault{p}{(}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{ptable}\PYGdefault{p}{.}\PYGdefault{n}{lock}\PYGdefault{p}{);}  \PYGdefault{c+c1}{//DOC: yieldlock}
+  \PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{state} \PYGdefault{o}{=} \PYGdefault{n}{RUNNABLE}\PYGdefault{p}{;}
+  \PYGdefault{n}{sched}\PYGdefault{p}{();}
+  \PYGdefault{n}{release}\PYGdefault{p}{(}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{ptable}\PYGdefault{p}{.}\PYGdefault{n}{lock}\PYGdefault{p}{);}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+
+\PYGdefault{c+c1}{// A fork child\PYGdefaultZsq{}s very first scheduling by scheduler()}
+\PYGdefault{c+c1}{// will swtch here.  \PYGdefaultZdq{}Return\PYGdefaultZdq{} to user space.}
+\PYGdefault{k+kt}{void}
+\PYGdefault{n+nf}{forkret}\PYGdefault{p}{(}\PYGdefault{k+kt}{void}\PYGdefault{p}{)}
+\PYGdefault{p}{\PYGdefaultZob{}}
+  \PYGdefault{k}{static} \PYGdefault{k+kt}{int} \PYGdefault{n}{first} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{;}
+  \PYGdefault{c+c1}{// Still holding ptable.lock from scheduler.}
+  \PYGdefault{n}{release}\PYGdefault{p}{(}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{ptable}\PYGdefault{p}{.}\PYGdefault{n}{lock}\PYGdefault{p}{);}
+
+  \PYGdefault{k}{if} \PYGdefault{p}{(}\PYGdefault{n}{first}\PYGdefault{p}{)} \PYGdefault{p}{\PYGdefaultZob{}}
+    \PYGdefault{c+c1}{// Some initialization functions must be run in the context}
+    \PYGdefault{c+c1}{// of a regular process (e.g., they call sleep), and thus cannot }
+    \PYGdefault{c+c1}{// be run from main().}
+    \PYGdefault{n}{first} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
+    \PYGdefault{n}{iinit}\PYGdefault{p}{(}\PYGdefault{n}{ROOTDEV}\PYGdefault{p}{);}
+    \PYGdefault{n}{initlog}\PYGdefault{p}{(}\PYGdefault{n}{ROOTDEV}\PYGdefault{p}{);}
+  \PYGdefault{p}{\PYGdefaultZcb{}}
+  
+  \PYGdefault{c+c1}{// Return to \PYGdefaultZdq{}caller\PYGdefaultZdq{}, actually trapret (see allocproc).}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+
+\PYGdefault{c+c1}{// Atomically release lock and sleep on chan.}
+\PYGdefault{c+c1}{// Reacquires lock when awakened.}
+\PYGdefault{k+kt}{void}
+\PYGdefault{n+nf}{sleep}\PYGdefault{p}{(}\PYGdefault{k+kt}{void} \PYGdefault{o}{*}\PYGdefault{n}{chan}\PYGdefault{p}{,} \PYGdefault{k}{struct} \PYGdefault{n}{spinlock} \PYGdefault{o}{*}\PYGdefault{n}{lk}\PYGdefault{p}{)}
+\PYGdefault{p}{\PYGdefaultZob{}}
+  \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{proc} \PYGdefault{o}{==} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)}
+    \PYGdefault{n}{panic}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}sleep\PYGdefaultZdq{}}\PYGdefault{p}{);}
+
+  \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{lk} \PYGdefault{o}{==} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{)}
+    \PYGdefault{n}{panic}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}sleep without lk\PYGdefaultZdq{}}\PYGdefault{p}{);}
+
+  \PYGdefault{c+c1}{// Must acquire ptable.lock in order to}
+  \PYGdefault{c+c1}{// change p\PYGdefaultZhy{}\PYGdefaultZgt{}state and then call sched.}
+  \PYGdefault{c+c1}{// Once we hold ptable.lock, we can be}
+  \PYGdefault{c+c1}{// guaranteed that we won\PYGdefaultZsq{}t miss any wakeup}
+  \PYGdefault{c+c1}{// (wakeup runs with ptable.lock locked),}
+  \PYGdefault{c+c1}{// so it\PYGdefaultZsq{}s okay to release lk.}
+  \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{lk} \PYGdefault{o}{!=} \PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{ptable}\PYGdefault{p}{.}\PYGdefault{n}{lock}\PYGdefault{p}{)\PYGdefaultZob{}}  \PYGdefault{c+c1}{//DOC: sleeplock0}
+    \PYGdefault{n}{acquire}\PYGdefault{p}{(}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{ptable}\PYGdefault{p}{.}\PYGdefault{n}{lock}\PYGdefault{p}{);}  \PYGdefault{c+c1}{//DOC: sleeplock1}
+    \PYGdefault{n}{release}\PYGdefault{p}{(}\PYGdefault{n}{lk}\PYGdefault{p}{);}
+  \PYGdefault{p}{\PYGdefaultZcb{}}
+
+  \PYGdefault{c+c1}{// Go to sleep.}
+  \PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{chan} \PYGdefault{o}{=} \PYGdefault{n}{chan}\PYGdefault{p}{;}
+  \PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{state} \PYGdefault{o}{=} \PYGdefault{n}{SLEEPING}\PYGdefault{p}{;}
+  \PYGdefault{n}{sched}\PYGdefault{p}{();}
+
+  \PYGdefault{c+c1}{// Tidy up.}
+  \PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{chan} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
+
+  \PYGdefault{c+c1}{// Reacquire original lock.}
+  \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{lk} \PYGdefault{o}{!=} \PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{ptable}\PYGdefault{p}{.}\PYGdefault{n}{lock}\PYGdefault{p}{)\PYGdefaultZob{}}  \PYGdefault{c+c1}{//DOC: sleeplock2}
+    \PYGdefault{n}{release}\PYGdefault{p}{(}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{ptable}\PYGdefault{p}{.}\PYGdefault{n}{lock}\PYGdefault{p}{);}
+    \PYGdefault{n}{acquire}\PYGdefault{p}{(}\PYGdefault{n}{lk}\PYGdefault{p}{);}
+  \PYGdefault{p}{\PYGdefaultZcb{}}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+
+\PYGdefault{c+c1}{//PAGEBREAK!}
+\PYGdefault{c+c1}{// Wake up all processes sleeping on chan.}
+\PYGdefault{c+c1}{// The ptable lock must be held.}
+\PYGdefault{k}{static} \PYGdefault{k+kt}{void}
+\PYGdefault{n+nf}{wakeup1}\PYGdefault{p}{(}\PYGdefault{k+kt}{void} \PYGdefault{o}{*}\PYGdefault{n}{chan}\PYGdefault{p}{)}
+\PYGdefault{p}{\PYGdefaultZob{}}
+  \PYGdefault{k}{struct} \PYGdefault{n}{proc} \PYGdefault{o}{*}\PYGdefault{n}{p}\PYGdefault{p}{;}
+
+  \PYGdefault{k}{for}\PYGdefault{p}{(}\PYGdefault{n}{p} \PYGdefault{o}{=} \PYGdefault{n}{ptable}\PYGdefault{p}{.}\PYGdefault{n}{proc}\PYGdefault{p}{;} \PYGdefault{n}{p} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{ptable}\PYGdefault{p}{.}\PYGdefault{n}{proc}\PYGdefault{p}{[}\PYGdefault{n}{NPROC}\PYGdefault{p}{];} \PYGdefault{n}{p}\PYGdefault{o}{++}\PYGdefault{p}{)}
+    \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{state} \PYGdefault{o}{==} \PYGdefault{n}{SLEEPING} \PYGdefault{o}{\PYGdefaultZam{}\PYGdefaultZam{}} \PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{chan} \PYGdefault{o}{==} \PYGdefault{n}{chan}\PYGdefault{p}{)}
+      \PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{state} \PYGdefault{o}{=} \PYGdefault{n}{RUNNABLE}\PYGdefault{p}{;}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+
+\PYGdefault{c+c1}{// Wake up all processes sleeping on chan.}
+\PYGdefault{k+kt}{void}
+\PYGdefault{n+nf}{wakeup}\PYGdefault{p}{(}\PYGdefault{k+kt}{void} \PYGdefault{o}{*}\PYGdefault{n}{chan}\PYGdefault{p}{)}
+\PYGdefault{p}{\PYGdefaultZob{}}
+  \PYGdefault{n}{acquire}\PYGdefault{p}{(}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{ptable}\PYGdefault{p}{.}\PYGdefault{n}{lock}\PYGdefault{p}{);}
+  \PYGdefault{n}{wakeup1}\PYGdefault{p}{(}\PYGdefault{n}{chan}\PYGdefault{p}{);}
+  \PYGdefault{n}{release}\PYGdefault{p}{(}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{ptable}\PYGdefault{p}{.}\PYGdefault{n}{lock}\PYGdefault{p}{);}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+
+\PYGdefault{c+c1}{// Kill the process with the given pid.}
+\PYGdefault{c+c1}{// Process won\PYGdefaultZsq{}t exit until it returns}
+\PYGdefault{c+c1}{// to user space (see trap in trap.c).}
+\PYGdefault{k+kt}{int}
+\PYGdefault{n+nf}{kill}\PYGdefault{p}{(}\PYGdefault{k+kt}{int} \PYGdefault{n}{pid}\PYGdefault{p}{)}
+\PYGdefault{p}{\PYGdefaultZob{}}
+  \PYGdefault{k}{struct} \PYGdefault{n}{proc} \PYGdefault{o}{*}\PYGdefault{n}{p}\PYGdefault{p}{;}
+
+  \PYGdefault{n}{acquire}\PYGdefault{p}{(}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{ptable}\PYGdefault{p}{.}\PYGdefault{n}{lock}\PYGdefault{p}{);}
+  \PYGdefault{k}{for}\PYGdefault{p}{(}\PYGdefault{n}{p} \PYGdefault{o}{=} \PYGdefault{n}{ptable}\PYGdefault{p}{.}\PYGdefault{n}{proc}\PYGdefault{p}{;} \PYGdefault{n}{p} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{ptable}\PYGdefault{p}{.}\PYGdefault{n}{proc}\PYGdefault{p}{[}\PYGdefault{n}{NPROC}\PYGdefault{p}{];} \PYGdefault{n}{p}\PYGdefault{o}{++}\PYGdefault{p}{)\PYGdefaultZob{}}
+    \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{pid} \PYGdefault{o}{==} \PYGdefault{n}{pid}\PYGdefault{p}{)\PYGdefaultZob{}}
+      \PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{killed} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{;}
+      \PYGdefault{c+c1}{// Wake process from sleep if necessary.}
+      \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{state} \PYGdefault{o}{==} \PYGdefault{n}{SLEEPING}\PYGdefault{p}{)}
+        \PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{state} \PYGdefault{o}{=} \PYGdefault{n}{RUNNABLE}\PYGdefault{p}{;}
+      \PYGdefault{n}{release}\PYGdefault{p}{(}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{ptable}\PYGdefault{p}{.}\PYGdefault{n}{lock}\PYGdefault{p}{);}
+      \PYGdefault{k}{return} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
+    \PYGdefault{p}{\PYGdefaultZcb{}}
+  \PYGdefault{p}{\PYGdefaultZcb{}}
+  \PYGdefault{n}{release}\PYGdefault{p}{(}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{ptable}\PYGdefault{p}{.}\PYGdefault{n}{lock}\PYGdefault{p}{);}
+  \PYGdefault{k}{return} \PYGdefault{o}{\PYGdefaultZhy{}}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{;}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+
+\PYGdefault{c+c1}{//PAGEBREAK: 36}
+\PYGdefault{c+c1}{// Print a process listing to console.  For debugging.}
+\PYGdefault{c+c1}{// Runs when user types \PYGdefaultZca{}P on console.}
+\PYGdefault{c+c1}{// No lock to avoid wedging a stuck machine further.}
+\PYGdefault{k+kt}{void}
+\PYGdefault{n+nf}{procdump}\PYGdefault{p}{(}\PYGdefault{k+kt}{void}\PYGdefault{p}{)}
+\PYGdefault{p}{\PYGdefaultZob{}}
+  \PYGdefault{k}{static} \PYGdefault{k+kt}{char} \PYGdefault{o}{*}\PYGdefault{n}{states}\PYGdefault{p}{[]} \PYGdefault{o}{=} \PYGdefault{p}{\PYGdefaultZob{}}
+  \PYGdefault{p}{[}\PYGdefault{n}{UNUSED}\PYGdefault{p}{]}    \PYGdefault{l+s}{\PYGdefaultZdq{}unused\PYGdefaultZdq{}}\PYGdefault{p}{,}
+  \PYGdefault{p}{[}\PYGdefault{n}{EMBRYO}\PYGdefault{p}{]}    \PYGdefault{l+s}{\PYGdefaultZdq{}embryo\PYGdefaultZdq{}}\PYGdefault{p}{,}
+  \PYGdefault{p}{[}\PYGdefault{n}{SLEEPING}\PYGdefault{p}{]}  \PYGdefault{l+s}{\PYGdefaultZdq{}sleep \PYGdefaultZdq{}}\PYGdefault{p}{,}
+  \PYGdefault{p}{[}\PYGdefault{n}{RUNNABLE}\PYGdefault{p}{]}  \PYGdefault{l+s}{\PYGdefaultZdq{}runble\PYGdefaultZdq{}}\PYGdefault{p}{,}
+  \PYGdefault{p}{[}\PYGdefault{n}{RUNNING}\PYGdefault{p}{]}   \PYGdefault{l+s}{\PYGdefaultZdq{}run   \PYGdefaultZdq{}}\PYGdefault{p}{,}
+  \PYGdefault{p}{[}\PYGdefault{n}{ZOMBIE}\PYGdefault{p}{]}    \PYGdefault{l+s}{\PYGdefaultZdq{}zombie\PYGdefaultZdq{}}
+  \PYGdefault{p}{\PYGdefaultZcb{};}
+  \PYGdefault{c+c1}{//int i;}
+  \PYGdefault{k}{struct} \PYGdefault{n}{proc} \PYGdefault{o}{*}\PYGdefault{n}{p}\PYGdefault{p}{;}
+  \PYGdefault{k+kt}{char} \PYGdefault{o}{*}\PYGdefault{n}{state}\PYGdefault{p}{;}
+  \PYGdefault{c+c1}{//uint pc[10];}
+  
+  \PYGdefault{k}{for}\PYGdefault{p}{(}\PYGdefault{n}{p} \PYGdefault{o}{=} \PYGdefault{n}{ptable}\PYGdefault{p}{.}\PYGdefault{n}{proc}\PYGdefault{p}{;} \PYGdefault{n}{p} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{ptable}\PYGdefault{p}{.}\PYGdefault{n}{proc}\PYGdefault{p}{[}\PYGdefault{n}{NPROC}\PYGdefault{p}{];} \PYGdefault{n}{p}\PYGdefault{o}{++}\PYGdefault{p}{)\PYGdefaultZob{}}
+    \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{state} \PYGdefault{o}{==} \PYGdefault{n}{UNUSED}\PYGdefault{p}{)}
+      \PYGdefault{k}{continue}\PYGdefault{p}{;}
+    \PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{state} \PYGdefault{o}{\PYGdefaultZgt{}=} \PYGdefault{l+m+mi}{0} \PYGdefault{o}{\PYGdefaultZam{}\PYGdefaultZam{}} \PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{state} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{n}{NELEM}\PYGdefault{p}{(}\PYGdefault{n}{states}\PYGdefault{p}{)} \PYGdefault{o}{\PYGdefaultZam{}\PYGdefaultZam{}} \PYGdefault{n}{states}\PYGdefault{p}{[}\PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{state}\PYGdefault{p}{])}
+      \PYGdefault{n}{state} \PYGdefault{o}{=} \PYGdefault{n}{states}\PYGdefault{p}{[}\PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{state}\PYGdefault{p}{];}
+    \PYGdefault{k}{else}
+      \PYGdefault{n}{state} \PYGdefault{o}{=} \PYGdefault{l+s}{\PYGdefaultZdq{}???\PYGdefaultZdq{}}\PYGdefault{p}{;}
+    \PYGdefault{n}{cprintf}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}\PYGdefaultZpc{}d \PYGdefaultZpc{}s \PYGdefaultZpc{}s \PYGdefaultZpc{}d \PYGdefaultZpc{}d \PYGdefaultZpc{}d\PYGdefaultZdq{}}\PYGdefault{p}{,} \PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{pid}\PYGdefault{p}{,} \PYGdefault{n}{state}\PYGdefault{p}{,} \PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{name}\PYGdefault{p}{,} \PYGdefault{p}{(}\PYGdefault{n}{uint}\PYGdefault{p}{)}\PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{tf}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{esp}\PYGdefault{p}{,} \PYGdefault{n}{PGROUNDDOWN}\PYGdefault{p}{((}\PYGdefault{n}{uint}\PYGdefault{p}{)}\PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{tf}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{esp}\PYGdefault{p}{),} \PYGdefault{p}{(}\PYGdefault{n}{uint}\PYGdefault{p}{)}\PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{tf}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{ebp}\PYGdefault{p}{);}
+    \PYGdefault{n}{cprintf}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{} esp: \PYGdefaultZpc{}p \PYGdefaultZpc{}p \PYGdefaultZpc{}p\PYGdefaultZdq{}}\PYGdefault{p}{,} \PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{tf}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{esp}\PYGdefault{p}{,} \PYGdefault{n}{PGROUNDDOWN}\PYGdefault{p}{(}\PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{tf}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{esp}\PYGdefault{p}{),} \PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{tf}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{esp} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{n}{PGROUNDDOWN}\PYGdefault{p}{(}\PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{tf}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{esp}\PYGdefault{p}{));}
+    \PYGdefault{n}{cprintf}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{} ebp: \PYGdefaultZpc{}p \PYGdefaultZpc{}p \PYGdefaultZpc{}p\PYGdefaultZdq{}}\PYGdefault{p}{,} \PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{tf}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{ebp}\PYGdefault{p}{,} \PYGdefault{n}{PGROUNDDOWN}\PYGdefault{p}{(}\PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{tf}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{ebp}\PYGdefault{p}{),} \PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{tf}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{ebp} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{n}{PGROUNDDOWN}\PYGdefault{p}{(}\PYGdefault{n}{p}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{tf}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{ebp}\PYGdefault{p}{));}
+    \PYGdefault{c+cm}{/*}
+\PYGdefault{c+cm}{    if(p\PYGdefaultZhy{}\PYGdefaultZgt{}state == SLEEPING)\PYGdefaultZob{}}
+\PYGdefault{c+cm}{      getcallerpcs((uint*)p\PYGdefaultZhy{}\PYGdefaultZgt{}context\PYGdefaultZhy{}\PYGdefaultZgt{}ebp+2, pc);}
+\PYGdefault{c+cm}{      for(i=0; i\PYGdefaultZlt{}10 \PYGdefaultZam{}\PYGdefaultZam{} pc[i] != 0; i++)}
+\PYGdefault{c+cm}{        cprintf(\PYGdefaultZdq{} \PYGdefaultZpc{}p\PYGdefaultZdq{}, pc[i]);}
+\PYGdefault{c+cm}{    \PYGdefaultZcb{}}
+\PYGdefault{c+cm}{    */}
+    \PYGdefault{n}{cprintf}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{p}{);}
+  \PYGdefault{p}{\PYGdefaultZcb{}}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+\end{Verbatim}
