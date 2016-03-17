@@ -63,7 +63,7 @@ In this section, we describe our implementation of the system call \texttt{clone
 \item Instead of different address spaces between the parent and the child, in \texttt{clone} the child process has the same address space with the parent. 
 \item In \texttt{clone}, the user stack is different for the child process than the one that the parent uses. 
 \item We, also, need to change the trap frame because we have to point our new registers to the new user stack. So, when we go back to user space we need the registers to be restored. As a result, we need to change the base pointer and the stack pointer. 
-\item Finally, we change the \texttt{wait()} function in \texttt{proc.c} (listing \ref{lst:wait}). The parent process releases the resources when the child process if finished. But now more threads share the same resources. So, we added a parameter that keeps track of the thread that the system currently releases. 
+\item Finally, we change the \texttt{wait()} function in \texttt{proc.c} (listing \ref{lst:wait}). The parent process releases the resources when the child process is finished. But now more threads share the same resources. So, we added a parameter that keeps track of the thread that the system currently releases. 
 
 \end{enumerate}
 
