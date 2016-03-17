@@ -1,0 +1,63 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGdefault{c+cp}{\PYGdefaultZsh{}include \PYGdefaultZdq{}types.h\PYGdefaultZdq{}}
+\PYGdefault{c+cp}{\PYGdefaultZsh{}include \PYGdefaultZdq{}user.h\PYGdefaultZdq{}}
+\PYGdefault{c+cp}{\PYGdefaultZsh{}include \PYGdefaultZdq{}x86.h\PYGdefaultZdq{}}
+
+\PYGdefault{k+kt}{int} \PYGdefault{n}{n}\PYGdefault{p}{;}
+
+\PYGdefault{k}{struct} \PYGdefault{n}{lock} \PYGdefault{p}{\PYGdefaultZob{}}
+  \PYGdefault{n}{uint} \PYGdefault{n}{locked}\PYGdefault{p}{;}
+\PYGdefault{p}{\PYGdefaultZcb{};}
+
+\PYGdefault{k+kt}{int} \PYGdefault{n+nf}{thread\PYGdefaultZus{}create2}\PYGdefault{p}{(}\PYGdefault{k+kt}{void} \PYGdefault{o}{*}\PYGdefault{p}{(}\PYGdefault{o}{*}\PYGdefault{n}{start\PYGdefaultZus{}routine}\PYGdefault{p}{)(}\PYGdefault{k+kt}{void}\PYGdefault{o}{*}\PYGdefault{p}{),} \PYGdefault{k+kt}{void} \PYGdefault{o}{*}\PYGdefault{n}{arg}\PYGdefault{p}{)\PYGdefaultZob{}}
+	\PYGdefault{k+kt}{int} \PYGdefault{n}{size} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{4096}\PYGdefault{p}{;}
+	\PYGdefault{k+kt}{char} \PYGdefault{o}{*}\PYGdefault{n}{stack} \PYGdefault{o}{=} \PYGdefault{n}{malloc}\PYGdefault{p}{(}\PYGdefault{l+m+mi}{2} \PYGdefault{o}{*} \PYGdefault{n}{size}\PYGdefault{p}{);}
+	
+	\PYGdefault{k+kt}{int} \PYGdefault{n}{tid} \PYGdefault{o}{=} \PYGdefault{n}{clone}\PYGdefault{p}{(}\PYGdefault{n}{stack}\PYGdefault{p}{,} \PYGdefault{n}{size}\PYGdefault{p}{);}
+	\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{tid} \PYGdefault{o}{==} \PYGdefault{o}{\PYGdefaultZhy{}}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{)\PYGdefaultZob{}}
+		\PYGdefault{p}{(}\PYGdefault{o}{*}\PYGdefault{n}{start\PYGdefaultZus{}routine}\PYGdefault{p}{)(}\PYGdefault{n}{arg}\PYGdefault{p}{);}
+		\PYGdefault{n}{free}\PYGdefault{p}{(}\PYGdefault{n}{stack}\PYGdefault{p}{);}
+		\PYGdefault{n}{exit}\PYGdefault{p}{();}
+	\PYGdefault{p}{\PYGdefaultZcb{}} 
+	\PYGdefault{k}{return} \PYGdefault{n}{tid}\PYGdefault{p}{;}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+
+\PYGdefault{k+kt}{void} \PYGdefault{n+nf}{init\PYGdefaultZus{}lock}\PYGdefault{p}{(}\PYGdefault{k}{struct} \PYGdefault{n}{lock} \PYGdefault{o}{*}\PYGdefault{n}{lk}\PYGdefault{p}{)} \PYGdefault{p}{\PYGdefaultZob{}}
+  \PYGdefault{n}{lk}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{locked} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+
+\PYGdefault{k+kt}{void} \PYGdefault{n+nf}{acquire\PYGdefaultZus{}lock}\PYGdefault{p}{(}\PYGdefault{k}{struct} \PYGdefault{n}{lock} \PYGdefault{o}{*}\PYGdefault{n}{lk}\PYGdefault{p}{)\PYGdefaultZob{}}
+  \PYGdefault{k}{while}\PYGdefault{p}{(}\PYGdefault{n}{xchg}\PYGdefault{p}{(}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{lk}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{locked}\PYGdefault{p}{,} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{)} \PYGdefault{o}{!=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{);}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+
+\PYGdefault{k+kt}{void} \PYGdefault{n+nf}{release\PYGdefaultZus{}lock}\PYGdefault{p}{(}\PYGdefault{k}{struct} \PYGdefault{n}{lock} \PYGdefault{o}{*}\PYGdefault{n}{lk}\PYGdefault{p}{)\PYGdefaultZob{}}
+  \PYGdefault{n}{xchg}\PYGdefault{p}{(}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{lk}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{locked}\PYGdefault{p}{,} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{);}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+
+\PYGdefault{k}{struct} \PYGdefault{n}{anderson\PYGdefaultZus{}lock} \PYGdefault{p}{\PYGdefaultZob{}}
+  \PYGdefault{n}{uint} \PYGdefault{o}{*}\PYGdefault{n}{slots}\PYGdefault{p}{;}
+  \PYGdefault{n}{uint} \PYGdefault{n}{next\PYGdefaultZus{}slot}\PYGdefault{p}{;}
+\PYGdefault{p}{\PYGdefaultZcb{};}
+
+\PYGdefault{k+kt}{void} \PYGdefault{n+nf}{init\PYGdefaultZus{}anderson\PYGdefaultZus{}lock}\PYGdefault{p}{(}\PYGdefault{k}{struct} \PYGdefault{n}{anderson\PYGdefaultZus{}lock} \PYGdefault{o}{*}\PYGdefault{n}{lk}\PYGdefault{p}{,} \PYGdefault{n}{uint} \PYGdefault{n}{nthreads}\PYGdefault{p}{)\PYGdefaultZob{}}
+  \PYGdefault{n}{lk}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{slots} \PYGdefault{o}{=} \PYGdefault{n}{malloc}\PYGdefault{p}{(}\PYGdefault{n}{nthreads}\PYGdefault{o}{*}\PYGdefault{k}{sizeof}\PYGdefault{p}{(}\PYGdefault{n}{uint}\PYGdefault{p}{));}
+  \PYGdefault{k+kt}{int} \PYGdefault{n}{i}\PYGdefault{p}{;}
+  \PYGdefault{k}{for}\PYGdefault{p}{(}\PYGdefault{n}{i} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;} \PYGdefault{n}{i} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{n}{nthreads}\PYGdefault{p}{;} \PYGdefault{n}{i}\PYGdefault{o}{++}\PYGdefault{p}{)} \PYGdefault{n}{lk}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{slots}\PYGdefault{p}{[}\PYGdefault{n}{i}\PYGdefault{p}{]} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
+  \PYGdefault{n}{lk}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{slots}\PYGdefault{p}{[}\PYGdefault{l+m+mi}{0}\PYGdefault{p}{]} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{;}
+  \PYGdefault{n}{lk}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{next\PYGdefaultZus{}slot} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+
+\PYGdefault{n}{uint} \PYGdefault{n+nf}{acquire\PYGdefaultZus{}anderson\PYGdefaultZus{}lock}\PYGdefault{p}{(}\PYGdefault{k}{struct} \PYGdefault{n}{anderson\PYGdefaultZus{}lock} \PYGdefault{o}{*}\PYGdefault{n}{lk}\PYGdefault{p}{)\PYGdefaultZob{}}
+  \PYGdefault{n}{uint} \PYGdefault{n}{myplace}\PYGdefault{p}{;}
+  \PYGdefault{n}{xchg}\PYGdefault{p}{(}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{myplace}\PYGdefault{p}{,} \PYGdefault{n}{lk}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{next\PYGdefaultZus{}slot}\PYGdefault{p}{);}
+  \PYGdefault{n}{xchg}\PYGdefault{p}{(}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{lk}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{next\PYGdefaultZus{}slot}\PYGdefault{p}{,} \PYGdefault{n}{lk}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{next\PYGdefaultZus{}slot} \PYGdefault{o}{+} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{);}
+  \PYGdefault{n}{myplace} \PYGdefault{o}{=} \PYGdefault{n}{myplace} \PYGdefault{o}{\PYGdefaultZpc{}} \PYGdefault{n}{n}\PYGdefault{p}{;}
+  \PYGdefault{k}{while}\PYGdefault{p}{(}\PYGdefault{n}{lk}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{slots}\PYGdefault{p}{[}\PYGdefault{n}{myplace}\PYGdefault{p}{]} \PYGdefault{o}{==} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{);}
+  \PYGdefault{k}{return} \PYGdefault{n}{myplace}\PYGdefault{p}{;}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+
+\PYGdefault{k+kt}{void} \PYGdefault{n+nf}{release\PYGdefaultZus{}anderson\PYGdefaultZus{}lock}\PYGdefault{p}{(}\PYGdefault{k}{struct} \PYGdefault{n}{anderson\PYGdefaultZus{}lock} \PYGdefault{o}{*}\PYGdefault{n}{lk}\PYGdefault{p}{,} \PYGdefault{n}{uint} \PYGdefault{n}{myplace}\PYGdefault{p}{)\PYGdefaultZob{}}
+  \PYGdefault{n}{xchg}\PYGdefault{p}{(}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{lk}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{slots}\PYGdefault{p}{[}\PYGdefault{n}{myplace} \PYGdefault{o}{\PYGdefaultZpc{}} \PYGdefault{n}{n}\PYGdefault{p}{],} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{);}
+  \PYGdefault{n}{xchg}\PYGdefault{p}{(}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{lk}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{slots}\PYGdefault{p}{[(}\PYGdefault{n}{myplace} \PYGdefault{o}{+} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{)} \PYGdefault{o}{\PYGdefaultZpc{}} \PYGdefault{n}{n}\PYGdefault{p}{],} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{);}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+\end{Verbatim}

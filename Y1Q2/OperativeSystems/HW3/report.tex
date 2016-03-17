@@ -1,0 +1,206 @@
+\documentclass[10pt]{scrartcl}
+\usepackage[hmargin=2.5cm,vmargin=3cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+
+\usepackage{color}
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+\usepackage{listings}
+\lstset{frame=tb,
+  language=C++,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+\usepackage[dvipsnames]{xcolor}
+
+
+\usepackage{hyperref}
+\hypersetup{
+colorlinks=false,
+hidelinks
+}
+\usepackage{minted}
+\usepackage{placeins}
+
+\setlength{\parindent}{1em}
+\setlength{\parskip}{0.5em}
+
+
+%opening
+\title{Lab 3 Report}
+\author{
+   Christina Pavlopoulou\\
+  \small \texttt{cpavl001@ucr.edu}
+  \and
+   Niloufar Hosseini Pour\\
+  \small \texttt{nhoss003@ucr.edu}
+  \and
+   Andres Calderon\\
+  \small \texttt{acald013@ucr.edu}
+}
+
+\begin{document}
+\maketitle
+
+The goal of this lab was to create kernel threads in \texttt{xv6}. 
+
+\section{Clone}
+In this section, we describe our implementation of the system call \texttt{clone} that we created. Firstly, we added this function in the \texttt{proc.c} file of \texttt{xv6} (see listing \ref{lst:clone}). We based on the \texttt{fork()} implementation but we changed the following things:
+\begin{enumerate}
+\item Instead of different address spaces between the parent and the child, in \texttt{clone} the child process has the same address space with the parent. 
+\item In \texttt{clone}, the user stack is different for the child process than the one that the parent uses. 
+\item We, also, need to change the trap frame because we have to point our new registers to the new user stack. So, when we go back to user space we need the registers to be restored. As a result, we need to change the base pointer and the stack pointer. 
+\item Finally, we change the \texttt{wait()} function in \texttt{proc.c} (listing \ref{lst:wait}). The parent process releases the resources when the child process if finished. But now more threads share the same resources. So, we added a parameter that keeps track of the thread that the system currently releases. 
+
+\end{enumerate}
+
+\begin{listing}[h!]
+  \inputminted[
+    fontsize=\footnotesize,
+    tabsize=2,
+    firstline=169,
+    firstnumber=169,
+    lastline=217,
+    frame=single,
+    linenos
+  ]{c}{xv6-public/proc.c}
+  \caption{Clone function for thread creation.}\label{lst:clone}
+\end{listing}
+
+\begin{listing}[h!]
+  \inputminted[
+    fontsize=\footnotesize,
+    tabsize=2,
+    firstline=285,
+    firstnumber=285,
+    lastline=288,
+    frame=single,
+    linenos
+  ]{c}{xv6-public/proc.c}
+  \caption{Changes in the \texttt{wait} function.}\label{lst:wait}
+\end{listing}
+
+\section{Thread Library}\label{sec:threads}
+In this section, we created a file called \texttt{thread.h} (see listing \ref{lst:threads}). In this file, we added \texttt{init\_lock()}, \texttt{acquire\_lock()} and \texttt{release\_lock()} function in the same way as in the \texttt{spinlock.c} file. The only difference is that we did not use the CPUs and the name variables because we did not need them for our implementation.
+
+In the \texttt{init\_lock} we just initialize the locked variable. In the \texttt{acquire\_lock}, we spin the threads that do not have the lock until the thread with the lock calls the \texttt{release\_lock } and release it.
+Finally, in the same file, we implement the \texttt{create\_thread} function in which we define the size of our stack and we allocate space for it. Then, we call the \texttt{clone} system call. As final step, we free the stack and we exit. 
+
+\begin{listing}[h!]
+  \inputminted[
+    fontsize=\footnotesize,
+    tabsize=2,
+    firstline=1,
+    firstnumber=1,
+    lastline=34,
+    frame=single,
+    linenos
+  ]{c}{xv6-public/thread.h}
+  \caption{Library for thread creation and locking.}\label{lst:threads}
+\end{listing}
+
+\FloatBarrier
+
+\section{Anderson's array-based queue lock}
+
+\subsection{Initialization}
+First we dynamically create an array and make all the cells equal to zero except the first cell.
+
+\begin{listing}[h!]
+  \inputminted[
+    fontsize=\footnotesize,
+    tabsize=2,
+    firstline=41,
+    firstnumber=41,
+    lastline=47,
+    frame=single,
+    linenos
+  ]{c}{xv6-public/thread.h}
+  \caption{Initializing an Anderson lock.}\label{lst:init_anderson_lock}
+\end{listing}
+
+\subsection{Acquiring the Lock}
+Threads share an atomic tail field, to acquire the lock, each thread atomically increments the tail field.  If the flag is true, the lock is acquired , otherwise, spin until the flag is true. If another thread wants to acquire the lock, it applies get and increment,the thread spins because the flag is false.
+
+\begin{listing}[h!]
+  \inputminted[
+    fontsize=\footnotesize,
+    tabsize=2,
+    firstline=49,
+    firstnumber=49,
+    lastline=56,
+    frame=single,
+    linenos
+  ]{c}{xv6-public/thread.h}
+  \caption{Acquiring an Anderson lock.}\label{lst:acquire_anderson_lock}
+\end{listing}
+
+\subsection{Releasing the Lock}
+The first thread releases the lock by setting, the next slot to true, the second thread notices the change and gets the lock.
+
+\begin{listing}[h!]
+  \inputminted[
+    fontsize=\footnotesize,
+    tabsize=2,
+    firstline=58,
+    firstnumber=58,
+    lastline=61,
+    frame=single,
+    linenos
+  ]{c}{xv6-public/thread.h}
+  \caption{Releasing an Anderson lock.}\label{lst:release_anderson_lock}
+\end{listing}
+
+\section{Tests}
+\subsection{Spin lock test}
+The first of our tests implements the simple spin lock explained in section \ref{sec:threads}.  We used a fix number of threads (4 in this case) and a counter that we put between the acquire and release functions to test that the threads are interleaving and increment the counter appropriately. For each thread we run \textit{n} iterations, where \textit{n} is the number of threads. The code can be seen in listing \ref{lst:test1}.  Figure \ref{fig:test1} shows the output of this test.
+
+\begin{listing}
+  \inputminted[
+    fontsize=\footnotesize,
+    tabsize=2,
+    frame=single,
+    linenos
+  ]{c}{xv6-public/test1.c}
+  \caption{Spin lock test.}\label{lst:test1}
+\end{listing}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.7\textwidth]{figures/test1.png}
+  \caption{Output of test 1.  Number of threads was set to 4.}\label{fig:test1}
+\end{figure}
+
+\subsection{Anderson lock test}
+Here we implement the frisbee game.  We ask the number of threads and number of passes as parameters. We allocate an Anderson lock and create the requested number of threads. Then, we run a function with an infinite loop which stops when the number of passes is reached.  Listing \ref{lst:test2} shows our implementation.  The output of the test can be seen in figure \ref{fig:test2}
+
+\begin{listing}
+  \inputminted[
+    fontsize=\footnotesize,
+    tabsize=2,
+    frame=single,
+    linenos
+  ]{c}{xv6-public/test2.c}
+  \caption{Anderson lock test.}\label{lst:test2}
+\end{listing}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.7\textwidth]{figures/test2.png}
+  \caption{Output of test 2.  Frisbee game runs for 5 threads during 15 passes.}\label{fig:test2}
+\end{figure}
+
+\end{document}
