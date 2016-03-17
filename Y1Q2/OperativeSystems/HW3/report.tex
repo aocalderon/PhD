@@ -73,7 +73,7 @@ In this section, we describe our implementation of the system call \texttt{clone
     tabsize=2,
     firstline=169,
     firstnumber=169,
-    lastline=217,
+    lastline=218,
     frame=single,
     linenos
   ]{c}{xv6-public/proc.c}
@@ -84,9 +84,9 @@ In this section, we describe our implementation of the system call \texttt{clone
   \inputminted[
     fontsize=\footnotesize,
     tabsize=2,
-    firstline=285,
-    firstnumber=285,
-    lastline=288,
+    firstline=286,
+    firstnumber=286,
+    lastline=289,
     frame=single,
     linenos
   ]{c}{xv6-public/proc.c}
@@ -117,14 +117,14 @@ Finally, in the same file, we implement the \texttt{create\_thread} function in 
 \section{Anderson's array-based queue lock}
 
 \subsection{Initialization}
-First we dynamically create an array and make all the cells equal to zero except the first cell.
+First we used a new struct and dynamically create an array and make all the cells equal to zero except the first cell.
 
 \begin{listing}[h!]
   \inputminted[
     fontsize=\footnotesize,
     tabsize=2,
-    firstline=41,
-    firstnumber=41,
+    firstline=36,
+    firstnumber=36,
     lastline=47,
     frame=single,
     linenos

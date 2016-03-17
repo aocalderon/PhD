@@ -197,7 +197,7 @@
   \PYGdefault{n}{uint} \PYGdefault{n}{usize} \PYGdefault{o}{=} \PYGdefault{n}{size} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{p}{(}\PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{tf}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{esp} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{n}{PGROUNDDOWN}\PYGdefault{p}{(}\PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{tf}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{esp}\PYGdefault{p}{));}
   \PYGdefault{c+c1}{// We copy them}
   \PYGdefault{n}{memmove}\PYGdefault{p}{((}\PYGdefault{k+kt}{void} \PYGdefault{o}{*}\PYGdefault{p}{)(}\PYGdefault{n}{np}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{tf}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{esp}\PYGdefault{p}{),} \PYGdefault{p}{(}\PYGdefault{k}{const} \PYGdefault{k+kt}{void} \PYGdefault{o}{*}\PYGdefault{p}{)(}\PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{tf}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{esp}\PYGdefault{p}{),} \PYGdefault{n}{usize}\PYGdefault{p}{);}
-  \PYGdefault{c+c1}{// We mark the clone processes with a \PYGdefaultZhy{}1}
+  \PYGdefault{c+c1}{// We return \PYGdefaultZhy{}1 in the clone processes}
   \PYGdefault{n}{np}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{tf}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{eax} \PYGdefault{o}{=} \PYGdefault{o}{\PYGdefaultZhy{}}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{;}
 
   \PYGdefault{k}{for}\PYGdefault{p}{(}\PYGdefault{n}{i} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;} \PYGdefault{n}{i} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{n}{NOFILE}\PYGdefault{p}{;} \PYGdefault{n}{i}\PYGdefault{o}{++}\PYGdefault{p}{)}
@@ -208,6 +208,7 @@
   \PYGdefault{n}{safestrcpy}\PYGdefault{p}{(}\PYGdefault{n}{np}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{name}\PYGdefault{p}{,} \PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{name}\PYGdefault{p}{,} \PYGdefault{k}{sizeof}\PYGdefault{p}{(}\PYGdefault{n}{proc}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{name}\PYGdefault{p}{));}
  
   \PYGdefault{n}{pid} \PYGdefault{o}{=} \PYGdefault{n}{np}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{pid}\PYGdefault{p}{;}
+  \PYGdefault{c+c1}{// We mark the PID of the clone process}
   \PYGdefault{n}{np}\PYGdefault{o}{\PYGdefaultZhy{}\PYGdefaultZgt{}}\PYGdefault{n}{pid} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
 
   \PYGdefault{n}{acquire}\PYGdefault{p}{(}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{ptable}\PYGdefault{p}{.}\PYGdefault{n}{lock}\PYGdefault{p}{);}
