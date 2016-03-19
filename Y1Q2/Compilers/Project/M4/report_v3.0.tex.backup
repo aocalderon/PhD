@@ -1,0 +1,44 @@
+\documentclass{article}
+
+\usepackage{alltt}
+\usepackage{graphicx}
+\usepackage{minted}
+\usepackage{xcolor}
+\usepackage{placeins}
+\usepackage{booktabs}
+\usepackage{subcaption}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\hypersetup{
+colorlinks=false,
+hidelinks
+}
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0.5em}
+
+\title{Milestone 4}
+\author{Andres Calderon \\ acald013@ucr.edu}
+\begin{document}
+\maketitle
+
+\section{Introduction}
+This report describes the wrap up of the final project in the course. The main goal of the project is to perform a reliability analysis of a machine learning algorithm (kNN).  This last report aims to elaborate on the final thoughts in the analysis of the impact of error injection during the distance calculation of kNN.  The main goal of the report is to discuss a second version of the formula proposed in milestone 3 to describe the behavior of the error rate.  
+
+\section{Formal reasoning.}\label{sec:formal}
+In order to understand in a better way how error rate affect the accuracy of kNN we face the following situation:  if we have a training set with \textit{N} points and a \textit{p} percentage of them have been affected by error injection during the distance calculation, how probable will we have a misclassification? To answer this question I think we have to deal with two aspect for each given new point $x_i$ to be classified: (1) Which is the probability that the closest point $x_j$ is affected by error injection and (2) Which is the probability that $x_j$ is the same class than $x_i$ and we can fail to classify it correctly.
+
+\subsection{Closest point probability}
+In \cite{song_iknn:_2007}, Song et al define informativeness as a function of $Pr(x_j|Q=x_i)$ where $Q$ denotes the query point $x_i$.  They states that this term can be interpreted as the likelihood that point $x_j$ is close to the $Q$.  Then, they follow to explain that in order to achieve higher probability when two points are close each other, $Pr$ should be a function inverse to the distance between them.  In our case, we are using Euclidean distance, so we can use equation \ref{eq:1} to refer to this probability.
+
+\begin{equation}\label{eq:1}
+ Pr(x_j|Q=x_i) = exp(-\sqrt{(x_i-x_j)^2})
+\end{equation}
+
+\subsection{Same class probability}
+As it was stated in milestone 3, the probability of two points $x_j$ and $x_i$ belong to the same class depends on the number of classes ($C$) and the size of the training set ($N$) and simply find $\frac{N}{C}$.  However, in a more general sense, we have to consider that the number of points in each class is not uniformly distributed    
+
+
+\bibliographystyle{unsrt}
+\bibliography{iknn}
+
+\end{document}
