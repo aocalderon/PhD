@@ -1,0 +1,36 @@
+\documentclass[a4paper,10pt]{scrartcl}
+\usepackage[hmargin=2.5cm,vmargin=3cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\hypersetup{
+colorlinks=false,
+hidelinks
+}
+
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0.5em}
+
+%opening
+\title{Paper Review 4/8}
+\author{Andres Calderon - SID:861243796}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+
+\section*{CUBIC: A New TCP-Friendly High Speed TCP Variant (Sangtae and Xu, 2005)}
+This paper describes the details of CUBIC, a congestion control protocol for TCP and, at that time, the default algorithm in Linux.  At the beginning, the discussion focuses on BIC-TCP and its stability based on a binary search algorithm.  CUBIC is the next version of BIC-TCP.  Among its improvements, CUBIC presents a simplification of the window adjustment algorithm (by the use of a cubic function ) and the efficient implementation of cubic root calculation.  
+
+BIC-TCP showed problems, especially in low speed networks. The new style of window adjustment proposed by CUBIC (concave at the beginning an then convex) improves protocol and stability while maintaining high network utilization.  The details of the implementation are described in Section 3.  It is nice that the authors present the pseudo-code of the algorithm together with notes which refer to subsections on the paper with a further explanation.
+
+In next section, the paper shares the version history of CUBIC in the Linux Kernel.  Then, through a fair-enough (although short) testing, it confirms that CUBIC tackles the drawbacks of BIC-TCP and achieves good performance in Intra-protocol and RTT fairness and TCP friendliness.  It is worth noting that CUBIC has been replaced by TCP Proportional Rate Reduction (PRR) as default algorithm in Linux since kernel version 3.2\footnote{\url{http://kernelnewbies.org/Linux_3.2\#head-1c3e71416a9fdc2f59c1c251a97963f165302b6e}}.
+
+% \begin{thebibliography}{9}
+% \bibitem{github} 
+% Andres Calderon.
+% \textit{GitHub Personal Repository}, 2015. 
+% \url{https://github.com/aocalderon/PhD/tree/master/Y1Q1/GPU/lab3}.
+% \end{thebibliography}
+
+\end{document}
