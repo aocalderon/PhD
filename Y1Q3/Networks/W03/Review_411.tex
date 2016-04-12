@@ -1,0 +1,36 @@
+\documentclass[a4paper,10pt]{scrartcl}
+\usepackage[hmargin=2.5cm,vmargin=3cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\hypersetup{
+colorlinks=false,
+hidelinks
+}
+
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0.5em}
+
+%opening
+\title{Paper Review 4/11}
+\author{Andres Calderon - SID:861243796}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+
+\section*{Design, implementation and evaluation of congestion control for multipath TCP (Wischik et al, 2011)}
+The paper describes the design decisions of a multipath congestion control algorithm.  It also describes details of its implementation in Linux and an extensive evaluation under diverse scenarios such as servers, data centers and wireless clients.  The authors claim that this algorithm improves both throughput and fairness.
+
+Section 2 addresses which congestion control mechanism use on each subflow of a multipath.  They explore TCP, EWTCP, COUPLED, SEMICOUPLED and then a modification and generalization of the latter.  Finally,  they propose MPTCP (although it is stated at the beginning of the section).  It is nice how they introduce a problem, then a possible solution, state the formula and, then, the algorithm together with an example and supporting figures.
+
+Last sections discuss an extensive testing using simulations and testbed experiments in Linux.  Particularly, they evaluate servers, where MPTCP shows a reasonable compromise; data centers, where MPTCP performs well across a wide range of traffic patterns; and mobile clients, where it gives users at least as much throughput as single-path users. 
+
+% \begin{thebibliography}{9}
+% \bibitem{github} 
+% Andres Calderon.
+% \textit{GitHub Personal Repository}, 2015. 
+% \url{https://github.com/aocalderon/PhD/tree/master/Y1Q1/GPU/lab3}.
+% \end{thebibliography}
+
+\end{document}

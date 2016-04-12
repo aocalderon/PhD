@@ -1,0 +1,36 @@
+\documentclass[a4paper,10pt]{scrartcl}
+\usepackage[hmargin=2.5cm,vmargin=3cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\hypersetup{
+colorlinks=false,
+hidelinks
+}
+
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0.5em}
+
+%opening
+\title{Paper Review 4}
+\author{Andres Calderon - SID:861243796}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+
+\section*{A Case for End System Multicast (Chu et al., 2000)}
+The paper states the idea of the implementation of multicast at end system rather than IP layer.  The authors proposes End System Multicast which addresses some advantages over IP multicast such as faster development, stateless nature of networks and significant simplification by unicast solutions.  However, they recognize that it cannot perform as well as IP multicast.
+
+The paper presents Narada, an implementation of an End System Multicas which is self-organizing, overlay efficient, self-improving and adaptive to changes in the network.  Narada builds trees in two phases: (1) it constructs a connected graph they called a mesh, (2) it constructs spanning trees of the mesh.  The author provide sufficient details about the group management, mesh performance and data delivery.
+
+Finally, the author present an extend evaluation, through Internet experiments and simulations. They explain in a clear way the used methodology and metrics.  I like that they reserve enough space to discuss the limitation of their approach, discussing issues and scenarios in order to analyze the results appropriately.
+
+% \begin{thebibliography}{9}
+% \bibitem{github} 
+% Andres Calderon.
+% \textit{GitHub Personal Repository}, 2015. 
+% \url{https://github.com/aocalderon/PhD/tree/master/Y1Q1/GPU/lab3}.
+% \end{thebibliography}
+
+\end{document}

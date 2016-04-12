@@ -1,0 +1,189 @@
+\documentclass{article}
+
+\usepackage{amsmath,amsfonts}
+\usepackage{fullpage}
+\usepackage{enumitem}
+
+\usepackage{tikz}
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+    
+\pagestyle{empty}
+
+\renewcommand{\vec}[1]{\mathbf{#1}}
+
+\title{Homework 1\\CS 210}
+\author{Andres Calderon \\ SID 861243796}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+%\vspace{-.5in}
+
+\begin{center}
+\begin{tabular}{|l|l|p{.4in}|}
+\hline Question & Points & Score \\
+\hline 1 & 10 & \\
+\hline 2 &  5 & \\
+\hline 3 &  5 & \\
+\hline 4 &  5 & \\
+\hline 5 & 10 & \\
+\hline 6 & 10 & \\
+\hline 7 & 10 & \\
+\hline 8 & 15 & \\
+\hline 9 & 15 & \\
+\hline 10 & 15 & \\
+\hline Total & 100 & \\
+\hline 
+\end{tabular}
+\end{center}
+
+\subsection*{Errors and sources of error}
+\begin{enumerate}
+\setcounter{enumi}{0}
+%---
+\item (Heath 1.2) What are the approximate absolute and relative errors in approximating $\pi$ by each of the following
+  quantities?
+    \begin{enumerate}
+    \item 3
+    \item 3.14
+    \item 22/7
+    \end{enumerate}
+     
+    Answer: we have $\pi (3.141592)$, to 6 decimal places, then:
+    
+    \begin{enumerate}
+    \item Absolute error: $3-\pi=-0.141592$\\ Relative error: $\frac{-0.141592}{\pi}=0.045070$ 
+    \item Absolute error: $3.14-\pi=-0.001592$\\ Relative error: $\frac{-0.001592}{\pi}=0.00050$
+    \item Absolute error: $\frac{22}{7}-\pi=0.001265$\\ Relative error: $\frac{0.001265}{\pi}=-0.00040$
+    \end{enumerate}
+    
+%----
+\item (Heath 1.3) If $a$ is an approximate value for a quantity whose true value is $t$, and $a$ has a relative error $r$, prove from the definitions of these terms that $a = t(1+r)$.\\
+Answer:\\
+\begin{tabular}{rl}
+ $absolute\_error$ & $=a-t$\\
+ $r$ & $=\frac{absolute\_error}{t}$\\
+ $r$ & $=\frac{a-t}{t}$\\
+ $tr$ & $=a-t$\\
+ $t+tr$ & $=a$\\
+ $t(1+r)$ & $=a$\\
+\end{tabular}
+
+%----
+\item For each of the following statements, indicate whether the statement is true or false.
+    \begin{description}
+    \item[T/\circled{F}] The use of a floating point number system results in so-called truncation error in numerical methods.
+    \item[\circled{T}/F] It is possible for small rounding errors to catastrophically destroy the accuracy of an algorithm.
+    \item[T/\circled{F}] A large absolute error implies a large relative error.
+    \end{description}
+\end{enumerate}
+
+\subsection*{Conditioning and stability}
+\begin{enumerate}
+\setcounter{enumi}{3}
+\item For each of the following statements, indicate whether the statement is true or false.
+    \begin{description}
+    \item[\circled{T}/F] A problem is ill-conditioned if its solution is highly sensitive to changes in its data.
+    \item[T/\circled{F}] We can improve conditioning of a problem by switching from single to double precision arithmetic.
+    \item[\circled{T}/F] In order to numerically solve a problem accurately, it is necessary to have both a well-conditioned problem and a stable algorithm.
+    \item[\circled{T}/F] A condition number of 1 means the problem is well-conditioned.
+    \end{description}
+\item (Heath 1.5) Consider the function $ f: \mathbb{R} \rightarrow \mathbb{R} $ defined by $f(x,y) = x - y$.  Measuring the size of the input $(x,y)$ by $|x| + |y|$, and assuming that $|x| + |y|  \approx 
+1$ and $x - y \approx \epsilon$, show that cond($f$) $\approx 1/\epsilon$. What can you conclude about the sensitivity of subtraction?\\
+Answer:\\
+Given $f(x,y)=x-y$ its absolute error is:
+$$absolute\_error = f(x+\Delta{x},y+\Delta{y})-f(x,y)\approx\Delta{x}f^\prime_x(x,y)+\Delta{y}f^\prime_y(x,y)$$
+Then, the relative error is:
+$$relative\_error = \frac{f(x+\Delta{x},y+\Delta{y})-f(x,y)}{f(x,y)}\approx\frac{\Delta{x}f^\prime_x(x,y)+\Delta{y}f^\prime_y(x,y)}{f(x,y)}$$
+As $f(x,y)=x-y\approx\epsilon$, then:
+$$relative\_error \approx \frac{\Delta{x}f^\prime_x(x,y)+\Delta{y}f^\prime_y(x,y)}{\epsilon}$$
+Finally, the condition number is:
+$$ Cond \approx \left| \frac{\frac{\Delta{x}f^\prime_x(x,y)+\Delta{y}f^\prime_y(x,y)}{\epsilon}}{\frac{\Delta{x}+\Delta{y}}{|x|+|y|}} \right|$$
+As $|x|+|y| \approx 1$, then:
+$$ Cond \approx \left| \frac{\Delta{x}f^\prime_x(x,y)+\Delta{y}f^\prime_y(x,y)}{\epsilon(\Delta{x}+\Delta{y})} \right|$$
+Since $f^\prime_x(x,y)=1$ and $f^\prime_y(x,y)=-1$, we have:
+$$ Cond \approx \left| \frac{\Delta{x}-\Delta{y}}{\epsilon(\Delta{x}+\Delta{y})} \right| \approx \frac{1}{\epsilon}$$
+
+As $Cond \approx \frac{1}{\epsilon}$, we can conclude that the substraction is very sensitive to small changes in the input.
+
+\item Show that for a differentiable function $f(x)$, the sensitivity of evaluating the function is described by the condition number
+$$
+\kappa_f \approx \left| \frac{x f'(x)}{f(x)} \right|,
+$$
+and that the sensitivity of evaluating the inverse function $g(y)$ is given by
+$$
+\kappa_g = \frac{1}{\kappa_f}.
+$$
+\end{enumerate}
+
+Answer:\\
+To find $\kappa_f$ from $f(x)$ we have to compute the absolute error:
+$$absolute\_error = f(x+\Delta{x})-f(x) \approx \Delta{x}f^\prime(x)$$
+Then, the relative error:
+$$relative\_error = \frac{f(x+\Delta{x})-f(x)}{f(x)} \approx \frac{\Delta{x}f^\prime(x)}{f(x)}$$
+and finally, the condition number:
+$$\kappa_f \approx \left|\frac{\frac{\Delta{x}f^\prime(x)}{f(x)}}{\frac{\Delta{x}}{x}}\right| \approx \left|\frac{\Delta{x}f^\prime(x)x}{f(x)\Delta{x}}\right| \approx \left|\frac{xf^\prime(x)}{f(x)}\right|$$
+
+For the second part, I assume $g(y)=\frac{1}{f(x)}$ so, $g^\prime(y)=\frac{1}{f^\prime(x)}$ and $y=\frac{1}{x}$,then:
+$$\kappa_g \approx \left|y\frac{g^\prime(y)}{g(y)}\right| \approx \left|\frac{1}{x}\frac{\frac{1}{f^\prime(x)}}{\frac{1}{f(x)}}\right| \approx \left|\frac{f(x)}{xf^\prime(x)}\right| \approx \frac{1}{\kappa_f}$$
+
+\subsection*{Floating point}
+\begin{enumerate}
+\setcounter{enumi}{6}
+\item (Heath 1.7) A floating point number system is characterized by four integers: the base $\beta$, the precision $p$,
+  and the lower and upper limits $L$ and $U$ of the exponent range.  
+\begin{enumerate}
+\item If $\beta =10$, what are the smallest values of $p$
+  and $U$, and the largest value of $L$, such that both $2365.27$ and $0.0000512$ can be represented \emph{exactly} in a
+  \emph{normalized} floating-point system?
+\item How would your answer change if the system is not normalized, i.e., if gradual underflow is allowed?
+\end{enumerate}
+\item (Trefethen \& Bau 13.1) Between an adjacent pair of nonzero IEEE single precision real numbers, how many IEEE
+  doule precision numbers are there?
+
+\item For each of the following statements, indicate whether the statement is true or false.
+    \begin{description}
+    \item[T/F] If two numbers are exactly representable in floating point, then the result of an arithmetic operation on them is also an exactly representable floating point number.
+    \item[T/F] Floating point arithmetic is commutative, but not associative.
+    \item[T/F] Floating point numbers are distributed uniformly througout their range.
+    \item[T/F] In a denormalized floating point system, the representation of a number is unique.
+    \item[T/F] Addition of two positive floating point numbers may cause underflow.
+    \item[T/F] Division of two positive floating point numbers may cause overflow.
+    \item[T/F] Denormalization is used to mitigate arithmetic overflow.
+    \item[T/F] In a normalized floating point system, the representation of a machine number is not unique.
+    \end{description}
+
+\pagebreak
+
+\item \emph{Computer problem} (Heath 1.10) 
+\begin{enumerate}
+\item Write a program to solve the quadratic equation $ax^2 + bx+c = 0$ using the standard quadratic formula
+$$
+x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}
+$$
+or the alternative formula
+$$
+x = \frac{2c}{-b \mp \sqrt{b^2 - 4ac}}.
+$$
+Your program should accept values for the coefficients $a$, $b$, and $c$ as input and produce the two roots of the equation as output.  Your program should detect when the roots are not real, but need not use complex arithmetic explicitly (for example, you could return the real and imaginary parts of the complex conjugate roots in this case).  You should guard against unnecessary overflow, underflow, and cancellation.  Try to make your program robust when given unusual input values, such as $a =0$ or $c=0$, which otherwise would make one of the formulas fail.  Any root that is within the range of the floating-point system should be computed accurately, even if the other is out of range.  Submit a copy of your code.  You may use the language of your choice.
+\item When should you use each of the two formulas?
+\item Test your program using the following values for the coefficients and give your results:
+
+\begin{tabular}{ccc}
+$a$ & $b$ & $c$ \\
+\hline
+$6$ & $5$ & $-4$ \\
+$6 \times 10^{154}$ & $5 \times 10^{154}$ & $-4 \times 10^{154}$ \\
+$0$ & $1$ & $1$ \\
+$1$ & $-10^5$ & $1$ \\
+$1$ & $-4$ & $3.999999$ \\
+$10^{-155}$ & $-10^{155}$ & $10^{155}$ 
+\end{tabular}
+
+\end{enumerate}
+\end{enumerate}
+
+
+\end{document}
