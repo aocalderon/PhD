@@ -127,7 +127,7 @@ and finally, the condition number:
 $$\kappa_f \approx \left|\frac{\frac{\Delta{x}f^\prime(x)}{f(x)}}{\frac{\Delta{x}}{x}}\right| \approx \left|\frac{\Delta{x}f^\prime(x)x}{f(x)\Delta{x}}\right| \approx \left|\frac{xf^\prime(x)}{f(x)}\right|$$
 
 For the second part, I assume $g(y)=\frac{1}{f(x)}$ so, $g^\prime(y)=\frac{1}{f^\prime(x)}$ and $y=\frac{1}{x}$,then:
-$$\kappa_g \approx \left|y\frac{g^\prime(y)}{g(y)}\right| \approx \left|\frac{1}{x}\frac{\frac{1}{f^\prime(x)}}{\frac{1}{f(x)}}\right|$$
+$$\kappa_g \approx \left|y\frac{g^\prime(y)}{g(y)}\right| \approx \left|\frac{1}{x}\frac{\frac{1}{f^\prime(x)}}{\frac{1}{f(x)}}\right| \approx \left|\frac{f(x)}{xf^\prime(x)}\right| \approx \frac{1}{\kappa_f}$$
 
 \subsection*{Floating point}
 \begin{enumerate}
@@ -140,19 +140,29 @@ $$\kappa_g \approx \left|y\frac{g^\prime(y)}{g(y)}\right| \approx \left|\frac{1}
   \emph{normalized} floating-point system?
 \item How would your answer change if the system is not normalized, i.e., if gradual underflow is allowed?
 \end{enumerate}
+Answer:\\
+\begin{enumerate}
+\item For $2365.27$:\\
+$2.36527\times10^3 \Longrightarrow p=6$ and $U=3$\\
+For $0.0000512$:\\
+$5.12\times10^{-5} \Longrightarrow L=-5$
+\item For $0.0000512$ we would have:\\
+$0.000512\times10^{-1} \Longrightarrow L=-1$
+\end{enumerate}
+
 \item (Trefethen \& Bau 13.1) Between an adjacent pair of nonzero IEEE single precision real numbers, how many IEEE
   doule precision numbers are there?
 
 \item For each of the following statements, indicate whether the statement is true or false.
     \begin{description}
-    \item[T/F] If two numbers are exactly representable in floating point, then the result of an arithmetic operation on them is also an exactly representable floating point number.
-    \item[T/F] Floating point arithmetic is commutative, but not associative.
-    \item[T/F] Floating point numbers are distributed uniformly througout their range.
-    \item[T/F] In a denormalized floating point system, the representation of a number is unique.
-    \item[T/F] Addition of two positive floating point numbers may cause underflow.
-    \item[T/F] Division of two positive floating point numbers may cause overflow.
-    \item[T/F] Denormalization is used to mitigate arithmetic overflow.
-    \item[T/F] In a normalized floating point system, the representation of a machine number is not unique.
+    \item[T/\circled{F}] If two numbers are exactly representable in floating point, then the result of an arithmetic operation on them is also an exactly representable floating point number.
+    \item[\circled{T}/F] Floating point arithmetic is commutative, but not associative.
+    \item[T/\circled{F}] Floating point numbers are distributed uniformly througout their range.
+    \item[T/\circled{F}] In a denormalized floating point system, the representation of a number is unique.
+    \item[T/\circled{F}] Addition of two positive floating point numbers may cause underflow.
+    \item[\circled{T}/F] Division of two positive floating point numbers may cause overflow.
+    \item[T/\circled{F}] Denormalization is used to mitigate arithmetic overflow.
+    \item[T/\circled{F}] In a normalized floating point system, the representation of a machine number is not unique.
     \end{description}
 
 \pagebreak
