@@ -1,0 +1,36 @@
+\documentclass[a4paper,10pt]{scrartcl}
+\usepackage[hmargin=2.5cm,vmargin=3cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\hypersetup{
+colorlinks=false,
+hidelinks
+}
+
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0.5em}
+
+%opening
+\title{Paper Review 4/13}
+\author{Andres Calderon - SID:861243796}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+
+\section*{Layering as Optimization Decomposition: A Mathematical Theory of Network Architectures (Chiang et al., 2007)}
+This paper presents a detailed survey about research around the understanding of layering as ``Optimization Decomposition''.  Particularly, section II focuses on the current status of horizontal decomposition into distributed computing while section III talks about vertical decomposition into functional modules.  ``Layering as Optimization Decomposition'' provides a unified framework as an alternative for protocol stack design. The main feature of this framework is that it views the network as the optimizer itself.
+
+As it is summarized in table 1, section II focuses on reverse engineering for congestion control protocols and how it leads to a better design in the context of horizontal decomposition.  Then, the section discusses its stability.  The authors summarize some significant algorithms and how they are used to assess the stability of the network in the absence of feedback delay.  Namely, they explore Lyapunov stability theorem, gradient descent methods, passivity techniques and singular perturbation theory.
+
+Personally, I found this paper challenging and difficult to read.  It is a long paper with strong theoretical background.  Section II discusses 6 theorems and 47 equations.  I am afraid I had to skip most of the proofs. However, it is nice how authors summarize key messages and main methods in tables 1 and 2.  Also the last paragraph at the end of each subsection is quite useful to organize the reading and follow the main ideas.
+
+% \begin{thebibliography}{9}
+% \bibitem{github} 
+% Andres Calderon.
+% \textit{GitHub Personal Repository}, 2015. 
+% \url{https://github.com/aocalderon/PhD/tree/master/Y1Q1/GPU/lab3}.
+% \end{thebibliography}
+
+\end{document}
