@@ -1,6 +1,6 @@
 start <- 219
 top <- 20
-xlab <- "Number of commit instructions"
+xlab <- "Number of committed instructions"
 
 data <- readLines("Results/results_C1.txt") 
 data <- data[start:length(data) - 1]
@@ -38,7 +38,7 @@ for(i in 1:n){
 
 plot(1:4,results[15,2:5],type='l',axes=F,ylab=results[15,1]
      ,main=results[15,6]
-     ,xlab="Number of commit instructions")
+     ,xlab=xlab)
 points(1:4,results[15,2:5],cex=0.7,pch=21,bg=1)
 box()
 axis(1,at=1:4,labels=c(1,2,4,8))
@@ -51,6 +51,7 @@ results$sd <- apply(results[,2:5],1,sd)
 results$index <- results$sd / results$range
 
 results <- results[with(results,order(-index)),]
+write.csv(results,'Results/metrics_C.csv',row.names = F)
 results <- results[1:top,1:6]
 
 for(i in 1:top){

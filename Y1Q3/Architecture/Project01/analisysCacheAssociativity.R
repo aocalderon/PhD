@@ -1,8 +1,9 @@
 start <- 219
 top <- 20
-xlab <- "Number of commit instructions"
+xlab <- "Cache associativity"
+labels <- c('Direct Mapped','4-way','8-way','Fully Associative')
 
-data <- readLines("Results/results_C1.txt") 
+data <- readLines("Results/results_CacheA1.txt") 
 data <- data[start:length(data) - 1]
 n <- length(data)
 empty <- rep(0, n)
@@ -12,21 +13,21 @@ for(i in 1:n){
   results[i,1] <- result[1]
   results[i,2] <- as.numeric(result[2])
 }
-data <- readLines("Results/results_C2.txt") 
+data <- readLines("Results/results_CacheA4.txt") 
 data <- data[start:length(data) - 1]
 results$C2 <- empty
 for(i in 1:n){
   result <- strsplit(strsplit(data[i], "#")[[1]][1], "\\s+")[[1]]
   results[i,3] <- as.numeric(result[2])
 }
-data <- readLines("Results/results_C4.txt") 
+data <- readLines("Results/results_CacheA8.txt") 
 data <- data[start:length(data) - 1]
 results$C4 <- empty
 for(i in 1:n){
   result <- strsplit(strsplit(data[i], "#")[[1]][1], "\\s+")[[1]]
   results[i,4] <- as.numeric(result[2])
 }
-data <- readLines("Results/results_C8.txt") 
+data <- readLines("Results/results_CacheA64.txt") 
 data <- data[start:length(data) - 1]
 results$C8 <- empty
 results$desc <- empty
@@ -38,10 +39,10 @@ for(i in 1:n){
 
 plot(1:4,results[15,2:5],type='l',axes=F,ylab=results[15,1]
      ,main=results[15,6]
-     ,xlab="Number of commit instructions")
+     ,xlab=xlab)
 points(1:4,results[15,2:5],cex=0.7,pch=21,bg=1)
 box()
-axis(1,at=1:4,labels=c(1,2,4,8))
+axis(1,at=1:4,labels=labels)
 axis(2)
 
 results$min <- apply(results[,2:5],1,min)
@@ -51,6 +52,7 @@ results$sd <- apply(results[,2:5],1,sd)
 results$index <- results$sd / results$range
 
 results <- results[with(results,order(-index)),]
+write.csv(results,'Results/metrics_CacheA.csv',row.names = F)
 results <- results[1:top,1:6]
 
 for(i in 1:top){
@@ -58,7 +60,7 @@ for(i in 1:top){
        ,main=results[i,6]
        ,xlab=xlab)
   box()
-  axis(1,at=1:4,labels=c(1,2,4,8))
+  axis(1,at=1:4,labels=labels)
   axis(2)
   points(1:4,results[i,2:5],cex=0.7,pch=21,bg=1)
 }
