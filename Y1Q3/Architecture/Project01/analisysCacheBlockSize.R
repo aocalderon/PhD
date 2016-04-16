@@ -1,5 +1,5 @@
 start <- 219
-top <- 20
+top <- 10
 xlab <- "Cache block size"
 labels <- c('32','64','128','256')
 

@@ -1,5 +1,5 @@
 start <- 219
-top <- 20
+top <- 10
 xlab <- "Branch prediction method"
 labels <- c('Not Taken','Taken','Bimodal','2-Level')
 

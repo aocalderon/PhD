@@ -1,5 +1,5 @@
 start <- 219
-top <- 20
+top <- 10
 xlab <- "Number of fetched instructions"
 
 data <- readLines("Results/results_F1.txt") 
