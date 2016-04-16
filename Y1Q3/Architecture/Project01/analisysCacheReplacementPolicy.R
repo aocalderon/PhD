@@ -1,5 +1,5 @@
 start <- 219
-top <- 20
+top <- 10
 xlab <- "Cache replacement policy"
 labels <- c('Random','FIFO ','LRU')
 

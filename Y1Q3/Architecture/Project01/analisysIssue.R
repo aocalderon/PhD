@@ -1,5 +1,5 @@
 start <- 219
-top <- 20
+top <- 10
 xlab <- "Number of issued instructions"
 
 data <- readLines("Results/results_I1.txt") 

@@ -1,5 +1,5 @@
 start <- 219
-top <- 20
+top <- 10
 xlab <- "Cache associativity"
 labels <- c('Direct Mapped','4-way','8-way','Fully Associative')
 
