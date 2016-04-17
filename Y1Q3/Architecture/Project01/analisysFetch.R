@@ -1,8 +1,18 @@
-start <- 219
 top <- 10
-xlab <- "Number of fetched instructions"
+app_prefix <- '_C'
+fea_prefix <- '_F'
 
-data <- readLines("Results/results_F1.txt") 
+if(fea_prefix=='_F'){
+  xlab <- "Number of fetched instructions"
+}else if(fea_prefix=='_D'){
+  xlab <- "Number of decoded instructions"
+}else if(fea_prefix=='_I'){
+  xlab <- "Number of issued instructions"
+}else if(fea_prefix=='_C'){
+  xlab <- "Number of committed instructions"
+}
+data <- readLines(paste0("Results/results",app_prefix,fea_prefix,"1.txt")) 
+start <- match("sim: ** simulation statistics **", data)
 data <- data[start:length(data) - 1]
 n <- length(data)
 empty <- rep(0, n)
@@ -12,21 +22,21 @@ for(i in 1:n){
   results[i,1] <- result[1]
   results[i,2] <- as.numeric(result[2])
 }
-data <- readLines("Results/results_F2.txt") 
+data <- readLines(paste0("Results/results",app_prefix,fea_prefix,"2.txt")) 
 data <- data[start:length(data) - 1]
 results$C2 <- empty
 for(i in 1:n){
   result <- strsplit(strsplit(data[i], "#")[[1]][1], "\\s+")[[1]]
   results[i,3] <- as.numeric(result[2])
 }
-data <- readLines("Results/results_F4.txt") 
+data <- readLines(paste0("Results/results",app_prefix,fea_prefix,"4.txt")) 
 data <- data[start:length(data) - 1]
 results$C4 <- empty
 for(i in 1:n){
   result <- strsplit(strsplit(data[i], "#")[[1]][1], "\\s+")[[1]]
   results[i,4] <- as.numeric(result[2])
 }
-data <- readLines("Results/results_F8.txt") 
+data <- readLines(paste0("Results/results",app_prefix,fea_prefix,"8.txt")) 
 data <- data[start:length(data) - 1]
 results$C8 <- empty
 results$desc <- empty
@@ -44,6 +54,7 @@ box()
 axis(1,at=1:4,labels=c(1,2,4,8))
 axis(2)
 
+results = results[complete.cases(results),]
 results$min <- apply(results[,2:5],1,min)
 results$max <- apply(results[,2:5],1,max)
 results$range <- results$max - results$min
@@ -51,7 +62,7 @@ results$sd <- apply(results[,2:5],1,sd)
 results$index <- results$sd / results$range
 
 results <- results[with(results,order(-index)),]
-write.csv(results,'Results/metrics_F.csv',row.names = F)
+write.csv(results,paste0("Results/metrics",app_prefix,"_F.csv"),row.names = F)
 results <- results[1:top,1:6]
 
 for(i in 1:top){
