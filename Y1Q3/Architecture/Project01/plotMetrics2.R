@@ -1,0 +1,41 @@
+source('plotMetrics.R')
+
+metric = "sim_CPI"
+variables = c("1", "2", "4", "8")
+applications = c("cc1", "go", "anagram", "compress95")
+feature = "_C"
+if(feature=="_F"){
+  xlab = "Number of fetched instructions"
+} else if(feature=="_D"){
+  xlab = "Number of decoded instructions"
+} else if(feature=="_I"){
+  xlab = "Number of issued instructions"
+} else if(feature=="_C"){
+  xlab = "Number of committed instructions"
+}
+plotMetric(feature, metric, variables, applications, xlab)
+
+cc1 = read.csv(paste0('Results/metrics',feature,'.csv'))
+cc1 = cc1[complete.cases(cc1),c(1,length(cc1))]
+go = read.csv(paste0('Results/metrics_G',feature,'.csv'))
+go = go[complete.cases(go),c(1,length(go))]
+features = merge(cc1, go, by = "metric")
+names(features) = c('metric','cc1','go')
+
+anagram = read.csv(paste0('Results/metrics_A',feature,'.csv'))
+anagram = anagram[complete.cases(anagram),c(1,length(anagram))]
+features = merge(features, anagram, by = "metric")
+names(features) = c('metric','cc1','go','anagram')
+
+compress95 = read.csv('Results/metrics_C_F.csv')
+compress95 = read.csv(paste0('Results/metrics_C',feature,'.csv'))
+compress95 = compress95[complete.cases(compress95),c(1,length(compress95))]
+features = merge(features, compress95, by = "metric")
+names(features) = c('metric','cc1','go','anagram','compress95')
+
+features$index = apply(features[2:5],1,sum)
+features <- features[with(features,order(-index)),]
+
+for(metric in features$metric[1:20]){
+  plotMetric(feature, metric, variables, applications, xlab)
+}

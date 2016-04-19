@@ -1,6 +1,6 @@
 top <- 10
 app_prefix <- '_C'
-fea_prefix <- '_F'
+fea_prefix <- '_C'
 
 if(fea_prefix=='_F'){
   xlab <- "Number of fetched instructions"
@@ -62,7 +62,7 @@ results$sd <- apply(results[,2:5],1,sd)
 results$index <- results$sd / results$range
 
 results <- results[with(results,order(-index)),]
-write.csv(results,paste0("Results/metrics",app_prefix,"_F.csv"),row.names = F)
+write.csv(results,paste0("Results/metrics",app_prefix,fea_prefix,".csv"),row.names = F)
 results <- results[1:top,1:6]
 
 for(i in 1:top){
