@@ -1,5 +1,5 @@
 top <- 10
-labels = c("Direct Mapped", "4-way", "8-way", "Fully Associative")
+labels = c("Direct", "4-way", "8-way", "Fully")
 app_prefix <- '_G'
 fea_prefix <- '_CacheA'
 
