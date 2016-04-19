@@ -1,0 +1,257 @@
+\documentclass[10pt]{scrartcl}
+\usepackage[hmargin=2.5cm,vmargin=3cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{pdflscape}
+\usepackage{minted}
+\usepackage{placeins}
+\usepackage{hyperref}
+\hypersetup{
+colorlinks=false,
+hidelinks
+}
+
+\setlength{\parindent}{1em}
+\setlength{\parskip}{0.5em}
+
+
+%opening
+\title{Project 1 Report}
+\author{
+   Christina Pavlopoulou\\
+  \small \texttt{cpavl001@ucr.edu}
+  \and
+   Andres Calderon\\
+  \small \texttt{acald013@ucr.edu}
+}
+
+\begin{document}
+\maketitle
+
+
+\section{Results}
+
+\subsection{Number of fetched instructions}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{Plots/plot_F_sim_CPI}
+  \caption{Cycles per instructions vs number of fetched instructions.}\label{fig:f_sim_cpi}
+\end{figure}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{Plots/plot_F_lsq_latency}
+  \caption{Cycles per instructions vs number of fetched instructions.}\label{fig:f_lsq_latency}
+\end{figure}
+
+\FloatBarrier
+
+\subsection{Number of decoded instructions}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{Plots/plot_D_sim_CPI}
+  \caption{Cycles per instructions vs number of decoded instructions.}\label{fig:d_sim_cpi}
+\end{figure}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{Plots/plot_D_lsq_latency}
+  \caption{Cycles per instructions vs number of fetched instructions.}\label{fig:d_lsq_latency}
+\end{figure}
+
+\FloatBarrier
+
+\subsection{Number of issued instructions}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{Plots/plot_I_sim_CPI}
+  \caption{Cycles per instructions vs number of issued instructions.}\label{fig:i_sim_cpi}
+\end{figure}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{Plots/plot_I_lsq_latency}
+  \caption{Cycles per instructions vs number of fetched instructions.}\label{fig:i_lsq_latency}
+\end{figure}
+
+\FloatBarrier
+
+\subsection{Number of committed instructions}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{Plots/plot_C_sim_CPI}
+  \caption{Cycles per instructions vs number of committed instructions.}\label{fig:c_sim_cpi}
+\end{figure}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{Plots/plot_C_lsq_latency}
+  \caption{Cycles per instructions vs number of fetched instructions.}\label{fig:c_lsq_latency}
+\end{figure}
+
+\FloatBarrier
+
+\subsection{Branch prediction}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{Plots/plot_BP_sim_CPI}
+  \caption{Cycles per instructions vs branch prediction methods.}\label{fig:bp_sim_cpi}
+\end{figure}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{Plots/plot_BP_bpred_addr_rate}
+  \caption{Cycles per instructions vs branch prediction methods.}\label{fig:bp_addr-pred-rate}
+\end{figure}
+
+\FloatBarrier
+
+\subsection{Cache block size}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{Plots/plot_CacheBS_sim_CPI}
+  \caption{Cycles per instructions vs branch prediction methods.}\label{fig:cache-bs_sim_cpi}
+\end{figure}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{NewPlots/plot_BS_miss-rate}
+  \caption{Cycles per instructions vs branch prediction methods.}\label{fig:cache-bs_miss_rate}
+\end{figure}
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{NewPlots/plot_BS_A_miss-rate}
+  \caption{Cycles per instructions vs branch prediction methods.}\label{fig:cache-bs_A_miss_rate}
+\end{figure}
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{NewPlots/plot_BS_C_miss-rate}
+  \caption{Cycles per instructions vs branch prediction methods.}\label{fig:cache-bs_C_miss_rate}
+\end{figure}
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{NewPlots/plot_BS_G_miss-rate}
+  \caption{Cycles per instructions vs branch prediction methods.}\label{fig:cache-bs_G_miss_rate}
+\end{figure}
+
+
+\FloatBarrier
+
+\subsection{Cache replacement policy}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{Plots/plot_CacheRP_sim_CPI}
+  \caption{Cycles per instructions vs branch prediction methods.}\label{fig:cache-rp_sim_cpi}
+\end{figure}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{NewPlots/plot_RP_miss_rate}
+  \caption{Cycles per instructions vs branch prediction methods.}\label{fig:cache-RP_miss_rate}
+\end{figure}
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{NewPlots/plot_RP_A_miss_rate}
+  \caption{Cycles per instructions vs branch prediction methods.}\label{fig:cache-RP_A_miss_rate}
+\end{figure}
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{NewPlots/plot_RP_C_miss_rate}
+  \caption{Cycles per instructions vs branch prediction methods.}\label{fig:cache-RP_C_miss_rate}
+\end{figure}
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{NewPlots/plot_RP_G_miss_rate}
+  \caption{Cycles per instructions vs branch prediction methods.}\label{fig:cache-RP_G_miss_rate}
+\end{figure}
+
+\FloatBarrier
+
+\subsection{Cache associativity}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{Plots/plot_CacheA_sim_CPI}
+  \caption{Cycles per instructions vs branch prediction methods.}\label{fig:cache-a_sim_cpi}
+\end{figure}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{NewPlots/plot_A_miss_rate}
+  \caption{Cycles per instructions vs branch prediction methods.}\label{fig:cache-A_miss_rate}
+\end{figure}
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{NewPlots/plot_A_A_miss_rate}
+  \caption{Cycles per instructions vs branch prediction methods.}\label{fig:cache-A_A_miss_rate}
+\end{figure}
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{NewPlots/plot_A_C_miss_rate}
+  \caption{Cycles per instructions vs branch prediction methods.}\label{fig:cache-A_C_miss_rate}
+\end{figure}
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{NewPlots/plot_A_G_miss_rate}
+  \caption{Cycles per instructions vs branch prediction methods.}\label{fig:cache-A_G_miss_rate}
+\end{figure}
+
+\FloatBarrier
+
+\section{Discussion}
+
+\newpage
+\section{Commands}
+
+\begin{landscape}
+\begin{listing}
+  \inputminted[
+    fontsize=\footnotesize,
+    tabsize=2,
+    frame=single,
+    linenos
+  ]{bash}{scriptCC1.sh}
+  \caption{Simulation execution commands for \textit{cc1} application.}\label{lst:cc1}
+\end{listing}
+
+\begin{listing}
+  \inputminted[
+    fontsize=\footnotesize,
+    tabsize=2,
+    frame=single,
+    linenos
+  ]{bash}{scriptANAGRAM.sh}
+  \caption{Simulation execution commands for \textit{anagram} application.}\label{lst:anagram}
+\end{listing}
+
+\begin{listing}
+  \inputminted[
+    fontsize=\footnotesize,
+    tabsize=2,
+    frame=single,
+    linenos
+  ]{bash}{scriptCOMPRESS.sh}
+  \caption{Simulation execution commands for \textit{compress95} application.}\label{lst:compress}
+\end{listing}
+
+\begin{listing}
+  \inputminted[
+    fontsize=\footnotesize,
+    tabsize=2,
+    frame=single,
+    linenos
+  ]{bash}{scriptGO.sh}
+  \caption{Simulation execution commands for \textit{go} application.}\label{lst:go}
+\end{listing}
+\end{landscape}
+
+
+\end{document}

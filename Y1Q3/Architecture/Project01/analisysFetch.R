@@ -45,9 +45,9 @@ for(i in 1:n){
   results[i,5] <- as.numeric(result[2])
   results[i,6] <- strsplit(data[i], "#")[[1]][2]
 }
-
-plot(1:4,results[15,2:5],type='l',axes=F,ylab=results[15,1]
-     ,main=results[15,6]
+pos_cpi <- match("sim_CPI",results$metric)
+plot(1:4,results[pos_cpi,2:5],type='l',axes=F,ylab=results[pos_cpi,1]
+     ,main=results[pos_cpi,6]
      ,xlab=xlab)
 points(1:4,results[15,2:5],cex=0.7,pch=21,bg=1)
 box()
