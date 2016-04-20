@@ -1,0 +1,49 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGdefault{c}{\PYGdefaultZsh{}!/bin/bash}
+\PYGdefault{c}{\PYGdefaultZsh{} Number of instructions fetched...}
+./sim\PYGdefaultZhy{}outorder \PYGdefaultZhy{}fetch:ifqsize \PYGdefault{l+m}{1} ../benchmarks/compress95.alpha ../benchmarks/1stmt.i 2\PYGdefaultZgt{} Results/results\PYGdefaultZus{}C\PYGdefaultZus{}F1.txt
+./sim\PYGdefaultZhy{}outorder \PYGdefaultZhy{}fetch:ifqsize \PYGdefault{l+m}{2} ../benchmarks/compress95.alpha ../benchmarks/1stmt.i 2\PYGdefaultZgt{} Results/results\PYGdefaultZus{}C\PYGdefaultZus{}F2.txt
+./sim\PYGdefaultZhy{}outorder \PYGdefaultZhy{}fetch:ifqsize \PYGdefault{l+m}{4} ../benchmarks/compress95.alpha ../benchmarks/1stmt.i 2\PYGdefaultZgt{} Results/results\PYGdefaultZus{}C\PYGdefaultZus{}F4.txt
+./sim\PYGdefaultZhy{}outorder \PYGdefaultZhy{}fetch:ifqsize \PYGdefault{l+m}{8} ../benchmarks/compress95.alpha ../benchmarks/1stmt.i 2\PYGdefaultZgt{} Results/results\PYGdefaultZus{}C\PYGdefaultZus{}F8.txt
+
+\PYGdefault{c}{\PYGdefaultZsh{} Number of instructions decoded...}
+./sim\PYGdefaultZhy{}outorder \PYGdefaultZhy{}decode:width \PYGdefault{l+m}{1} ../benchmarks/compress95.alpha ../benchmarks/1stmt.i 2\PYGdefaultZgt{} Results/results\PYGdefaultZus{}C\PYGdefaultZus{}D1.txt
+./sim\PYGdefaultZhy{}outorder \PYGdefaultZhy{}decode:width \PYGdefault{l+m}{2} ../benchmarks/compress95.alpha ../benchmarks/1stmt.i 2\PYGdefaultZgt{} Results/results\PYGdefaultZus{}C\PYGdefaultZus{}D2.txt
+./sim\PYGdefaultZhy{}outorder \PYGdefaultZhy{}decode:width \PYGdefault{l+m}{4} ../benchmarks/compress95.alpha ../benchmarks/1stmt.i 2\PYGdefaultZgt{} Results/results\PYGdefaultZus{}C\PYGdefaultZus{}D4.txt
+./sim\PYGdefaultZhy{}outorder \PYGdefaultZhy{}decode:width \PYGdefault{l+m}{8} ../benchmarks/compress95.alpha ../benchmarks/1stmt.i 2\PYGdefaultZgt{} Results/results\PYGdefaultZus{}C\PYGdefaultZus{}D8.txt
+
+\PYGdefault{c}{\PYGdefaultZsh{} Number of instructions issued...}
+./sim\PYGdefaultZhy{}outorder \PYGdefaultZhy{}issue:width \PYGdefault{l+m}{1} ../benchmarks/compress95.alpha ../benchmarks/1stmt.i 2\PYGdefaultZgt{} Results/results\PYGdefaultZus{}C\PYGdefaultZus{}I1.txt
+./sim\PYGdefaultZhy{}outorder \PYGdefaultZhy{}issue:width \PYGdefault{l+m}{2} ../benchmarks/compress95.alpha ../benchmarks/1stmt.i 2\PYGdefaultZgt{} Results/results\PYGdefaultZus{}C\PYGdefaultZus{}I2.txt
+./sim\PYGdefaultZhy{}outorder \PYGdefaultZhy{}issue:width \PYGdefault{l+m}{4} ../benchmarks/compress95.alpha ../benchmarks/1stmt.i 2\PYGdefaultZgt{} Results/results\PYGdefaultZus{}C\PYGdefaultZus{}I4.txt
+./sim\PYGdefaultZhy{}outorder \PYGdefaultZhy{}issue:width \PYGdefault{l+m}{8} ../benchmarks/compress95.alpha ../benchmarks/1stmt.i 2\PYGdefaultZgt{} Results/results\PYGdefaultZus{}C\PYGdefaultZus{}I8.txt
+
+\PYGdefault{c}{\PYGdefaultZsh{} Number of instructions commited...}
+./sim\PYGdefaultZhy{}outorder \PYGdefaultZhy{}commit:width \PYGdefault{l+m}{1} ../benchmarks/compress95.alpha ../benchmarks/1stmt.i 2\PYGdefaultZgt{} Results/results\PYGdefaultZus{}C\PYGdefaultZus{}C1.txt
+./sim\PYGdefaultZhy{}outorder \PYGdefaultZhy{}commit:width \PYGdefault{l+m}{2} ../benchmarks/compress95.alpha ../benchmarks/1stmt.i 2\PYGdefaultZgt{} Results/results\PYGdefaultZus{}C\PYGdefaultZus{}C2.txt
+./sim\PYGdefaultZhy{}outorder \PYGdefaultZhy{}commit:width \PYGdefault{l+m}{4} ../benchmarks/compress95.alpha ../benchmarks/1stmt.i 2\PYGdefaultZgt{} Results/results\PYGdefaultZus{}C\PYGdefaultZus{}C4.txt
+./sim\PYGdefaultZhy{}outorder \PYGdefaultZhy{}commit:width \PYGdefault{l+m}{8} ../benchmarks/compress95.alpha ../benchmarks/1stmt.i 2\PYGdefaultZgt{} Results/results\PYGdefaultZus{}C\PYGdefaultZus{}C8.txt
+
+\PYGdefault{c}{\PYGdefaultZsh{} Branch prediction...}
+./sim\PYGdefaultZhy{}outorder \PYGdefaultZhy{}bpred nottaken ../benchmarks/compress95.alpha ../benchmarks/1stmt.i 2\PYGdefaultZgt{} Results/results\PYGdefaultZus{}C\PYGdefaultZus{}BPNT.txt
+./sim\PYGdefaultZhy{}outorder \PYGdefaultZhy{}bpred taken ../benchmarks/compress95.alpha ../benchmarks/1stmt.i 2\PYGdefaultZgt{} Results/results\PYGdefaultZus{}C\PYGdefaultZus{}BPT.txt
+./sim\PYGdefaultZhy{}outorder \PYGdefaultZhy{}bpred bimod ../benchmarks/compress95.alpha ../benchmarks/1stmt.i 2\PYGdefaultZgt{} Results/results\PYGdefaultZus{}C\PYGdefaultZus{}BPBM.txt
+./sim\PYGdefaultZhy{}outorder \PYGdefaultZhy{}bpred 2lev ../benchmarks/compress95.alpha ../benchmarks/1stmt.i 2\PYGdefaultZgt{} Results/results\PYGdefaultZus{}C\PYGdefaultZus{}BP2L.txt
+
+\PYGdefault{c}{\PYGdefaultZsh{} Cache block size...}
+./sim\PYGdefaultZhy{}outorder \PYGdefaultZhy{}cache:dl2 ul2:128:32:4:l ../benchmarks/compress95.alpha ../benchmarks/1stmt.i 2\PYGdefaultZgt{} Results/results\PYGdefaultZus{}C\PYGdefaultZus{}CacheBS32.txt
+./sim\PYGdefaultZhy{}outorder \PYGdefaultZhy{}cache:dl2 ul2:128:64:4:l ../benchmarks/compress95.alpha ../benchmarks/1stmt.i 2\PYGdefaultZgt{} Results/results\PYGdefaultZus{}C\PYGdefaultZus{}CacheBS64.txt
+./sim\PYGdefaultZhy{}outorder \PYGdefaultZhy{}cache:dl2 ul2:128:128:4:l ../benchmarks/compress95.alpha ../benchmarks/1stmt.i 2\PYGdefaultZgt{} Results/results\PYGdefaultZus{}C\PYGdefaultZus{}CacheBS128.txt
+./sim\PYGdefaultZhy{}outorder \PYGdefaultZhy{}cache:dl2 ul2:128:256:4:l ../benchmarks/compress95.alpha ../benchmarks/1stmt.i 2\PYGdefaultZgt{} Results/results\PYGdefaultZus{}C\PYGdefaultZus{}CacheBS256.txt
+
+\PYGdefault{c}{\PYGdefaultZsh{} Cache replacement policy...}
+./sim\PYGdefaultZhy{}outorder \PYGdefaultZhy{}cache:dl2 ul2:128:32:4:f ../benchmarks/compress95.alpha ../benchmarks/1stmt.i 2\PYGdefaultZgt{} Results/results\PYGdefaultZus{}C\PYGdefaultZus{}CacheRPF.txt
+./sim\PYGdefaultZhy{}outorder \PYGdefaultZhy{}cache:dl2 ul2:128:32:4:l ../benchmarks/compress95.alpha ../benchmarks/1stmt.i 2\PYGdefaultZgt{} Results/results\PYGdefaultZus{}C\PYGdefaultZus{}CacheRPL.txt
+./sim\PYGdefaultZhy{}outorder \PYGdefaultZhy{}cache:dl2 ul2:128:32:4:r ../benchmarks/compress95.alpha ../benchmarks/1stmt.i 2\PYGdefaultZgt{} Results/results\PYGdefaultZus{}C\PYGdefaultZus{}CacheRPR.txt
+
+\PYGdefault{c}{\PYGdefaultZsh{} Cache associativity...}
+./sim\PYGdefaultZhy{}outorder \PYGdefaultZhy{}cache:dl2 ul2:128:32:1:l ../benchmarks/compress95.alpha ../benchmarks/1stmt.i 2\PYGdefaultZgt{} Results/results\PYGdefaultZus{}C\PYGdefaultZus{}CacheA1.txt
+./sim\PYGdefaultZhy{}outorder \PYGdefaultZhy{}cache:dl2 ul2:128:32:4:l ../benchmarks/compress95.alpha ../benchmarks/1stmt.i 2\PYGdefaultZgt{} Results/results\PYGdefaultZus{}C\PYGdefaultZus{}CacheA4.txt
+./sim\PYGdefaultZhy{}outorder \PYGdefaultZhy{}cache:dl2 ul2:128:32:8:l ../benchmarks/compress95.alpha ../benchmarks/1stmt.i 2\PYGdefaultZgt{} Results/results\PYGdefaultZus{}C\PYGdefaultZus{}CacheA8.txt
+./sim\PYGdefaultZhy{}outorder \PYGdefaultZhy{}cache:dl2 ul2:128:32:64:l ../benchmarks/compress95.alpha ../benchmarks/1stmt.i 2\PYGdefaultZgt{} Results/results\PYGdefaultZus{}C\PYGdefaultZus{}CacheA64.txt
+\end{Verbatim}
