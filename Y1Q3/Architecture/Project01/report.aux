@@ -20,40 +20,74 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {1.1}Number of fetched instructions}{1}{subsection.1.1}}
 \@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Cycles per instructions vs number of fetched instructions.}}{1}{figure.1}}
 \newlabel{fig:f_sim_cpi}{{1}{1}{Cycles per instructions vs number of fetched instructions}{figure.1}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.2}Number of decoded instructions}{1}{subsection.1.2}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Cycles per instructions vs number of decoded instructions.}}{2}{figure.2}}
-\newlabel{fig:d_sim_cpi}{{2}{2}{Cycles per instructions vs number of decoded instructions}{figure.2}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.3}Number of issued instructions}{2}{subsection.1.3}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Cycles per instructions vs number of issued instructions.}}{2}{figure.3}}
-\newlabel{fig:i_sim_cpi}{{3}{2}{Cycles per instructions vs number of issued instructions}{figure.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.4}Number of committed instructions}{2}{subsection.1.4}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Cycles per instructions vs number of committed instructions.}}{3}{figure.4}}
-\newlabel{fig:c_sim_cpi}{{4}{3}{Cycles per instructions vs number of committed instructions}{figure.4}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.5}Branch prediction}{3}{subsection.1.5}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Cycles per instructions vs branch prediction methods.}}{3}{figure.5}}
-\newlabel{fig:bp_sim_cpi}{{5}{3}{Cycles per instructions vs branch prediction methods}{figure.5}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.6}Cache block size}{3}{subsection.1.6}}
-\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Cycles per instructions vs branch prediction methods.}}{4}{figure.6}}
-\newlabel{fig:cache-bs_sim_cpi}{{6}{4}{Cycles per instructions vs branch prediction methods}{figure.6}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.7}Cache replacement policy}{4}{subsection.1.7}}
-\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Cycles per instructions vs branch prediction methods.}}{4}{figure.7}}
-\newlabel{fig:cache-rp_sim_cpi}{{7}{4}{Cycles per instructions vs branch prediction methods}{figure.7}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.8}Cache associativity}{4}{subsection.1.8}}
-\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Cycles per instructions vs branch prediction methods.}}{5}{figure.8}}
-\newlabel{fig:cache-a_sim_cpi}{{8}{5}{Cycles per instructions vs branch prediction methods}{figure.8}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {2}Discussion}{5}{section.2}}
-\@writefile{toc}{\contentsline {section}{\numberline {3}Commands}{6}{section.3}}
-\@writefile{lol}{\contentsline {listing}{\numberline {1}{\ignorespaces Simulation execution commands for \textit  {cc1} application.}}{7}{listing.1}}
-\newlabel{lst:cc1}{{1}{7}{Commands}{listing.1}{}}
-\@writefile{lol}{\contentsline {listing}{\numberline {2}{\ignorespaces Simulation execution commands for \textit  {anagram} application.}}{8}{listing.2}}
-\newlabel{lst:anagram}{{2}{8}{Commands}{listing.2}{}}
-\@writefile{lol}{\contentsline {listing}{\numberline {3}{\ignorespaces Simulation execution commands for \textit  {compress95} application.}}{9}{listing.3}}
-\newlabel{lst:compress}{{3}{9}{Commands}{listing.3}{}}
-\@writefile{lol}{\contentsline {listing}{\numberline {4}{\ignorespaces Simulation execution commands for \textit  {go} application.}}{10}{listing.4}}
-\newlabel{lst:go}{{4}{10}{Commands}{listing.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Cycles per instructions vs number of fetched instructions.}}{2}{figure.2}}
+\newlabel{fig:f_lsq_latency}{{2}{2}{Cycles per instructions vs number of fetched instructions}{figure.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.2}Number of decoded instructions}{2}{subsection.1.2}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Cycles per instructions vs number of decoded instructions.}}{2}{figure.3}}
+\newlabel{fig:d_sim_cpi}{{3}{2}{Cycles per instructions vs number of decoded instructions}{figure.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Cycles per instructions vs number of fetched instructions.}}{3}{figure.4}}
+\newlabel{fig:d_lsq_latency}{{4}{3}{Cycles per instructions vs number of fetched instructions}{figure.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.3}Number of issued instructions}{3}{subsection.1.3}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Cycles per instructions vs number of issued instructions.}}{3}{figure.5}}
+\newlabel{fig:i_sim_cpi}{{5}{3}{Cycles per instructions vs number of issued instructions}{figure.5}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Cycles per instructions vs number of fetched instructions.}}{4}{figure.6}}
+\newlabel{fig:i_lsq_latency}{{6}{4}{Cycles per instructions vs number of fetched instructions}{figure.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.4}Number of committed instructions}{4}{subsection.1.4}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Cycles per instructions vs number of committed instructions.}}{4}{figure.7}}
+\newlabel{fig:c_sim_cpi}{{7}{4}{Cycles per instructions vs number of committed instructions}{figure.7}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Cycles per instructions vs number of fetched instructions.}}{5}{figure.8}}
+\newlabel{fig:c_lsq_latency}{{8}{5}{Cycles per instructions vs number of fetched instructions}{figure.8}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.5}Branch prediction}{5}{subsection.1.5}}
+\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces Cycles per instructions vs branch prediction methods.}}{5}{figure.9}}
+\newlabel{fig:bp_sim_cpi}{{9}{5}{Cycles per instructions vs branch prediction methods}{figure.9}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces Cycles per instructions vs branch prediction methods.}}{6}{figure.10}}
+\newlabel{fig:bp_addr-pred-rate}{{10}{6}{Cycles per instructions vs branch prediction methods}{figure.10}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.6}Cache block size}{6}{subsection.1.6}}
+\@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces Cycles per instructions vs branch prediction methods.}}{6}{figure.11}}
+\newlabel{fig:cache-bs_sim_cpi}{{11}{6}{Cycles per instructions vs branch prediction methods}{figure.11}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {12}{\ignorespaces Cycles per instructions vs branch prediction methods.}}{7}{figure.12}}
+\newlabel{fig:cache-bs_miss_rate}{{12}{7}{Cycles per instructions vs branch prediction methods}{figure.12}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {13}{\ignorespaces Cycles per instructions vs branch prediction methods.}}{7}{figure.13}}
+\newlabel{fig:cache-bs_A_miss_rate}{{13}{7}{Cycles per instructions vs branch prediction methods}{figure.13}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {14}{\ignorespaces Cycles per instructions vs branch prediction methods.}}{8}{figure.14}}
+\newlabel{fig:cache-bs_C_miss_rate}{{14}{8}{Cycles per instructions vs branch prediction methods}{figure.14}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {15}{\ignorespaces Cycles per instructions vs branch prediction methods.}}{8}{figure.15}}
+\newlabel{fig:cache-bs_G_miss_rate}{{15}{8}{Cycles per instructions vs branch prediction methods}{figure.15}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.7}Cache replacement policy}{9}{subsection.1.7}}
+\@writefile{lof}{\contentsline {figure}{\numberline {16}{\ignorespaces Cycles per instructions vs branch prediction methods.}}{9}{figure.16}}
+\newlabel{fig:cache-rp_sim_cpi}{{16}{9}{Cycles per instructions vs branch prediction methods}{figure.16}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {17}{\ignorespaces Cycles per instructions vs branch prediction methods.}}{9}{figure.17}}
+\newlabel{fig:cache-RP_miss_rate}{{17}{9}{Cycles per instructions vs branch prediction methods}{figure.17}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {18}{\ignorespaces Cycles per instructions vs branch prediction methods.}}{10}{figure.18}}
+\newlabel{fig:cache-RP_A_miss_rate}{{18}{10}{Cycles per instructions vs branch prediction methods}{figure.18}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {19}{\ignorespaces Cycles per instructions vs branch prediction methods.}}{10}{figure.19}}
+\newlabel{fig:cache-RP_C_miss_rate}{{19}{10}{Cycles per instructions vs branch prediction methods}{figure.19}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {20}{\ignorespaces Cycles per instructions vs branch prediction methods.}}{11}{figure.20}}
+\newlabel{fig:cache-RP_G_miss_rate}{{20}{11}{Cycles per instructions vs branch prediction methods}{figure.20}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.8}Cache associativity}{12}{subsection.1.8}}
+\@writefile{lof}{\contentsline {figure}{\numberline {21}{\ignorespaces Cycles per instructions vs branch prediction methods.}}{12}{figure.21}}
+\newlabel{fig:cache-a_sim_cpi}{{21}{12}{Cycles per instructions vs branch prediction methods}{figure.21}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {22}{\ignorespaces Cycles per instructions vs branch prediction methods.}}{12}{figure.22}}
+\newlabel{fig:cache-A_miss_rate}{{22}{12}{Cycles per instructions vs branch prediction methods}{figure.22}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {23}{\ignorespaces Cycles per instructions vs branch prediction methods.}}{13}{figure.23}}
+\newlabel{fig:cache-A_A_miss_rate}{{23}{13}{Cycles per instructions vs branch prediction methods}{figure.23}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {24}{\ignorespaces Cycles per instructions vs branch prediction methods.}}{13}{figure.24}}
+\newlabel{fig:cache-A_C_miss_rate}{{24}{13}{Cycles per instructions vs branch prediction methods}{figure.24}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {25}{\ignorespaces Cycles per instructions vs branch prediction methods.}}{14}{figure.25}}
+\newlabel{fig:cache-A_G_miss_rate}{{25}{14}{Cycles per instructions vs branch prediction methods}{figure.25}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2}Discussion}{15}{section.2}}
+\@writefile{toc}{\contentsline {section}{\numberline {3}Commands}{16}{section.3}}
+\@writefile{lol}{\contentsline {listing}{\numberline {1}{\ignorespaces Simulation execution commands for \textit  {cc1} application.}}{17}{listing.1}}
+\newlabel{lst:cc1}{{1}{17}{Commands}{listing.1}{}}
+\@writefile{lol}{\contentsline {listing}{\numberline {2}{\ignorespaces Simulation execution commands for \textit  {anagram} application.}}{18}{listing.2}}
+\newlabel{lst:anagram}{{2}{18}{Commands}{listing.2}{}}
+\@writefile{lol}{\contentsline {listing}{\numberline {3}{\ignorespaces Simulation execution commands for \textit  {compress95} application.}}{19}{listing.3}}
+\newlabel{lst:compress}{{3}{19}{Commands}{listing.3}{}}
+\@writefile{lol}{\contentsline {listing}{\numberline {4}{\ignorespaces Simulation execution commands for \textit  {go} application.}}{20}{listing.4}}
+\newlabel{lst:go}{{4}{20}{Commands}{listing.4}{}}
 \gdef\minted@oldcachelist{,
   default.pygstyle,
   CD160BAF91A7767FEEB139D88624140F3566381C589D85DCA69BFE0A81897A1F.pygtex,
   65BF876AB4004328B382B30EB942D77A2DE1659205DF9DF41D3C88621997C5C1.pygtex,
-  48A3DBB67929269D2362628B8579172CD087A6AD9885493719C703553FB22C89.pygtex,
+  7ED4500D4825613262B6DA0F14B2813BD087A6AD9885493719C703553FB22C89.pygtex,
   B1C85177A5A1D5C23213D724692C1847C51EC2500E2CC271573863AEB1C497FF.pygtex}

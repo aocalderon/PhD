@@ -69,7 +69,7 @@ Level 2 Cache Power Consumption: 4.2091 (5.86%)
 warning: section `.comment' ignored...
 sim: command line: ./sim-outorder -fetch:ifqsize 4 ../benchmarks/compress95.alpha ../benchmarks/1stmt.i 
 
-sim: simulation started @ Fri Apr 15 16:55:36 2016, options follow:
+sim: simulation started @ Tue Apr 19 17:28:12 2016, options follow:
 
 sim-outorder: This simulator implements a very detailed out-of-order issue
 superscalar processor with a two-level memory system and speculative
@@ -202,37 +202,37 @@ sim_num_stores             892.0000 # total number of stores committed
 sim_num_branches               1893 # total number of branches committed
 sim_elapsed_time                  1 # total simulation time in seconds
 sim_inst_rate             9325.0000 # simulation speed (in insts/sec)
-sim_total_insn                11436 # total number of instructions executed
-sim_total_refs                 2508 # total number of loads and stores executed
-sim_total_loads                1516 # total number of loads executed
+sim_total_insn                11450 # total number of instructions executed
+sim_total_refs                 2511 # total number of loads and stores executed
+sim_total_loads                1519 # total number of loads executed
 sim_total_stores           992.0000 # total number of stores executed
-sim_total_branches             2134 # total number of branches executed
-sim_cycle                     14053 # total simulation time in cycles
-sim_IPC                      0.6636 # instructions per cycle
-sim_CPI                      1.5070 # cycles per instruction
-sim_exec_BW                  0.8138 # total instructions (mis-spec + committed) per cycle
+sim_total_branches             2135 # total number of branches executed
+sim_cycle                     14090 # total simulation time in cycles
+sim_IPC                      0.6618 # instructions per cycle
+sim_CPI                      1.5110 # cycles per instruction
+sim_exec_BW                  0.8126 # total instructions (mis-spec + committed) per cycle
 sim_IPB                      4.9260 # instruction per branch
-IFQ_count                     21516 # cumulative IFQ occupancy
-IFQ_fcount                     4666 # cumulative IFQ full count
-ifq_occupancy                1.5311 # avg IFQ occupancy (insn's)
-ifq_rate                     0.8138 # avg IFQ dispatch rate (insn/cycle)
-ifq_latency                  1.8814 # avg IFQ occupant latency (cycle's)
-ifq_full                     0.3320 # fraction of time (cycle's) IFQ was full
-RUU_count                     83090 # cumulative RUU occupancy
-RUU_fcount                     2869 # cumulative RUU full count
-ruu_occupancy                5.9126 # avg RUU occupancy (insn's)
-ruu_rate                     0.8138 # avg RUU dispatch rate (insn/cycle)
-ruu_latency                  7.2657 # avg RUU occupant latency (cycle's)
-ruu_full                     0.2042 # fraction of time (cycle's) RUU was full
-LSQ_count                     19014 # cumulative LSQ occupancy
+IFQ_count                     21662 # cumulative IFQ occupancy
+IFQ_fcount                     4703 # cumulative IFQ full count
+ifq_occupancy                1.5374 # avg IFQ occupancy (insn's)
+ifq_rate                     0.8126 # avg IFQ dispatch rate (insn/cycle)
+ifq_latency                  1.8919 # avg IFQ occupant latency (cycle's)
+ifq_full                     0.3338 # fraction of time (cycle's) IFQ was full
+RUU_count                     83667 # cumulative RUU occupancy
+RUU_fcount                     2906 # cumulative RUU full count
+ruu_occupancy                5.9380 # avg RUU occupancy (insn's)
+ruu_rate                     0.8126 # avg RUU dispatch rate (insn/cycle)
+ruu_latency                  7.3072 # avg RUU occupant latency (cycle's)
+ruu_full                     0.2062 # fraction of time (cycle's) RUU was full
+LSQ_count                     19088 # cumulative LSQ occupancy
 LSQ_fcount                      162 # cumulative LSQ full count
-lsq_occupancy                1.3530 # avg LSQ occupancy (insn's)
-lsq_rate                     0.8138 # avg LSQ dispatch rate (insn/cycle)
-lsq_latency                  1.6626 # avg LSQ occupant latency (cycle's)
+lsq_occupancy                1.3547 # avg LSQ occupancy (insn's)
+lsq_rate                     0.8126 # avg LSQ dispatch rate (insn/cycle)
+lsq_latency                  1.6671 # avg LSQ occupant latency (cycle's)
 lsq_full                     0.0115 # fraction of time (cycle's) LSQ was full
-sim_slip                     102318 # total number of slip cycles
-avg_sim_slip                10.9724 # the average slip between issue and retirement
-bpred_bimod.lookups            2240 # total number of bpred lookups
+sim_slip                     102925 # total number of slip cycles
+avg_sim_slip                11.0375 # the average slip between issue and retirement
+bpred_bimod.lookups            2242 # total number of bpred lookups
 bpred_bimod.updates            1893 # total number of updates
 bpred_bimod.addr_hits          1445 # total number of address-predicted hits
 bpred_bimod.dir_hits           1660 # total number of direction-predicted hits (includes addr-hits)
@@ -250,38 +250,38 @@ bpred_bimod.retstack_pops          241 # total number of address popped off of r
 bpred_bimod.used_ras.PP          195 # total number of RAS predictions used
 bpred_bimod.ras_hits.PP          122 # total number of RAS hits
 bpred_bimod.ras_rate.PP    0.6256 # RAS prediction rate (i.e., RAS hits/used RAS)
-il1.accesses                  11464 # total number of accesses
-il1.hits                      11125 # total number of hits
+il1.accesses                  11478 # total number of accesses
+il1.hits                      11139 # total number of hits
 il1.misses                      339 # total number of misses
 il1.replacements                 84 # total number of replacements
 il1.writebacks                    0 # total number of writebacks
 il1.invalidations                 0 # total number of invalidations
-il1.miss_rate                0.0296 # miss rate (i.e., misses/ref)
+il1.miss_rate                0.0295 # miss rate (i.e., misses/ref)
 il1.repl_rate                0.0073 # replacement rate (i.e., repls/ref)
 il1.wb_rate                  0.0000 # writeback rate (i.e., wrbks/ref)
 il1.inv_rate                 0.0000 # invalidation rate (i.e., invs/ref)
-dl1.accesses                   2286 # total number of accesses
-dl1.hits                       1729 # total number of hits
-dl1.misses                      557 # total number of misses
-dl1.replacements                102 # total number of replacements
-dl1.writebacks                   84 # total number of writebacks
+dl1.accesses                   2287 # total number of accesses
+dl1.hits                       1728 # total number of hits
+dl1.misses                      559 # total number of misses
+dl1.replacements                103 # total number of replacements
+dl1.writebacks                   86 # total number of writebacks
 dl1.invalidations                 0 # total number of invalidations
-dl1.miss_rate                0.2437 # miss rate (i.e., misses/ref)
-dl1.repl_rate                0.0446 # replacement rate (i.e., repls/ref)
-dl1.wb_rate                  0.0367 # writeback rate (i.e., wrbks/ref)
+dl1.miss_rate                0.2444 # miss rate (i.e., misses/ref)
+dl1.repl_rate                0.0450 # replacement rate (i.e., repls/ref)
+dl1.wb_rate                  0.0376 # writeback rate (i.e., wrbks/ref)
 dl1.inv_rate                 0.0000 # invalidation rate (i.e., invs/ref)
-ul2.accesses                    980 # total number of accesses
-ul2.hits                        454 # total number of hits
-ul2.misses                      526 # total number of misses
+ul2.accesses                    984 # total number of accesses
+ul2.hits                        457 # total number of hits
+ul2.misses                      527 # total number of misses
 ul2.replacements                  0 # total number of replacements
 ul2.writebacks                    0 # total number of writebacks
 ul2.invalidations                 0 # total number of invalidations
-ul2.miss_rate                0.5367 # miss rate (i.e., misses/ref)
+ul2.miss_rate                0.5356 # miss rate (i.e., misses/ref)
 ul2.repl_rate                0.0000 # replacement rate (i.e., repls/ref)
 ul2.wb_rate                  0.0000 # writeback rate (i.e., wrbks/ref)
 ul2.inv_rate                 0.0000 # invalidation rate (i.e., invs/ref)
-itlb.accesses                 11464 # total number of accesses
-itlb.hits                     11453 # total number of hits
+itlb.accesses                 11478 # total number of accesses
+itlb.hits                     11467 # total number of hits
 itlb.misses                      11 # total number of misses
 itlb.replacements                 0 # total number of replacements
 itlb.writebacks                   0 # total number of writebacks
@@ -290,8 +290,8 @@ itlb.miss_rate               0.0010 # miss rate (i.e., misses/ref)
 itlb.repl_rate               0.0000 # replacement rate (i.e., repls/ref)
 itlb.wb_rate                 0.0000 # writeback rate (i.e., wrbks/ref)
 itlb.inv_rate                0.0000 # invalidation rate (i.e., invs/ref)
-dtlb.accesses                  2291 # total number of accesses
-dtlb.hits                      2274 # total number of hits
+dtlb.accesses                  2292 # total number of accesses
+dtlb.hits                      2275 # total number of hits
 dtlb.misses                      17 # total number of misses
 dtlb.replacements                 0 # total number of replacements
 dtlb.writebacks                   0 # total number of writebacks
@@ -300,18 +300,18 @@ dtlb.miss_rate               0.0074 # miss rate (i.e., misses/ref)
 dtlb.repl_rate               0.0000 # replacement rate (i.e., repls/ref)
 dtlb.wb_rate                 0.0000 # writeback rate (i.e., wrbks/ref)
 dtlb.inv_rate                0.0000 # invalidation rate (i.e., invs/ref)
-rename_power              5873.6690 # total power usage of rename unit
-bpred_power              63563.4952 # total power usage of bpred unit
-window_power             30977.3008 # total power usage of instruction window
-lsq_power                13535.5684 # total power usage of load/store queue
-regfile_power            50203.9505 # total power usage of arch. regfile
-icache_power             34808.4622 # total power usage of icache
-dcache_power             85511.1878 # total power usage of dcache
-dcache2_power            59150.4183 # total power usage of dcache2
-alu_power               266180.3379 # total power usage of alu
-falu_power              200691.5246 # total power usage of falu
-resultbus_power          32287.3702 # total power usage of resultbus
-clock_power             366747.7828 # total power usage of clock
+rename_power              5889.1337 # total power usage of rename unit
+bpred_power              63730.8509 # total power usage of bpred unit
+window_power             31058.8606 # total power usage of instruction window
+lsq_power                13571.2060 # total power usage of load/store queue
+regfile_power            50336.1320 # total power usage of arch. regfile
+icache_power             34900.1091 # total power usage of icache
+dcache_power             85736.3294 # total power usage of dcache
+dcache2_power            59306.1548 # total power usage of dcache2
+alu_power               266881.1614 # total power usage of alu
+falu_power              201219.9233 # total power usage of falu
+resultbus_power          32372.3793 # total power usage of resultbus
+clock_power             367713.3893 # total power usage of clock
 avg_rename_power             0.4180 # avg power usage of rename unit
 avg_bpred_power              4.5231 # avg power usage of bpred unit
 avg_window_power             2.2043 # avg power usage of instruction window
@@ -324,130 +324,130 @@ avg_alu_power               18.9412 # avg power usage of alu
 avg_falu_power              14.2810 # avg power usage of falu
 avg_resultbus_power          2.2975 # avg power usage of resultbus
 avg_clock_power             26.0975 # avg power usage of clock
-fetch_stage_power        98371.9575 # total power usage of fetch stage
-dispatch_stage_power      5873.6690 # total power usage of dispatch stage
-issue_stage_power       487642.1834 # total power usage of issue stage
+fetch_stage_power        98630.9600 # total power usage of fetch stage
+dispatch_stage_power      5889.1337 # total power usage of dispatch stage
+issue_stage_power       488926.0915 # total power usage of issue stage
 avg_fetch_power              7.0001 # average power of fetch unit per cycle
 avg_dispatch_power           0.4180 # average power of dispatch unit per cycle
 avg_issue_power             34.7002 # average power of issue unit per cycle
-total_power            1008839.5432 # total power per cycle
+total_power            1011495.7065 # total power per cycle
 avg_total_power_cycle       71.7882 # average total power per cycle
 avg_total_power_cycle_nofp_nod2      53.2981 # average total power per cycle
-avg_total_power_insn        88.2161 # average total power per insn
-avg_total_power_insn_nofp_nod2      65.4947 # average total power per insn
-rename_power_cc1          1686.0728 # total power usage of rename unit_cc1
+avg_total_power_insn        88.3402 # average total power per insn
+avg_total_power_insn_nofp_nod2      65.5869 # average total power per insn
+rename_power_cc1          1688.9985 # total power usage of rename unit_cc1
 bpred_power_cc1           7239.2638 # total power usage of bpred unit_cc1
-window_power_cc1         11596.9290 # total power usage of instruction window_cc1
-lsq_power_cc1              934.5977 # total power usage of lsq_cc1
-regfile_power_cc1        14382.6616 # total power usage of arch. regfile_cc1
-icache_power_cc1         11282.4696 # total power usage of icache_cc1
-dcache_power_cc1         11415.2842 # total power usage of dcache_cc1
-dcache2_power_cc1         3725.0495 # total power usage of dcache2_cc1
-alu_power_cc1            20541.8551 # total power usage of alu_cc1
-resultbus_power_cc1       8978.3548 # total power usage of resultbus_cc1
-clock_power_cc1          50353.0385 # total power usage of clock_cc1
-avg_rename_power_cc1         0.1200 # avg power usage of rename unit_cc1
-avg_bpred_power_cc1          0.5151 # avg power usage of bpred unit_cc1
-avg_window_power_cc1         0.8252 # avg power usage of instruction window_cc1
-avg_lsq_power_cc1            0.0665 # avg power usage of lsq_cc1
-avg_regfile_power_cc1        1.0235 # avg power usage of arch. regfile_cc1
-avg_icache_power_cc1         0.8029 # avg power usage of icache_cc1
-avg_dcache_power_cc1         0.8123 # avg power usage of dcache_cc1
-avg_dcache2_power_cc1        0.2651 # avg power usage of dcache2_cc1
-avg_alu_power_cc1            1.4617 # avg power usage of alu_cc1
-avg_resultbus_power_cc1       0.6389 # avg power usage of resultbus_cc1
-avg_clock_power_cc1          3.5831 # avg power usage of clock_cc1
-fetch_stage_power_cc1    18521.7334 # total power usage of fetch stage_cc1
-dispatch_stage_power_cc1    1686.0728 # total power usage of dispatch stage_cc1
-issue_stage_power_cc1    57192.0702 # total power usage of issue stage_cc1
-avg_fetch_power_cc1          1.3180 # average power of fetch unit per cycle_cc1
-avg_dispatch_power_cc1       0.1200 # average power of dispatch unit per cycle_cc1
-avg_issue_power_cc1          4.0697 # average power of issue unit per cycle_cc1
-total_power_cycle_cc1   142135.5766 # total power per cycle_cc1
-avg_total_power_cycle_cc1      10.1143 # average total power per cycle_cc1
-avg_total_power_insn_cc1      12.4288 # average total power per insn_cc1
-rename_power_cc2          1194.9633 # total power usage of rename unit_cc2
+window_power_cc1         11502.8844 # total power usage of instruction window_cc1
+lsq_power_cc1              936.2060 # total power usage of lsq_cc1
+regfile_power_cc1        14173.9043 # total power usage of arch. regfile_cc1
+icache_power_cc1         11304.7621 # total power usage of icache_cc1
+dcache_power_cc1         11433.5389 # total power usage of dcache_cc1
+dcache2_power_cc1         3733.4677 # total power usage of dcache2_cc1
+alu_power_cc1            20579.1361 # total power usage of alu_cc1
+resultbus_power_cc1       8609.9163 # total power usage of resultbus_cc1
+clock_power_cc1          50012.8628 # total power usage of clock_cc1
+avg_rename_power_cc1         0.1199 # avg power usage of rename unit_cc1
+avg_bpred_power_cc1          0.5138 # avg power usage of bpred unit_cc1
+avg_window_power_cc1         0.8164 # avg power usage of instruction window_cc1
+avg_lsq_power_cc1            0.0664 # avg power usage of lsq_cc1
+avg_regfile_power_cc1        1.0060 # avg power usage of arch. regfile_cc1
+avg_icache_power_cc1         0.8023 # avg power usage of icache_cc1
+avg_dcache_power_cc1         0.8115 # avg power usage of dcache_cc1
+avg_dcache2_power_cc1        0.2650 # avg power usage of dcache2_cc1
+avg_alu_power_cc1            1.4605 # avg power usage of alu_cc1
+avg_resultbus_power_cc1       0.6111 # avg power usage of resultbus_cc1
+avg_clock_power_cc1          3.5495 # avg power usage of clock_cc1
+fetch_stage_power_cc1    18544.0259 # total power usage of fetch stage_cc1
+dispatch_stage_power_cc1    1688.9985 # total power usage of dispatch stage_cc1
+issue_stage_power_cc1    56795.1494 # total power usage of issue stage_cc1
+avg_fetch_power_cc1          1.3161 # average power of fetch unit per cycle_cc1
+avg_dispatch_power_cc1       0.1199 # average power of dispatch unit per cycle_cc1
+avg_issue_power_cc1          4.0309 # average power of issue unit per cycle_cc1
+total_power_cycle_cc1   141214.9409 # total power per cycle_cc1
+avg_total_power_cycle_cc1      10.0224 # average total power per cycle_cc1
+avg_total_power_insn_cc1      12.3332 # average total power per insn_cc1
+rename_power_cc2          1196.4262 # total power usage of rename unit_cc2
 bpred_power_cc2           4281.1391 # total power usage of bpred unit_cc2
-window_power_cc2          7544.2918 # total power usage of instruction window_cc2
-lsq_power_cc2              548.5761 # total power usage of lsq_cc2
-regfile_power_cc2         3238.6876 # total power usage of arch. regfile_cc2
-icache_power_cc2         11282.4696 # total power usage of icache_cc2
-dcache_power_cc2          6955.0479 # total power usage of dcache_cc2
-dcache2_power_cc2         2062.4568 # total power usage of dcache2_cc2
-alu_power_cc2            11997.5059 # total power usage of alu_cc2
-resultbus_power_cc2       4762.0346 # total power usage of resultbus_cc2
-clock_power_cc2          29039.3221 # total power usage of clock_cc2
-avg_rename_power_cc2         0.0850 # avg power usage of rename unit_cc2
-avg_bpred_power_cc2          0.3046 # avg power usage of bpred unit_cc2
-avg_window_power_cc2         0.5368 # avg power usage of instruction window_cc2
+window_power_cc2          7474.7656 # total power usage of instruction window_cc2
+lsq_power_cc2              549.0923 # total power usage of lsq_cc2
+regfile_power_cc2         3192.7502 # total power usage of arch. regfile_cc2
+icache_power_cc2         11304.7621 # total power usage of icache_cc2
+dcache_power_cc2          6958.0903 # total power usage of dcache_cc2
+dcache2_power_cc2         2070.8750 # total power usage of dcache2_cc2
+alu_power_cc2            12004.4961 # total power usage of alu_cc2
+resultbus_power_cc2       4557.9122 # total power usage of resultbus_cc2
+clock_power_cc2          28878.8870 # total power usage of clock_cc2
+avg_rename_power_cc2         0.0849 # avg power usage of rename unit_cc2
+avg_bpred_power_cc2          0.3038 # avg power usage of bpred unit_cc2
+avg_window_power_cc2         0.5305 # avg power usage of instruction window_cc2
 avg_lsq_power_cc2            0.0390 # avg power usage of instruction lsq_cc2
-avg_regfile_power_cc2        0.2305 # avg power usage of arch. regfile_cc2
-avg_icache_power_cc2         0.8029 # avg power usage of icache_cc2
-avg_dcache_power_cc2         0.4949 # avg power usage of dcache_cc2
-avg_dcache2_power_cc2        0.1468 # avg power usage of dcache2_cc2
-avg_alu_power_cc2            0.8537 # avg power usage of alu_cc2
-avg_resultbus_power_cc2       0.3389 # avg power usage of resultbus_cc2
-avg_clock_power_cc2          2.0664 # avg power usage of clock_cc2
-fetch_stage_power_cc2    15563.6087 # total power usage of fetch stage_cc2
-dispatch_stage_power_cc2    1194.9633 # total power usage of dispatch stage_cc2
-issue_stage_power_cc2    33869.9129 # total power usage of issue stage_cc2
-avg_fetch_power_cc2          1.1075 # average power of fetch unit per cycle_cc2
-avg_dispatch_power_cc2       0.0850 # average power of dispatch unit per cycle_cc2
-avg_issue_power_cc2          2.4102 # average power of issue unit per cycle_cc2
-total_power_cycle_cc2    82906.4947 # total power per cycle_cc2
-avg_total_power_cycle_cc2       5.8996 # average total power per cycle_cc2
-avg_total_power_insn_cc2       7.2496 # average total power per insn_cc2
-rename_power_cc3          1613.7229 # total power usage of rename unit_cc3
-bpred_power_cc3           9929.1671 # total power usage of bpred unit_cc3
-window_power_cc3          9366.1790 # total power usage of instruction window_cc3
-lsq_power_cc3             1805.0884 # total power usage of lsq_cc3
-regfile_power_cc3         6582.1643 # total power usage of arch. regfile_cc3
-icache_power_cc3         13635.0689 # total power usage of icache_cc3
-dcache_power_cc3         14375.5911 # total power usage of dcache_cc3
-dcache2_power_cc3         7606.2564 # total power usage of dcache2_cc3
-alu_power_cc3            36561.3541 # total power usage of alu_cc3
-resultbus_power_cc3       6941.2540 # total power usage of resultbus_cc3
-clock_power_cc3          60405.9816 # total power usage of clock_cc3
-avg_rename_power_cc3         0.1148 # avg power usage of rename unit_cc3
-avg_bpred_power_cc3          0.7066 # avg power usage of bpred unit_cc3
-avg_window_power_cc3         0.6665 # avg power usage of instruction window_cc3
+avg_regfile_power_cc2        0.2266 # avg power usage of arch. regfile_cc2
+avg_icache_power_cc2         0.8023 # avg power usage of icache_cc2
+avg_dcache_power_cc2         0.4938 # avg power usage of dcache_cc2
+avg_dcache2_power_cc2        0.1470 # avg power usage of dcache2_cc2
+avg_alu_power_cc2            0.8520 # avg power usage of alu_cc2
+avg_resultbus_power_cc2       0.3235 # avg power usage of resultbus_cc2
+avg_clock_power_cc2          2.0496 # avg power usage of clock_cc2
+fetch_stage_power_cc2    15585.9012 # total power usage of fetch stage_cc2
+dispatch_stage_power_cc2    1196.4262 # total power usage of dispatch stage_cc2
+issue_stage_power_cc2    33615.2315 # total power usage of issue stage_cc2
+avg_fetch_power_cc2          1.1062 # average power of fetch unit per cycle_cc2
+avg_dispatch_power_cc2       0.0849 # average power of dispatch unit per cycle_cc2
+avg_issue_power_cc2          2.3858 # average power of issue unit per cycle_cc2
+total_power_cycle_cc2    82469.1961 # total power per cycle_cc2
+avg_total_power_cycle_cc2       5.8530 # average total power per cycle_cc2
+avg_total_power_insn_cc2       7.2025 # average total power per insn_cc2
+rename_power_cc3          1616.4397 # total power usage of rename unit_cc3
+bpred_power_cc3           9945.9026 # total power usage of bpred unit_cc3
+window_power_cc3          9301.8575 # total power usage of instruction window_cc3
+lsq_power_cc3             1809.0009 # total power usage of lsq_cc3
+regfile_power_cc3         6547.6588 # total power usage of arch. regfile_cc3
+icache_power_cc3         13664.2968 # total power usage of icache_cc3
+dcache_power_cc3         14399.3222 # total power usage of dcache_cc3
+dcache2_power_cc3         7629.4064 # total power usage of dcache2_cc3
+alu_power_cc3            36634.6986 # total power usage of alu_cc3
+resultbus_power_cc3       6744.7136 # total power usage of resultbus_cc3
+clock_power_cc3          60334.6508 # total power usage of clock_cc3
+avg_rename_power_cc3         0.1147 # avg power usage of rename unit_cc3
+avg_bpred_power_cc3          0.7059 # avg power usage of bpred unit_cc3
+avg_window_power_cc3         0.6602 # avg power usage of instruction window_cc3
 avg_lsq_power_cc3            0.1284 # avg power usage of instruction lsq_cc3
-avg_regfile_power_cc3        0.4684 # avg power usage of arch. regfile_cc3
-avg_icache_power_cc3         0.9703 # avg power usage of icache_cc3
-avg_dcache_power_cc3         1.0230 # avg power usage of dcache_cc3
-avg_dcache2_power_cc3        0.5413 # avg power usage of dcache2_cc3
-avg_alu_power_cc3            2.6017 # avg power usage of alu_cc3
-avg_resultbus_power_cc3       0.4939 # avg power usage of resultbus_cc3
-avg_clock_power_cc3          4.2984 # avg power usage of clock_cc3
-fetch_stage_power_cc3    23564.2359 # total power usage of fetch stage_cc3
-dispatch_stage_power_cc3    1613.7229 # total power usage of dispatch stage_cc3
-issue_stage_power_cc3    76655.7230 # total power usage of issue stage_cc3
-avg_fetch_power_cc3          1.6768 # average power of fetch unit per cycle_cc3
-avg_dispatch_power_cc3       0.1148 # average power of dispatch unit per cycle_cc3
-avg_issue_power_cc3          5.4548 # average power of issue unit per cycle_cc3
-total_power_cycle_cc3   168821.8277 # total power per cycle_cc3
-avg_total_power_cycle_cc3      12.0132 # average total power per cycle_cc3
-avg_total_power_insn_cc3      14.7623 # average total power per insn_cc3
-total_rename_access           11436 # total number accesses of rename unit
+avg_regfile_power_cc3        0.4647 # avg power usage of arch. regfile_cc3
+avg_icache_power_cc3         0.9698 # avg power usage of icache_cc3
+avg_dcache_power_cc3         1.0220 # avg power usage of dcache_cc3
+avg_dcache2_power_cc3        0.5415 # avg power usage of dcache2_cc3
+avg_alu_power_cc3            2.6000 # avg power usage of alu_cc3
+avg_resultbus_power_cc3       0.4787 # avg power usage of resultbus_cc3
+avg_clock_power_cc3          4.2821 # avg power usage of clock_cc3
+fetch_stage_power_cc3    23610.1994 # total power usage of fetch stage_cc3
+dispatch_stage_power_cc3    1616.4397 # total power usage of dispatch stage_cc3
+issue_stage_power_cc3    76518.9992 # total power usage of issue stage_cc3
+avg_fetch_power_cc3          1.6757 # average power of fetch unit per cycle_cc3
+avg_dispatch_power_cc3       0.1147 # average power of dispatch unit per cycle_cc3
+avg_issue_power_cc3          5.4307 # average power of issue unit per cycle_cc3
+total_power_cycle_cc3   168627.9480 # total power per cycle_cc3
+avg_total_power_cycle_cc3      11.9679 # average total power per cycle_cc3
+avg_total_power_insn_cc3      14.7273 # average total power per insn_cc3
+total_rename_access           11450 # total number accesses of rename unit
 total_bpred_access             1893 # total number accesses of bpred unit
-total_window_access           36665 # total number accesses of instruction window
-total_lsq_access               2308 # total number accesses of load/store queue
-total_regfile_access          12743 # total number accesses of arch. regfile
-total_icache_access           12587 # total number accesses of icache
-total_dcache_access            2286 # total number accesses of dcache
-total_dcache2_access            980 # total number accesses of dcache2
-total_alu_access              10298 # total number accesses of alu
-total_resultbus_access         9704 # total number accesses of resultbus
-avg_rename_access            0.8138 # avg number accesses of rename unit
-avg_bpred_access             0.1347 # avg number accesses of bpred unit
-avg_window_access            2.6091 # avg number accesses of instruction window
-avg_lsq_access               0.1642 # avg number accesses of lsq
-avg_regfile_access           0.9068 # avg number accesses of arch. regfile
-avg_icache_access            0.8957 # avg number accesses of icache
-avg_dcache_access            0.1627 # avg number accesses of dcache
-avg_dcache2_access           0.0697 # avg number accesses of dcache2
-avg_alu_access               0.7328 # avg number accesses of alu
-avg_resultbus_access         0.6905 # avg number accesses of resultbus
+total_window_access           36702 # total number accesses of instruction window
+total_lsq_access               2310 # total number accesses of load/store queue
+total_regfile_access          12754 # total number accesses of arch. regfile
+total_icache_access           12601 # total number accesses of icache
+total_dcache_access            2287 # total number accesses of dcache
+total_dcache2_access            984 # total number accesses of dcache2
+total_alu_access              10304 # total number accesses of alu
+total_resultbus_access         9709 # total number accesses of resultbus
+avg_rename_access            0.8126 # avg number accesses of rename unit
+avg_bpred_access             0.1344 # avg number accesses of bpred unit
+avg_window_access            2.6048 # avg number accesses of instruction window
+avg_lsq_access               0.1639 # avg number accesses of lsq
+avg_regfile_access           0.9052 # avg number accesses of arch. regfile
+avg_icache_access            0.8943 # avg number accesses of icache
+avg_dcache_access            0.1623 # avg number accesses of dcache
+avg_dcache2_access           0.0698 # avg number accesses of dcache2
+avg_alu_access               0.7313 # avg number accesses of alu
+avg_resultbus_access         0.6891 # avg number accesses of resultbus
 max_rename_access                 4 # max number accesses of rename unit
 max_bpred_access                  3 # max number accesses of bpred unit
 max_window_access                16 # max number accesses of instruction window
@@ -458,9 +458,9 @@ max_dcache_access                 4 # max number accesses of dcache
 max_dcache2_access                4 # max number accesses of dcache2
 max_alu_access                    4 # max number accesses of alu
 max_resultbus_access              6 # max number accesses of resultbus
-max_cycle_power_cc1         35.5213 # maximum cycle power usage of cc1
-max_cycle_power_cc2         26.1264 # maximum cycle power usage of cc2
-max_cycle_power_cc3         29.9036 # maximum cycle power usage of cc3
+max_cycle_power_cc1         35.4439 # maximum cycle power usage of cc1
+max_cycle_power_cc2         26.1036 # maximum cycle power usage of cc2
+max_cycle_power_cc3         29.8808 # maximum cycle power usage of cc3
 sim_invalid_addrs                 0 # total non-speculative bogus addresses seen (debug var)
 ld_text_base           0x0120000000 # program text (code) segment base
 ld_text_size                  65536 # program text (code) size in bytes
@@ -474,6 +474,6 @@ ld_target_big_endian              0 # target executable endian-ness, non-zero if
 mem.page_count                   18 # total number of pages allocated
 mem.page_mem                   144k # total size of memory pages allocated
 mem.ptab_misses                 427 # total first level page table misses
-mem.ptab_accesses            225206 # total page table accesses
+mem.ptab_accesses            225238 # total page table accesses
 mem.ptab_miss_rate           0.0019 # first level page table miss rate
 

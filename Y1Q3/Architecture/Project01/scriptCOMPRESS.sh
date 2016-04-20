@@ -1,9 +1,9 @@
 #!/bin/bash
 # Number of instructions fetched...
-./sim-outorder -fetch:ifqsize 1 ../benchmarks/compress95.alpha 2> Results/results_C_F1.txt
-./sim-outorder -fetch:ifqsize 2 ../benchmarks/compress95.alpha 2> Results/results_C_F2.txt
-./sim-outorder -fetch:ifqsize 4 ../benchmarks/compress95.alpha 2> Results/results_C_F4.txt
-./sim-outorder -fetch:ifqsize 8 ../benchmarks/compress95.alpha 2> Results/results_C_F8.txt
+./sim-outorder -fetch:ifqsize 1 ../benchmarks/compress95.alpha ../benchmarks/1stmt.i 2> Results/results_C_F1.txt
+./sim-outorder -fetch:ifqsize 2 ../benchmarks/compress95.alpha ../benchmarks/1stmt.i 2> Results/results_C_F2.txt
+./sim-outorder -fetch:ifqsize 4 ../benchmarks/compress95.alpha ../benchmarks/1stmt.i 2> Results/results_C_F4.txt
+./sim-outorder -fetch:ifqsize 8 ../benchmarks/compress95.alpha ../benchmarks/1stmt.i 2> Results/results_C_F8.txt
 
 # Number of instructions decoded...
 ./sim-outorder -decode:width 1 ../benchmarks/compress95.alpha 2> Results/results_C_D1.txt
