@@ -1,0 +1,36 @@
+\documentclass[a4paper,10pt]{scrartcl}
+\usepackage[hmargin=2.5cm,vmargin=3cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\hypersetup{
+colorlinks=false,
+hidelinks
+}
+
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0.5em}
+
+%opening
+\title{Paper Review 4/20}
+\author{Andres Calderon - SID:861243796}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+
+\section*{Towards a SPDY'ier Mobile Web? (Erman et al, 2015)}
+This paper present a fair evaluation of HTML and SPDY protocols under the context of cellular networks.  Given the limitations of HTML, the authors aim to measure the performance of SPDY as an alternative using detailed experiments on a commercial 3G network during 4 months.  As conclusion, they state that there is \textit{not} clear evidence of superior performance of SPDY over HTML in the studied scenario.
+
+The paper is easy to read.  It introduces important concepts about HTML, SPDY and Cellular State Machines before to present the experiments and results.  Section V brings an extensive discussion and analysis about the results and their implications.  One of the main conclusions is the impact on performance from the interactions between different layers.  
+
+However, even though the setup of the experiments is clear and detailed, it seems it searches for an ideal situation.  For example, they avoid smart-phones and run the experiments in quite periods.  Although the idea is to mitigate the influence of external factors, in a real-life scenario the results would not valid. 
+
+% \begin{thebibliography}{9}
+% \bibitem{github} 
+% Andres Calderon.
+% \textit{GitHub Personal Repository}, 2015. 
+% \url{https://github.com/aocalderon/PhD/tree/master/Y1Q1/GPU/lab3}.
+% \end{thebibliography}
+
+\end{document}
