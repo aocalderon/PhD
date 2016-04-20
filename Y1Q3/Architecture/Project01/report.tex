@@ -30,7 +30,8 @@ hidelinks
 \maketitle
 
 
-\section{Results}
+\section{Results}\label{sec:results}
+In the this section we present some results we found interesting using the commands show in section \ref{sec:commands}.  Section \ref{sec:discussion} presents our discussion about these figures. 
 
 \subsection{Number of fetched instructions}
 
@@ -202,10 +203,22 @@ hidelinks
 
 \FloatBarrier
 
-\section{Discussion}
+\section{Discussion}\label{sec:discussion}
+In the first part of the assignment, we chose to present the results from the following metrics: CPI (figures \ref{fig:f_sim_cpi},\ref{fig:d_sim_cpi},\ref{fig:i_sim_cpi},\ref{fig:c_sim_cpi}) and LSQ\_latency (figures \ref{fig:f_lsq_latency},\ref{fig:d_lsq_latency},\ref{fig:i_lsq_latency},\ref{fig:c_lsq_latency}). We observe from the graphs that the CPI metric has the same behavior for all the four benchmarks. This happens because CPI measures the number of cycles per instruction,which is the inverse of IPC (number of instructions per cycle). As a result, if we increase the number of instructions, CPI is decreased. That is the behavior that we observe in all the graphs of CPI vs IPC (fetched, decoded, issued and committed). 
+\par For the LSQ\_latency metric we have similar behavior for fetched and decoded instructions and for committed and issued but different among those two groups. When we increase the number of fetched and decoded instructions, it is reasonable that the latency in load/store queue will be increased as we increase the data stored in it. In contrast, when we increase the number of issued and committed instructions it is not certain that all of them will use the aforementioned queue. 
+\par In part 2 of the assignment (branch prediction), we chose to report the results of CPI (figure \ref{fig:bp_sim_cpi}) and rate of addresses predicted (figure \ref{fig:bp_addr-pred-rate}). We change the status of the branch predictions between taken (go to the branch), not taken (do not go to the branch), bimodal (go to the branch according to what happened in the past in this branch) and 2-level (go to the branch according to what happened in the past in the other branches). When the program is completed, if the prediction that we made was not correct, we have to go back and execute or not the branch according to what we did during the prediction phase. 
+\par As a result, when the status is not taken, it means that we do not execute the branch but if we were wrong we have to go back so we have to execute more instructions. As a result, the cycles are increased. The same happens with the taken status. In contrast, when the status is 2-level, and specifically bimodal, the number of instructions are less because we depend on what happened on the history. So, the system is learning from a pattern and it goes back less times. 
+\par The second metric as we mentioned above was the number of addresses predicted. As we explained in the previous paragraph, we have more chances to predict a correct outcome in the bimodal and 2-level status than in taken and not taken ones. So, the number of addresses predicted correctly is larger for bimodal and 2-level status. 
+\par Finally, in the third part of the assignment (caches) we chose to present the results for CPI (figures \ref{fig:cache-bs_sim_cpi},\ref{fig:cache-rp_sim_cpi},\ref{fig:cache-a_sim_cpi}) and miss\_rate (figures \ref{fig:cache-bs_miss_rate},\ref{fig:cache-rp_miss_rate},\ref{fig:cache-a_miss_rate}). First, we notice that as the block size increases both of those metrics are decreased. This happens because as the block size is increased, the number of missed may be also increased but the rate with which it is increased is decreased. Since, the miss rate is decreased, the average cycles that an instruction uses is also, decreased. 
+\par Then, we can see that the same behavior described above is also observed for cache associativity. The justification is the same. 
+\par Finally, for the replacement policy, we observe that the behavior for each metric is different for each benchmark. As a result, we believe that the optimal replacement policy depends on the application that we use.  
 
-\newpage
-\section{Commands}
+\section{Commands}\label{sec:commands}
+This section presents the scripts in \texttt{bash} we used to collect the data from the simulations and benchmarks (see listings \ref{lst:cc1},\ref{lst:anagram},\ref{lst:compress},\ref{lst:go}). We used shell redirect to send the output to files using a specific format naming.  Then we coded scripts in \texttt{R}\footnote{The R Project for Statistical Computing (\url{https://www.r-project.org/})} to process those files.  
+
+We scanned the files and retrieved the ``\texttt{** simulation statistics **}'' section. We collected the metrics for each benchmark changing the corresponding parameters for each feature (i.e. fetched or decoded instructions).  Then we used the standard deviation and range to sort the metrics according to their variability and selected the more relevant.  Finally, we used the \texttt{ggplot2}\footnote{\url{https://cran.r-project.org/web/packages/ggplot2/index.html}} package to generate the plots.
+
+The scripts in \texttt{bash} and \texttt{R}, together with additional materials, can be accessed at \url{https://github.com/aocalderon/PhD/tree/master/Y1Q3/Architecture/Project01}. 
 
 \begin{landscape}
 \begin{listing}
@@ -248,6 +261,5 @@ hidelinks
   \caption{Simulation execution commands for \textit{go} application.}\label{lst:go}
 \end{listing}
 \end{landscape}
-
 
 \end{document}
