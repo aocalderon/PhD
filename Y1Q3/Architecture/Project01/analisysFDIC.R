@@ -1,6 +1,6 @@
 top <- 10
 app_prefix <- '_C'
-fea_prefix <- '_C'
+fea_prefix <- '_F'
 
 if(fea_prefix=='_F'){
   xlab <- "Number of fetched instructions"
@@ -46,6 +46,15 @@ for(i in 1:n){
   results[i,6] <- strsplit(data[i], "#")[[1]][2]
 }
 pos_cpi <- match("sim_CPI",results$metric)
+plot(1:4,results[pos_cpi,2:5],type='l',axes=F,ylab=results[pos_cpi,1]
+     ,main=results[pos_cpi,6]
+     ,xlab=xlab)
+points(1:4,results[15,2:5],cex=0.7,pch=21,bg=1)
+box()
+axis(1,at=1:4,labels=c(1,2,4,8))
+axis(2)
+
+pos_cpi <- match("lsq_latency",results$metric)
 plot(1:4,results[pos_cpi,2:5],type='l',axes=F,ylab=results[pos_cpi,1]
      ,main=results[pos_cpi,6]
      ,xlab=xlab)

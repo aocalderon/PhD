@@ -3,7 +3,7 @@ source('plotMetrics.R')
 metric = "sim_CPI"
 variables = c("1", "2", "4", "8")
 applications = c("cc1", "go", "anagram", "compress95")
-feature = "_C"
+feature = "_F"
 if(feature=="_F"){
   xlab = "Number of fetched instructions"
 } else if(feature=="_D"){
@@ -36,6 +36,6 @@ names(features) = c('metric','cc1','go','anagram','compress95')
 features$index = apply(features[2:5],1,sum)
 features <- features[with(features,order(-index)),]
 
-for(metric in features$metric[1:20]){
-  plotMetric(feature, metric, variables, applications, xlab)
-}
+# for(metric in features$metric[1:20]){
+#   plotMetric(feature, metric, variables, applications, xlab)
+# }
