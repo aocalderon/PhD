@@ -1,0 +1,36 @@
+\documentclass[a4paper,10pt]{scrartcl}
+\usepackage[hmargin=2.5cm,vmargin=3cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\hypersetup{
+colorlinks=false,
+hidelinks
+}
+
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0.5em}
+
+%opening
+\title{Paper Review 4/22}
+\author{Andres Calderon - SID:861243796}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+
+\section*{Chord: A Scalable Peer-to-peer Lookup Protocol for Internet Applications (Stoica et al., 2001)}
+This paper presents Chord, a distributed lookup protocol aims to efficiently locate nodes for data storing on peer-to-peer applications.  Chord manages data and nodes using a key-value mapping approach together with consistent hashing.  As a result, Chord is highly scalable as it adapts easily when new nodes join or leave the system.  In addition, communication cost and maintenance scale appropriately according to the number of nodes.
+
+Section III highlights the main tenets of Chord design: load balance, decentralization, scalability, adaptability and flexible naming.  Thanks to these, Chord can be used as a library and, on top of it, can be implemented a diverse kind of software applications.  Section IV explains the core of the Chord protocol: a consistent hashing improvement, scalable key location algorithms and dynamic operations and failure management.  Finally, section V presents a detailed set of simulations to evaluate the proposed protocol.
+
+Overall, it is a paper well-organized and easy to read.  Although part of section III introduces theorems and proofs they are concise and well-supported by examples and figures.  It is also nice to see the correspondence between the concepts explained in section III and the experiments run in section IV.
+
+% \begin{thebibliography}{9}
+% \bibitem{github} 
+% Andres Calderon.
+% \textit{GitHub Personal Repository}, 2015. 
+% \url{https://github.com/aocalderon/PhD/tree/master/Y1Q1/GPU/lab3}.
+% \end{thebibliography}
+
+\end{document}
