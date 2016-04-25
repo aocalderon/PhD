@@ -1,0 +1,223 @@
+\documentclass{article}
+
+\usepackage{amsmath,amsfonts}
+\usepackage{fullpage}
+\usepackage{enumitem}
+
+\usepackage{tikz}
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+
+\usepackage{minted}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{amssymb}
+
+\pagestyle{empty}
+
+\renewcommand{\vec}[1]{\mathbf{#1}}
+
+\title{Homework 2\\CS 210}
+\author{Andres Calderon - SID 861243796}
+\date{\today}
+\begin{document}
+
+\maketitle
+
+\begin{center}
+\begin{tabular}{|l|l|p{.4in}|}
+\hline Question & Points & Score \\
+\hline 1 & 10 & \\
+\hline 2 & 10 & \\
+\hline 3 & 10 & \\
+\hline 4 & 10 & \\
+\hline 5 & 10 & \\
+\hline 6 & 10 & \\
+\hline 7 & 10 & \\
+\hline 8 & 10 & \\
+\hline 9 & 10 & \\
+\hline 10 & 10 & \\
+\hline Total & 100 & \\
+\hline 
+\end{tabular}
+\end{center}
+
+\subsection*{Matrix algebra}
+\begin{enumerate}
+\setcounter{enumi}{0}
+\item (Trefethen\&Bau 2.6) If $\vec{u}$ and $\vec{v}$ are $m-$vectors, the matrix $A = I+\vec{u}\vec{v}^T$ is known as a rank-one
+  pertubation of the identity.  Show that if $A$ is nonsingular, then its inverse has the form $A^{-1} = I + \alpha
+  \vec{u} \vec{v}^T$ for some scalar $\alpha$, and give an expression for $\alpha$.  For what $\vec{u}$ and $\vec{v}$ is
+  $A$ singular?  If it is singular, what is null($A$)?
+\item (Heath 2.8) Let $A$ and $B$ be any two $n \times n$ matrices.
+\begin{enumerate}
+\item Prove that $(AB)^T=B^TA^T$.
+\item If $A$ and $B$ are both non-singular, prove that $(AB)^{-1} = B^{-1}A^{-1}$.
+\end{enumerate}
+\end{enumerate}
+
+\subsection*{Vector and matrix norms}
+\begin{enumerate}
+\setcounter{enumi}{2}
+\item Let $\vec{x} \in \mathbb{R}^n$. Two vector norms, $||\vec{x}||_a$ and $||\vec{x}||_b$, are \emph{equivalent} if
+  $\exists \, c,d \in \mathbb{R}$ such that
+$$c||\vec{x}||_b \leq ||\vec{x}||_a \leq d||\vec{x}||_b.$$
+Matrix norm equivalence is defined analogously to vector norm equivalence, i.e., $||\cdot||_a$ and $||\cdot||_b$ are
+equivalent if $\exists \, c,d$ s.t. $c||A||_b \leq ||A||_a \leq d||A||_b$.
+  \begin{enumerate}
+  \item Let $\vec{x} \in \mathbb{R}^n, \, A \in \mathbb{R}^{n \times n}$.  For each of the following, verify the inequality and give an example of a non-zero vector or matrix for which the
+  bound is achieved (showing that the bound is tight):
+    \begin{enumerate}
+      \item $||\vec{x}||_\infty \leq ||\vec{x}||_2$
+      \item $||\vec{x}||_2 \leq \sqrt{n} ||\vec{x}||_\infty$
+      \item $||A||_\infty \leq \sqrt{n} ||A||_2$
+      \item $||A||_2 \leq \sqrt{n} ||A||_\infty$
+    \end{enumerate}
+  This shows that $||\cdot||_\infty$ and $||\cdot||_2$ are equivalent, and that their induced matrix norms are equivalent.
+  \item Prove that the equivalence of two vector norms implies the equivalence of their induced matrix norms.
+  \end{enumerate}
+\end{enumerate}
+
+\subsection*{Sensitivity and conditioning}
+\begin{enumerate}
+\setcounter{enumi}{3}
+\item (Heath 2.58) Suppose that the $n \times n$ matrix $A$ is perfectly well-conditioned, i.e., cond(A) = 1.  Which of the following matrices would then necessarily share this same
+  property?
+\begin{enumerate}
+\item $cA$, where $c$ is any nonzero scalar \Large \checkmark \normalsize
+\item $DA$, where $D$ is a nonsingular diagonal matrix
+\item $PA$, where $P$ is any permutation matrix \Large \checkmark \normalsize
+\item $BA$, where $B$ is any nonsingular matrix
+\item $A^{-1}$, the inverse of $A$ \Large \checkmark \normalsize
+\item $A^T$, the transpose of $A$
+\end{enumerate}
+\end{enumerate}
+
+\subsection*{Linear Systems}
+\begin{enumerate}
+\setcounter{enumi}{4}
+\item (Heath 2.4a) Show that the following matrix is singular.
+$$
+A = \left(\begin{array}{ccc} 1 & 1 & 0 \\ 1 & 2 & 1 \\ 1& 3 & 2 \end{array} \right)
+$$
+
+Answer:\\
+Let's compute the determinant of $A$:\\
+\\
+\begin{tabular}{rl}
+$det(A)$ & $ = 1[(2\times2)-(3\times1)]-1[(1\times2)-(3\times0)]+1[(1\times1)-(2\times0)]$ \\
+& $ = 1-2+1$ \\
+& $ = 0$
+\end{tabular}
+
+So, given $det(A)=0$, $A$ must be singular.
+\item For each of the following statements, indicate whether the statement is true or false.
+    \begin{description}
+    \item[\circled{T}/F] If a matrix $A$ is singular, then the number of solutions to the linear system $A\vec{x} = \vec{b}$ depends on the particular choice of right-hand-side $\vec{b}$.
+    \item[T/\circled{F}] If a matrix $A$ is nonsingular, then the number of solutions to the linear system $A\vec{x} = \vec{b}$ depends on the particular choice of right-hand-side $\vec{b}$.
+    \item[T/\circled{F}] If a matrix has a very small determinant, then the matrix is nearly singular.
+    \item[T/\circled{F}] If any matrix has a zero on its main diagonal, then it is necessarily singular.
+    \end{description}
+\item Can a system of linear equations $A\vec{x} = \vec{b}$ have exactly two solutions?  Explain your answer.\\
+\\
+Answer:\\
+\\
+No, according to section 2.2 of the textbook, a system of linear equations can have an unique solution, no solution at all or infinitely many solutions. Visually, it is easy to see that lines in a plane (or, more general, hyperplanes in higher dimensions) can only touch in one point (unique solution), be parallel and do not touch (no solution) or be the same line (hyperplane) and have multiple solutions.
+
+Formally, let say $\vec{x_1}$ and $\vec{x_2}$ are the two unique solutions.  So, from $A\vec{x}=\vec{b}$ we have:
+$$A\vec{x_1}=A\vec{x_2}=\vec{b}$$
+Now, let assume $\frac{\vec{x_1}}{4}+\frac{3\vec{x_2}}{4}$ as a possible new solution.  So:\\
+\\
+\begin{tabular}{rl}
+$A(\frac{\vec{x_1}}{4}+\frac{3\vec{x_1}}{4})$ & $= \vec{b}$ \\
+$\frac{1}{4}(A\vec{x_1}+3A\vec{x_2})$ & $= \vec{b}$ \\
+$\frac{1}{4}(\vec{b}+3\vec{b})$ & $= \vec{b}$ \\
+$\frac{1}{4}(4\vec{b})$ & $= \vec{b}$ \\
+$\vec{b}$ & $= \vec{b}$ \\
+\end{tabular}
+
+So, $\frac{\vec{x_1}}{4}+\frac{3\vec{x_2}}{4}$ is a third solution for the system.  Indeed, for any $\lambda$ in $(0,1)$:
+$$\lambda\vec{x_1}+(1-\lambda)\vec{x_2}$$
+should be a solution and the system must have infitinely many solutions.  For example, in the abovementioned example $\lambda=\frac{1}{4}$. 
+
+\end{enumerate}
+
+\subsection*{LU Factorization and Gaussian Eliminiation}
+
+\begin{enumerate}
+\setcounter{enumi}{7}
+\item For each of the following statements, indicate whether the statement is true or false.
+    \begin{description}
+    \item[\circled{T}/F] If a triangular matrix has a zero on its main diagonal, then it is necessarily singular.
+    \item[\circled{T}/F] The product of two upper triangular matrices is upper triangular.
+    \item[T/\circled{F}] If a linear system is well-conditioned, then pivoting is unnecessary in Gaussian elimination.
+    \item[\circled{T}/F] Once the LU factorization of a matrix has been computed to solve a linear system, then subsequent linear systems with the same matrix but different right-hand-side vectors can be solved without refactoring the matrix.
+    \end{description}
+%\item (T\&B 20.2) Suppose $A \in \mathbb{R}^{n \times n}$ has an $LU$ factorization.  Suppose that $A$ is banded with bandwidth $2p+1$, i.e., $a_{ij} = 0$ for $|i-j|>p$.  What can you say about the sparsity patterns of the factors $L$ and $U$ of $A$?  Explain.
+\item Consider $LU$ factorization with partial pivoting of the matrix $A$ which computes
+$$
+M_{n-1} P_{n-1} \cdots M_3 P_3 M_2 P_2 M_1 P_1 A = U
+$$
+where $P_i$ is a row permutation matrix interchanging rows $i$ and $j>i$. 
+  \begin{enumerate}
+  \item Show that the matrix $P_3 P_2 M_1 P_2^{-1} P_3^{-1}$ has the same structure as the matrix $M_1$.\\
+  \\
+  Answer:\\
+  \\
+  Since $M_j=I-\vec{m_j}\vec{e_j^T}$, we can show that any $P_kM_jP_k^{-1}$ has the same structure as $M_j$ by:\\
+\\
+\begin{tabular}{rl}
+$P_kM_jP_k^{-1}$ & $= P_k(I-\vec{m_j}\vec{e_j^T})P_k^{-1}$ \\
+ & $= P_kP_k^{-1}-P_k\vec{m_j}\vec{e_j^T}P_k^{-1}$ \\
+\end{tabular}
+\\
+\\
+  Hence, $\vec{e_j^T}P_k^{-1}=\vec{e_j^T}$, we have:\\
+\\
+\begin{tabular}{rl}
+$P_kM_jP_k^{-1}$ & $= P_kP_k^{-1}-(P_k\vec{m_j})\vec{e_j^T}$ \\
+ & $= I-(P_k\vec{m_j})\vec{e_j^T}$ \\
+ & $= M_j^\prime$ \\
+\end{tabular}
+\\
+\\
+So, $M_j^\prime=I-(P_k\vec{m_j})\vec{e_j^T}$ has the same structure that $M_j=I-\vec{m_j}\vec{e_j^T}$. This concept can easily be applied to $P_3 P_2 M_1 P_2^{-1} P_3^{-1}$ to show it has the same structure as the matrix $M_1$.
+ 
+  \item Explain how the above expression is transformed into the form $PA = LU$, where $P$ is a row permutation matrix.\\
+  \\
+  Answer:\\
+  \\
+  For sake of simplicity, let's take $n=3$, so:
+  $$M_3 P_3 M_2 P_2 M_1 P_1 A = U$$
+  We can insert identity matrices in the form of $I_2=P_3^{-1}P_3$ and $I_1=P_2^{-1}P_3^{-1}P_3P_2$ after $M_2$ and $M_1$ respectively, so:
+  $$M_3 P_3 M_2 (P_3^{-1} P_3) P_2 M_1 (P_2^{-1} P_3^{-1} P_3 P_2) P_1 A = U$$
+  or
+  $$M_3 (P_3 M_2 P_3^{-1}) P_3 (P_2 M_1 P_2^{-1}) P_3^{-1} P_3 P_2 P_1 A = U$$
+  As we already know, $P_kM_jP_k^{-1}=M_j^\prime$ has the same structure as $M_j$ for $k>j$. In addition, we can group the remaining permutations as $P$, so:
+  $$M_3 M_2^\prime M_1^\prime P A = U$$
+  As $M_3 M_2^\prime M_1^\prime = L^{-1}$, we have:
+  $$L^{-1} P A = U$$
+  $$P A = L U$$
+  \end{enumerate}
+\end{enumerate}
+
+\subsection*{Cholesky Factorization}
+\begin{enumerate}
+\setcounter{enumi}{9}
+\item (Heath 2.37) Suppose that the symmetric $(n+1) \times (n+1)$ matrix
+$$
+B = \begin{pmatrix}
+\alpha & \vec{a}^T \\
+\vec{a} & A
+\end{pmatrix}
+$$
+is positive definite.
+\begin{enumerate}
+\item Show that the scalar $\alpha$ must be positive and the $n \times n$ matrix $A$ must be positive definite.
+\item What is the Cholesky factorization of $B$ in terms of $\alpha$, $\vec{a}$, and the Cholesky factorization of $A$?
+\end{enumerate}
+\end{enumerate}
+
+
+
+\end{document}
