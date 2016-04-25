@@ -1,0 +1,35 @@
+\documentclass[a4paper,10pt]{scrartcl}
+\usepackage[hmargin=2.5cm,vmargin=3cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\hypersetup{
+colorlinks=false,
+hidelinks
+}
+
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0.5em}
+
+%opening
+\title{Paper Review 4/25}
+\author{Andres Calderon - SID:861243796}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+
+\section*{A Scheduling Framework for Adaptive Video Delivery over Cellular Networks (Chen et al., 2013)}
+This paper presents the detailed design and implementation of AVIS, a resource management framework to schedule HTTP-based adaptive video flows on cellular networks. Among the main features of AVIS we have: optimal bit-rate allocation, a scheduler and per-flow shapers for bit-rate stability, and efficient resource utilization.  The authors evaluate a framework prototype on both a WiMAX network testbed and a LTE system simulator.
+
+The AVIS's design aims to manage the radio resources of cellular base stations across multiple adaptive video flows. To achieve that, AVIS first separates the resource management of adaptive video flows from regular video flows. Then, AVIS scheduler proposes two components: an Allocator, for optimal bit-rate allocation which provides fairness and high utilization; and an Enforcer, which schedules the allocated bit-rates to provide stability.
+
+
+% \begin{thebibliography}{9}
+% \bibitem{github} 
+% Andres Calderon.
+% \textit{GitHub Personal Repository}, 2015. 
+% \url{https://github.com/aocalderon/PhD/tree/master/Y1Q1/GPU/lab3}.
+% \end{thebibliography}
+
+\end{document}
