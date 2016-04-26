@@ -55,8 +55,9 @@
 \\
 Answer:\\
 \\
-Let denote the $i,j$ entry of $(AB)^T$ as $(AB)_{i,j}^T$.  Note that it is the same as the $j,i$ entry of $(AB)$. Therefore, the $j,i$ entry of $(AB)$ is equal to the row $j$ of $A$ $dot$ the column $i$ of $B$.\\
-Similarly, the $i,j$ entry of $B^TA^T$ is equal to the row $i$ of $B^T$ $dot$ the column $j$ of $A^T$, which is similar to say the column $i$ of $B$ $dot$ the row $j$ of $A$.
+Let denote the $i,j$ entry of $(AB)^T$ as $(AB)_{i,j}^T$.  Note that it is the same as the $j,i$ entry of $AB$. Note also that the $j,i$ entry of $AB$ is equal to the row $j$ of $A$ $dot$ the column $i$ of $B$.\\
+Similarly, the $i,j$ entry of $B^TA^T$ is equal to the row $i$ of $B^T$ $dot$ the column $j$ of $A^T$, which is the same to say the column $i$ of $B$ $dot$ the row $j$ of $A$.\\
+So, we can see that the $i,j$ entries of each side are the $dot$ product of the same two vectors.  Hence $(AB)^T=B^TA^T$.
 
 \item If $A$ and $B$ are both non-singular, prove that $(AB)^{-1} = B^{-1}A^{-1}$.\\
 \\
@@ -201,7 +202,7 @@ $P_kM_jP_k^{-1}$ & $= P_k(I-\vec{m_j}\vec{e_j^T})P_k^{-1}$ \\
 \end{tabular}
 \\
 \\
-  Hence, $\vec{e_j^T}P_k^{-1}=\vec{e_j^T}$, we have:\\
+  As $\vec{e_j^T}P_k^{-1}=\vec{e_j^T}$, we have:\\
 \\
 \begin{tabular}{rl}
 $P_kM_jP_k^{-1}$ & $= P_kP_k^{-1}-(P_k\vec{m_j})\vec{e_j^T}$ \\
@@ -242,7 +243,46 @@ B = \begin{pmatrix}
 $$
 is positive definite.
 \begin{enumerate}
-\item Show that the scalar $\alpha$ must be positive and the $n \times n$ matrix $A$ must be positive definite.
+\item Show that the scalar $\alpha$ must be positive and the $n \times n$ matrix $A$ must be positive definite.\\
+\\
+Answer:\\
+\\
+Since $B$ is positive definite, then:
+$$\vec{x}^TB\vec{x}>0$$
+$$\vec{x}^T\begin{pmatrix}
+\alpha & \vec{a}^T \\
+\vec{a} & A
+\end{pmatrix}\vec{x}>0$$
+If $\vec{x}=\begin{pmatrix}1\\0\end{pmatrix}$, then:
+$$\begin{pmatrix}1&0\end{pmatrix}
+\begin{pmatrix}
+\alpha & \vec{a}^T \\
+\vec{a} & A
+\end{pmatrix}\begin{pmatrix}1\\0\end{pmatrix}>0
+$$
+$$\begin{pmatrix}
+\alpha & \vec{a}^T \\
+\end{pmatrix}\begin{pmatrix}1\\0\end{pmatrix}>0
+$$
+$$ \alpha > 0 $$
+
+So, $\alpha$ is positive.\\
+Similarly, if $\vec{x}=\begin{pmatrix} 0 \\ \vec{y} \end{pmatrix}$, where $\vec{y}$ is any non-zero vector, then:
+$$\begin{pmatrix} 0 & \vec{y}^T \end{pmatrix}
+\begin{pmatrix}
+\alpha & \vec{a}^T \\
+\vec{a} & A
+\end{pmatrix}\begin{pmatrix} 0 \\ \vec{y} \end{pmatrix}>0
+$$
+$$\begin{pmatrix}
+\vec{y}^T\vec{a} & \vec{y}^TA \\
+\end{pmatrix}\begin{pmatrix} 0 \\ \vec{y} \end{pmatrix}>0
+$$
+
+$$ \vec{y}^TA\vec{y} > 0 $$
+
+So, $A$ is positive definite.
+
 \item What is the Cholesky factorization of $B$ in terms of $\alpha$, $\vec{a}$, and the Cholesky factorization of $A$?
 \end{enumerate}
 \end{enumerate}
