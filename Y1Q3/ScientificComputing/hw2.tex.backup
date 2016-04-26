@@ -48,7 +48,37 @@
 \item (Trefethen\&Bau 2.6) If $\vec{u}$ and $\vec{v}$ are $m-$vectors, the matrix $A = I+\vec{u}\vec{v}^T$ is known as a rank-one
   pertubation of the identity.  Show that if $A$ is nonsingular, then its inverse has the form $A^{-1} = I + \alpha
   \vec{u} \vec{v}^T$ for some scalar $\alpha$, and give an expression for $\alpha$.  For what $\vec{u}$ and $\vec{v}$ is
-  $A$ singular?  If it is singular, what is null($A$)?
+  $A$ singular?  If it is singular, what is null($A$)?\\
+\\
+Answer:\\
+\\
+\begin{tabular}{rl}
+$I$ & $= AA^{-1}$ \\
+& $= (I+\vec{u}\vec{v}^T)(I+\alpha\vec{u}\vec{v}^T)$ \\
+& $= I+\alpha\vec{u}\vec{v}^T+\vec{u}\vec{v}^T+\alpha(\vec{u}\vec{v}^T)(\vec{u}\vec{v}^T)$\\
+& $= I+\alpha\vec{u}\vec{v}^T+\vec{u}\vec{v}^T+\alpha\vec{u}(\vec{v}^T\vec{u})\vec{v}^T$\\
+\end{tabular}
+
+As $\vec{v}^T\vec{u}$ is a scalar, we can:
+
+\begin{tabular}{rl}
+$I$ & $= I+\alpha\vec{u}\vec{v}^T+\vec{u}\vec{v}^T+\alpha(\vec{v}^T\vec{u})(\vec{u}\vec{v}^T)$\\
+& $= I+(\alpha+1+\alpha(\vec{v}^T\vec{u}))\vec{u}\vec{v}^T$\\
+\end{tabular}
+
+Since $\vec{u}\vec{v}^T\neq0$ (as A is supposed to be non-singular and its inverse must exist) an expression for $\alpha$ is:
+$$\alpha+1+\alpha(\vec{v}^T\vec{u})=0$$
+$$\alpha(1+\vec{v}^T\vec{u})=-1$$
+$$\alpha=\frac{-1}{1+\vec{v}^T\vec{u}}$$
+
+We can see that for any $\vec{u}$ and $\vec{v}$ where:
+$$\vec{v}^T\vec{u}=-1$$
+the previous expression cannot be defined and, in those cases, $A$ is singular.
+
+To find the null space of A we have:
+$$A\vec{x}=0$$
+From the statement we have:
+$$(I+\vec{u}\vec{v}^T)\vec{x}=0$$
 \item (Heath 2.8) Let $A$ and $B$ be any two $n \times n$ matrices.
 \begin{enumerate}
 \item Prove that $(AB)^T=B^TA^T$.\\
@@ -283,7 +313,28 @@ $$ \vec{y}^TA\vec{y} > 0 $$
 
 So, $A$ is positive definite.
 
-\item What is the Cholesky factorization of $B$ in terms of $\alpha$, $\vec{a}$, and the Cholesky factorization of $A$?
+\item What is the Cholesky factorization of $B$ in terms of $\alpha$, $\vec{a}$, and the Cholesky factorization of $A$?\\
+\\
+Answer:\\
+\\
+Following section 2.5.1 of the textbook, we have $B=LL^T$, we can express $LL^T$ in terms of $\alpha$ and $\vec{a}$:
+
+$$
+B = \begin{pmatrix}
+\alpha & \vec{a}^T \\
+\vec{a} & A
+\end{pmatrix} =
+\begin{pmatrix}
+\sqrt{\alpha} & 0 \\
+\frac{\vec{a}}{\sqrt{\alpha}} & L^\prime
+\end{pmatrix}
+\begin{pmatrix}
+\sqrt{\alpha} & \frac{\vec{a}^T}{\sqrt{\alpha}} \\
+0 & L^{\prime T}
+\end{pmatrix}
+$$
+
+Where $$L^\prime L^{\prime T}=A-\frac{\vec{a}\vec{a}^T}{\sqrt{\alpha}}$$ is the Cholesky factorization of $A$.
 \end{enumerate}
 \end{enumerate}
 

@@ -48,7 +48,44 @@
 \item (Trefethen\&Bau 2.6) If $\vec{u}$ and $\vec{v}$ are $m-$vectors, the matrix $A = I+\vec{u}\vec{v}^T$ is known as a rank-one
   pertubation of the identity.  Show that if $A$ is nonsingular, then its inverse has the form $A^{-1} = I + \alpha
   \vec{u} \vec{v}^T$ for some scalar $\alpha$, and give an expression for $\alpha$.  For what $\vec{u}$ and $\vec{v}$ is
-  $A$ singular?  If it is singular, what is null($A$)?
+  $A$ singular?  If it is singular, what is null($A$)?\\
+\\
+Answer:\\
+\\
+\begin{tabular}{rl}
+$I$ & $= AA^{-1}$ \\
+& $= (I+\vec{u}\vec{v}^T)(I+\alpha\vec{u}\vec{v}^T)$ \\
+& $= I+\alpha\vec{u}\vec{v}^T+\vec{u}\vec{v}^T+\alpha(\vec{u}\vec{v}^T)(\vec{u}\vec{v}^T)$\\
+& $= I+\alpha\vec{u}\vec{v}^T+\vec{u}\vec{v}^T+\alpha\vec{u}(\vec{v}^T\vec{u})\vec{v}^T$\\
+\end{tabular}
+
+As $\vec{v}^T\vec{u}$ is a scalar, we can:
+
+\begin{tabular}{rl}
+$I$ & $= I+\alpha\vec{u}\vec{v}^T+\vec{u}\vec{v}^T+\alpha(\vec{v}^T\vec{u})(\vec{u}\vec{v}^T)$\\
+& $= I+(\alpha+1+\alpha(\vec{v}^T\vec{u}))\vec{u}\vec{v}^T$\\
+\end{tabular}
+
+Since $\vec{u}\vec{v}^T\neq0$ (as A is supposed to be non-singular and its inverse must exist) an expression for $\alpha$ is:
+$$\alpha+1+\alpha(\vec{v}^T\vec{u})=0$$
+$$\alpha(1+\vec{v}^T\vec{u})=-1$$
+$$\alpha=\frac{-1}{1+\vec{v}^T\vec{u}}$$
+
+We can see that for any $\vec{u}$ and $\vec{v}$ where:
+$$\vec{v}^T\vec{u}=-1$$
+the previous expression cannot be defined and, in those cases, $A$ is singular.
+
+To find the \textbf{null space} of A we have:
+$$A\vec{x}=0$$
+From the statement we have:
+$$(I+\vec{u}\vec{v}^T)\vec{x}=0$$
+If $\vec{x}=\vec{u}$, then:
+$$(I+\vec{u}\vec{v}^T)\vec{u}=0$$
+$$\vec{u}+\vec{u}(\vec{v}^T\vec{u})=0$$
+If A is singular, we know $\vec{v}^T\vec{u}=-1$, so:
+$$\vec{u}-\vec{u}=0$$
+holds.  Therefore, $null(A)=span \{ \vec{u} \}$.
+
 \item (Heath 2.8) Let $A$ and $B$ be any two $n \times n$ matrices.
 \begin{enumerate}
 \item Prove that $(AB)^T=B^TA^T$.\\
