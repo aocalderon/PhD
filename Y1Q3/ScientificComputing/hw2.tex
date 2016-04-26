@@ -136,9 +136,41 @@ equivalent if $\exists \, c,d$ s.t. $c||A||_b \leq ||A||_a \leq d||A||_b$.
   bound is achieved (showing that the bound is tight):
     \begin{enumerate}
       \item $||\vec{x}||_\infty \leq ||\vec{x}||_2$
+      $$ \max_i|\vec{x}_i| \leq \left(\sum_{i=1}^n{|\vec{x}_i|^2}\right)^\frac{1}{2}$$
+      Let say $|x_r|$ is the maximum value in $\vec{x}$, then:
+      $$ |x_r| \leq (\sum_{i=1}^n{|\vec{x}_i|^2})^\frac{1}{2}$$
+      $$ |x_r|^2 \leq |x_1|^2+|x_2|^2+\cdots+|x_r|^2+\cdots+|x_n|^2$$
+      $$ 0 \leq |x_1|^2+|x_2|^2+\cdots+|x_n|^2$$
+      It is clear that any addition of squared absolute values is positive.\\
+      i.e. $\vec{x}= \left(\begin{array}{c} 3 \\ 4 \\ \end{array} \right)$
+      $$ ||\vec{x}||_\infty \leq ||\vec{x}||_2$$
+      $$ 4 \leq 5$$
       \item $||\vec{x}||_2 \leq \sqrt{n} ||\vec{x}||_\infty$
+      $$ \left(\sum_{i=1}^n{|\vec{x}_i|^2}\right)^\frac{1}{2} \leq \sqrt{n}\max_i|\vec{x}_i| $$
+      Again, let say $|x_r|$ is the maximum value in $\vec{x}$, then:
+      $$ \left(\sum_{i=1}^n{|\vec{x}_i|^2}\right)^\frac{1}{2}  \leq \sqrt{n}|x_r| $$
+      $$ \sum_{i=1}^n{|\vec{x}_i|^2} \leq n|x_r|^2 $$
+      $$ |x_1|^2+|x_2|^2+\cdots+|x_r|^2+\cdots+|x_n|^2 \leq n|x_r|^2 $$
+      Just in the case that all values of the left hand side are $x_r$ we will have an equality. For other cases, it is clear that the right hand side is greater.\\
+      i.e. $\vec{x}= \left(\begin{array}{c} 2 \\ 2 \\ 2 \\ \end{array} \right)$
+      $$ ||\vec{x}||_2 \leq \sqrt{n} ||\vec{x}||_\infty$$
+      $$ \sqrt{4+4+4} \leq \sqrt{3}\times2 $$
+      $$ \sqrt{12} \leq 2\sqrt{3} $$
+      $$ \sqrt{4\times3} \leq 2\sqrt{3} $$
+      $$ 2\sqrt{3} \leq 2\sqrt{3} $$
+
       \item $||A||_\infty \leq \sqrt{n} ||A||_2$
-      \item $||A||_2 \leq \sqrt{n} ||A||_\infty$
+      \item $||A||_2 \leq \sqrt{n} ||A||_\infty$\\
+      For items \texttt{iii} and \texttt{iv} the verification is not straightforward.  As sections 2.3.2 and 3.6.1 of the textbook state ``the matrix norm corresponding to the vector 2-norm is not so easy to compute''.  However, based on examples 2.4 and 3.17, we can give an example using the matrix:
+      $$ A=\left[\begin{array}{ccc} 2&-1&1 \\ 1&0&1 \\ 3&-1&4 \\ \end{array} \right] $$
+      where $||A||_\infty=8$ and $||A||_2=5,723$, so:
+      $$||A||_\infty \leq \sqrt{n} ||A||_2$$
+      $$8 \leq \sqrt{3}\times5,723$$
+      $$8 \leq 9,91$$
+      and
+      $$||A||_2 \leq \sqrt{n} ||A||_\infty$$
+      $$5,723 \leq \sqrt{3}\times8$$
+      $$5,723 \leq 13,85$$
     \end{enumerate}
   This shows that $||\cdot||_\infty$ and $||\cdot||_2$ are equivalent, and that their induced matrix norms are equivalent.
   \item Prove that the equivalence of two vector norms implies the equivalence of their induced matrix norms.
