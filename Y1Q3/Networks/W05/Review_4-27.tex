@@ -1,0 +1,36 @@
+\documentclass[a4paper,10pt]{scrartcl}
+\usepackage[hmargin=2.5cm,vmargin=3cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\hypersetup{
+colorlinks=false,
+hidelinks
+}
+
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0.5em}
+
+%opening
+\title{Paper Review 4/27}
+\author{Andres Calderon - SID:861243796}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+
+\section*{Measuring and Evaluating Large-Scale CDNs (Huang et al., 2008)}
+The paper shows an extensive and detailed performance comparison between Akamai and Limelight (two popular commercial CDNs). The study focuses on their particular design philosophies.  It measures diverse factors such as: charting the CDNs, delay performance, availability and even IP anycast in the case of Limelight.
+
+It is interesting the methodology the authors used to collect a vast amount of data about the two CDNs.  It seems robust and sufficient to evaluate delay performance and assess CDN server location for future deployments.  In addition, they take advantage of the Limelight infrastructure to evaluate IP anycast under a production environment.  It shows it is very effective in the real-world.  
+
+Overall, the paper is easy to read and well organized.  I would like to know which strategies use CDNs to keep the content update.  Given the large number of content servers, it should be challenging for CDNs to maintain the last version of content.
+
+% \begin{thebibliography}{9}
+% \bibitem{github} 
+% Andres Calderon.
+% \textit{GitHub Personal Repository}, 2015. 
+% \url{https://github.com/aocalderon/PhD/tree/master/Y1Q1/GPU/lab3}.
+% \end{thebibliography}
+
+\end{document}
