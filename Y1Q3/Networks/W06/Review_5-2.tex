@@ -1,0 +1,40 @@
+\documentclass[a4paper,10pt]{scrartcl}
+\usepackage[hmargin=2.5cm,vmargin=3cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\hypersetup{
+colorlinks=false,
+hidelinks
+}
+
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0.5em}
+
+%opening
+\title{Paper Review 5/2}
+\author{Andres Calderon - SID:861243796}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+
+\section*{VL2: A Scalable and Flexible Data Center Network (Greenberg et al., 2009)}
+This paper describes VL2, a new network architecture for scalability in very large data centers.  VL2 design is simple and affordable while, through a prototype evaluation, it shows to be efficient
+and fair. VL2 provides a simple abstraction for programmers which can access servers in the data center regardless where they are located.  In addition, 
+VL2 enables agility and high utilization at the same time that provides isolation and uniform high bandwidth.
+
+The authors try to address three particular problems of current data centers: capacity, traffic floods and fragmentation. They propose a single non-interfering 
+Ethernet switch to create the illusion that all the servers assigned to a service share this resource.  The model addresses the above-mentioned problems through 
+three main objectives: uniform high capacity, performance isolation (using VLB) and layer-2 semantics.
+
+Section 3 is relevant since they collect information from diverse analysis (data center traffic, flow distribution, traffic matrix and failure analysis) in order to shape the design of VL2. Similarly,  it is quite interesting the deployment of experiments using a real cluster with 80 servers and 10 switches. Overall, it is an interesting paper, especially the evaluation section.  The discussion section actually addressed one of my questions about the use of VLB over other alternatives.
+
+% \begin{thebibliography}{9}
+% \bibitem{github} 
+% Andres Calderon.
+% \textit{GitHub Personal Repository}, 2015. 
+% \url{https://github.com/aocalderon/PhD/tree/master/Y1Q1/GPU/lab3}.
+% \end{thebibliography}
+
+\end{document}
