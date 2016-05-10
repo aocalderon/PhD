@@ -1,0 +1,138 @@
+\documentclass{article}
+
+\usepackage{amsmath,amsfonts}
+\usepackage{fullpage}
+\usepackage{enumitem}
+
+\pagestyle{empty}
+
+\renewcommand{\vec}[1]{\mathbf{#1}}
+\newcommand{\x}{\vec{x}}
+\renewcommand{\r}{\vec{r}}
+\renewcommand{\b}{\vec{b}}
+\renewcommand{\v}{\vec{v}}
+
+\title{Homework 3\\CS 210}
+\date{}
+\begin{document}
+
+\maketitle
+\vspace{-.5in}
+
+\begin{center}
+\begin{tabular}{|l|l|p{.4in}|}
+\hline Question & Points & Score \\
+\hline  1 & 10 & \\
+\hline  2 & 15 & \\
+\hline  3 & 10 & \\
+\hline  4 &  5 & \\
+\hline  5 & 10 & \\
+\hline  6 &  5 & \\
+\hline  7 &  5 & \\
+\hline  8 &  5 & \\
+\hline  9 &  5 & \\
+\hline 10 & 10 & \\
+\hline Total & 80 & \\
+\hline 
+\end{tabular}
+\end{center}
+
+\subsection*{Singular Value Decomposition}
+\begin{enumerate}
+\setcounter{enumi}{0}
+\item (T\&B 4.1) Determine SVDs of the following matrices (by hand calculation):\\
+(a) $\left( \begin{array}{cc} 3 & 0 \\ 0 & -2  \end{array} \right)$, \quad
+(b) $\left( \begin{array}{cc} 2 & 0 \\ 0 &  3  \end{array} \right)$, \quad 
+(c) $\left( \begin{array}{cc} 0 & 2 \\ 0 & 0 \\ 0 & 0  \end{array} \right)$,  \quad
+(d) $\left( \begin{array}{cc} 1 & 1 \\ 0 & 0  \end{array} \right)$,  \quad
+(e) $\left( \begin{array}{cc} 1 & 1 \\ 1 & 1  \end{array} \right)$.
+\item Let $A$ be an $m \times n$ singular matrix of rank $r$ with SVD
+\begin{align*}
+A = U \Sigma V^T &= 
+\left( \begin{array}{c|c|c|c} &&& \\ &&& \\ \vec{u}_1 & \vec{u}_2 & \ldots & \vec{u}_m \\ &&& \\ &&&  \end{array} \right)
+\left( \begin{array}{cccccc} \sigma_1 &&&&& \\ & \ddots &&&& \\ && \sigma_r &&& \\ &&& 0 &&\\ &&&& \ddots &\\  &&&&& 0 \end{array} \right)
+\left( \begin{array}{ccccccc} &&& \vec{v}_1^T &&& \\ \hline &&& \vec{v}_2^T &&& \\ \hline &&& \vdots &&& \\ \hline &&&
+    \vec{v}_n^T &&&  \end{array} \right) \\
+& = \left( \begin{array}{cc} \hat{U} & \tilde{U} \end{array} \right) 
+\left( \begin{array}{cccccc} \sigma_1 &&&&& \\ & \ddots &&&& \\ && \sigma_r &&& \\ &&& 0 &&\\ &&&& \ddots &\\  &&&&& 0 \end{array} \right)
+\left( \begin{array}{c} \hat{V}^T \\ \tilde{V}^T \end{array} \right) \\
+\end{align*}
+where $\sigma_1 \geq  \ldots \geq \sigma_r > 0$, $\hat{U}$ consists of the first $r$ columns of $U$, $\tilde{U}$ consists of the remaining $m-r$ columns of $U$,
+$\hat{V}$ consists of the first $r$ columns of $V$, and $\tilde{V}$ consists of the remaining $n-r$ columns of $V$.
+Give bases for the spaces range($A$), null($A$), range($A^T$) and null($A^T$) in terms of the components of the SVD of
+$A$, and a brief justification.
+\item Use the SVD of $A$ to show that for an $m \times n$ matrix of full column rank $n$, the matrix $A (A^TA)^{-1} A^T$ is an orthogonal
+  projector onto range($A$).
+\end{enumerate}
+
+\subsection*{Least Squares}
+\begin{enumerate}
+\setcounter{enumi}{3}
+
+\item Consider the least squares problem $\min_\x ||\b - A\x||_2$.  Which of the following statements are
+  necessarily true?
+\begin{enumerate}
+\item If $\x$ is a solution to the least squares problem, then $A\x = \b$.
+\item If $\x$ is a solution to the least squares problem, then the residual vector $\r = \b - A \x$ is in the nullspace of $A^T$.
+\item The solution is unique.
+\item A solution may not exist.
+\item None of the above.
+\end{enumerate}
+
+\item (Heath 3.3) Set up the linear least squares system $A\vec{x} \approx \vec{b}$ for fitting the model function $f(t,\vec{x}) = x_1 t + x_2 e^t$ to the three data points $(1,2),
+  (2,3), (3,5)$.  Is the least squares solution unique? Why or why not?
+
+\item (Heath 3.5) Let $\vec{x}$ be the solution to the linear least squares problem $A\vec{x} \approx \vec{b}$, where
+$$
+A = \begin{pmatrix}
+1 & 0 \\ 1 & 1 \\ 1 & 2 \\ 1 & 3
+\end{pmatrix}.
+$$
+Let $\vec{r} = \vec{b} - A\vec{x}$ be the corresponding residual vector.  Which of the following three vectors is a possible value for $\vec{r}$?  Why?\\
+(a) $\begin{pmatrix} 1 \\ 1 \\ 1 \\ 1 \end{pmatrix}$ \quad (b) $\begin{pmatrix} -1 \\ -1 \\ 1 \\ 1 \end{pmatrix}$ \quad (c) $\begin{pmatrix} -1 \\ 1 \\ 1 \\ -1 \end{pmatrix}$
+
+\end{enumerate}
+
+\subsection*{Orthogonal and Householder Matrices}
+
+\begin{enumerate}
+\setcounter{enumi}{6}
+
+\item (Heath 3.23) Which of the following matrices are orthogonal?
+\begin{enumerate}
+\item $\begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}$
+\item $\begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix}$
+\item $\begin{pmatrix} 2 & 0 \\ 0 & 1/2 \end{pmatrix}$
+\item $\begin{pmatrix} \sqrt{2}/2 & \sqrt{2}/2 \\ -\sqrt{2}/2 & \sqrt{2}/2 \end{pmatrix}$
+\end{enumerate}
+
+\pagebreak
+
+\item (Heath 3.24) Which of the following properties does an orthogonal $n \times n$ matrix necessarily have? (Circle all that apply.)
+\begin{enumerate}
+\item It is nonsingular.
+\item It preserves the Euclidean vector norm when multiplied times a vector.
+\item Its transpose is its inverse.
+\item Its columns are orthonormal.
+\item It is symmetric.
+\item It is diagonal.
+\item Its Euclidean matrix norm is 1.
+\item Its Euclidean condition number is 1.
+\end{enumerate}
+
+\item A Householder matrix $H$
+\begin{enumerate}
+\item has condition number 1.
+\item has the property $||H||_2 = 1$.
+\item is uniquely defined by $H\x = \b$ for two vector $\x$ and $\b$ such that  $||\x||_2 = ||\b||_2$.
+\item Both (a) and (b).
+\item All of the above.
+\end{enumerate}
+
+\item Show that a $n \times n$ Householder matrix $H = I - 2 \v\v^T / \v^T\v$ has an eigenvalue of 1 with multiplicity $n-1$ and an eigenvalue
+of -1 with multiplicity 1.
+
+\end{enumerate}
+
+
+\end{document}
