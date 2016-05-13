@@ -96,8 +96,13 @@ $\hat{V}$ consists of the first $r$ columns of $V$, and $\tilde{V}$ consists of 
 Give bases for the spaces range($A$), null($A$), range($A^T$) and null($A^T$) in terms of the components of the SVD of
 $A$, and a brief justification.\\
 \\
-Answer:\\
-\\
+Answer:
+\begin{itemize}
+ \item range($A$): $span\{\vec{u}_1,\cdots,\vec{u}_r\}$ or $\hat{U}$
+ \item null($A$): $span\{\vec{v}^T_{r+1},\cdots,\vec{v}^T_n\}$ or $\tilde{V}^T$
+ \item range($A^T$): $span\{\vec{v}^T_1,\cdots,\vec{v}^T_r\}$ or $\hat{V}$
+ \item null($A^T$): $span\{\vec{u}_{r+1},\cdots,\vec{u}_m\}$ or $\tilde{U}$
+\end{itemize}
 
 \item Use the SVD of $A$ to show that for an $m \times n$ matrix of full column rank $n$, the matrix $A (A^TA)^{-1} A^T$ is an orthogonal
   projector onto range($A$).
