@@ -1,0 +1,134 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage{graphicx}
+\usepackage{hyperref}
+\hypersetup{
+colorlinks=false,
+hidelinks
+}
+\usepackage{minted}
+\usepackage{placeins}
+
+\setlength{\parindent}{1em}
+\setlength{\parskip}{0.5em}
+
+\title{Homework 1 Report}
+\author{
+   Christina Pavlopoulou\\
+  \small \texttt{cpavl001@ucr.edu}
+  \and
+   Andres Calderon\\
+  \small \texttt{acald013@ucr.edu}
+}
+
+\begin{document}
+\maketitle
+
+\section*{Part A}
+For the part A we only changed the code of the file topo-2sw-2host.py (listing \ref{lst:topo1}) to design the topology described in the assignment. 
+
+\begin{listing}[h!]
+  \inputminted[
+    fontsize=\footnotesize,
+    tabsize=2,
+    frame=single,
+    linenos
+  ]{python}{topo1.py}
+  \caption{Basic topology.}\label{lst:topo1}
+\end{listing}
+
+\begin{enumerate}
+\item Running the command h1 ping h2, we observe that the time needed for the procedure to be completed is 32.901 ms. Running h1 ping h5 takes 33.270 ms. We observe that it takes approximately the same time. This happens because the controller is set to deliver packets in all the hosts, so it doesn't matter which is the host. The other noticeable thing is that in both cases (h1 ping h2 and h1 ping h5) all the hosts and switches observe the same traffic because of the aforementioned reason. 
+\item The throughput that we get between h1 and h2 is 12.1 Mbits/sec while the one between h1 and h5 is 5.28Mbits/sec. This happens because the hosts h1 and h2 are connected directly while h1 and h5 are not. 
+\item If we run the command pingall we see that all the hosts are reachable (See figure \ref{fig:pingall}). 
+\end{enumerate}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.5\textwidth]{pingall.png}
+  \caption{Output of pingall command.}\label{fig:pingall}
+\end{figure}
+
+\section*{Part B}
+
+\begin{listing}[h!]
+  \inputminted[
+    fontsize=\footnotesize,
+    tabsize=2,
+    frame=single,
+    firstline=82,
+    firstnumber=82,
+    lastline=92,
+    linenos
+  ]{python}{controller2.py}
+  \caption{Controller part B.}\label{lst:controller2}
+\end{listing}
+
+\begin{enumerate}
+\item In this case, the output of command h1 ping h2 was 31.864 ms. Results for h1 ping h5 was 31.955 ms.  For this case, we only observe traffic between the host involved in the ping procedure because the new controller map the mac address to the corresponding port and not to all the port as in the first part.
+\item The iperf output between h1 and h2 was 27.9 Mbits/sec while between h1 and h5 was 8.84 Mbits/sec.  We can see an improvement from part A because of the learning controller.
+\item The pingall command retrieves the same results showing that all the hosts are reachable.
+\end{enumerate}
+
+\section*{Part C}
+For the part C we changed the controller code in the file of\_tutorial.py (listing \ref{lst:controller3}) to make the switches even smarter than part B. 
+
+\begin{listing}[h!]
+  \inputminted[
+    fontsize=\footnotesize,
+    tabsize=2,
+    frame=single,
+    firstline=82,
+    firstnumber=82,
+    lastline=96,
+    linenos
+  ]{python}{controller3.py}
+  \caption{Controller part C.}\label{lst:controller3}
+\end{listing}
+
+\begin{enumerate}
+\item At this part it only takes 2.740 ms to ping between h1 and h2 and 23.840 ms between h1 and h5. The big difference is because of the larger distance between h1 and h5 than distance between h1 and h2. Comparing with the first part it takes less time in both cases since the controller accepts the packets from which the switch doesn't have an entry flow. Here only the hosts between which the ping is performed have traffic. 
+\item The throughput between h1 and h2 is 12.6 Gbits/sec and between h1 and h5 is 31.4 Mbis/sec. The reason for the difference is the same as in part A and B. However, the throughput is even more than in parts B and C because the switches are even smarter. 
+\item The pingall command verifies that all the hosts are reachable. 
+\item The number of rules is 4 for switch 1 and 5 for switches 2 and 3 (figure \ref{fig:dumpsC}). Switches 2 and 3 send the flow to each hosts according to the IP address they get.    
+\end{enumerate}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.9\textwidth]{dumpsC.png}
+  \caption{Output of ovs-ofctl dump-flow for the three switches.}\label{fig:dumpsC}
+\end{figure}
+
+\section*{Part D}
+
+We use the topology in listing \ref{lst:topo2} for this part of the assignment.  To install IP matching rules in switch 2 we use the commands:\\
+
+\texttt{sudo ovs-ofctl add-flow dl\_type=0x0800,nw\_dst=10.0.0.0/24,actions=output:1}\\
+\texttt{sudo ovs-ofctl add-flow dl\_type=0x0800,nw\_dst=10.0.1.0/24,actions=output:2}\\
+
+
+\begin{listing}[h!]
+  \inputminted[
+    fontsize=\footnotesize,
+    tabsize=2,
+    frame=single,
+    linenos
+  ]{python}{topo2.py}
+  \caption{New topology.}\label{lst:topo2}
+\end{listing}
+
+\begin{enumerate}
+\item The result of ping between h1 and h2 in this case was 4.041 ms.  Between h1 and h5 was 23.189 ms.  We can see a big difference similar to what we saw in part C. We observe that when we ping between hosts in the same switch, the traffic is only between these two hosts.  However, when we ping host in different switches there is traffic in all the hosts.
+\item The throughput between h1 and h2 was 5.71 Gbits/sec while the throughput between h1 and h5 was 43.8 Mbits/sec.  The behavior is similar to the one we observe in part C.
+\item The pingall command verifies that all the hosts are reachable. 
+\item For switch 2 we see two rules now (figure \ref{fig:dumpsD}). This happens because every flow which begins with 10.0.0 is sent to the left and every flow starting with 10.0.1 goes to the right. Switches 1 and 3 remain the same.  
+\item This controller is better than options in parts A and B.  It is similar than controller in part C but we evaluate less rules in part D.  However, in part C the traffic was observed in less hosts when we ping among them.
+\end{enumerate}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.9\textwidth]{dumpsD.png}
+  \caption{Output of ovs-ofctl dump-flow for switch 2.}\label{fig:dumpsD}
+\end{figure}
+
+\end{document}
