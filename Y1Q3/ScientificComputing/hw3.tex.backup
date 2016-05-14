@@ -1,6 +1,7 @@
 \documentclass{article}
 
 \usepackage{amsmath,amsfonts}
+\usepackage{amssymb}
 \usepackage{fullpage}
 \usepackage{enumitem}
 
@@ -11,6 +12,10 @@
 \renewcommand{\r}{\vec{r}}
 \renewcommand{\b}{\vec{b}}
 \renewcommand{\v}{\vec{v}}
+\renewcommand{\a}{\vec{a}}
+\renewcommand{\u}{\vec{u}}
+
+\newcommand{\me}{\mathrm{e}}
 
 \title{Homework 3\\CS 210}
 \author{Andres Calderon \\ SID: 861243796}
@@ -49,26 +54,29 @@
 \\
 Answer:\\
 \\
-(a) 
-%The singular values are almost ready, we only have to deal with the negative sign in position $(2,2)$ through:
+Note: Answers follow the format $A=U \Sigma V^T$ \\
+\\
+(a) The singular values are almost ready, we only have to deal with the negative sign in position $(2,2)$ through:
 $$\left( \begin{array}{cc} 3 & 0 \\ 0 & -2  \end{array} \right) = 
 \left( \begin{array}{cc} 1 & 0 \\ 0 & 1  \end{array} \right)
 \left( \begin{array}{cc} 3 & 0 \\ 0 & 2  \end{array} \right)
 \left( \begin{array}{cc} 1 & 0 \\ 0 & -1  \end{array} \right)$$
-(b) 
-%Here, we only have to deal with the order of the singular values:
+(b) Here, we only have to deal with the order of the singular values:
 $$\left( \begin{array}{cc} 2 & 0 \\ 0 &  3  \end{array} \right) = 
 \left( \begin{array}{cc} 0 & 1 \\ 1 & 0  \end{array} \right)
 \left( \begin{array}{cc} 3 & 0 \\ 0 & 2  \end{array} \right)
 \left( \begin{array}{cc} 0 & 1 \\ 1 & 0  \end{array} \right)$$
-(c) 
-% singular
+(c) In this case we know the singular values should be 2 and 0 but we have to work on how to reorder the positions:
 $$\left( \begin{array}{cc} 0 & 2 \\ 0 & 0 \\ 0 & 0  \end{array} \right) = 
 \left( \begin{array}{cc} 1 & 0 \\ 0 & 1 \\ 0 & 0  \end{array} \right)
 \left( \begin{array}{cc} 2 & 0 \\ 0 & 0  \end{array} \right)
 \left( \begin{array}{cc} 0 & 1 \\ -1 & 0  \end{array} \right)$$
-(d) 
-% rank 1
+(d) The key in this exercise is that matrix is rank 1, so we already know that the second singular value must be 0. So,
+$$\Sigma = \left( \begin{array}{cc} \sigma_1 & 0 \\ 0 & 0  \end{array} \right)$$
+We also know that range($A$):$\left\{\alpha \begin{pmatrix} 1 \\ -0  \end{pmatrix} \forall \alpha \in \mathbb{R} \right\}$, so we have the first column of $U$:
+$$U = \left( \begin{array}{cc} 1 & u_{1,2} \\ 0 & u_{2,2}  \end{array} \right)$$
+
+
 $$\left( \begin{array}{cc} 1 & 1 \\ 0 & 0  \end{array} \right) = 
 \left( \begin{array}{cc} 1 & 0 \\ 0 & 1  \end{array} \right)
 \left( \begin{array}{cc} \sqrt{2} & 0 \\ 0 & 0  \end{array} \right)
@@ -94,9 +102,36 @@ A = U \Sigma V^T &=
 where $\sigma_1 \geq  \ldots \geq \sigma_r > 0$, $\hat{U}$ consists of the first $r$ columns of $U$, $\tilde{U}$ consists of the remaining $m-r$ columns of $U$,
 $\hat{V}$ consists of the first $r$ columns of $V$, and $\tilde{V}$ consists of the remaining $n-r$ columns of $V$.
 Give bases for the spaces range($A$), null($A$), range($A^T$) and null($A^T$) in terms of the components of the SVD of
-$A$, and a brief justification.
+$A$, and a brief justification.\\
+\\
+Answer:
+\begin{itemize}
+ \item range($A$): $span\{\vec{u}_1,\cdots,\vec{u}_r\}$ or $\hat{U}$
+ \item null($A$): $span\{\vec{v}^T_{r+1},\cdots,\vec{v}^T_n\}$ or $\tilde{V}^T$
+ \item range($A^T$): $span\{\vec{v}^T_1,\cdots,\vec{v}^T_r\}$ or $\hat{V}$
+ \item null($A^T$): $span\{\vec{u}_{r+1},\cdots,\vec{u}_m\}$ or $\tilde{U}$
+\end{itemize}
+
 \item Use the SVD of $A$ to show that for an $m \times n$ matrix of full column rank $n$, the matrix $A (A^TA)^{-1} A^T$ is an orthogonal
-  projector onto range($A$).
+  projector onto range($A$).\\
+\\
+Answer:\\
+\\
+I assume that $P=P^2$ and $P=P^T$ as it was already explained at class.  To see that $P=A(A^TA)^{-1}A^T$ is an orthogonal projector onto range($A$), we can use the reduced SVD ($A=\hat{U}\hat{\Sigma}V^T$) in the above equation:
+$$P=A(A^TA)^{-1}A^T$$
+$$P=(\hat{U}\hat{\Sigma}V^T)(V\hat{\Sigma}\hat{U}^T\hat{U}\hat{\Sigma}V^T )^{-1}V\hat{\Sigma}\hat{U}^T$$
+As $\hat{U}^T\hat{U}=I$:
+$$P=\hat{U}\hat{\Sigma}V^T(V\hat{\Sigma}\hat{\Sigma}V^T )^{-1}V\hat{\Sigma}\hat{U}^T$$
+$$P=\hat{U}\hat{\Sigma}V^T(V\hat{\Sigma}^2V^T )^{-1}V\hat{\Sigma}\hat{U}^T$$
+As $V$ is squared and orthogonal, $V^{-1}=V^T$ holds:
+$$P=\hat{U}\hat{\Sigma}V^TV\hat{\Sigma}^{-2}V^TV\hat{\Sigma}\hat{U}^T$$
+As $V^TV=I$:
+$$P=\hat{U}\hat{\Sigma}\hat{\Sigma}^{-2}\hat{\Sigma}\hat{U}^T$$
+And finally:
+$$P=\hat{U}\hat{U}^T$$
+From question 2 we know that range($A$): $span\{\vec{u}_1,\cdots,\vec{u}_r\}$ or $\hat{U}$, so if $P$ is in function of $\hat{U}$ it must be an orthogonal projector onto range($A$).
+  
+  
 \end{enumerate}
 
 \subsection*{Least Squares}
@@ -107,14 +142,26 @@ $A$, and a brief justification.
   necessarily true?
 \begin{enumerate}
 \item If $\x$ is a solution to the least squares problem, then $A\x = \b$.
-\item If $\x$ is a solution to the least squares problem, then the residual vector $\r = \b - A \x$ is in the nullspace of $A^T$.
+\item If $\x$ is a solution to the least squares problem, then the residual vector $\r = \b - A \x$ is in the nullspace of $A^T$. \Large \checkmark \normalsize
 \item The solution is unique.
 \item A solution may not exist.
 \item None of the above.
 \end{enumerate}
 
 \item (Heath 3.3) Set up the linear least squares system $A\vec{x} \approx \vec{b}$ for fitting the model function $f(t,\vec{x}) = x_1 t + x_2 e^t$ to the three data points $(1,2),
-  (2,3), (3,5)$.  Is the least squares solution unique? Why or why not?
+  (2,3), (3,5)$.  Is the least squares solution unique? Why or why not?\\
+\\
+Answer:\\
+\\
+We can set a linear systems from the above information:
+$$\vec{x}_1+\me\vec{x}_2=2$$
+$$2\vec{x}_1+\me^2\vec{x}_2=3$$
+$$3\vec{x}_1+\me^3\vec{x}_2=5$$
+
+and in the $A\x=\b$ format:
+$$ \begin{pmatrix} 1 & \me \\ 2 & \me^2 \\ 3 & \me^3  \end{pmatrix} \begin{pmatrix} \x_1 \\ \x_2 \end{pmatrix} = \begin{pmatrix} 2 \\ 3 \\ 5 \end{pmatrix}$$
+
+It is clear that columns of A are linearly independent, so it is \textit{full rank} and it has an unique solution.
 
 \item (Heath 3.5) Let $\vec{x}$ be the solution to the linear least squares problem $A\vec{x} \approx \vec{b}$, where
 $$
@@ -123,7 +170,12 @@ A = \begin{pmatrix}
 \end{pmatrix}.
 $$
 Let $\vec{r} = \vec{b} - A\vec{x}$ be the corresponding residual vector.  Which of the following three vectors is a possible value for $\vec{r}$?  Why?\\
-(a) $\begin{pmatrix} 1 \\ 1 \\ 1 \\ 1 \end{pmatrix}$ \quad (b) $\begin{pmatrix} -1 \\ -1 \\ 1 \\ 1 \end{pmatrix}$ \quad (c) $\begin{pmatrix} -1 \\ 1 \\ 1 \\ -1 \end{pmatrix}$
+(a) $\begin{pmatrix} 1 \\ 1 \\ 1 \\ 1 \end{pmatrix}$ \quad (b) $\begin{pmatrix} -1 \\ -1 \\ 1 \\ 1 \end{pmatrix}$ \quad (c) $\begin{pmatrix} -1 \\ 1 \\ 1 \\ -1 \end{pmatrix}$ \Large \checkmark \normalsize
+\\ \vspace{0.5em} \\
+Answer:\\
+\\
+If $\x$ is the solution, then $\r$ must be $\perp$ to $A$ and $A^T\r=0$ holds.  Just option (c) satisfies $A^T\r=0$.
+
 
 \end{enumerate}
 
@@ -134,24 +186,22 @@ Let $\vec{r} = \vec{b} - A\vec{x}$ be the corresponding residual vector.  Which 
 
 \item (Heath 3.23) Which of the following matrices are orthogonal?
 \begin{enumerate}
-\item $\begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}$
-\item $\begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix}$
+\item $\begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}$ \Large \checkmark \normalsize
+\item $\begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix}$ \Large \checkmark \normalsize
 \item $\begin{pmatrix} 2 & 0 \\ 0 & 1/2 \end{pmatrix}$
-\item $\begin{pmatrix} \sqrt{2}/2 & \sqrt{2}/2 \\ -\sqrt{2}/2 & \sqrt{2}/2 \end{pmatrix}$
+\item $\begin{pmatrix} \sqrt{2}/2 & \sqrt{2}/2 \\ -\sqrt{2}/2 & \sqrt{2}/2 \end{pmatrix}$ \Large \checkmark \normalsize
 \end{enumerate}
-
-\pagebreak
 
 \item (Heath 3.24) Which of the following properties does an orthogonal $n \times n$ matrix necessarily have? (Circle all that apply.)
 \begin{enumerate}
-\item It is nonsingular.
-\item It preserves the Euclidean vector norm when multiplied times a vector.
-\item Its transpose is its inverse.
-\item Its columns are orthonormal.
+\item It is nonsingular. \Large \checkmark \normalsize
+\item It preserves the Euclidean vector norm when multiplied times a vector. \Large \checkmark \normalsize
+\item Its transpose is its inverse. \Large \checkmark \normalsize
+\item Its columns are orthonormal. \Large \checkmark \normalsize
 \item It is symmetric.
 \item It is diagonal.
-\item Its Euclidean matrix norm is 1.
-\item Its Euclidean condition number is 1.
+\item Its Euclidean matrix norm is 1. \Large \checkmark \normalsize
+\item Its Euclidean condition number is 1. \Large \checkmark \normalsize
 \end{enumerate}
 
 \item A Householder matrix $H$
@@ -160,11 +210,37 @@ Let $\vec{r} = \vec{b} - A\vec{x}$ be the corresponding residual vector.  Which 
 \item has the property $||H||_2 = 1$.
 \item is uniquely defined by $H\x = \b$ for two vector $\x$ and $\b$ such that  $||\x||_2 = ||\b||_2$.
 \item Both (a) and (b).
-\item All of the above.
+\item All of the above. \Large \checkmark \normalsize
 \end{enumerate}
 
 \item Show that a $n \times n$ Householder matrix $H = I - 2 \v\v^T / \v^T\v$ has an eigenvalue of 1 with multiplicity $n-1$ and an eigenvalue
-of -1 with multiplicity 1.
+of -1 with multiplicity 1.\\
+\\
+Answer:\\
+\\
+Using the formula of $H$, we have:
+$$H\a = \left(I-2\frac{\v\v^T}{\v^T\v}\right)\a$$
+$$H\a = \left(\a-2\frac{\v(\v^T\a)}{\v^T\v}\right)$$
+and 
+$$\left(\a-2\frac{\v(\v^T\a)}{\v^T\v}\right)=\lambda\a$$
+
+We also know that a Householder matrix has eigenvalues $\pm1$, so:
+$$\left(\a-2\frac{\v(\v^T\a)}{\v^T\v}\right)=-\a$$
+or
+$$\left(\a-2\frac{\v(\v^T\a)}{\v^T\v}\right)=\a$$
+So, we have to evaluate when 
+\begin{equation}\label{eq:h}
+ \a-2\frac{\v(\v^T\a)}{\v^T\v}
+\end{equation}
+becomes positive and when it becomes negative. Following this, just in the case that $\a=\v$, we have:
+$$\left(\v-2\frac{\v(\v^T\v)}{\v^T\v}\right)=\v-2\v=-\v$$
+
+On the other hand, if $\a=\u$ and $\u\perp\v$, we have
+$$\left(\u-2\frac{\v(\v^T\u)}{\v^T\v}\right)=\u$$
+since $\v^T\u=0$ because they are perpendicular.
+
+Therefore, we have just one case where equation \ref{eq:h} becomes negative and this explains the eigenvalue of -1 with multiplicity 1.  However, there are $n-1$ cases where equation  \ref{eq:h} becomes positive since there are $n-1$ independent vectors orthogonal to $\v$ (eigenvalue of 1 with multiplicity $n-1$).
+
 
 \end{enumerate}
 
