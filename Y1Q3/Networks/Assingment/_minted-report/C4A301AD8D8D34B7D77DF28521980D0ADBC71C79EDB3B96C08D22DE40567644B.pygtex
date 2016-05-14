@@ -1,0 +1,34 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGdefault{k+kn}{from} \PYGdefault{n+nn}{mininet.topo} \PYGdefault{k+kn}{import} \PYGdefault{n}{Topo}
+
+\PYGdefault{k}{class} \PYGdefault{n+nc}{MyTopo2}\PYGdefault{p}{(} \PYGdefault{n}{Topo} \PYGdefault{p}{):}
+    \PYGdefault{l+s}{\PYGdefaultZdq{}Simple topology example.\PYGdefaultZdq{}}
+
+    \PYGdefault{k}{def} \PYGdefault{n+nf}{\PYGdefaultZus{}\PYGdefaultZus{}init\PYGdefaultZus{}\PYGdefaultZus{}}\PYGdefault{p}{(} \PYGdefault{n+nb+bp}{self} \PYGdefault{p}{):}
+        \PYGdefault{l+s}{\PYGdefaultZdq{}Create custom topo.\PYGdefaultZdq{}}
+
+        \PYGdefault{c}{\PYGdefaultZsh{} Initialize topology}
+        \PYGdefault{n}{Topo}\PYGdefault{o}{.}\PYGdefault{n}{\PYGdefaultZus{}\PYGdefaultZus{}init\PYGdefaultZus{}\PYGdefaultZus{}}\PYGdefault{p}{(} \PYGdefault{n+nb+bp}{self} \PYGdefault{p}{)}
+
+        \PYGdefault{c}{\PYGdefaultZsh{} Add hosts and switches}
+        \PYGdefault{n}{leftUpHost} \PYGdefault{o}{=} \PYGdefault{n+nb+bp}{self}\PYGdefault{o}{.}\PYGdefault{n}{addHost}\PYGdefault{p}{(} \PYGdefault{l+s}{\PYGdefaultZsq{}h1\PYGdefaultZsq{}}\PYGdefault{p}{)}
+        \PYGdefault{n}{leftDownHost} \PYGdefault{o}{=} \PYGdefault{n+nb+bp}{self}\PYGdefault{o}{.}\PYGdefault{n}{addHost}\PYGdefault{p}{(} \PYGdefault{l+s}{\PYGdefaultZsq{}h2\PYGdefaultZsq{}}\PYGdefault{p}{)}
+        \PYGdefault{n}{leftSwitch} \PYGdefault{o}{=} \PYGdefault{n+nb+bp}{self}\PYGdefault{o}{.}\PYGdefault{n}{addSwitch}\PYGdefault{p}{(} \PYGdefault{l+s}{\PYGdefaultZsq{}s1\PYGdefaultZsq{}} \PYGdefault{p}{)}
+        \PYGdefault{n}{middleSwitch} \PYGdefault{o}{=} \PYGdefault{n+nb+bp}{self}\PYGdefault{o}{.}\PYGdefault{n}{addSwitch}\PYGdefault{p}{(} \PYGdefault{l+s}{\PYGdefaultZsq{}s2\PYGdefaultZsq{}} \PYGdefault{p}{)}
+        \PYGdefault{n}{rightSwitch} \PYGdefault{o}{=} \PYGdefault{n+nb+bp}{self}\PYGdefault{o}{.}\PYGdefault{n}{addSwitch}\PYGdefault{p}{(} \PYGdefault{l+s}{\PYGdefaultZsq{}s3\PYGdefaultZsq{}} \PYGdefault{p}{)}
+        \PYGdefault{n}{rightUpHost} \PYGdefault{o}{=} \PYGdefault{n+nb+bp}{self}\PYGdefault{o}{.}\PYGdefault{n}{addHost}\PYGdefault{p}{(} \PYGdefault{l+s}{\PYGdefaultZsq{}h3\PYGdefaultZsq{}}\PYGdefault{p}{)}
+        \PYGdefault{n}{rightMiddleHost} \PYGdefault{o}{=} \PYGdefault{n+nb+bp}{self}\PYGdefault{o}{.}\PYGdefault{n}{addHost}\PYGdefault{p}{(} \PYGdefault{l+s}{\PYGdefaultZsq{}h4\PYGdefaultZsq{}}\PYGdefault{p}{)}
+        \PYGdefault{n}{rightDownHost} \PYGdefault{o}{=} \PYGdefault{n+nb+bp}{self}\PYGdefault{o}{.}\PYGdefault{n}{addHost}\PYGdefault{p}{(} \PYGdefault{l+s}{\PYGdefaultZsq{}h5\PYGdefaultZsq{}}\PYGdefault{p}{)}
+
+        \PYGdefault{c}{\PYGdefaultZsh{} Add links}
+        \PYGdefault{n+nb+bp}{self}\PYGdefault{o}{.}\PYGdefault{n}{addLink}\PYGdefault{p}{(} \PYGdefault{n}{leftUpHost}\PYGdefault{p}{,} \PYGdefault{n}{leftSwitch} \PYGdefault{p}{)}
+        \PYGdefault{n+nb+bp}{self}\PYGdefault{o}{.}\PYGdefault{n}{addLink}\PYGdefault{p}{(} \PYGdefault{n}{leftDownHost}\PYGdefault{p}{,} \PYGdefault{n}{leftSwitch} \PYGdefault{p}{)}
+		\PYGdefault{n+nb+bp}{self}\PYGdefault{o}{.}\PYGdefault{n}{addLink}\PYGdefault{p}{(} \PYGdefault{n}{leftSwitch}\PYGdefault{p}{,} \PYGdefault{n}{middleSwitch} \PYGdefault{p}{)}
+		\PYGdefault{n+nb+bp}{self}\PYGdefault{o}{.}\PYGdefault{n}{addLink}\PYGdefault{p}{(} \PYGdefault{n}{middleSwitch}\PYGdefault{p}{,} \PYGdefault{n}{rightSwitch} \PYGdefault{p}{)}
+        \PYGdefault{n+nb+bp}{self}\PYGdefault{o}{.}\PYGdefault{n}{addLink}\PYGdefault{p}{(} \PYGdefault{n}{rightSwitch}\PYGdefault{p}{,} \PYGdefault{n}{rightUpHost} \PYGdefault{p}{)}
+        \PYGdefault{n+nb+bp}{self}\PYGdefault{o}{.}\PYGdefault{n}{addLink}\PYGdefault{p}{(} \PYGdefault{n}{rightSwitch}\PYGdefault{p}{,} \PYGdefault{n}{rightMiddleHost} \PYGdefault{p}{)}
+        \PYGdefault{n+nb+bp}{self}\PYGdefault{o}{.}\PYGdefault{n}{addLink}\PYGdefault{p}{(} \PYGdefault{n}{rightSwitch}\PYGdefault{p}{,} \PYGdefault{n}{rightDownHost} \PYGdefault{p}{)}
+
+
+\PYGdefault{n}{topos} \PYGdefault{o}{=} \PYGdefault{p}{\PYGdefaultZob{}} \PYGdefault{l+s}{\PYGdefaultZsq{}mytopo2\PYGdefaultZsq{}}\PYGdefault{p}{:} \PYGdefault{p}{(} \PYGdefault{k}{lambda}\PYGdefault{p}{:} \PYGdefault{n}{MyTopo2}\PYGdefault{p}{()} \PYGdefault{p}{)} \PYGdefault{p}{\PYGdefaultZcb{}}
+\end{Verbatim}

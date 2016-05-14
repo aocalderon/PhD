@@ -1,0 +1,128 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGdefault{c}{\PYGdefaultZsh{} Copyright 2012 James McCauley}
+\PYGdefault{c}{\PYGdefaultZsh{}}
+\PYGdefault{c}{\PYGdefaultZsh{} Licensed under the Apache License, Version 2.0 (the \PYGdefaultZdq{}License\PYGdefaultZdq{});}
+\PYGdefault{c}{\PYGdefaultZsh{} you may not use this file except in compliance with the License.}
+\PYGdefault{c}{\PYGdefaultZsh{} You may obtain a copy of the License at:}
+\PYGdefault{c}{\PYGdefaultZsh{}}
+\PYGdefault{c}{\PYGdefaultZsh{}     http://www.apache.org/licenses/LICENSE\PYGdefaultZhy{}2.0}
+\PYGdefault{c}{\PYGdefaultZsh{}}
+\PYGdefault{c}{\PYGdefaultZsh{} Unless required by applicable law or agreed to in writing, software}
+\PYGdefault{c}{\PYGdefaultZsh{} distributed under the License is distributed on an \PYGdefaultZdq{}AS IS\PYGdefaultZdq{} BASIS,}
+\PYGdefault{c}{\PYGdefaultZsh{} WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.}
+\PYGdefault{c}{\PYGdefaultZsh{} See the License for the specific language governing permissions and}
+\PYGdefault{c}{\PYGdefaultZsh{} limitations under the License.}
+
+\PYGdefault{l+s+sd}{\PYGdefaultZdq{}\PYGdefaultZdq{}\PYGdefaultZdq{}}
+\PYGdefault{l+s+sd}{This component is for use with the OpenFlow tutorial.}
+
+\PYGdefault{l+s+sd}{It acts as a simple hub, but can be modified to act like an L2}
+\PYGdefault{l+s+sd}{learning switch.}
+
+\PYGdefault{l+s+sd}{It\PYGdefaultZsq{}s roughly similar to the one Brandon Heller did for NOX.}
+\PYGdefault{l+s+sd}{\PYGdefaultZdq{}\PYGdefaultZdq{}\PYGdefaultZdq{}}
+
+\PYGdefault{k+kn}{from} \PYGdefault{n+nn}{pox.core} \PYGdefault{k+kn}{import} \PYGdefault{n}{core}
+\PYGdefault{k+kn}{import} \PYGdefault{n+nn}{pox.openflow.libopenflow\PYGdefaultZus{}01} \PYGdefault{k+kn}{as} \PYGdefault{n+nn}{of}
+
+\PYGdefault{n}{log} \PYGdefault{o}{=} \PYGdefault{n}{core}\PYGdefault{o}{.}\PYGdefault{n}{getLogger}\PYGdefault{p}{()}
+
+
+
+\PYGdefault{k}{class} \PYGdefault{n+nc}{Tutorial} \PYGdefault{p}{(}\PYGdefault{n+nb}{object}\PYGdefault{p}{):}
+  \PYGdefault{l+s+sd}{\PYGdefaultZdq{}\PYGdefaultZdq{}\PYGdefaultZdq{}}
+\PYGdefault{l+s+sd}{  A Tutorial object is created for each switch that connects.}
+\PYGdefault{l+s+sd}{  A Connection object for that switch is passed to the \PYGdefaultZus{}\PYGdefaultZus{}init\PYGdefaultZus{}\PYGdefaultZus{} function.}
+\PYGdefault{l+s+sd}{  \PYGdefaultZdq{}\PYGdefaultZdq{}\PYGdefaultZdq{}}
+  \PYGdefault{k}{def} \PYGdefault{n+nf}{\PYGdefaultZus{}\PYGdefaultZus{}init\PYGdefaultZus{}\PYGdefaultZus{}} \PYGdefault{p}{(}\PYGdefault{n+nb+bp}{self}\PYGdefault{p}{,} \PYGdefault{n}{connection}\PYGdefault{p}{):}
+    \PYGdefault{c}{\PYGdefaultZsh{} Keep track of the connection to the switch so that we can}
+    \PYGdefault{c}{\PYGdefaultZsh{} send it messages!}
+    \PYGdefault{n+nb+bp}{self}\PYGdefault{o}{.}\PYGdefault{n}{connection} \PYGdefault{o}{=} \PYGdefault{n}{connection}
+
+    \PYGdefault{c}{\PYGdefaultZsh{} This binds our PacketIn event listener}
+    \PYGdefault{n}{connection}\PYGdefault{o}{.}\PYGdefault{n}{addListeners}\PYGdefault{p}{(}\PYGdefault{n+nb+bp}{self}\PYGdefault{p}{)}
+
+    \PYGdefault{c}{\PYGdefaultZsh{} Use this table to keep track of which ethernet address is on}
+    \PYGdefault{c}{\PYGdefaultZsh{} which switch port (keys are MACs, values are ports).}
+    \PYGdefault{n+nb+bp}{self}\PYGdefault{o}{.}\PYGdefault{n}{mac\PYGdefaultZus{}to\PYGdefaultZus{}port} \PYGdefault{o}{=} \PYGdefault{p}{\PYGdefaultZob{}\PYGdefaultZcb{}}
+
+
+  \PYGdefault{k}{def} \PYGdefault{n+nf}{resend\PYGdefaultZus{}packet} \PYGdefault{p}{(}\PYGdefault{n+nb+bp}{self}\PYGdefault{p}{,} \PYGdefault{n}{packet\PYGdefaultZus{}in}\PYGdefault{p}{,} \PYGdefault{n}{out\PYGdefaultZus{}port}\PYGdefault{p}{):}
+    \PYGdefault{l+s+sd}{\PYGdefaultZdq{}\PYGdefaultZdq{}\PYGdefaultZdq{}}
+\PYGdefault{l+s+sd}{    Instructs the switch to resend a packet that it had sent to us.}
+\PYGdefault{l+s+sd}{    \PYGdefaultZdq{}packet\PYGdefaultZus{}in\PYGdefaultZdq{} is the ofp\PYGdefaultZus{}packet\PYGdefaultZus{}in object the switch had sent to the}
+\PYGdefault{l+s+sd}{    controller due to a table\PYGdefaultZhy{}miss.}
+\PYGdefault{l+s+sd}{    \PYGdefaultZdq{}\PYGdefaultZdq{}\PYGdefaultZdq{}}
+    \PYGdefault{n}{msg} \PYGdefault{o}{=} \PYGdefault{n}{of}\PYGdefault{o}{.}\PYGdefault{n}{ofp\PYGdefaultZus{}packet\PYGdefaultZus{}out}\PYGdefault{p}{()}
+    \PYGdefault{n}{msg}\PYGdefault{o}{.}\PYGdefault{n}{data} \PYGdefault{o}{=} \PYGdefault{n}{packet\PYGdefaultZus{}in}
+
+    \PYGdefault{c}{\PYGdefaultZsh{} Add an action to send to the specified port}
+    \PYGdefault{n}{action} \PYGdefault{o}{=} \PYGdefault{n}{of}\PYGdefault{o}{.}\PYGdefault{n}{ofp\PYGdefaultZus{}action\PYGdefaultZus{}output}\PYGdefault{p}{(}\PYGdefault{n}{port} \PYGdefault{o}{=} \PYGdefault{n}{out\PYGdefaultZus{}port}\PYGdefault{p}{)}
+    \PYGdefault{n}{msg}\PYGdefault{o}{.}\PYGdefault{n}{actions}\PYGdefault{o}{.}\PYGdefault{n}{append}\PYGdefault{p}{(}\PYGdefault{n}{action}\PYGdefault{p}{)}
+
+    \PYGdefault{c}{\PYGdefaultZsh{} Send message to switch}
+    \PYGdefault{n+nb+bp}{self}\PYGdefault{o}{.}\PYGdefault{n}{connection}\PYGdefault{o}{.}\PYGdefault{n}{send}\PYGdefault{p}{(}\PYGdefault{n}{msg}\PYGdefault{p}{)}
+
+
+  \PYGdefault{k}{def} \PYGdefault{n+nf}{act\PYGdefaultZus{}like\PYGdefaultZus{}hub} \PYGdefault{p}{(}\PYGdefault{n+nb+bp}{self}\PYGdefault{p}{,} \PYGdefault{n}{packet}\PYGdefault{p}{,} \PYGdefault{n}{packet\PYGdefaultZus{}in}\PYGdefault{p}{):}
+    \PYGdefault{l+s+sd}{\PYGdefaultZdq{}\PYGdefaultZdq{}\PYGdefaultZdq{}}
+\PYGdefault{l+s+sd}{    Implement hub\PYGdefaultZhy{}like behavior \PYGdefaultZhy{}\PYGdefaultZhy{} send all packets to all ports besides}
+\PYGdefault{l+s+sd}{    the input port.}
+\PYGdefault{l+s+sd}{    \PYGdefaultZdq{}\PYGdefaultZdq{}\PYGdefaultZdq{}}
+
+    \PYGdefault{c}{\PYGdefaultZsh{} We want to output to all ports \PYGdefaultZhy{}\PYGdefaultZhy{} we do that using the special}
+    \PYGdefault{c}{\PYGdefaultZsh{} OFPP\PYGdefaultZus{}ALL port as the output port.  (We could have also used}
+    \PYGdefault{c}{\PYGdefaultZsh{} OFPP\PYGdefaultZus{}FLOOD.)}
+    \PYGdefault{n+nb+bp}{self}\PYGdefault{o}{.}\PYGdefault{n}{resend\PYGdefaultZus{}packet}\PYGdefault{p}{(}\PYGdefault{n}{packet\PYGdefaultZus{}in}\PYGdefault{p}{,} \PYGdefault{n}{of}\PYGdefault{o}{.}\PYGdefault{n}{OFPP\PYGdefaultZus{}ALL}\PYGdefault{p}{)}
+
+    \PYGdefault{c}{\PYGdefaultZsh{} Note that if we didn\PYGdefaultZsq{}t get a valid buffer\PYGdefaultZus{}id, a slightly better}
+    \PYGdefault{c}{\PYGdefaultZsh{} implementation would check that we got the full data before}
+    \PYGdefault{c}{\PYGdefaultZsh{} sending it (len(packet\PYGdefaultZus{}in.data) should be == packet\PYGdefaultZus{}in.total\PYGdefaultZus{}len)).}
+
+
+  \PYGdefault{k}{def} \PYGdefault{n+nf}{act\PYGdefaultZus{}like\PYGdefaultZus{}switch} \PYGdefault{p}{(}\PYGdefault{n+nb+bp}{self}\PYGdefault{p}{,} \PYGdefault{n}{event}\PYGdefault{p}{,} \PYGdefault{n}{packet}\PYGdefault{p}{,} \PYGdefault{n}{packet\PYGdefaultZus{}in}\PYGdefault{p}{):}
+    \PYGdefault{l+s+sd}{\PYGdefaultZdq{}\PYGdefaultZdq{}\PYGdefaultZdq{}}
+\PYGdefault{l+s+sd}{    Implement switch\PYGdefaultZhy{}like behavior.}
+\PYGdefault{l+s+sd}{    \PYGdefaultZdq{}\PYGdefaultZdq{}\PYGdefaultZdq{}}
+    \PYGdefault{n+nb+bp}{self}\PYGdefault{o}{.}\PYGdefault{n}{mac\PYGdefaultZus{}to\PYGdefaultZus{}port}\PYGdefault{p}{[}\PYGdefault{n}{packet}\PYGdefault{o}{.}\PYGdefault{n}{src}\PYGdefault{p}{]}\PYGdefault{o}{=}\PYGdefault{n}{event}\PYGdefault{o}{.}\PYGdefault{n}{port} 
+
+    \PYGdefault{k}{if} \PYGdefault{n}{packet}\PYGdefault{o}{.}\PYGdefault{n}{dst} \PYGdefault{o+ow}{in} \PYGdefault{n+nb+bp}{self}\PYGdefault{o}{.}\PYGdefault{n}{mac\PYGdefaultZus{}to\PYGdefaultZus{}port}\PYGdefault{p}{:}
+      \PYGdefault{n}{outport}\PYGdefault{o}{=}\PYGdefault{n+nb+bp}{self}\PYGdefault{o}{.}\PYGdefault{n}{mac\PYGdefaultZus{}to\PYGdefaultZus{}port}\PYGdefault{p}{[}\PYGdefault{n}{packet}\PYGdefault{o}{.}\PYGdefault{n}{dst}\PYGdefault{p}{]}
+      \PYGdefault{n}{msg} \PYGdefault{o}{=} \PYGdefault{n}{of}\PYGdefault{o}{.}\PYGdefault{n}{ofp\PYGdefaultZus{}flow\PYGdefaultZus{}mod}\PYGdefault{p}{()}
+      \PYGdefault{n}{msg}\PYGdefault{o}{.}\PYGdefault{n}{match}\PYGdefault{o}{.}\PYGdefault{n}{dl\PYGdefaultZus{}dst} \PYGdefault{o}{=} \PYGdefault{n}{packet}\PYGdefault{o}{.}\PYGdefault{n}{dst}
+      \PYGdefault{n}{msg}\PYGdefault{o}{.}\PYGdefault{n}{buffer\PYGdefaultZus{}id} \PYGdefault{o}{=} \PYGdefault{n}{event}\PYGdefault{o}{.}\PYGdefault{n}{ofp}\PYGdefault{o}{.}\PYGdefault{n}{buffer\PYGdefaultZus{}id}
+      \PYGdefault{n}{msg}\PYGdefault{o}{.}\PYGdefault{n}{actions}\PYGdefault{o}{.}\PYGdefault{n}{append}\PYGdefault{p}{(}\PYGdefault{n}{of}\PYGdefault{o}{.}\PYGdefault{n}{ofp\PYGdefaultZus{}action\PYGdefaultZus{}output}\PYGdefault{p}{(}\PYGdefault{n}{port}\PYGdefault{o}{=}\PYGdefault{n}{outport}\PYGdefault{p}{))}
+      \PYGdefault{n+nb+bp}{self}\PYGdefault{o}{.}\PYGdefault{n}{connection}\PYGdefault{o}{.}\PYGdefault{n}{send}\PYGdefault{p}{(}\PYGdefault{n}{msg}\PYGdefault{p}{)}
+    \PYGdefault{k}{else}\PYGdefault{p}{:}
+     \PYGdefault{n+nb+bp}{self}\PYGdefault{o}{.}\PYGdefault{n}{resend\PYGdefaultZus{}packet}\PYGdefault{p}{(}\PYGdefault{n}{packet\PYGdefaultZus{}in}\PYGdefault{p}{,} \PYGdefault{n}{of}\PYGdefault{o}{.}\PYGdefault{n}{OFPP\PYGdefaultZus{}ALL}\PYGdefault{p}{)}
+
+
+
+  \PYGdefault{k}{def} \PYGdefault{n+nf}{\PYGdefaultZus{}handle\PYGdefaultZus{}PacketIn} \PYGdefault{p}{(}\PYGdefault{n+nb+bp}{self}\PYGdefault{p}{,} \PYGdefault{n}{event}\PYGdefault{p}{):}
+    \PYGdefault{l+s+sd}{\PYGdefaultZdq{}\PYGdefaultZdq{}\PYGdefaultZdq{}}
+\PYGdefault{l+s+sd}{    Handles packet in messages from the switch.}
+\PYGdefault{l+s+sd}{    \PYGdefaultZdq{}\PYGdefaultZdq{}\PYGdefaultZdq{}}
+
+    \PYGdefault{n}{packet} \PYGdefault{o}{=} \PYGdefault{n}{event}\PYGdefault{o}{.}\PYGdefault{n}{parsed} \PYGdefault{c}{\PYGdefaultZsh{} This is the parsed packet data.}
+    \PYGdefault{k}{if} \PYGdefault{o+ow}{not} \PYGdefault{n}{packet}\PYGdefault{o}{.}\PYGdefault{n}{parsed}\PYGdefault{p}{:}
+      \PYGdefault{n}{log}\PYGdefault{o}{.}\PYGdefault{n}{warning}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}Ignoring incomplete packet\PYGdefaultZdq{}}\PYGdefault{p}{)}
+      \PYGdefault{k}{return}
+
+    \PYGdefault{n}{packet\PYGdefaultZus{}in} \PYGdefault{o}{=} \PYGdefault{n}{event}\PYGdefault{o}{.}\PYGdefault{n}{ofp} \PYGdefault{c}{\PYGdefaultZsh{} The actual ofp\PYGdefaultZus{}packet\PYGdefaultZus{}in message.}
+
+    \PYGdefault{c}{\PYGdefaultZsh{} Comment out the following line and uncomment the one after}
+    \PYGdefault{c}{\PYGdefaultZsh{} when starting the exercise.}
+    \PYGdefault{c}{\PYGdefaultZsh{}self.act\PYGdefaultZus{}like\PYGdefaultZus{}hub(packet, packet\PYGdefaultZus{}in)}
+    \PYGdefault{n+nb+bp}{self}\PYGdefault{o}{.}\PYGdefault{n}{act\PYGdefaultZus{}like\PYGdefaultZus{}switch}\PYGdefault{p}{(}\PYGdefault{n}{event}\PYGdefault{p}{,} \PYGdefault{n}{packet}\PYGdefault{p}{,} \PYGdefault{n}{packet\PYGdefaultZus{}in}\PYGdefault{p}{)}
+
+
+
+\PYGdefault{k}{def} \PYGdefault{n+nf}{launch} \PYGdefault{p}{():}
+  \PYGdefault{l+s+sd}{\PYGdefaultZdq{}\PYGdefaultZdq{}\PYGdefaultZdq{}}
+\PYGdefault{l+s+sd}{  Starts the component}
+\PYGdefault{l+s+sd}{  \PYGdefaultZdq{}\PYGdefaultZdq{}\PYGdefaultZdq{}}
+  \PYGdefault{k}{def} \PYGdefault{n+nf}{start\PYGdefaultZus{}switch} \PYGdefault{p}{(}\PYGdefault{n}{event}\PYGdefault{p}{):}
+    \PYGdefault{n}{log}\PYGdefault{o}{.}\PYGdefault{n}{debug}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}Controlling }\PYGdefault{l+s+si}{\PYGdefaultZpc{}s}\PYGdefault{l+s}{\PYGdefaultZdq{}} \PYGdefault{o}{\PYGdefaultZpc{}} \PYGdefault{p}{(}\PYGdefault{n}{event}\PYGdefault{o}{.}\PYGdefault{n}{connection}\PYGdefault{p}{,))}
+    \PYGdefault{n}{Tutorial}\PYGdefault{p}{(}\PYGdefault{n}{event}\PYGdefault{o}{.}\PYGdefault{n}{connection}\PYGdefault{p}{)}
+  \PYGdefault{n}{core}\PYGdefault{o}{.}\PYGdefault{n}{openflow}\PYGdefault{o}{.}\PYGdefault{n}{addListenerByName}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}ConnectionUp\PYGdefaultZdq{}}\PYGdefault{p}{,} \PYGdefault{n}{start\PYGdefaultZus{}switch}\PYGdefault{p}{)}
+\end{Verbatim}
