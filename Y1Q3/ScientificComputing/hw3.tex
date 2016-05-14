@@ -106,10 +106,10 @@ $A$, and a brief justification.\\
 \\
 Answer:
 \begin{itemize}
- \item range($A$): $span\{\vec{u}_1,\cdots,\vec{u}_r\}$ or $\hat{U}$
- \item null($A$): $span\{\vec{v}^T_{r+1},\cdots,\vec{v}^T_n\}$ or $\tilde{V}^T$
- \item range($A^T$): $span\{\vec{v}^T_1,\cdots,\vec{v}^T_r\}$ or $\hat{V}$
- \item null($A^T$): $span\{\vec{u}_{r+1},\cdots,\vec{u}_m\}$ or $\tilde{U}$
+ \item The range of $A$ is the subspace mapped to by $A$, and form an orthonormal basis for the first $r$ columns of $U$. range($A$): $span\{\vec{u}_1,\cdots,\vec{u}_r\}$ or $\hat{U}$
+ \item The null space of $A$ is the set of vectors mapped to zero by $A$ ($A\x=0$).  null($A$): $span\{\vec{v}^T_{r+1},\cdots,\vec{v}^T_n\}$ or $\tilde{V}^T$
+ \item The range of $A^T$ is the subspace that is mapped by $A$ to the column space (range($A$)). The first $r$ columns of $V$ are an orthonormal basis for this. range($A^T$): $span\{\vec{v}^T_1,\cdots,\vec{v}^T_r\}$ or $\hat{V}$
+ \item The null space of $A^T$ is the set of vectors $\vec{y}$ such that $\vec{y}A = 0$.  null($A^T$): $span\{\vec{u}_{r+1},\cdots,\vec{u}_m\}$ or $\tilde{U}$
 \end{itemize}
 
 \item Use the SVD of $A$ to show that for an $m \times n$ matrix of full column rank $n$, the matrix $A (A^TA)^{-1} A^T$ is an orthogonal

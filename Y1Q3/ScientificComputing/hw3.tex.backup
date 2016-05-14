@@ -75,14 +75,14 @@ $$\left( \begin{array}{cc} 0 & 2 \\ 0 & 0 \\ 0 & 0  \end{array} \right) =
 $$\Sigma = \left( \begin{array}{cc} \sigma_1 & 0 \\ 0 & 0  \end{array} \right)$$
 We also know that range($A$):$\left\{\alpha \begin{pmatrix} 1 \\ -0  \end{pmatrix} \forall \alpha \in \mathbb{R} \right\}$, so we have the first column of $U$:
 $$U = \left( \begin{array}{cc} 1 & u_{1,2} \\ 0 & u_{2,2}  \end{array} \right)$$
-
-
+Similarly, we know that $\begin{pmatrix} 1 \\ -1  \end{pmatrix} \in null(A)$ and $\left\| \begin{pmatrix} 1 \\ -1  \end{pmatrix} \right\|_2=\sqrt{2}$ and $\begin{pmatrix} \frac{1}{\sqrt{2}} \\ -\frac{1}{\sqrt{2}} \end{pmatrix}$ must be part of the \textit{null-space} of $A$. So,
+$$V^T = \left( \begin{array}{cc} v_{1,1} & v_{1,2} \\  \frac{1}{\sqrt{2}} & -\frac{1}{\sqrt{2}}  \end{array} \right)$$
+From here, we can elaborate to complete matrices $U$ and $V^T$ as orthogonal matrices and then find $\sigma_1$.  Finally, we obtain:
 $$\left( \begin{array}{cc} 1 & 1 \\ 0 & 0  \end{array} \right) = 
 \left( \begin{array}{cc} 1 & 0 \\ 0 & 1  \end{array} \right)
 \left( \begin{array}{cc} \sqrt{2} & 0 \\ 0 & 0  \end{array} \right)
 \left( \begin{array}{cc} \frac{1}{\sqrt{2}} & \frac{1}{\sqrt{2}} \\ -\frac{1}{\sqrt{2}} & \frac{1}{\sqrt{2}}  \end{array} \right)$$
-(e) 
-% rank 1
+(e) This matrix is also rank 1 and we can follow a similar procedure that in literal (d).
 $$\left( \begin{array}{cc} 1 & 1 \\ 1 & 1  \end{array} \right) = 
 \left( \begin{array}{cc} -\frac{1}{\sqrt{2}} & -\frac{1}{\sqrt{2}} \\ -\frac{1}{\sqrt{2}} & \frac{1}{\sqrt{2}}  \end{array} \right)
 \left( \begin{array}{cc} 2 & 0 \\ 0 & 0  \end{array} \right)
@@ -107,9 +107,9 @@ $A$, and a brief justification.\\
 Answer:
 \begin{itemize}
  \item range($A$): $span\{\vec{u}_1,\cdots,\vec{u}_r\}$ or $\hat{U}$
- \item null($A$): $span\{\vec{v}^T_{r+1},\cdots,\vec{v}^T_n\}$ or $\tilde{V}^T$
+ \item The null space of $A$ is the set of vectors mapped to zero by $A$ ($A\x=0$).  null($A$): $span\{\vec{v}^T_{r+1},\cdots,\vec{v}^T_n\}$ or $\tilde{V}^T$
  \item range($A^T$): $span\{\vec{v}^T_1,\cdots,\vec{v}^T_r\}$ or $\hat{V}$
- \item null($A^T$): $span\{\vec{u}_{r+1},\cdots,\vec{u}_m\}$ or $\tilde{U}$
+ \item The null space of $A^T$ is the set of vectors $\vec{y}$ such that $\vec{y}A = 0$.  null($A^T$): $span\{\vec{u}_{r+1},\cdots,\vec{u}_m\}$ or $\tilde{U}$
 \end{itemize}
 
 \item Use the SVD of $A$ to show that for an $m \times n$ matrix of full column rank $n$, the matrix $A (A^TA)^{-1} A^T$ is an orthogonal
