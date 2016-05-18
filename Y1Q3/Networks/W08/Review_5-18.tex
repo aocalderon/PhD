@@ -19,13 +19,12 @@ hidelinks
 \maketitle
 \thispagestyle{empty}
 
-\section*{Anonymous Connections and Onion Routing (Reed et al., 1998)}
-The paper describes how an implementation of anonymous connections, onion routing, can protect diverse Internet services in a private communication, particularly eavesdropping and traffic analysis. In addition, the papers provides the specification to implements new applications using onion routing.  Some characteristics of onion routing are real-time and bidirectional communication and application independence.
+\section*{Diagnosing Network-Wide Traffic Anomalies (Lakhina et al., 2004)}
+This paper describes a technique to detect, identify and measure traffic anomalies on a network.  It is based on Principal Component Analysis (PCA) of high-dimensional, noisy data.  The analysis is able to separate the subspace of the normal traffic and detect the anomalous component corresponding to the anomalies.
 
-Onion routing networks allow data protection through onion routers, proxies and a data structure called \textit{onion}. When an anonymous connection is established through proxies, they hide who is connected to whom at each layer level.  As consequence , onion routers can only identify previous and next hops in the network and any anonymous connection appears different at each router.
+Although the evaluation of the method focuses on \textit{volume} anomalies, it is based on correlations of time-series from diverse links and its treatment as a spatial problem.  Therefore, the method can be extended to other types of anomalies.
 
-Overall, it is an interesting paper easy to read. In particular, I like sections 3 (Empirical Data) and 6 (Implementation Vulnerabilities).  Authors make an objective discussion of limitations during the evaluation of the prototype and possible drawbacks that should be taken into account.
-
+Overall, the paper is interesting and easy to read.  Particularly, it is more related to my area of interest (data mining). On that sense, it is well-known that PCA is quite expensive in terms of execution time.  I would like to know if other techniques for time-series anomaly detection were considered.  Anytime clustering of time-series has shown very efficient results in the analysis of real-time complex problems.
 % \begin{thebibliography}{9}
 % \bibitem{github} 
 % Andres Calderon.
