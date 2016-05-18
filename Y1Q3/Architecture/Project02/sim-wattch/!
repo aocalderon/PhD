@@ -1,0 +1,208 @@
+sim-outorder: SimpleScalar/Alpha Tool Set version 3.0 of August, 2003.
+Copyright (c) 1994-2003 by Todd M. Austin, Ph.D. and SimpleScalar, LLC.
+All Rights Reserved. This version of SimpleScalar is licensed for academic
+non-commercial use.  No portion of this work may be used by any commercial
+entity, or for any commercial purpose, without the prior written permission
+of SimpleScalar, LLC (info@simplescalar.com).
+
+
+Processor Parameters:
+Issue Width: 4
+Window Size: 16
+Number of Virtual Registers: 32
+Number of Physical Registers: 16
+Datapath Width: 64
+Total Power Consumption: 73.7882
+Branch Predictor Power Consumption: 4.52313  (6.3%)
+ branch target buffer power (W): 4.16837
+ local predict power (W): 0.0879711
+ global predict power (W): 0.0996078
+ chooser power (W): 0.0702439
+ RAS power (W): 0.0969383
+Rename Logic Power Consumption: 0.417965  (0.582%)
+ Instruction Decode Power (W): 0.0159915
+ RAT decode_power (W): 0.113514
+ RAT wordline_power (W): 0.0307815
+ RAT bitline_power (W): 0.246771
+ DCL Comparators (W): 0.0109075
+Instruction Window Power Consumption: 2.20432  (3.07%)
+ tagdrive (W): 0.0943488
+ tagmatch (W): 0.033695
+ Selection Logic (W): 0.0134217
+ decode_power (W): 0.0532503
+ wordline_power (W): 0.0844643
+ bitline_power (W): 1.92514
+Load/Store Queue Power Consumption: 0.96318  (1.34%)
+ tagdrive (W): 0.457232
+ tagmatch (W): 0.100774
+ decode_power (W): 0.00799577
+ wordline_power (W): 0.0150119
+ bitline_power (W): 0.382166
+Arch. Register File Power Consumption: 3.57247  (4.98%)
+ decode_power (W): 0.113514
+ wordline_power (W): 0.0844643
+ bitline_power (W): 3.37449
+Result Bus Power Consumption: 2.29754  (3.2%)
+Total Clock Power: 26.0975  (36.4%)
+Int ALU Power: 4.66013  (6.49%)
+FP ALU Power: 14.281  (19.9%)
+Instruction Cache Power Consumption: 2.21363  (3.08%)
+ decode_power (W): 0.779481
+ wordline_power (W): 0.028656
+ bitline_power (W): 0.886372
+ senseamp_power (W): 0.096
+ tagarray_power (W): 0.423116
+Itlb_power (W): 0.263317 (0.367%)
+Data Cache Power Consumption: 5.18303  (7.22%)
+ decode_power (W): 0.651055
+ wordline_power (W): 0.196735
+ bitline_power (W): 2.71235
+ senseamp_power (W): 0.768
+ tagarray_power (W): 0.854886
+Dtlb_power (W): 0.901877 (1.26%)
+Level 2 Cache Power Consumption: 4.2091 (5.86%)
+ decode_power (W): 0.41817
+ wordline_power (W): 0.0430878
+ bitline_power (W): 3.0244
+ senseamp_power (W): 0.192
+ tagarray_power (W): 0.531433
+fatal: cannot open executable `test-math'
+
+Cache Parameters:
+  Size in bytes: 16384
+  Number of sets: 512
+  Associativity: 4
+  Block Size (bytes): 8
+
+Access Time: 9.27925e-09
+Cycle Time:  1.09081e-08
+
+Best Ndwl (L1): 8
+Best Ndbl (L1): 1
+Best Nspd (L1): 1
+Best Ntwl (L1): 1
+Best Ntbl (L1): 4
+Best Ntspd (L1): 1
+
+Time Components:
+ data side (with Output driver) (ns): 8.44162
+ tag side (ns): 8.55667
+ decode_data (ns): 5.29318
+ wordline_data (ns): 1.03507
+ bitline_data (ns): 0.810785
+ sense_amp_data (ns): 0.58
+ decode_tag (ns): 2.37065
+ wordline_tag (ns): 1.36749
+ bitline_tag (ns): 0.158246
+ sense_amp_tag (ns): 0.26
+ compare (ns): 2.42991
+ mux driver (ns): 1.6125
+ sel inverter (ns): 0.357877
+ data output driver (ns): 0.722579
+ total data path (with output driver) (ns): 7.71904
+ total tag path is set assoc (ns): 8.55667
+ precharge time (ns): 1.6289
+
+Cache Parameters:
+  Size in bytes: 16384
+  Number of sets: 512
+  Associativity: 1
+  Block Size (bytes): 32
+
+Access Time: 6.07496e-09
+Cycle Time:  7.99836e-09
+
+Best Ndwl (L1): 2
+Best Ndbl (L1): 2
+Best Nspd (L1): 1
+Best Ntwl (L1): 1
+Best Ntbl (L1): 2
+Best Ntspd (L1): 2
+
+Time Components:
+ data side (with Output driver) (ns): 6.07496
+ tag side (ns): 6.05737
+ decode_data (ns): 2.92313
+ wordline_data (ns): 1.32956
+ bitline_data (ns): 0.452976
+ sense_amp_data (ns): 0.58
+ decode_tag (ns): 1.84499
+ wordline_tag (ns): 0.825016
+ bitline_tag (ns): 0.252886
+ sense_amp_tag (ns): 0.26
+ compare (ns): 2.30022
+ valid signal driver (ns): 0.574251
+ data output driver (ns): 0.789293
+ total data path (with output driver) (ns): 5.28567
+ total tag path is dm (ns): 6.05737
+ precharge time (ns): 1.92339
+
+Cache Parameters:
+  Size in bytes: 16384
+  Number of sets: 128
+  Associativity: 4
+  Block Size (bytes): 32
+
+Access Time: 9.14093e-09
+Cycle Time:  1.11718e-08
+
+Best Ndwl (L1): 4
+Best Ndbl (L1): 2
+Best Nspd (L1): 1
+Best Ntwl (L1): 1
+Best Ntbl (L1): 2
+Best Ntspd (L1): 1
+
+Time Components:
+ data side (with Output driver) (ns): 6.05114
+ tag side (ns): 7.98848
+ decode_data (ns): 2.92572
+ wordline_data (ns): 1.437
+ bitline_data (ns): -0.0440331
+ sense_amp_data (ns): 0.58
+ decode_tag (ns): 1.46851
+ wordline_tag (ns): 1.27791
+ bitline_tag (ns): -0.0315811
+ sense_amp_tag (ns): 0.26
+ compare (ns): 2.29478
+ mux driver (ns): 2.37376
+ sel inverter (ns): 0.345094
+ data output driver (ns): 1.15245
+ total data path (with output driver) (ns): 4.89869
+ total tag path is set assoc (ns): 7.98848
+ precharge time (ns): 2.03083
+
+Cache Parameters:
+  Size in bytes: 262144
+  Number of sets: 1024
+  Associativity: 4
+  Block Size (bytes): 64
+
+Access Time: 1.44948e-08
+Cycle Time:  1.76863e-08
+
+Best Ndwl (L1): 2
+Best Ndbl (L1): 2
+Best Nspd (L1): 1
+Best Ntwl (L1): 1
+Best Ntbl (L1): 4
+Best Ntspd (L1): 1
+
+Time Components:
+ data side (with Output driver) (ns): 11.3269
+ tag side (ns): 12.2049
+ decode_data (ns): 4.99158
+ wordline_data (ns): 2.59771
+ bitline_data (ns): 0.867749
+ sense_amp_data (ns): 0.58
+ decode_tag (ns): 4.52586
+ wordline_tag (ns): 1.24192
+ bitline_tag (ns): 0.46158
+ sense_amp_tag (ns): 0.26
+ compare (ns): 2.17054
+ mux driver (ns): 3.21212
+ sel inverter (ns): 0.332908
+ data output driver (ns): 2.28987
+ total data path (with output driver) (ns): 9.03704
+ total tag path is set assoc (ns): 12.2049
+ precharge time (ns): 3.19154

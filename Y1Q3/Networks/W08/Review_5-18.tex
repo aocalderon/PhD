@@ -1,0 +1,36 @@
+\documentclass[a4paper,10pt]{scrartcl}
+\usepackage[hmargin=2.5cm,vmargin=3cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\hypersetup{
+colorlinks=false,
+hidelinks
+}
+
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0.5em}
+
+%opening
+\title{Paper Review 5/13}
+\author{Andres Calderon - SID:861243796}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+
+\section*{Anonymous Connections and Onion Routing (Reed et al., 1998)}
+The paper describes how an implementation of anonymous connections, onion routing, can protect diverse Internet services in a private communication, particularly eavesdropping and traffic analysis. In addition, the papers provides the specification to implements new applications using onion routing.  Some characteristics of onion routing are real-time and bidirectional communication and application independence.
+
+Onion routing networks allow data protection through onion routers, proxies and a data structure called \textit{onion}. When an anonymous connection is established through proxies, they hide who is connected to whom at each layer level.  As consequence , onion routers can only identify previous and next hops in the network and any anonymous connection appears different at each router.
+
+Overall, it is an interesting paper easy to read. In particular, I like sections 3 (Empirical Data) and 6 (Implementation Vulnerabilities).  Authors make an objective discussion of limitations during the evaluation of the prototype and possible drawbacks that should be taken into account.
+
+% \begin{thebibliography}{9}
+% \bibitem{github} 
+% Andres Calderon.
+% \textit{GitHub Personal Repository}, 2015. 
+% \url{https://github.com/aocalderon/PhD/tree/master/Y1Q1/GPU/lab3}.
+% \end{thebibliography}
+
+\end{document}
