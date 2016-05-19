@@ -4935,13 +4935,13 @@ sim_main(void)
 /* CS 203A Declaring VSF and FSF          */	       
 /******************************************/	      
       
-      if(sim_cycle % 1 == 0){
+      if(sim_cycle % 100000 == 0){
 		n_cycles = sim_cycle - previous_sim_cycles;
 		total = total - previous_total;
 		avg_total = total / n_cycles;  
 		//printf("TOTAL : %f\n", total);
 		//printf("N_CYCLES : %d\n", n_cycles);
-		printf("AVG_TOTAL : %f\n", avg_total);
+		//printf("AVG_TOTAL : %f\n", avg_total);
 		fprintf(output,"AVG_TOTAL : %f\n", avg_total);
 		//printf("VSF : %f\n", VSF);
 		if(avg_total > 100000){
