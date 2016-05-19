@@ -640,7 +640,7 @@ void update_power_stats()
   /***********************************/
   /* CS 203A Computing total         */
   /***********************************/	
-  total += total_cycle_power_cc3;
+  total += total_cycle_power_cc2;
 }
 
 void

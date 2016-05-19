@@ -225,11 +225,15 @@ exit_now(int exit_code)
   exit(exit_code);
 }
 
+FILE * output;
+
 int
 main(int argc, char **argv, char **envp)
 {
   char *s;
   int i, exit_code;
+  
+  output = fopen ("test.txt","w");
 
 #ifndef _MSC_VER
   /* catch SIGUSR1 and dump intermediate stats */
@@ -417,6 +421,7 @@ main(int argc, char **argv, char **envp)
   sim_main();
 
   /* simulation finished early */
+  fclose(output);
   exit_now(0);
 
   return 0;

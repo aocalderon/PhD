@@ -112,7 +112,7 @@ static float previous_total = 0;
 static tick_t previous_sim_cycles = 0;
 float avg_total;
 tick_t n_cycles;
-
+extern FILE * output;
 /******************************************/	       
 /*                                        */	       
 /******************************************/	
@@ -4935,21 +4935,20 @@ sim_main(void)
 /* CS 203A Declaring VSF and FSF          */	       
 /******************************************/	      
       
-      if(sim_cycle % 500 == 0){
+      if(sim_cycle % 1 == 0){
 		n_cycles = sim_cycle - previous_sim_cycles;
 		total = total - previous_total;
 		avg_total = total / n_cycles;  
 		//printf("TOTAL : %f\n", total);
 		//printf("N_CYCLES : %d\n", n_cycles);
 		printf("AVG_TOTAL : %f\n", avg_total);
+		fprintf(output,"AVG_TOTAL : %f\n", avg_total);
 		//printf("VSF : %f\n", VSF);
 		if(avg_total > 100000){
 			VSF -= 0.2;
 		}
 		previous_sim_cycles = sim_cycle;
-		previous_total = total;
-		printf("TOTAL : %f\n", total);
-		printf("PREVIOUS_TOTAL : %f\n", previous_total);
+		previous_total += total;
 	  }
 	  
 /******************************************/	       
