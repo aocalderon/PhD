@@ -114,6 +114,7 @@ float DVFSTargetPower;
 float total;
 float previous_total = 0;
 float avg_total;
+float power_factor;
 tick_t previous_sim_cycles = 0;
 tick_t n_cycles;
 extern FILE * output;
@@ -4945,7 +4946,7 @@ sim_main(void)
 			FSF += DVFSIncrement;
 		}
 		
-		fprintf(output,"%f:%f:%f:%f\n", total, avg_total, VSF, FSF);
+		fprintf(output,"%f:%f:%f:%f:%f\n", total, avg_total, VSF, FSF, power_factor);
 		previous_sim_cycles = sim_cycle;
 		previous_total += total;
 	  }
