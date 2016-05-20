@@ -59,6 +59,7 @@ extern float FSF;
 #define Powerfactor (FSF)*(Mhz)*(VSF*VSF)*Vdd*Vdd
 //#define Powerfactor (Mhz)*Vdd*Vdd
 extern float total;
+extern float power_factor;
 
 /******************************************/	       
 /*                                        */	       
@@ -644,6 +645,7 @@ void update_power_stats()
   /* CS 203A Computing total power per cycle                                      */
   /********************************************************************************/	
   total += total_cycle_power_cc1 + total_cycle_power_cc2 + total_cycle_power_cc3;
+  power_factor = Powerfactor;
 
   /********************************************************************************/	
   /*                                                                              */
