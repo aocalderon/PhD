@@ -277,12 +277,14 @@
 /******************************************/	       
 /* CS 203A Defining a new Power factor    */	       
 /******************************************/
-//extern float *pVSF;
-//extern float *pFSF;
+extern float VSF;
+extern float FSF;
+#define Powerfactor (FSF)*(Mhz)*(VSF*VSF)*Vdd*Vdd
+//#define Powerfactor (Mhz)*Vdd*Vdd
 
-//#define Powerfactor (*pFSF)*(Mhz)*(*pVSF)*(*pVSF)*Vdd*Vdd
-#define Powerfactor (Mhz)*Vdd*Vdd
-
+/******************************************/	       
+/*                                        */	       
+/******************************************/
 
 #define SensePowerfactor3 (Mhz)*(Vbitsense)*(Vbitsense)
 #define SensePowerfactor2 (Mhz)*(Vbitpre-Vbitsense)*(Vbitpre-Vbitsense)

@@ -53,13 +53,16 @@
 /******************************************/	       
 /* CS 203A Defining a new Power factor    */	       
 /******************************************/
-//extern float *pVSF;
-//extern float *pFSF;
 
-//#define Powerfactor (*pFSF)*(Mhz)*(*pVSF)*(*pVSF)*Vdd*Vdd
-#define Powerfactor (Mhz)*Vdd*Vdd
-
+extern float VSF;
+extern float FSF;
+#define Powerfactor (FSF)*(Mhz)*(VSF*VSF)*Vdd*Vdd
+//#define Powerfactor (Mhz)*Vdd*Vdd
 extern float total;
+
+/******************************************/	       
+/*                                        */	       
+/******************************************/
 
 #define LowSwingPowerfactor (Mhz)*.2*.2
 /* set scale for crossover (vdd->gnd) currents */
@@ -637,10 +640,15 @@ void update_power_stats()
   last_single_total_cycle_power_cc2 = total_cycle_power_cc2;
   last_single_total_cycle_power_cc3 = total_cycle_power_cc3;
 	
-  /***********************************/
-  /* CS 203A Computing total         */
-  /***********************************/	
-  total += total_cycle_power_cc3;
+  /********************************************************************************/
+  /* CS 203A Computing total power per cycle                                      */
+  /********************************************************************************/	
+  total += total_cycle_power_cc1 + total_cycle_power_cc2 + total_cycle_power_cc3;
+
+  /********************************************************************************/	
+  /*                                                                              */
+  /********************************************************************************/	
+  
 }
 
 void
@@ -907,7 +915,7 @@ power_reg_stats(struct stat_sdb_t *sdb)	/* stats database */
 /******************************************/	
   stat_reg_formula(sdb, "avg_power", "Our metric","avg_total_power_cycle_cc1+avg_total_power_cycle_cc2+avg_total_power_cycle_cc3", NULL);
   
-  stat_reg_formula(sdb, "testing", "Our metric","PowerFactor", NULL);
+  //stat_reg_formula(sdb, "Powerfactor", "Our metric","Powerfactor", NULL);
   
 
   stat_reg_counter(sdb, "total_rename_access", "total number accesses of rename unit", &total_rename_access, 0, NULL);

@@ -99,20 +99,25 @@ static struct mem_t *mem = NULL;
 /******************************************/	       
 /* CS 203A Declaring VSF and FSF          */	       
 /******************************************/	
-static float VSF;
-static float FSF;
-float *pVSF = &VSF;
-float *pFSF = &FSF;
-float total;
-static float previous_total = 0;
+float VSF = 1.0;
+float FSF = 1.0;
+
+/******************************************/	       
+/* CS 203A Declaring arguments            */	       
+/******************************************/	
+int DVFSInterval;
+float DVFSTargetPower;
 
 /******************************************/	       
 /* CS 203A Declaring auxiliar varibles    */	       
 /******************************************/
-static tick_t previous_sim_cycles = 0;
+float total;
+float previous_total = 0;
 float avg_total;
+tick_t previous_sim_cycles = 0;
 tick_t n_cycles;
 extern FILE * output;
+
 /******************************************/	       
 /*                                        */	       
 /******************************************/	
@@ -670,13 +675,17 @@ sim_reg_options(struct opt_odb_t *odb)
 /******************************************/	       
 /* CS 203A Catching VSF and FSF from user */	       
 /******************************************/	       
-  opt_reg_float(odb, "-VSF:n", "Testing",
-	       &VSF, /* default */1.0,
+  opt_reg_int(odb, "-DVFSInterval:n", "Number of cycles for power monitoring interval",
+	       &DVFSInterval, /* default */100000,
 	       /* print */TRUE, /* format */NULL);
 	       
-  opt_reg_float(odb, "-FSF:n", "Testing",
-	       &FSF, /* default */1.0,
+  opt_reg_float(odb, "-DVFSTargetPower:n", "Target power budget controlled at each interval",
+	       &DVFSTargetPower, /* default */6000000.0,
 	       /* print */TRUE, /* format */NULL);	 
+
+/******************************************/	       
+/*                                        */	       
+/******************************************/	
 
   /* trace options */
 
@@ -1324,20 +1333,6 @@ sim_reg_stats(struct stat_sdb_t *sdb)   /* stats database */
   stat_reg_counter(sdb, "sim_cycle",
 		   "total simulation time in cycles",
 		   &sim_cycle, /* initial value */0, /* format */NULL);
-		   
-/******************************************/	       
-/* CS 203A Catching VSF and FSF from user */	       
-/******************************************/	
-//	   
-//  stat_reg_float(sdb, "VSF",
-//		   "Voltage scaling factor",
-//		   &VSF, /* initial value */1.0, /* format */NULL);
-//  stat_reg_float(sdb, "FSF",
-//		   "Frequency scaling factor",
-//		   &FSF, /* initial value */1.0, /* format */NULL);		   		   
-		   
-		   
-		   
   stat_reg_formula(sdb, "sim_IPC",
 		   "instructions per cycle",
 		   "sim_num_insn / sim_cycle", /* format */NULL);
@@ -4933,20 +4928,24 @@ sim_main(void)
       
 /******************************************/	       
 /* CS 203A Declaring VSF and FSF          */	       
-/******************************************/	      
-      
-      if(sim_cycle % 100000 == 0){
+/******************************************/
+      float DVFSIncrement = 0.1;
+            
+      if(sim_cycle % DVFSInterval == 0){
 		n_cycles = sim_cycle - previous_sim_cycles;
 		total = total - previous_total;
-		avg_total = total / n_cycles;  
-		//printf("TOTAL : %f\n", total);
-		//printf("N_CYCLES : %d\n", n_cycles);
-		//printf("AVG_TOTAL : %f\n", avg_total);
-		fprintf(output,"AVG_TOTAL : %f\n", avg_total);
-		//printf("VSF : %f\n", VSF);
-		if(avg_total > 100000){
-			VSF -= 0.2;
+		avg_total = total / n_cycles; 
+		 
+		if(total > DVFSTargetPower){
+			VSF -= DVFSIncrement;
+			FSF -= DVFSIncrement;
+		} 
+		if(total < DVFSTargetPower){
+			VSF += DVFSIncrement;
+			FSF += DVFSIncrement;
 		}
+		
+		fprintf(output,"%f:%f:%f:%f\n", total, avg_total, VSF, FSF);
 		previous_sim_cycles = sim_cycle;
 		previous_total += total;
 	  }
