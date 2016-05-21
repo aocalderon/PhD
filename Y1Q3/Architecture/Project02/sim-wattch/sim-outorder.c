@@ -107,17 +107,20 @@ float FSF = 1.0;
 /******************************************/	
 int DVFSInterval;
 float DVFSTargetPower;
+float DVFSIncrement;
+int DVFSTurnOff;
 
 /******************************************/	       
 /* CS 203A Declaring auxiliar varibles    */	       
 /******************************************/
 #define Mhz 600e6
+float power_this_interval;
 float total;
 float previous_total = 0;
-float avg_total;
+float avg_power;
 float power_factor;
-tick_t previous_sim_cycles = 0;
-tick_t n_cycles;
+// tick_t previous_sim_cycles = 0;
+// tick_t n_cycles;
 extern FILE * output;
 
 /******************************************/	       
@@ -684,6 +687,14 @@ sim_reg_options(struct opt_odb_t *odb)
   opt_reg_float(odb, "-DVFSTargetPower", "Target power budget controlled at each interval",
 	       &DVFSTargetPower, /* default */6000000.00,
 	       /* print */TRUE, /* format */"%12.2f");	 
+
+  opt_reg_float(odb, "-DVFSIncrement", "Increment for scaling of Voltage and Frequency",
+	       &DVFSIncrement, /* default */0.1,
+	       /* print */TRUE, /* format */"%12.1f");	 
+	       
+  opt_reg_flag(odb, "-DVFSTurnOff", "Do not execute the DVFS controller",
+	       &DVFSTurnOff, /* default */FALSE,
+	       /* print */TRUE, /* format */NULL);	       
 
 /******************************************/	       
 /*                                        */	       
@@ -4928,33 +4939,32 @@ sim_main(void)
       /* go to next cycle */
       sim_cycle++;
       
-/******************************************/	       
-/* CS 203A Declaring VSF and FSF          */	       
-/******************************************/
-      float DVFSIncrement = 0.1;
+/************************************************************************************************/	       
+/* CS 203A DVFS Controller                                                                      */	       
+/************************************************************************************************/	       
             
       if(sim_cycle % DVFSInterval == 0){
-		n_cycles = sim_cycle - previous_sim_cycles;
-		total = total - previous_total;
-		avg_total = total / n_cycles; 
-		 
-		if(total > DVFSTargetPower && VSF > 0.2){
-			VSF -= DVFSIncrement;
-			FSF -= DVFSIncrement;
-		} 
-		if(total < DVFSTargetPower && VSF < 10.0){
-			VSF += DVFSIncrement;
-			FSF += DVFSIncrement;
+		power_this_interval = total - previous_total;
+		avg_power = power_this_interval / DVFSInterval; 
+		
+		if(DVFSTurnOff == FALSE){
+			if(avg_power > DVFSTargetPower && VSF > 0.1){
+				VSF -= DVFSIncrement;
+				FSF -= DVFSIncrement;
+			} 
+			if(avg_power < DVFSTargetPower && VSF < 10.0){
+				VSF += DVFSIncrement;
+				FSF += DVFSIncrement;
+			}
 		}
 		
-		fprintf(output,"%f:%f:%f:%f:%f:%f\n", total, avg_total, VSF, FSF, power_factor, FSF*Mhz);
-		previous_sim_cycles = sim_cycle;
-		previous_total += total;
+		fprintf(output,"%f:%f:%f:%f:%f:%f\n", power_this_interval, avg_power, VSF, FSF, power_factor, FSF*Mhz);
+		previous_total += power_this_interval;
 	  }
 	  
-/******************************************/	       
-/* CS 203A                                */	       
-/******************************************/      
+/************************************************************************************************/	       
+/*                                                                                              */	       
+/************************************************************************************************/	       
 
       /* finish early? */
       if (max_insts && sim_num_insn >= max_insts)

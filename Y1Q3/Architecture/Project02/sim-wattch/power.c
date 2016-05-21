@@ -912,13 +912,16 @@ power_reg_stats(struct stat_sdb_t *sdb)	/* stats database */
 
   stat_reg_formula(sdb, "avg_total_power_insn_cc3", "average total power per insn_cc3","(rename_power_cc3 + bpred_power_cc3 + lsq_power_cc3 + window_power_cc3 + regfile_power_cc3 + icache_power_cc3 + resultbus_power_cc3 + clock_power_cc3 + alu_power_cc3 + dcache_power_cc3 + dcache2_power_cc3)/sim_total_insn", NULL);
 
-/******************************************/	       
-/* CS 203A Calculating the average power */	       
-/******************************************/	
-  stat_reg_formula(sdb, "avg_power", "Our metric","avg_total_power_cycle_cc1+avg_total_power_cycle_cc2+avg_total_power_cycle_cc3", NULL);
+/****************************************************************************************************************************************/	       
+/* CS 203A Printing usefull statistics                                                                                                  */	       
+/****************************************************************************************************************************************/	       
+  stat_reg_formula(sdb, "avg_power", "Sum of average powers (cc1+cc2+cc3)","avg_total_power_cycle_cc1+avg_total_power_cycle_cc2+avg_total_power_cycle_cc3", NULL);
   
-  //stat_reg_formula(sdb, "Powerfactor", "Our metric","Powerfactor", NULL);
+  stat_reg_formula(sdb, "tot_power", "Sum of total powers (cc1+cc2+cc3)","total_power_cycle_cc1+total_power_cycle_cc2+total_power_cycle_cc3", NULL);
   
+/****************************************************************************************************************************************/	       
+/*                                                                                                                                      */	       
+/****************************************************************************************************************************************/	       
 
   stat_reg_counter(sdb, "total_rename_access", "total number accesses of rename unit", &total_rename_access, 0, NULL);
 
