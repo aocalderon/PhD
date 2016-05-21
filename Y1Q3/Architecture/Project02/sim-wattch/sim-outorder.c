@@ -111,6 +111,7 @@ float DVFSTargetPower;
 /******************************************/	       
 /* CS 203A Declaring auxiliar varibles    */	       
 /******************************************/
+#define Mhz 600e6
 float total;
 float previous_total = 0;
 float avg_total;
@@ -676,13 +677,13 @@ sim_reg_options(struct opt_odb_t *odb)
 /******************************************/	       
 /* CS 203A Catching VSF and FSF from user */	       
 /******************************************/	       
-  opt_reg_int(odb, "-DVFSInterval:n", "Number of cycles for power monitoring interval",
+  opt_reg_int(odb, "-DVFSInterval", "Number of cycles for power monitoring interval",
 	       &DVFSInterval, /* default */100000,
 	       /* print */TRUE, /* format */NULL);
 	       
-  opt_reg_float(odb, "-DVFSTargetPower:n", "Target power budget controlled at each interval",
-	       &DVFSTargetPower, /* default */6000000.0,
-	       /* print */TRUE, /* format */NULL);	 
+  opt_reg_float(odb, "-DVFSTargetPower", "Target power budget controlled at each interval",
+	       &DVFSTargetPower, /* default */6000000.00,
+	       /* print */TRUE, /* format */"%12.2f");	 
 
 /******************************************/	       
 /*                                        */	       
@@ -4937,16 +4938,16 @@ sim_main(void)
 		total = total - previous_total;
 		avg_total = total / n_cycles; 
 		 
-		if(total > DVFSTargetPower){
+		if(total > DVFSTargetPower && VSF > 0.2){
 			VSF -= DVFSIncrement;
 			FSF -= DVFSIncrement;
 		} 
-		if(total < DVFSTargetPower){
+		if(total < DVFSTargetPower && VSF < 10.0){
 			VSF += DVFSIncrement;
 			FSF += DVFSIncrement;
 		}
 		
-		fprintf(output,"%f:%f:%f:%f:%f\n", total, avg_total, VSF, FSF, power_factor);
+		fprintf(output,"%f:%f:%f:%f:%f:%f\n", total, avg_total, VSF, FSF, power_factor, FSF*Mhz);
 		previous_sim_cycles = sim_cycle;
 		previous_total += total;
 	  }
