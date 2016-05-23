@@ -1,26 +1,26 @@
 interval = 100000
-target = 5400000
+target = 7425842
 increment = 0.2
 
 turnoff = FALSE
-output = 'output1'
-DVFSOn = runSim_OutOrderGo(interval,target,increment,turnoff,output)
+output = 'output3'
+DVFSOn = runSim_OutOrderAnagram(interval,target,increment,turnoff,output)
 plotIntervals(DVFSOn, target)
-output1 = getPowerMetrics('output1')
+output1 = getPowerMetrics('output3')
 
 turnoff = TRUE
-output = 'output2'
-DVFSOff = runSim_OutOrderGo(interval,target,increment,turnoff,output)
+output = 'output4'
+DVFSOff = runSim_OutOrderAnagram(interval,target,increment,turnoff,output)
 plotIntervals(DVFSOff, target)
-output2 = getPowerMetrics('output2')
+output2 = getPowerMetrics('output4')
 
 print(paste0("DVFS Controller ON"))
 print(summary(DVFSOn))
 print(paste0("DVFS Controller OFF"))
 print(summary(DVFSOff))
 
-print(getTotalPower('output1'))
-print(getTotalPower('output2'))
+print(getTotalPower('output3'))
+print(getTotalPower('output4'))
 
 data = merge(output1, output2, by='metric')
 names(data) = c('metric','DVFS','Baseline')

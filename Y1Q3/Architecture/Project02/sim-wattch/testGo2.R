@@ -1,18 +1,20 @@
-interval = 10000
-increment = 0.1
-app = "go"
+interval = 100000
+increment = 0.2
 turnoff = FALSE
-tot_powers1 = c()
+tot_powers = c()
 
-targets = seq(40000,80000,2500)
+targets = seq(5000000,7000000,100000)
+n = length(targets)
+i = 1
 for(target in targets){
-  runSim_OutOrder(app,interval,target,increment,turnoff,'output1')
-  tot_powers1 = c(tot_powers1, getTotalPower('output1'))
-  print('*')
+  runSim_OutOrderGo(interval,target,increment,turnoff,'output1')
+  tot_powers = c(tot_powers, getTotalPower('output1'))
+  print(paste0('* ',i,'/',n))
+  i = i + 1
 }
 
 turnoff = TRUE
-runSim_OutOrder(app,interval,target,increment,turnoff,'output2')
+runSim_OutOrderGo(interval,target,increment,turnoff,'output2')
 baseline = getTotalPower('output2')
 
 plot(targets, tot_powers,type = 'l',col=4)
