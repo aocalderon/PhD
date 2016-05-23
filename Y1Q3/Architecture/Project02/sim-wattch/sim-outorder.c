@@ -4948,11 +4948,11 @@ sim_main(void)
 		avg_power = power_this_interval / DVFSInterval; 
 		
 		if(DVFSTurnOff == FALSE){
-			if(avg_power > DVFSTargetPower && VSF > 0.1){
+			if(power_this_interval > DVFSTargetPower && VSF > 0.3){
 				VSF -= DVFSIncrement;
 				FSF -= DVFSIncrement;
 			} 
-			if(avg_power < DVFSTargetPower && VSF < 10.0){
+			if(power_this_interval < DVFSTargetPower && VSF < 10.0){
 				VSF += DVFSIncrement;
 				FSF += DVFSIncrement;
 			}
