@@ -31,7 +31,7 @@ hidelinks
 \maketitle
 
 \section{DVFS controller implementation}
-In order to implement the requested controller we start capturing the user parameters for the number of cycles per interval (DVFSInterval) and the target power (DVFSTargetPower) in the file \texttt{sim-ourorder.c}.  We did that using the \texttt{opt\_reg\_*} functions already provided by the code (listing \ref{lst:capturing}).  With these values we implement the controller as it is shown in listing \ref{lst:controller}.  Listing \ref{lst:declaration} shows the variable we used.
+In order to implement the requested controller we start capturing the user parameters for the number of cycles per interval (DVFSInterval) and the target power (DVFSTargetPower) in the file \texttt{sim-ourorder.c}.  We did that using the \texttt{opt\_reg\_*} functions already provided by the code (listing \ref{lst:capturing}).  With these values we implement the controller as it is shown in listing \ref{lst:controller}.  Listing \ref{lst:declaration} shows the variables we used.
 
 In addition, we did modifications on files \texttt{power.c} and \texttt{power.h} to adapt the formula for power factor according to the changes in VSF and FSF values (listing \ref{lst:powerfactor}).  Also, we capture the total power per cycle for each interval at the end of the \texttt{update\_power\_stats} function (listing \ref{lst:totalpower}).
 
@@ -104,10 +104,10 @@ In addition, we did modifications on files \texttt{power.c} and \texttt{power.h}
 \FloatBarrier
 
 \section{Experiments}
-To run the experiment we select target power at each case without having the controller working. For go, we found that the average total power consumption was around 5400000.  In the case of Anagram the average power consumption was 7400000.  We modified the upper bound of the scaling factor to 10 in order to get a more wide range of possible values.
+To run the experiments we select target power at each case without having the controller working. For Go, we found that the average total power consumption was around 5400000 W.  In the case of Anagram the average power consumption was 7400000 W.  We modified the upper bound of the scaling factor to 10 in order to get a more wide range of possible values.
 
-\subsection{Go}
-Given time restriction we limit the number of instruction for this experiment to 50 million using the \texttt{-max:inst} parameter.  Table \ref{tab:go} summarizes the results of the experiment.  When we use the controller,  we can see that while the total and average power consumption is better, the execution time increases.  Figures \ref{fig:go1} and \ref{fig:go2} show the change on the scaling factors and the corresponding total power consumption respectively at each interval.  The red line on figure \ref{fig:go2} marks the target power.  We can see that the power remains around the target.
+\subsection{Results for Go}
+Given time restriction we limit the number of instructions for this experiment to 50 million using the \texttt{-max:inst} parameter.  Table \ref{tab:go} summarizes the results of the experiment.  When we use the controller,  we can see that while the total and average power consumption decrease, the execution time increases.  Figures \ref{fig:go1} and \ref{fig:go2} show the change on the scaling factors and the corresponding total power consumption respectively at each interval.  The red line on figure \ref{fig:go2} marks the target power.  We can see that the power remains around the target.
 
 \begin{table}[h!]
 \centering
@@ -115,8 +115,8 @@ Given time restriction we limit the number of instruction for this experiment to
 \toprule
 & DVFS Controller & Baseline\\
 \midrule
-Total run-time & 731 ns & 610 ns \\
-Total energy consumption & 1998777579 & 2008539742 \\
+Total run-time & 0.0731 s & 0.0610 s \\
+Total energy consumption & 1998777579 W & 2008539742 W \\
 Average power consumption & 53.75 & 54.02 \\
 \bottomrule
 \end{tabular}
@@ -136,7 +136,7 @@ Average power consumption & 53.75 & 54.02 \\
 \end{figure}
 
 
-\subsection{Anagram}
+\subsection{Results for Anagram}
 We can see a similar behavior to the previous section.  Table \ref{tab:anagram} and Figures \ref{fig:anagram1} and \ref{fig:anagram2} summarize the results for this experiment.
 
 \begin{table}[h!]
@@ -145,8 +145,8 @@ We can see a similar behavior to the previous section.  Table \ref{tab:anagram} 
 \toprule
 & DVFS Controller & Baseline\\
 \midrule
-Total run-time & 444 ns & 418 ns \\
-Total energy consumption & 1880593561 & 1893120690 \\
+Total run-time & 0.0444 s & 0.0418 s \\
+Total energy consumption & 1880593561 W & 1893120690 W\\
 Average power consumption & 74.33 & 74.82 \\
 \bottomrule
 \end{tabular}
