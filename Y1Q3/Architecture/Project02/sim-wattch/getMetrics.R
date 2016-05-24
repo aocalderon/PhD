@@ -44,7 +44,7 @@ runSim_OutOrder <- function(app, interval, target, increment = 0.1, turnoff = FA
 
 runSim_OutOrderGo <- function(interval, target, increment = 0.1, turnoff = FALSE, output){
   command = ""
-  command = paste0(command, "./sim-outorder -max:inst 1000000") 
+  command = paste0(command, "./sim-outorder -max:inst 50000000") 
   command = paste0(command, " -DVFSInterval ",format(interval,scientific=F))
   command = paste0(command, " -DVFSTargetPower ",format(target,scientific=F))
   command = paste0(command, " -DVFSTurnOff ",turnoff)
@@ -74,6 +74,6 @@ runSim_OutOrderAnagram <- function(interval, target, increment = 0.1, turnoff = 
 
 plotIntervals <- function(dd, target){
   plot(1:nrow(dd), dd$V1, type = 'l', xlab='Iteration', ylab='Total Power per Cycle',col=4)
-  abline(h=mean(dd$V1), col=4, lwd=1, lty=2)
+  # abline(h=mean(dd$V1), col=4, lwd=1, lty=2)
   abline(h=target, col=2, lwd=1, lty=2)
 }

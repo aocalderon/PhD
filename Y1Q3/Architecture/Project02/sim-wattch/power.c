@@ -57,7 +57,6 @@
 extern float VSF;
 extern float FSF;
 #define Powerfactor (FSF)*(Mhz)*(VSF*VSF)*Vdd*Vdd
-//#define Powerfactor (Mhz)*Vdd*Vdd
 extern float total;
 extern float power_factor;
 
@@ -645,7 +644,6 @@ void update_power_stats()
   /* CS 203A Computing total power per cycle                                      */
   /********************************************************************************/	
   total += total_cycle_power_cc1 + total_cycle_power_cc2 + total_cycle_power_cc3;
-  power_factor = Powerfactor;
 
   /********************************************************************************/	
   /*                                                                              */
@@ -988,8 +986,6 @@ power_reg_stats(struct stat_sdb_t *sdb)	/* stats database */
   stat_reg_double(sdb, "max_cycle_power_cc2", "maximum cycle power usage of cc2", &max_cycle_power_cc2, 0, NULL);
 
   stat_reg_double(sdb, "max_cycle_power_cc3", "maximum cycle power usage of cc3", &max_cycle_power_cc3, 0, NULL);
-
-	printf("\n\n!!!!!!!! Powerfactor == %lf\n\n",Powerfactor);
 }
 
 
