@@ -1,3 +1,4 @@
+source('getMetrics.R')
 interval = 100000
 target = 7425842
 increment = 0.2

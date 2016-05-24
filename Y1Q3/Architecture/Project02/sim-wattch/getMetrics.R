@@ -48,7 +48,7 @@ runSim_OutOrderGo <- function(interval, target, increment = 0.1, turnoff = FALSE
   command = paste0(command, " -DVFSInterval ",format(interval,scientific=F))
   command = paste0(command, " -DVFSTargetPower ",format(target,scientific=F))
   command = paste0(command, " -DVFSTurnOff ",turnoff)
-  command = paste0(command, " -DVFSIncrement ",increment)
+  #command = paste0(command, " -DVFSIncrement ",increment)
   command = paste0(command, " ../benchmarks/go.alpha 50 9 ../benchmarks/2stone9.in")
   command = paste0(command, " 2&> ", output)
   system(command, wait = TRUE)
@@ -57,13 +57,13 @@ runSim_OutOrderGo <- function(interval, target, increment = 0.1, turnoff = FALSE
   return(r)
 }
 
-runSim_OutOrderAnagram <- function(interval, target, increment = 0.1, turnoff = FALSE, output){
+runSim_OutOrderAnagram <- function(interval, target, increment = 0.2, turnoff = FALSE, output){
   command = ""
   command = paste0(command, "./sim-outorder ") 
   command = paste0(command, " -DVFSInterval ",format(interval,scientific=F))
   command = paste0(command, " -DVFSTargetPower ",format(target,scientific=F))
   command = paste0(command, " -DVFSTurnOff ",turnoff)
-  command = paste0(command, " -DVFSIncrement ",increment)
+  #command = paste0(command, " -DVFSIncrement ",increment)
   command = paste0(command, " ../benchmarks/anagram.alpha ../benchmarks/words < ../benchmarks/anagram.in")
   command = paste0(command, " 2&> ", output)
   system(command, wait = TRUE)
