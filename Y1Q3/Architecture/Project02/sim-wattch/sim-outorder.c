@@ -119,8 +119,6 @@ float total;
 float previous_total = 0;
 float avg_power;
 float power_factor;
-// tick_t previous_sim_cycles = 0;
-// tick_t n_cycles;
 extern FILE * output;
 
 /******************************************/	       
@@ -4943,7 +4941,7 @@ sim_main(void)
 /* CS 203A DVFS Controller                                                                      */	       
 /************************************************************************************************/	       
             
-      if(sim_cycle % DVFSInterval == 0){
+	if(sim_cycle % DVFSInterval == 0){
 		power_this_interval = total - previous_total;
 		avg_power = power_this_interval / DVFSInterval; 
 		
@@ -4951,16 +4949,16 @@ sim_main(void)
 			if(power_this_interval > DVFSTargetPower && VSF > 0.3){
 				VSF -= DVFSIncrement;
 				FSF -= DVFSIncrement;
-			} 
+			}
 			if(power_this_interval < DVFSTargetPower && VSF < 10.0){
 				VSF += DVFSIncrement;
 				FSF += DVFSIncrement;
 			}
 		}
 		
-		fprintf(output,"%f:%f:%f:%f:%f:%f\n", power_this_interval, avg_power, VSF, FSF, power_factor, FSF*Mhz);
+		fprintf(output,"%f:%f:%f:%f:%f\n", power_this_interval, avg_power, VSF, FSF, FSF*Mhz);
 		previous_total += power_this_interval;
-	  }
+	}
 	  
 /************************************************************************************************/	       
 /*                                                                                              */	       

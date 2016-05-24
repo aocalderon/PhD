@@ -1,0 +1,161 @@
+\documentclass[10pt]{scrartcl}
+\usepackage[hmargin=2.5cm,vmargin=3cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{pdflscape}
+\usepackage{minted}
+\usepackage{placeins}
+\usepackage{hyperref}
+\hypersetup{
+colorlinks=false,
+hidelinks
+}
+
+\setlength{\parindent}{1em}
+\setlength{\parskip}{0.5em}
+
+
+%opening
+\title{Project 2 Report}
+\author{
+   Christina Pavlopoulou\\
+  \small \texttt{cpavl001@ucr.edu}
+  \and
+   Andres Calderon\\
+  \small \texttt{acald013@ucr.edu}
+}
+
+\begin{document}
+\maketitle
+
+\section{DVFS controller implementation}
+In order to implement the requested controller we start capturing the user parameters for the number of cycles per interval (DVFSInterval) and the target power (DVFSTargetPower) in the file \texttt{sim-ourorder.c}.  We did that using the \texttt{opt\_reg\_*} functions already provided by the code (listing \ref{lst:capturing}).  With these values we implement the controller as it is shown in listing \ref{lst:controller}.  Listing \ref{lst:declaration} shows the variable we used.
+
+In addition, we did modifications on files \texttt{power.c} and \texttt{power.h} to adapt the formula for power factor according to the changes in VSF and FSF values (listing \ref{lst:powerfactor}).  Also, we capture the total power per cycle for each interval at the end of the \texttt{update\_power\_stats} function (listing \ref{lst:totalpower}).
+
+\begin{listing}
+  \inputminted[
+    fontsize=\footnotesize,
+    tabsize=2,
+    frame=single,
+    firstline=678,
+    firstnumber=678,
+    lastline=699,
+    linenos
+  ]{c}{sim-wattch/sim-outorder.c}
+  \caption{Capturing user parameters.}\label{lst:capturing}
+\end{listing}
+
+
+\begin{listing}
+  \inputminted[
+    fontsize=\footnotesize,
+    tabsize=2,
+    frame=single,
+    firstline=99,
+    firstnumber=99,
+    lastline=126,
+    linenos
+  ]{c}{sim-wattch/sim-outorder.c}
+  \caption{Declaration of variables.}\label{lst:declaration}
+\end{listing}
+
+\begin{listing}
+  \inputminted[
+    fontsize=\footnotesize,
+    tabsize=2,
+    frame=single,
+    firstline=4940,
+    firstnumber=4940,
+    lastline=4965,
+    linenos
+  ]{c}{sim-wattch/sim-outorder.c}
+  \caption{Source code DVFS controller.}\label{lst:controller}
+\end{listing}
+
+\begin{listing}
+  \inputminted[
+    fontsize=\footnotesize,
+    tabsize=2,
+    frame=single,
+    firstline=53,
+    firstnumber=53,
+    lastline=65,
+    linenos
+  ]{c}{sim-wattch/power.c}
+  \caption{Power factor modification.}\label{lst:powerfactor}
+\end{listing}
+
+\begin{listing}
+  \inputminted[
+    fontsize=\footnotesize,
+    tabsize=2,
+    frame=single,
+    firstline=643,
+    firstnumber=643,
+    lastline=650,
+    linenos
+  ]{c}{sim-wattch/power.c}
+  \caption{Computing total power per interval.}\label{lst:totalpower}
+\end{listing}
+
+\FloatBarrier
+
+\section{Experiments}
+To run the experiment we select target power at each case without having the controller working. For go, we found that the average total power consumption was around 5400000.  In the case of Anagram the average power consumption was 7400000.  We modified the upper bound of the scaling factor to 10 in order to get a more wide range of possible values.
+
+\subsection{Go}
+Given time restriction we limit the number of instruction for this experiment to 50 million using the \texttt{-max:inst} parameter.  Table \ref{tab:go} summarizes the results of the experiment.  When we use the controller,  we can see that while the total and average power consumption is better, the execution time increases.  Figures \ref{fig:go1} and \ref{fig:go2} show the change on the scaling factors and the corresponding total power consumption respectively at each interval.  The red line on figure \ref{fig:go2} marks the target power.  We can see that the power remains around the target.
+
+\begin{table}
+\centering
+\begin{tabular}{rcc}
+& DVFS Controller & Baseline\\
+Total run-time & 731 ns & 610 ns \\
+Total energy consumption & 1998777579 & 2008539742 \\
+Average power consumption & 53.75 & 54.02
+\end{tabular}
+\caption{Results Go experiment}\label{tab:go}
+\end{table}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.8\textwidth]{ScalingFactorsVsIteration}
+  \caption{Scaling factors VSF and FSF for each interval for the Go experiment.}\label{fig:go1}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.8\textwidth]{TotalPowerPerCycleVsIteration}
+  \caption{Total power per interval for the Go experiment.  Red line is the target power.}\label{fig:go2}
+\end{figure}
+
+
+\subsection{Anagram}
+We can see a similar behavior to the previous section.  Table \ref{tab:anagram} and Figures \ref{fig:anagram1} and \ref{fig:anagram2} summarize the results for this experiment.
+
+\begin{table}
+\centering
+\begin{tabular}{rcc}
+& DVFS Controller & Baseline\\
+Total run-time & 444 ns & 418 ns \\
+Total energy consumption & 1880593561 & 1893120690 \\
+Average power consumption & 74.33 & 74.82
+\end{tabular}
+\caption{Results Go experiment}\label{tab:anagram}
+\end{table}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.8\textwidth]{ScalingFactorsVsIterationAnagram}
+  \caption{Scaling factors VSF and FSF for each interval for the Anagram experiment.}\label{fig:anagram1}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.8\textwidth]{TotalPowerVsIterationAnagram}
+  \caption{Total power per interval for the Anagram experiment.  Red line is the target power.}\label{fig:anagram2}
+\end{figure}
+
+\end{document}
