@@ -1,0 +1,25 @@
+The modified files and some comments are described as follows:
+
+sim-outourder.c:
+	Main implementation of the DVFS controller.
+power.c and power.h:
+	Changes in the Powerfactor formula and computing of the total power
+	consumption per interval.
+main.c
+	Definition and declaration of a supporting file for collecting data.
+	At each run a file called 'test.txt' is created and stores the statistics
+	per interval (see line 4959 at sim-outorder.c).
+	
+We run the following commands for each test:
+
+For Go:
+
+./sim-outorder -max:inst 10000000 -DVFSInterval 100000 -DVFSTargetPower 500000 ../benchmarks/go.alpha 50 9 ../benchmarks/2stone9.in 
+
+For Anagram:
+
+./sim-outorder -DVFSInterval 100000 -DVFSTargetPower 7400000 ../benchmarks/anagram.alpha ../benchmarks/words < ../benchmarks/anagram.in
+
+In addition to the -DVFSInterval and -DVFSTargetPower parameters, we also
+implement the -DVFSTurnOff to check if the controller should run or not.
+A TRUE value for this parameter will turn off the controller.
