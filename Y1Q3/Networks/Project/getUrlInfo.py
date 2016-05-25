@@ -17,4 +17,4 @@ for url in f.readlines():
 	except socket.error, msg:
 		print ""
 	else:
-		print "{0};{1};{2};{3};{4};{5}".format(url,addr,lat,lon,g.city,g.state)
+		print(url+";"+addr+";"+str(lat)+";"+str(lon)+";"+g.city+";"+g.state)
