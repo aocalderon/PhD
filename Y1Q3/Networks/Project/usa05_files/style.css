@@ -1,0 +1,851 @@
+*{
+    margin: 0;
+    padding: 0;
+    border: 0;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none; 
+    user-select: none;
+    -webkit-user-drag: none;
+    user-drag: none;
+    cursor: pointer;
+    text-rendering: optimizeSpeed !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.container{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 728px;
+    height: 90px;
+    background-color: #fff;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    background-position: center;
+    border: 1px solid #000;
+    font-family:Arial, Helvetica, sans-serif;
+    overflow: hidden;
+}
+
+/*>>>>>>>>>>>>>>>>>>>>Regional<<<<<<<<<<<<<<<<<<<<<<*/
+
+.carImg {
+    position: absolute;
+    top: 0;
+    width: 726px;
+    height: 88px;
+    background-size: 728px auto;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.logo {
+    margin-top: -1px;
+    margin-left: 15px;
+    width: 39px;
+    height: 45px;
+    background: url(https://s0.2mdn.net/ads/richmedia/studio/34626472/9341_20141024101447186_tablet_728x90.jpg);
+    background-size: 39px 45px;
+    background-repeat: no-repeat;
+}
+
+.model {
+    position: absolute;
+    margin-left: 14px;
+    margin-right: 21px;
+    top: 50px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    color: #333333;
+    width: 120px;
+    line-height: 1.150em;
+}
+
+.model .year {
+    color: #d60041;
+}
+
+.model .name sup {
+    margin-left: 1px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 7px;
+    line-height: 0;
+}
+
+.cta {
+    position: absolute;
+    bottom: 52px;
+    width: 130px;
+    height: 28px;
+    right: 7px;
+    margin-left: auto;
+    margin-right: auto;
+    overflow: hidden;
+}
+ 
+.cta:hover.cta:before {
+    -webkit-transform: translateX(130px);
+    -ms-transform: translateX(130px);
+    -o-transform: translateX(130px);
+    transform: translateX(130px);
+    -webkit-transition-property: -webkit-transform;
+    -o-transition-property: -o-transform;
+    transition-property: transform;
+    -webkit-transition-duration: 750ms;
+    -o-transition-duration: 750ms;
+    transition-duration: 750ms;
+    -webkit-transition-timing-function: ease-in-out;
+    -o-transition-timing-function: ease-in-out;
+    transition-timing-function: ease-in-out;
+}
+ 
+.cta:before {
+    content: "";
+    position: absolute;
+    -webkit-transform: translateX(-130px);
+    -ms-transform: translateX(-130px);
+    -o-transform: translateX(-130px);
+    transform: translateX(-130px);
+    width: 130px;
+    height: 28px;
+    background-image: url(https://s0.2mdn.net/ads/richmedia/studio/34888994/9341_20141117085257285_gradient.png);
+    background-size: 130px auto;
+    opacity: 0.7;
+}
+
+.cta:after {
+    content: "";
+    position: absolute;
+    width: 130px;
+    height: 28px;
+    background-color: rgba(0,0,0,0);
+}
+.cta.cta1 {
+    top: 10px;
+    background-color: #d60041;
+}
+
+.cta.cta2 {
+    top: 44px;
+    background-color: #808080;
+}
+
+.cta .ctaTxt {
+    position: absolute;
+    width: 100%;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13px;
+    text-align: center;
+    color: #ffffff;
+}
+
+.cta.cta1.salesEvent {
+    top : 9px;
+    background-color: rgba(0,0,0,0)!important;
+}
+
+.cta.cta2.salesEvent {
+    top: 43px;
+    background-color: rgba(0,0,0,0)!important;
+}
+
+.cta.salesEvent .ctaTxt {
+    display: none;
+}
+
+.disclaimerTxt {
+    position: absolute;
+    margin-right: 7px;
+    top: 73px;
+    left: 587px;
+    font-family: "Arial", Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 7px;
+    color: #d60041;
+    line-height: 1em;
+}
+
+.asShownDisclaimerTxt {
+    position: absolute;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 7px;
+    color: #333333;
+    line-height: 0.950em;
+    /*text-align: center;*/
+}
+
+.asShownDisclaimerTxt span {
+    position: absolute;
+}
+
+.disclaimerBox {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 726px;
+    height: 88px;
+    background-color: rgb(0,0,0);/*rgba(255,255,255, 0.9)*/
+    display: none;
+}
+
+.disclaimerContent {
+    margin-top: 22px;
+    margin-left: 3px;
+    margin-right: 3px;
+    padding-top: 0;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    height: 63px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13px;
+    color: #ffffff;
+    overflow-y: auto;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.closeBtn {
+    position: absolute;
+    right: 2px;
+    top: 2px;
+    width: 17px;
+    height: 17px;
+    background-image: url(https://s0.2mdn.net/ads/richmedia/studio/34629611/9341_20141024083343891_close_white.png);
+    background-size: 17px 17px;
+    background-repeat: no-repeat;
+}
+
+sup {
+    /*line-height: 0%;*/
+}
+/*>>>>>>>>>>>>>>>>>>>>>>APR<<<<<<<<<<<<<<<<<<<<<<<<<*/
+.table{
+    position: absolute;
+}
+
+.td{
+    display: table-cell;
+}
+
+.tr{
+    display: table-row;
+}
+
+.apr .content,
+.aprcashback .content,
+.leasecash .content,
+.cashback .content,
+.lease .content,
+.msrp .content,
+.mathstack .content,
+.negmathstack .content {
+    position: absolute;
+    left: 302px;
+    top: 0px;
+    width: 275px;
+    height: 88px;
+    font-family: "Arial", Helvetica, sans-serif;
+    /*background-color: rgba(0,0,0,0.5);*/
+}
+
+.apr .table {
+    position: absolute;
+    color: #d60041;
+}
+
+.apr .rate {
+    font-size: 5.550em;
+    letter-spacing: -8px;
+    line-height: 0.800em;
+}
+
+.apr .sup {
+    padding-left: 7px;
+    font-size: 1.800em;
+    vertical-align: top;
+}
+
+.apr .sup div:nth-child(1){
+    font-size: 1.000em;
+    max-width: 154px;
+    line-height: 1.000em;
+}
+
+.apr .sup div:nth-child(2) {
+    font-size: 0.450em;
+    font-weight: bolder;
+    line-height: 1.150em;
+}
+
+.apr .sup div:nth-child(2) span {
+    display: block;
+    font-size: 0.750em;
+    line-height: 1em;
+}
+
+.apr .sup div:nth-child(3) {
+    font-size: 8px;
+    color: #333333;
+    line-height: 1.150em;
+    margin-top: 2px;
+}
+
+.apr .sup sup,
+.aprcashback .aprContent sup {
+    font-size: 6px;
+}
+
+
+.aprcashback .aprContent,
+.leasecash .leaseContent {
+    width: 135px;
+    border-right: 1px solid #000;
+    color: #d60041;
+}
+
+.aprcashback .aprContent .rate {
+    margin-top: -11px;
+    display: block;
+    margin-left: 0px;
+    font-size: 3.600em;
+    letter-spacing: -5px;
+    text-align: center;
+    line-height: 1.150em;
+}
+
+.aprcashback .aprContent .rate sup {
+    font-size: 0.4350em;
+    padding-left: 5px;
+}
+
+.aprcashback .aprContent p:nth-child(2) {
+    margin-top: -9px;
+    font-size: 0.785em;
+    font-weight: bolder;
+    line-height: 1.150em;
+    text-align: center;
+}
+
+.aprcashback .aprContent p:nth-child(2) span{
+    display: block;
+    font-size: 0.700em;
+    line-height: 1em;
+}
+
+.leasecash .leaseContent p:nth-child(2) {
+    margin-top: -7px!important;
+    font-size: 0.625em;
+    font-weight: bolder;
+    /*text-align: center;*/
+    color: #333333;
+}
+
+.aprcashback .aprContent p:nth-child(3),
+.leasecash .leaseContent p:nth-child(3) {
+    font-size: 7px;
+    /*font-weight: bold;*/
+    color: #333333;
+    line-height: 1.050em;
+    /*text-align: center;*/
+}
+.leasecash .leaseContent p:nth-child(3) {
+    font-weight: bold;
+   font-size: 7px;
+   line-height: 1;
+}
+
+.aprcashback .aprContent p:nth-child(3) {
+    text-align: center!important;
+}
+
+.aprcashback .cashbackContent,
+.leasecash .cashbackContent,
+.lease .copy {
+    vertical-align: top;
+}
+
+.aprcashback .aprContent .aprWrapper,
+.aprcashback .cashbackContent .cashbackWrapper,
+.leasecash .leaseContent .leaseWrapper,
+.leasecash .cashbackContent .cashbackWrapper {
+    position: relative;
+    color: #d60041;
+}
+
+.aprcashback .cashbackContent p.operatorCopy,
+.leasecash .cashbackContent p.operatorCopy {
+    margin-left: 10px;
+    font-size: 0.675em;
+    line-height: 1.150em;
+}
+
+.aprcashback .cashbackContent p.upTo,
+.leasecash .cashbackContent p.upTo {
+    margin-left: 10px;
+    font-size: 0.675em;
+    line-height: 1.150em;
+    color: #333333;
+}
+
+.aprcashback .cashbackContent p.amount,
+.leasecash .cashbackContent p.amount {
+    margin-top: -2px;
+    margin-left: 10px;
+    font-size: 1.850em;
+    color: #333333;
+    letter-spacing: -1px;
+    line-height: 1.150em;
+}
+
+.aprcashback .cashbackContent p.amount sup,
+.leasecash .cashbackContent p.amount sup {
+    font-size: 0.425em;
+}
+
+.aprcashback .cashbackContent p.copy,
+.leasecash .cashbackContent p.copy {
+    margin-top: -2px;
+    margin-left: 10px;
+    font-size: 0.675em;
+    line-height: 1.150em;
+    color: #333333;
+}
+.aprcashback .cashbackContent p.copy,
+.cashbackContent p.copy {
+    max-width: 75px;
+}
+.aprcashback .cashbackContent p.copy sup,
+.leasecash .cashbackContent p.copy sup {
+    font-size: 6px;
+}
+
+.leasecash .leaseContent p.amount {
+    /*margin-left: -12px;*/
+    margin-top: -7px;
+    font-size: 2.500em;
+    /*text-align: center;*/
+    letter-spacing: -1px;
+    line-height: 1.150em;
+}
+
+.leasecash .leaseContent p.amount sup {
+    font-size: 0.450em;
+}
+
+.cashback p.amountUpto:before{
+    content: "UP TO";
+    position: absolute;
+    margin-left: -30px;
+    margin-top: 32px;
+    font-size: 0.275em;
+    letter-spacing: normal;
+}
+
+.cashback p.amount{
+    display: inline-block;
+    font-family: "Arial", Helvetica, sans-serif;
+    font-size: 2.938em;
+    color: #d60041;
+    letter-spacing: -2.5px;
+}
+
+.cashback p.amountUpto{
+    display: inline-block;
+    font-family: "Arial", Helvetica, sans-serif;
+    font-size: 2.938em;
+    color: #d60041;
+    letter-spacing: -2.5px;
+}
+
+.cashback p sup{
+    font-size: 25px;
+}
+
+.cashback p.copy{
+    display: inline-block;
+    margin-left: 4px;
+    font-family: "Arial", Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 0.850em;
+    max-width: 115px;
+    line-height: 1.050em;
+    color: #333333;
+}
+
+.cashback p.copy span {
+    white-space: normal;
+}
+
+.cashback p.copy sup{
+    font-size: 8px;
+    font-weight: bold;
+}
+
+.lease .amount {
+    font-family: "Arial", Helvetica, sans-serif;
+    font-size: 2.810em;
+    color: #d60041;
+    letter-spacing: -2.5px;
+}
+
+.lease .amount sup {
+    padding-right: 2px;
+    font-size: 0.450em;
+}
+
+.lease .copy :nth-child(1){
+    margin-left: 5px;
+    margin-top: 10px;
+    max-width: 140px;
+    font-family: "Arial", Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 0.685em;
+    letter-spacing: -0.5px;
+    color: #333333;
+    line-height: 1.150em;
+}
+
+.lease .copy :nth-child(2){
+    margin-left: 5px;
+    margin-top: 1px;
+    max-width: 155px;
+    font-size: 7px;
+    color: #333333;
+    line-height: 1.150em;
+    white-space: normal;
+}
+
+
+.msrp .amount {
+    display: inline-block;
+    font-family: "Arial", Helvetica, sans-serif;
+    font-size: 2.750em;
+    letter-spacing: -2px;
+    color: #d60041;
+}
+
+.msrp .copy {
+    position: absolute;
+    white-space: nowrap;
+    top: -6px;
+    font-family: "Arial", Helvetica, sans-serif;
+    font-size: 0.250em;
+    letter-spacing: 0!important;
+    color: #d60041;
+}
+
+.msrp .amount sup {
+    font-family: "Arial", Helvetica, sans-serif;
+    font-size: 0.500em;
+}
+
+.msrp .after {
+    margin-left: 3px;
+    display: inline-block;
+    font-size: 0.950em;
+    font-weight: bold;
+    letter-spacing: 0!important;
+    color: #333333;
+}
+
+/*>>>>>>>>>>>>>>>>>>>>MATHSTACK<<<<<<<<<<<<<<<<<<<<<<*/
+
+
+.mathstack .equationWrapper,
+.negmathstack .equationWrapper {
+    display: table;
+    max-width: 290px;
+    border-bottom: 1px solid #000;
+    color: #333333;
+}
+
+.mathstack .equationWrapper .amount,
+.negmathstack .equationWrapper .amount {
+    display: table-cell;
+    font-size: 1.050em;
+}
+
+.mathstack .equationWrapper .copy,
+.negmathstack .equationWrapper .copy {
+    vertical-align: middle;
+    display: table-cell;
+    font-size: 7px;
+    width: 50px;
+}
+
+.mathstack .equationWrapper .ope,
+.negmathstack .equationWrapper .ope {
+    vertical-align: middle;
+    padding: 2px;
+    display: table-cell;
+    font-size: 0.500em;
+}
+
+.mathstack .equationWrapper .copy span,
+.negmathstack .equationWrapper .copy span {
+    white-space: normal;
+    line-height: 1.050;
+}
+
+.mathstack .equationWrapper .copy sup,
+.negmathstack .equationWrapper .copy sup {
+    font-size: 4px;
+    padding-left: 1px;
+}
+
+.mathstack .equationWrapper .amount sup,
+.negmathstack .equationWrapper .amount sup {
+    font-size: 0.55em;
+}
+
+.mathstack .totalWrapper,
+.negmathstack .totalWrapper {
+    display: table;
+}
+
+.mathstack .totalWrapper .upTo,
+.negmathstack .totalWrapper .upTo {
+    display: inline-block;
+    font-size: 0.500em;
+    color: #d60041;
+}
+
+.mathstack .totalWrapper .net,
+.negmathstack .totalWrapper .net {
+    display: inline-block;
+    margin-left: -5px;
+    font-size: 1.850em;
+    color: #d60041;
+}
+
+.mathstack .totalWrapper .net sup,
+.negmathstack .totalWrapper .net sup {
+    font-size: 0.500em;
+}
+
+.mathstack .totalWrapper .copy,
+.negmathstack .totalWrapper .copy {
+    display: inline-block;
+    margin-left: 2px;
+    font-size: 7px;
+    max-width: 100px;
+    color: #333333;
+}
+
+.mathstack .totalWrapper .copy sup,
+.negmathstack .totalWrapper .copy sup {
+    font-size: 4px;
+}
+
+.mathstack .amountCond,
+.negmathstack .amountCond,
+.mathstack .amountCondUpto,
+.negmathstack .amountCondUpto ,
+.mathstack .amountCondAs,
+.negmathstack .amountCondAs {
+    display: inline-block;
+    font-family: "Arial", Helvetica, sans-serif;
+    font-size: 2.900em;
+    color: #d60041;
+    letter-spacing: -2.5px;
+}
+
+.mathstack .amountCondUpto:before,
+.negmathstack .amountCondUpto:before {
+    content: "Up To";
+    position: absolute;
+    margin-left: -30px;
+    margin-top: 31px;
+    font-size: 0.275em;
+    letter-spacing: normal;
+    color: #d60041;
+}
+
+.negmathstack .amountCondAs:before {
+    content: "As low As";
+    position: absolute;
+    margin-top: -7px;
+    font-size: 0.275em;
+    letter-spacing: normal;
+    color: #d60041;
+}
+
+.mathstack .amountCond sup,
+.negmathstack .amountCond sup,
+.mathstack .amountCondUpto sup,
+.negmathstack .amountCondUpto sup,
+.mathstack .amountCondAs sup,
+.negmathstack .amountCondAs sup {
+    font-size: 0.475em;
+    padding-right: 2px;
+}
+
+.mathstack .copyCond,
+.negmathstack .copyCond {
+    margin-left: 4px;
+    display: inline-block;
+    font-family: "Arial", Helvetica, sans-serif;
+    font-size: .775em;
+    font-weight: bold;
+    max-width: 105px;
+    line-height: 1em;
+    color: #333333;
+}
+
+.mathstack .copyCond sup,
+.negmathstack .copyCond sup {
+    font-size: 6px;
+    padding-right: 2px;
+}
+
+
+/*>>>>>>>>>>>>>>>>>>>>SNDL<<<<<<<<<<<<<<<<<<<<<<*/
+.leasesignndrive .table sup,
+.leasesignndrivecashback .table sup {
+    line-height: 0;
+}
+
+.leasesignndrive .table .amount {
+    line-height: 27px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 2.0em;
+    color: #d60041;
+}
+
+.leasesignndrive .table .amount sup {
+    font-size: 14px;
+}
+
+.leasesignndrive .table .copy {
+	vertical-align: middle;
+    width: 58px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.450em;
+    color: #333333;
+}
+
+.leasesignndrive .table .copy sup {
+    font-size: 7px;
+}
+
+.leasesignndrive p {
+    margin-top: 0px;
+    margin-left: 317px;
+    margin-right: 153px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.600em;
+    line-height: 10px;
+    text-align: center;
+    color: #333333;
+}
+
+.leasesignndrive p.copy {
+    margin-top: 20px;
+}
+
+/*ONLY FOR LEASE SIGN AND DRIVE BONUS CASH*/
+
+.leasesignndrivecashback p.copy {
+	margin-top: 5px;
+}
+.leasesignndrivecashback .table .amount {
+    line-height: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1.300em;/*2.0em*/
+    color: #d60041;
+}
+.leasesignndrivecashback .table .amount sup {
+	font-size: 8.5px;
+}
+.leasesignndrivecashback .table .copy {
+    vertical-align: middle;
+    width: 35px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 6px;/*0.450em*/
+    color: #333333;
+}
+.leasesignndrivecashback .table .copy sup {
+	font-size: 4px;
+}
+.leasesignndrivecashback p {
+    margin-top: 0px;
+    margin-left: 317px;
+    margin-right: 153px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 8px;/*0.600em*/
+    line-height: 10px;
+    text-align: center;
+    color: #333333;
+}
+.leasesignndrivecashback .bonuscopy {
+	margin-top: 3px;
+}
+.leasesignndrivecashback .bonuscopy sup {
+	font-size: 5px;
+}
+
+/*END OF SIGN AND DRIVE BONUSH CASH*/
+.videobox {
+    position: absolute;
+    left: -1px;
+    top: -1px;
+    width: 728px;
+    height: 90px;
+    background-color: #fff;
+}
+
+video {
+    position: absolute;
+    width: 728px;
+    height: 90px;
+    background-color: #000;
+}
+
+.videobox.fadeOut {
+    opacity: 0;
+    -webkit-transition-property: opacity;
+    -o-transition-property: opacity;
+    transition-property: opacity;
+    -webkit-transition-duration: 500ms;
+    -o-transition-duration: 500ms;
+    transition-duration: 500ms;
+    -webkit-transition-timing-function: ease-in-out;
+    -o-transition-timing-function: ease-in-out;
+    transition-timing-function: ease-in-out;
+}
+
+.videobox:after {
+    content: "Fantasy. Simulated Image. Do not attempt. Cars can’t snowboard";
+    position: absolute;
+    bottom: 3px;
+    left: 3px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    text-align: left;
+    vertical-align: bottom;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    font-weight: bolder;
+}
+
+.salesLogo {
+    position: absolute;
+    top: 8px;
+    left: 60px;
+    width: 94px;
+    height: 28px;
+    background-size: auto 28px;
+    background-repeat: no-repeat;
+    background-position: left center;
+}
+
+sup {
+    line-height: 120%;
+}
+/*>>>>>>>>>>>>>>>>>>>>Regional<<<<<<<<<<<<<<<<<<<<<<*/
