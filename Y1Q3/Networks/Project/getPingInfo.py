@@ -1,6 +1,6 @@
 import subprocess
 
-f = open('dns.txt', 'r')
+f = open('dns3.txt', 'r')
 for url in f.readlines():
 	try:
 		url = url[:-1]
