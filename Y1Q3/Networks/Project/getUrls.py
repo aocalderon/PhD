@@ -3,7 +3,7 @@ import socket
 from geoip import geolite2
 import subprocess
 
-doc = xml.dom.minidom.parse("canada.xml")
+doc = xml.dom.minidom.parse("usa.xml")
 list = doc.getElementsByTagName("a")
 for item in list:
 	url = item.getAttribute("href")[7:-1]
