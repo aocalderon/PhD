@@ -1,0 +1,22 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGdefault{k+kn}{import} \PYGdefault{n+nn}{socket}
+\PYGdefault{k+kn}{from} \PYGdefault{n+nn}{geoip} \PYGdefault{k+kn}{import} \PYGdefault{n}{geolite2}
+\PYGdefault{k+kn}{import} \PYGdefault{n+nn}{subprocess}
+\PYGdefault{k+kn}{import} \PYGdefault{n+nn}{geocoder}
+\PYGdefault{k+kn}{import} \PYGdefault{n+nn}{time}
+
+\PYGdefault{n}{f} \PYGdefault{o}{=} \PYGdefault{n+nb}{open}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZsq{}dns3.txt\PYGdefaultZsq{}}\PYGdefault{p}{,} \PYGdefault{l+s}{\PYGdefaultZsq{}r\PYGdefaultZsq{}}\PYGdefault{p}{)}
+\PYGdefault{k}{for} \PYGdefault{n}{url} \PYGdefault{o+ow}{in} \PYGdefault{n}{f}\PYGdefault{o}{.}\PYGdefault{n}{readlines}\PYGdefault{p}{():}
+	\PYGdefault{k}{try}\PYGdefault{p}{:}
+		\PYGdefault{n}{url} \PYGdefault{o}{=} \PYGdefault{n}{url}\PYGdefault{p}{[:}\PYGdefault{o}{\PYGdefaultZhy{}}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{]}
+		\PYGdefault{n}{addr} \PYGdefault{o}{=} \PYGdefault{n}{socket}\PYGdefault{o}{.}\PYGdefault{n}{gethostbyname}\PYGdefault{p}{(}\PYGdefault{n}{url}\PYGdefault{p}{)}
+		\PYGdefault{n}{match} \PYGdefault{o}{=} \PYGdefault{n}{geolite2}\PYGdefault{o}{.}\PYGdefault{n}{lookup}\PYGdefault{p}{(}\PYGdefault{n}{addr}\PYGdefault{p}{)}
+		\PYGdefault{n}{lat} \PYGdefault{o}{=} \PYGdefault{n+nb}{round}\PYGdefault{p}{(}\PYGdefault{n}{match}\PYGdefault{o}{.}\PYGdefault{n}{location}\PYGdefault{p}{[}\PYGdefault{l+m+mi}{0}\PYGdefault{p}{],}\PYGdefault{l+m+mi}{2}\PYGdefault{p}{)}
+		\PYGdefault{n}{lon} \PYGdefault{o}{=} \PYGdefault{n+nb}{round}\PYGdefault{p}{(}\PYGdefault{n}{match}\PYGdefault{o}{.}\PYGdefault{n}{location}\PYGdefault{p}{[}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{],}\PYGdefault{l+m+mi}{2}\PYGdefault{p}{)}
+		\PYGdefault{n}{g} \PYGdefault{o}{=} \PYGdefault{n}{geocoder}\PYGdefault{o}{.}\PYGdefault{n}{google}\PYGdefault{p}{([}\PYGdefault{n}{lat}\PYGdefault{p}{,}\PYGdefault{n}{lon}\PYGdefault{p}{],} \PYGdefault{n}{method}\PYGdefault{o}{=}\PYGdefault{l+s}{\PYGdefaultZsq{}reverse\PYGdefaultZsq{}}\PYGdefault{p}{)}
+		\PYGdefault{n}{time}\PYGdefault{o}{.}\PYGdefault{n}{sleep}\PYGdefault{p}{(}\PYGdefault{l+m+mi}{2}\PYGdefault{p}{)}
+	\PYGdefault{k}{except} \PYGdefault{n}{socket}\PYGdefault{o}{.}\PYGdefault{n}{error}\PYGdefault{p}{,} \PYGdefault{n}{msg}\PYGdefault{p}{:}
+		\PYGdefault{k}{print} \PYGdefault{l+s}{\PYGdefaultZdq{}\PYGdefaultZdq{}}
+	\PYGdefault{k}{else}\PYGdefault{p}{:}
+		\PYGdefault{k}{print}\PYGdefault{p}{(}\PYGdefault{n}{url}\PYGdefault{o}{+}\PYGdefault{l+s}{\PYGdefaultZdq{};\PYGdefaultZdq{}}\PYGdefault{o}{+}\PYGdefault{n}{addr}\PYGdefault{o}{+}\PYGdefault{l+s}{\PYGdefaultZdq{};\PYGdefaultZdq{}}\PYGdefault{o}{+}\PYGdefault{n+nb}{str}\PYGdefault{p}{(}\PYGdefault{n}{lat}\PYGdefault{p}{)}\PYGdefault{o}{+}\PYGdefault{l+s}{\PYGdefaultZdq{};\PYGdefaultZdq{}}\PYGdefault{o}{+}\PYGdefault{n+nb}{str}\PYGdefault{p}{(}\PYGdefault{n}{lon}\PYGdefault{p}{)}\PYGdefault{o}{+}\PYGdefault{l+s}{\PYGdefaultZdq{};\PYGdefaultZdq{}}\PYGdefault{o}{+}\PYGdefault{n}{g}\PYGdefault{o}{.}\PYGdefault{n}{city}\PYGdefault{o}{+}\PYGdefault{l+s}{\PYGdefaultZdq{};\PYGdefaultZdq{}}\PYGdefault{o}{+}\PYGdefault{n}{g}\PYGdefault{o}{.}\PYGdefault{n}{state}\PYGdefault{p}{)}
+\end{Verbatim}

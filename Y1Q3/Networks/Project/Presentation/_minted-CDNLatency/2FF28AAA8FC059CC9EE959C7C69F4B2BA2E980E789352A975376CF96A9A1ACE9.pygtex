@@ -1,0 +1,24 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGdefault{k+kn}{import} \PYGdefault{n+nn}{xml.dom.minidom}
+\PYGdefault{k+kn}{import} \PYGdefault{n+nn}{socket}
+\PYGdefault{k+kn}{from} \PYGdefault{n+nn}{geoip} \PYGdefault{k+kn}{import} \PYGdefault{n}{geolite2}
+\PYGdefault{k+kn}{import} \PYGdefault{n+nn}{subprocess}
+
+\PYGdefault{n}{doc} \PYGdefault{o}{=} \PYGdefault{n}{xml}\PYGdefault{o}{.}\PYGdefault{n}{dom}\PYGdefault{o}{.}\PYGdefault{n}{minidom}\PYGdefault{o}{.}\PYGdefault{n}{parse}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}usa.xml\PYGdefaultZdq{}}\PYGdefault{p}{)}
+\PYGdefault{n+nb}{list} \PYGdefault{o}{=} \PYGdefault{n}{doc}\PYGdefault{o}{.}\PYGdefault{n}{getElementsByTagName}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}a\PYGdefaultZdq{}}\PYGdefault{p}{)}
+\PYGdefault{k}{for} \PYGdefault{n}{item} \PYGdefault{o+ow}{in} \PYGdefault{n+nb}{list}\PYGdefault{p}{:}
+	\PYGdefault{n}{url} \PYGdefault{o}{=} \PYGdefault{n}{item}\PYGdefault{o}{.}\PYGdefault{n}{getAttribute}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}href\PYGdefaultZdq{}}\PYGdefault{p}{)[}\PYGdefault{l+m+mi}{7}\PYGdefault{p}{:}\PYGdefault{o}{\PYGdefaultZhy{}}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{]}
+	\PYGdefault{k}{try}\PYGdefault{p}{:}
+		\PYGdefault{n}{addr} \PYGdefault{o}{=} \PYGdefault{n}{socket}\PYGdefault{o}{.}\PYGdefault{n}{gethostbyname}\PYGdefault{p}{(}\PYGdefault{n}{url}\PYGdefault{p}{)}
+		\PYGdefault{n}{match} \PYGdefault{o}{=} \PYGdefault{n}{geolite2}\PYGdefault{o}{.}\PYGdefault{n}{lookup}\PYGdefault{p}{(}\PYGdefault{n}{addr}\PYGdefault{p}{)}
+	\PYGdefault{k}{except} \PYGdefault{n}{socket}\PYGdefault{o}{.}\PYGdefault{n}{error}\PYGdefault{p}{,} \PYGdefault{n}{msg}\PYGdefault{p}{:}
+		\PYGdefault{n}{addr}
+	\PYGdefault{k}{else}\PYGdefault{p}{:}
+		\PYGdefault{k}{try}\PYGdefault{p}{:}
+			\PYGdefault{n}{output} \PYGdefault{o}{=} \PYGdefault{n}{subprocess}\PYGdefault{o}{.}\PYGdefault{n}{check\PYGdefaultZus{}output}\PYGdefault{p}{([}\PYGdefault{l+s}{\PYGdefaultZdq{}ping\PYGdefaultZdq{}}\PYGdefault{p}{,}\PYGdefault{l+s}{\PYGdefaultZdq{}\PYGdefaultZhy{}c1\PYGdefaultZdq{}}\PYGdefault{p}{,}\PYGdefault{n}{url}\PYGdefault{p}{])}
+		\PYGdefault{k}{except} \PYGdefault{n}{subprocess}\PYGdefault{o}{.}\PYGdefault{n}{CalledProcessError}\PYGdefault{p}{,}\PYGdefault{n}{e}\PYGdefault{p}{:}
+			\PYGdefault{n}{url}
+		\PYGdefault{k}{else}\PYGdefault{p}{:}
+			\PYGdefault{k}{print} \PYGdefault{l+s}{\PYGdefaultZdq{}\PYGdefaultZob{}0\PYGdefaultZcb{}\PYGdefaultZdq{}}\PYGdefault{o}{.}\PYGdefault{n}{format}\PYGdefault{p}{(}\PYGdefault{n}{url}\PYGdefault{p}{)}
+	
+\end{Verbatim}

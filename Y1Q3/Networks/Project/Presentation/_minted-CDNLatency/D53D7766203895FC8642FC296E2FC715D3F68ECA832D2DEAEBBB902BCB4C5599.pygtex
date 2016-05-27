@@ -1,0 +1,22 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGdefault{k+kn}{import} \PYGdefault{n+nn}{networkx} \PYGdefault{k+kn}{as} \PYGdefault{n+nn}{nx}
+\PYGdefault{k+kn}{import} \PYGdefault{n+nn}{pandas} \PYGdefault{k+kn}{as} \PYGdefault{n+nn}{pd}
+
+\PYGdefault{n}{G}\PYGdefault{o}{=}\PYGdefault{n}{nx}\PYGdefault{o}{.}\PYGdefault{n}{Graph}\PYGdefault{p}{()}
+\PYGdefault{c}{\PYGdefaultZsh{}\PYGdefaultZsh{} Riverside}
+\PYGdefault{n}{center\PYGdefaultZus{}y} \PYGdefault{o}{=} \PYGdefault{l+m+mf}{33.9680}
+\PYGdefault{n}{center\PYGdefaultZus{}x} \PYGdefault{o}{=} \PYGdefault{o}{\PYGdefaultZhy{}}\PYGdefault{l+m+mf}{117.3194}
+\PYGdefault{n}{center} \PYGdefault{o}{=} \PYGdefault{p}{(}\PYGdefault{n}{center\PYGdefaultZus{}x}\PYGdefault{p}{,}\PYGdefault{n}{center\PYGdefaultZus{}y}\PYGdefault{p}{)}
+\PYGdefault{n}{G}\PYGdefault{o}{.}\PYGdefault{n}{add\PYGdefaultZus{}node}\PYGdefault{p}{(}\PYGdefault{n}{center}\PYGdefault{p}{)}
+
+\PYGdefault{n}{candidates} \PYGdefault{o}{=} \PYGdefault{n}{pd}\PYGdefault{o}{.}\PYGdefault{n}{read\PYGdefaultZus{}csv}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZsq{}candidates.csv\PYGdefaultZsq{}}\PYGdefault{p}{,} \PYGdefault{n}{sep}\PYGdefault{o}{=}\PYGdefault{l+s}{\PYGdefaultZsq{};\PYGdefaultZsq{}}\PYGdefault{p}{,} \PYGdefault{n}{header}\PYGdefault{o}{=}\PYGdefault{n+nb+bp}{None}
+				\PYGdefault{p}{,} \PYGdefault{n}{names}\PYGdefault{o}{=}\PYGdefault{p}{[}\PYGdefault{l+s}{\PYGdefaultZsq{}url\PYGdefaultZsq{}}\PYGdefault{p}{,}\PYGdefault{l+s}{\PYGdefaultZsq{}ip\PYGdefaultZsq{}}\PYGdefault{p}{,}\PYGdefault{l+s}{\PYGdefaultZsq{}lat\PYGdefaultZsq{}}\PYGdefault{p}{,}\PYGdefault{l+s}{\PYGdefaultZsq{}lon\PYGdefaultZsq{}}\PYGdefault{p}{,}\PYGdefault{l+s}{\PYGdefaultZsq{}city\PYGdefaultZsq{}}\PYGdefault{p}{,}\PYGdefault{l+s}{\PYGdefaultZsq{}state\PYGdefaultZsq{}}\PYGdefault{p}{])}
+\PYGdefault{n}{pings} \PYGdefault{o}{=} \PYGdefault{n}{pd}\PYGdefault{o}{.}\PYGdefault{n}{read\PYGdefaultZus{}csv}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZsq{}pings.csv\PYGdefaultZsq{}}\PYGdefault{p}{,} \PYGdefault{n}{sep}\PYGdefault{o}{=}\PYGdefault{l+s}{\PYGdefaultZsq{};\PYGdefaultZsq{}}\PYGdefault{p}{,} \PYGdefault{n}{header}\PYGdefault{o}{=}\PYGdefault{n+nb+bp}{None}\PYGdefault{p}{,} \PYGdefault{n}{names}\PYGdefault{o}{=}\PYGdefault{p}{[}\PYGdefault{l+s}{\PYGdefaultZsq{}url\PYGdefaultZsq{}}\PYGdefault{p}{,}\PYGdefault{l+s}{\PYGdefaultZsq{}ping\PYGdefaultZsq{}}\PYGdefault{p}{])}
+
+\PYGdefault{n}{nodes} \PYGdefault{o}{=} \PYGdefault{n}{candidates}\PYGdefault{o}{.}\PYGdefault{n}{loc}\PYGdefault{p}{[:,[}\PYGdefault{l+s}{\PYGdefaultZsq{}url\PYGdefaultZsq{}}\PYGdefault{p}{,}\PYGdefault{l+s}{\PYGdefaultZsq{}lat\PYGdefaultZsq{}}\PYGdefault{p}{,}\PYGdefault{l+s}{\PYGdefaultZsq{}lon\PYGdefaultZsq{}}\PYGdefault{p}{]]}\PYGdefault{o}{.}\PYGdefault{n}{merge}\PYGdefault{p}{(}\PYGdefault{n}{pings}\PYGdefault{p}{)}\PYGdefault{o}{.}\PYGdefault{n}{loc}\PYGdefault{p}{[:,[}\PYGdefault{l+s}{\PYGdefaultZsq{}lat\PYGdefaultZsq{}}\PYGdefault{p}{,}\PYGdefault{l+s}{\PYGdefaultZsq{}lon\PYGdefaultZsq{}}\PYGdefault{p}{,}\PYGdefault{l+s}{\PYGdefaultZsq{}ping\PYGdefaultZsq{}}\PYGdefault{p}{]]}
+
+\PYGdefault{k}{for} \PYGdefault{n}{index}\PYGdefault{p}{,} \PYGdefault{n}{node} \PYGdefault{o+ow}{in} \PYGdefault{n}{nodes}\PYGdefault{o}{.}\PYGdefault{n}{iterrows}\PYGdefault{p}{():}
+	\PYGdefault{n}{point} \PYGdefault{o}{=} \PYGdefault{p}{(}\PYGdefault{n}{node}\PYGdefault{p}{[}\PYGdefault{l+s}{\PYGdefaultZsq{}lon\PYGdefaultZsq{}}\PYGdefault{p}{],}\PYGdefault{n}{node}\PYGdefault{p}{[}\PYGdefault{l+s}{\PYGdefaultZsq{}lat\PYGdefaultZsq{}}\PYGdefault{p}{])}
+	\PYGdefault{n}{G}\PYGdefault{o}{.}\PYGdefault{n}{add\PYGdefaultZus{}node}\PYGdefault{p}{(}\PYGdefault{n}{point}\PYGdefault{p}{)}
+	\PYGdefault{n}{G}\PYGdefault{o}{.}\PYGdefault{n}{add\PYGdefaultZus{}edge}\PYGdefault{p}{(}\PYGdefault{n}{center}\PYGdefault{p}{,}\PYGdefault{n}{point}\PYGdefault{p}{,}\PYGdefault{n}{weight}\PYGdefault{o}{=}\PYGdefault{n}{node}\PYGdefault{p}{[}\PYGdefault{l+s}{\PYGdefaultZsq{}ping\PYGdefaultZsq{}}\PYGdefault{p}{],}\PYGdefault{n}{cdn}\PYGdefault{o}{=}\PYGdefault{l+s}{\PYGdefaultZsq{}Riverside\PYGdefaultZsq{}}\PYGdefault{p}{)}
+\end{Verbatim}
