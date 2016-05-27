@@ -19,5 +19,4 @@ for item in list:
 			url
 		else:
 			print "{0}".format(url)
-			# print "{0};{1};{2};{3}".format(url,addr,match.location[0],match.location[1])
 	
