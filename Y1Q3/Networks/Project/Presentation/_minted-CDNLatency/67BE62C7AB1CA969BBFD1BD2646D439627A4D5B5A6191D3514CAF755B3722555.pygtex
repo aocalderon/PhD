@@ -1,0 +1,14 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGdefault{k+kn}{import} \PYGdefault{n+nn}{subprocess}
+
+\PYGdefault{n}{f} \PYGdefault{o}{=} \PYGdefault{n+nb}{open}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZsq{}dns3.txt\PYGdefaultZsq{}}\PYGdefault{p}{,} \PYGdefault{l+s}{\PYGdefaultZsq{}r\PYGdefaultZsq{}}\PYGdefault{p}{)}
+\PYGdefault{k}{for} \PYGdefault{n}{url} \PYGdefault{o+ow}{in} \PYGdefault{n}{f}\PYGdefault{o}{.}\PYGdefault{n}{readlines}\PYGdefault{p}{():}
+	\PYGdefault{k}{try}\PYGdefault{p}{:}
+		\PYGdefault{n}{url} \PYGdefault{o}{=} \PYGdefault{n}{url}\PYGdefault{p}{[:}\PYGdefault{o}{\PYGdefaultZhy{}}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{]}
+		\PYGdefault{n}{output} \PYGdefault{o}{=} \PYGdefault{n}{subprocess}\PYGdefault{o}{.}\PYGdefault{n}{check\PYGdefaultZus{}output}\PYGdefault{p}{([}\PYGdefault{l+s}{\PYGdefaultZdq{}ping\PYGdefaultZdq{}}\PYGdefault{p}{,}\PYGdefault{l+s}{\PYGdefaultZdq{}\PYGdefaultZhy{}c5\PYGdefaultZdq{}}\PYGdefault{p}{,}\PYGdefault{n}{url}\PYGdefault{p}{])}
+	\PYGdefault{k}{except} \PYGdefault{n}{subprocess}\PYGdefault{o}{.}\PYGdefault{n}{CalledProcessError}\PYGdefault{p}{,}\PYGdefault{n}{e}\PYGdefault{p}{:}
+		\PYGdefault{n}{url}
+	\PYGdefault{k}{else}\PYGdefault{p}{:}
+		\PYGdefault{n}{ping} \PYGdefault{o}{=} \PYGdefault{n+nb}{float}\PYGdefault{p}{(}\PYGdefault{n}{output}\PYGdefault{o}{.}\PYGdefault{n}{split}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZsq{}}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{\PYGdefaultZsq{}}\PYGdefault{p}{)[}\PYGdefault{o}{\PYGdefaultZhy{}}\PYGdefault{l+m+mi}{2}\PYGdefault{p}{:}\PYGdefault{o}{\PYGdefaultZhy{}}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{][}\PYGdefault{l+m+mi}{0}\PYGdefault{p}{]}\PYGdefault{o}{.}\PYGdefault{n}{split}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZsq{}/\PYGdefaultZsq{}}\PYGdefault{p}{)[}\PYGdefault{o}{\PYGdefaultZhy{}}\PYGdefault{l+m+mi}{3}\PYGdefault{p}{:}\PYGdefault{o}{\PYGdefaultZhy{}}\PYGdefault{l+m+mi}{2}\PYGdefault{p}{][}\PYGdefault{l+m+mi}{0}\PYGdefault{p}{])}
+		\PYGdefault{k}{print} \PYGdefault{l+s}{\PYGdefaultZdq{}\PYGdefaultZob{}0\PYGdefaultZcb{};\PYGdefaultZob{}1\PYGdefaultZcb{}\PYGdefaultZdq{}}\PYGdefault{o}{.}\PYGdefault{n}{format}\PYGdefault{p}{(}\PYGdefault{n}{url}\PYGdefault{p}{,} \PYGdefault{n}{ping}\PYGdefault{p}{)}
+\end{Verbatim}

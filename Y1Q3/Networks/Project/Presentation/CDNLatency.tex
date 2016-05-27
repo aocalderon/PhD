@@ -80,7 +80,7 @@
 
 \AtBeginSection[] {
     \begin{frame}<beamer>
-    \frametitle{Agenda} %
+    \frametitle{Outline} %
     \tableofcontents[currentsection]  
     \end{frame}
     \lattersubsectfalse
@@ -89,14 +89,14 @@
 \AtBeginSubsection[] {
     % \iflattersubsect
     \begin{frame}<beamer>
-    \frametitle{Agenda} %
+    \frametitle{Outline} %
     \tableofcontents[currentsubsection]  
     \end{frame}
     % \fi
     % \lattersubsecttrue
 }
 
-\begin{frame}{Agenda}
+\begin{frame}{Outline}
   \tableofcontents{}
 \end{frame}
 
@@ -179,13 +179,25 @@
 \end{frame}
 
 \begin{frame}[fragile]{Python scripts}
-  \tiny
-  \lstinputlisting[language=Python]{../getUrls.py}
+  \inputminted[
+    fontsize=\tiny,
+    tabsize=2,
+    breaklines,
+    linenos,
+    framesep=10pt,
+    frame=single
+    ]{python}{../getUrls.py}
 \end{frame}
 
 \begin{frame}[fragile]{Python scripts}
-  \tiny
-  \lstinputlisting[language=Python]{../getUrlInfo.py}
+  \inputminted[
+    fontsize=\tiny,
+    tabsize=2,
+    breaklines,
+    linenos,
+    framesep=10pt,
+    frame=single
+    ]{python}{../getUrlInfo.py}
 \end{frame}
 
 \begin{frame}{Choosing candidates}
@@ -203,9 +215,15 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{Python script}
-  \tiny
-  \lstinputlisting[language=Python]{../getPingInfo.py}
+\begin{frame}[fragile]{Python scripts}
+  \inputminted[
+    fontsize=\tiny,
+    tabsize=2,
+    breaklines,
+    linenos,
+    framesep=10pt,
+    frame=single
+    ]{python}{../getPingInfo.py}
 \end{frame}
 
 \subsection{Building the graph}
@@ -218,9 +236,15 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{Python script}
-  \tiny
-  \lstinputlisting[language=Python]{createGraph.py}
+\begin{frame}[fragile]{Python scripts}
+  \inputminted[
+    fontsize=\tiny,
+    tabsize=2,
+    breaklines,
+    linenos,
+    framesep=10pt,
+    frame=single
+    ]{python}{createGraph.py}
 \end{frame}
 
 \begin{frame}{Building the graph}
