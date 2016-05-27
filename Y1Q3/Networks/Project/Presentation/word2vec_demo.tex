@@ -1,0 +1,277 @@
+%% LyX 2.1.4 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass{beamer}
+\usepackage{mathptmx}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{minted}
+\usepackage{xcolor}
+
+\definecolor{LightGray}{gray}{0.9}
+
+\ifx\hypersetup\undefined
+  \AtBeginDocument{%
+    \hypersetup{unicode=true,
+ bookmarksnumbered=false,bookmarksopen=false,
+ breaklinks=false,pdfborder={0 0 0},colorlinks=false}
+  }
+\else
+  \hypersetup{unicode=true,
+ bookmarksnumbered=false,bookmarksopen=false,
+ breaklinks=false,pdfborder={0 0 0},colorlinks=false}
+\fi
+
+\makeatletter
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Textclass specific LaTeX commands.
+ % this default might be overridden by plain title style
+ \newcommand\makebeamertitle{\frame{\maketitle}}%
+ % (ERT) argument for the TOC
+ \AtBeginDocument{%
+   \let\origtableofcontents=\tableofcontents
+   \def\tableofcontents{\@ifnextchar[{\origtableofcontents}{\gobbletableofcontents}}
+   \def\gobbletableofcontents#1{\origtableofcontents}
+ }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
+\usetheme{Warsaw}
+% or ...
+\useoutertheme{infolines}
+\addtobeamertemplate{headline}{}{\vskip2pt}
+
+\setbeamercovered{transparent}
+% or whatever (possibly just delete it)
+
+
+
+\setbeamertemplate{footline}
+{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+    \usebeamerfont{date in head/foot}\insertshortdate{}\hspace*{2em}
+    \insertframenumber{} / \inserttotalframenumber\hspace*{2ex} 
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+\usepackage{pifont}
+\makeatother
+
+\begin{document}
+
+\title{CDN Latency}
+\subtitle{CDN Latency}
+\author{Chris, Nilou and Andres}
+\institute{University of California, Riverside}
+
+\makebeamertitle
+
+% \AtBeginSection[]{
+%   \frame<beamer>{ 
+%     \frametitle{Agenda}   
+%     \tableofcontents[currentsubsection] 
+%   }
+% }
+
+\newif\iflattersubsect
+
+\AtBeginSection[] {
+    \begin{frame}<beamer>
+    \frametitle{Agenda} %
+    \tableofcontents[currentsection]  
+    \end{frame}
+    \lattersubsectfalse
+}
+
+\AtBeginSubsection[] {
+    % \iflattersubsect
+    \begin{frame}<beamer>
+    \frametitle{Agenda} %
+    \tableofcontents[currentsubsection]  
+    \end{frame}
+    % \fi
+    % \lattersubsecttrue
+}
+
+\begin{frame}{Agenda}
+  \tableofcontents{}
+\end{frame}
+
+\section{Introduction}
+
+\begin{frame}{Introduction}
+  \begin{itemize}
+    \item Measuring and Evaluating Large-Scale CDNs (Huang et al., 2008).
+    \item The goal of a CDN is to serve content to end-users with high availability and high performance. 
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Introduction}
+  \centering
+  \includegraphics[width=0.85\textwidth]{CDN.png}
+\end{frame}
+
+\begin{frame}{Introduction}
+  \begin{itemize}
+    \item But... Where do we deploy a new CDN server???
+  \end{itemize}
+\end{frame}
+
+\section{Methodology}
+
+\begin{frame}{Overview}
+  \begin{enumerate}
+    \item Collect information about current CDNs
+    \item Select a group of possible candidates
+    \item Measure the latency between points (Ping time)
+    \item Graph analysis
+    \item Visualization
+  \end{enumerate}
+\end{frame}
+
+\subsection{CDNs collection}
+
+\begin{frame}{Virtual machines}
+  \begin{itemize}
+    \item Microsoft Azure: Cloud Computing Platform \& Services \footnote{\url{https://azure.microsoft.com/}}
+    \item 8 instances in different geographical regions
+    \begin{enumerate}
+     \item East USA
+     \item Central USA
+     \item South Central USA
+     \item West USA
+     \item North Central USA
+     \item East Canada
+     \item Central Canada
+     \item Riverside
+    \end{enumerate}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Virtual machines}
+  \centering
+  \includegraphics[width=0.9\textwidth]{cdns.png}
+\end{frame}
+
+\subsection{Choosing candidates}
+
+\begin{frame}{Choosing candidates}
+  \begin{itemize}
+    \item Universities Worldwide \footnote{\url{http://univ.cc/}}
+    \item Universities from USA and Canada
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Choosing candidates}
+  \begin{itemize}
+    \item Cleaning and processing 
+    \begin{itemize}
+     \item Remove urls which did not respond to ping
+     \item Remove duplicates (in the same city)
+     \item Remove incorrect format
+     \item Extract latitude and longitude (reverse geocoding)
+    \end{itemize}
+    \item End up with 97 candidates 
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Python scripts}
+  \tiny
+  \lstinputlisting[language=Python]{../getUrls.py}
+\end{frame}
+
+\begin{frame}[fragile]{Python scripts}
+  \tiny
+  \lstinputlisting[language=Python]{../getUrlInfo.py}
+\end{frame}
+
+\begin{frame}{Choosing candidates}
+  \centering
+  \includegraphics[width=0.9\textwidth]{candidates.png}
+\end{frame}
+
+\subsection{Collecting ping data}
+
+\begin{frame}{Ping data}
+  \begin{itemize}
+    \item We collect ping data from each current CDN to all the candidates
+    \item Run a script at each virtual machine
+    \item Transmit 5 packages and extract the average ping time
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Python script}
+  \tiny
+  \lstinputlisting[language=Python]{../getPingInfo.py}
+\end{frame}
+
+\subsection{Building the graph}
+
+\begin{frame}{Building the graph}
+  \begin{itemize}
+    \item Merge results for each virtual machine (CDN)
+    \item Use \texttt{networkX} package in python
+    \item Final graph has 105 nodes and 776 edges
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Python script}
+  \tiny
+  \lstinputlisting[language=Python]{createGraph.py}
+\end{frame}
+
+\begin{frame}{Building the graph}
+  \centering
+  \includegraphics[width=0.9\textwidth]{graph.png}
+\end{frame}
+
+\subsection{Visualization}
+
+\begin{frame}{Visualization}
+  \begin{itemize}
+    \item Use networkX to save the output to a shapefile format 
+    \item Use QGIS to visualize data
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Visualization}
+  \centering
+  \includegraphics[width=0.9\textwidth]{vis.png}
+\end{frame}
+
+\section{Results}
+
+\begin{frame}{Results}
+  \begin{itemize}
+    \item Iterate at each candidates to all the CDNs 
+    \item Compute the average ping time
+    \item Sort by average time ascendantly
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Results}
+  \centering
+  \includegraphics[width=0.9\textwidth]{results.png}
+\end{frame}
+
+\begin{frame}{Results}
+  \centering
+  \includegraphics[width=0.9\textwidth]{Clarksville.png}
+\end{frame}
+
+\begin{frame}{Results}
+  \centering
+  \includegraphics[width=0.9\textwidth]{bloomsburg.png}
+\end{frame}
+
+\subsection*{Thanks...}
+
+\begin{frame}{}
+  \centering
+  \huge Thank you!!! 
+\end{frame}
+
+\end{document}
