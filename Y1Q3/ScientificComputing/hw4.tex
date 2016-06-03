@@ -1,0 +1,176 @@
+\documentclass{article}
+
+\usepackage{amsmath,amsfonts}
+\usepackage{fullpage}
+\usepackage{enumitem}
+
+\usepackage{tikz}
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+
+\pagestyle{empty}
+
+\renewcommand{\vec}[1]{\mathbf{#1}}
+\newcommand{\x}{\vec{x}}
+\renewcommand{\r}{\vec{r}}
+\renewcommand{\b}{\vec{b}}
+\renewcommand{\v}{\vec{v}}
+
+\title{Homework 4\\CS 210}
+\author{Andres Calderon \\ SID 861243796}
+\date{\today}
+\begin{document}
+
+\maketitle
+
+\begin{center}
+\begin{tabular}{|l|l|p{.4in}|}
+\hline Question & Points & Score \\
+\hline  1 & 5 & \\
+\hline  2 & 10 & \\
+\hline  3 & 10 & \\
+\hline  4 & 10 & \\
+\hline  5 & 10 & \\
+\hline  6 &  5 & \\
+\hline  7 &  5 & \\
+\hline  8 &  10 & \\
+\hline  9 &  5 & \\
+\hline 10 & 15 & \\
+\hline Total & 85 & \\
+\hline 
+\end{tabular}
+\end{center}
+
+\subsection*{Eigenvalue problems}
+\begin{enumerate}
+\setcounter{enumi}{0}
+\item Consider the following statements about eigenvalue problems.  Mark each statement as true or false.
+\begin{enumerate}
+\item[T / \circled{F}]  A defective eigenvalue is one where the geometric multiplicity is greater the algebraic multiplicity.
+\item[T / \circled{F}]  A good way to compute eigenvalues is by finding roots of the associated characteristic polynomial.
+\item[T / \circled{F}]  An orthogonal projection matrix has one eigenvalue equal to 0 and the other eigenvalues equal to 1.
+\item[\circled{T} / F]  Symmetric matrices have orthogonal set of eigenvectors.
+\item[T / \circled{F}]  A projection matrix must have at least one eigenvalue equal to 0.
+\item[\circled{T} / F]  A matrix that has an orthogonal set of eigenvectors can be decomposed as $A = U \Lambda U^T$ where  $U$ is orthogonal and $\Lambda$ is diagonal.
+\end{enumerate}
+
+\item Given a symmetric $n \times n$ matrix $A$, show that two eigenvectors corresponding to two distinct eigenvalues must be orthogonal.
+\\
+\\
+Answer:\\
+\\
+Let's have two eigenvectors $\vec{x_1}$ and $\vec{x_2}$ with different eigenvalues $\lambda_1$ and $\lambda_2$ respectively.  Given $A\vec{x_1}=\lambda_1\vec{x_1}$ we can multiply both sides by $\vec{x^T_2}$,
+
+$$\vec{x^T_2}A\vec{x_1}=\lambda_1\vec{x^T_2}\vec{x_1}$$
+
+Now, let's transpose both sides,
+
+$$\vec{x^T_1}\vec{x_2}\lambda_1=\vec{x^T_1}A^T\vec{x_2}$$
+
+As $\lambda_1$ is a scalar and $A$ is symmetric ($A=A^T$) we can reorganized as,
+
+$$\lambda_1\vec{x^T_1}\vec{x_2}=\vec{x^T_1}A\vec{x_2}$$
+
+Similarly, given $A\vec{x_2}=\lambda_2\vec{x_2}$, this time we will multiply both sides by $\vec{x^T_1}$, 
+
+$$\vec{x^T_1}A\vec{x_2}=\lambda_2\vec{x^T_1}\vec{x_2}$$
+
+So we can compare previous expressions as follows,
+
+$$\lambda_1\vec{x^T_1}\vec{x_2}=\lambda_2\vec{x^T_1}\vec{x_2}$$
+
+Then,
+
+$$\lambda_1\vec{x^T_1}\vec{x_2}-\lambda_2\vec{x^T_1}\vec{x_2}=0$$
+
+$$(\lambda_1-\lambda_2)\vec{x^T_1}\vec{x_2}=0$$
+
+As $\lambda_1\neq\lambda_2$, $(\lambda_1-\lambda_2)$ cannot be $0$. We follow that $\vec{x^T_1}\vec{x_2}=0$ and conclude that $\vec{x_1}\bot\vec{x_2}$.
+
+\end{enumerate}
+
+\subsubsection*{Matrix deflation}
+
+Suppose we have found an eigenvalue, eigenvector pair $(\lambda_1,\vec{x}_1)$ of $A$, i.e., $A \vec{x}_1 = \lambda_1 \vec{x}_1$.  \emph{Matrix deflation} effectively removes the known
+eigenvalue from the matrix so that another eigenvalue, eigenvector pair can be computed.  Below we look at two approaches to matrix deflation.  See Heath 2002 Section 4.5.4, or Heath 1997 Section 4.3.5.
+
+
+\begin{enumerate}
+\setcounter{enumi}{2}
+\item Let A be an $n \times n$ matrix with distinct eigenvalues $\lambda_1, \lambda_2, \cdots, \lambda_n$.
+Suppose we have found an eigenvalue, eigenvector pair $(\lambda_1,\vec{x}_1)$ of $A$, i.e., $A \vec{x}_1 = \lambda_1 \vec{x}_1$.  Let $H$ be a Householder matrix such that $H\vec{x}_1 =
+\alpha \vec{e}_1$, a scalar multiple of the first column of the identity  matrix.  
+\begin{enumerate}
+\item Show that the similarity transformation determined by $H$ transforms $A$ into the block triangular form 
+$$
+H A H^{-1} = \begin{pmatrix} \lambda_1 & \vec{b}^T \\ \vec{0} & B \end{pmatrix},
+$$
+where $B$ is an $(n-1) \times (n-1)$ matrix.
+\item Show that $B$ has eigenvalues $\lambda_2, \cdots, \lambda_n$, and that if $B\vec{y}_k = \lambda_k \vec{y}_k$, then $A \vec{x}_k = \lambda_k \vec{x}_k$ where $\vec{x}_k =
+  H^{-1} \begin{pmatrix} \gamma \\ \vec{y}_k \end{pmatrix}, \gamma = \frac{\vec{b}^T\vec{y}_k}{\lambda_k-\lambda_1}.$
+\end{enumerate}
+\item Another approach to matrix deflation is to let $\vec{u}_1$ be any vector such that $\vec{u}_1^T\vec{x}_1 = \lambda_1$, and define $B = A - \vec{x}_1\vec{u}_1^T$.
+\begin{enumerate}
+\item Show that $B$ has eigenvalues $0, \lambda_2, \cdots, \lambda_n$.
+\item What are the eigenvectors of $B$?
+\end{enumerate}
+
+\end{enumerate}
+
+\subsection*{Nonlinear Equations}
+
+\begin{enumerate}
+\setcounter{enumi}{4}
+
+\item Consider the following statements about nonlinear equation solving.  Mark each statement as true or false.
+\begin{enumerate}
+\item[T / \circled{F}] A small residual $||\vec{f}(\vec{x})||$ guarantees an accurate solution of a system of nonlinear equations $\vec{f}(\vec{x}) = \vec{0}$.
+\item[\circled{T} / F] Newton's method is an example of a fixed point iteration.
+\item[T / \circled{F}] If an iterative method for solving a nonlinear equation gains more than one bit of accuracy per iteration, then it is said to have a superlinear convergence rate.
+\item[T / \circled{F}] Newton's method always converges quadratically.
+\item[T / \circled{F}] A \emph{fixed point} of a function $f(x)$ is a point $x^*$ such that $f(x^*) = 0$.
+\end{enumerate}
+
+\item Compare Newton's method and the Secant Method for solving a scalar nolinear equation.  What are the advantages and
+disadvantages of each?
+
+\item (Heath 5.1) Consider the nonlinear equation
+$$
+f(x) = x^2 - 2 = 0.
+$$
+\begin{enumerate}
+\item With $x_0 = 1$, as a starting point, what is the value of $x_1$ if you use Newton's method for solving this problem?
+\item With $x_0 = 1$ and $x_1 = 2$ as a starting points, what is the value of $x_2$ if you use the secant method for the same problem?
+\end{enumerate}
+
+\item (Heath 5.12) Newton's method for solving a scalar nonlinear equation $f(x) = 0$ requires computation of the derivative of $f$ at each iteration.  Suppose that we instead replace
+  the true derivative with a constant value $d$, that is, we use the iteration scheme
+$$
+x_{k+1} = x_k - \frac{f(x)}{d}.
+$$
+\begin{enumerate}
+\item Under what condition on the value of $d$ will this scheme be locally convergent?
+\item What will be the convergence rate, in general?
+\item Is there any value of $d$ that would still yield quadratic convergence?
+\end{enumerate}
+
+\item (Heath 5.10)  Carry out one iteration of Newton's method applied ot the system of nonlinear equations
+\begin{align*}
+x_1^2 - x_2^2 &= 0 \\
+2 x_1 x_2 &= 1
+\end{align*}
+with starting value $\vec{x}_0 = ( 0, 1 )^T$.
+
+\item \emph{Computer problem} (Heath 5.3) Implement the bisection, Newton, and secant methods for soving nonlinear equations in one dimension, and test your implementation by finding at least one
+  root for each of the following equations.  What termination criterion should you use?  What convergence rate is achieved in each case?
+\begin{enumerate}
+\item $x^3 - 2 x - 5 = 0.$
+\item $e^{-x} = x.$
+\item $x \sin(x) = 1.$
+\item $x^3 - 3 x^2 + 3 x - 1 = 0.$
+\end{enumerate}
+
+\end{enumerate}
+
+
+\end{document}
