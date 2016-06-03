@@ -7,6 +7,10 @@
 \usepackage{tikz}
 \newcommand*\circled[1]{\tikz[baseline=(char.base)]{
             \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+<<<<<<< 5f5d24cb15f5d621d811b3a2deea6d5bd0a85a18
+=======
+\usepackage{booktabs}
+>>>>>>> Sync machines...
 
 \pagestyle{empty}
 
@@ -133,6 +137,14 @@ where $B$ is an $(n-1) \times (n-1)$ matrix.
 
 \item Compare Newton's method and the Secant Method for solving a scalar nolinear equation.  What are the advantages and
 disadvantages of each?
+<<<<<<< 5f5d24cb15f5d621d811b3a2deea6d5bd0a85a18
+=======
+\\
+\\
+Answer:\\
+\\
+As it is stated at the end of section 5.5.4 of the textbook, in general, Newton's method has a quadratic convergence rate faster than the superlinear convergence of the secant method. However, an important advantage of the secant method is that it just requires one new function evaluation per iteration instead of a derivative computation.  Another drawback of the secant method is the requirement of two initial points instead of one of the Newton's method.
+>>>>>>> Sync machines...
 
 \item (Heath 5.1) Consider the nonlinear equation
 $$
@@ -140,7 +152,57 @@ f(x) = x^2 - 2 = 0.
 $$
 \begin{enumerate}
 \item With $x_0 = 1$, as a starting point, what is the value of $x_1$ if you use Newton's method for solving this problem?
+<<<<<<< 5f5d24cb15f5d621d811b3a2deea6d5bd0a85a18
 \item With $x_0 = 1$ and $x_1 = 2$ as a starting points, what is the value of $x_2$ if you use the secant method for the same problem?
+=======
+\\
+\\
+Answer:\\
+\\
+For Newton's method we will need the derivative of $f(x)$ which is given by,
+
+$$f'(x)=2x$$
+
+So the iteration function is given by,
+
+$$x_{k+1}=x_k-\frac{x_k^2-2}{2x_k}$$
+
+For $x_0=1$ the value of $x_1$ will be,
+
+$$x_{1}=x_0-\frac{x_0^2-2}{2x_0}$$
+$$x_{1}=1-\frac{1^2-2}{2(1)}$$
+$$x_{1}=1.5$$
+\item With $x_0 = 1$ and $x_1 = 2$ as a starting points, what is the value of $x_2$ if you use the secant method for the same problem?
+\\
+\\
+Answer:\\
+\\
+For the secant method, the iteration function is given by,
+
+$$x_{k+1}=x_k-f(x_k)\frac{x_k-x_{k-1}}{f(x_k)-f(x_{k-1})}$$
+
+Table \ref{tab:q7a} summarize the computation of $x_2$ given $x_0 = 1$ and $x_1 = 2$ as a starting points.
+
+\begin{table}[h]
+ \centering
+ \begin{center}
+\begin{tabular}{crr}
+\toprule
+k & $x_k$ & $f(x_k)$\\
+\midrule
+0 & 1.00 & -1.00\\
+1 & 2.00 &  2.00\\
+2 & 1.33 & \\
+\bottomrule
+ \end{tabular}
+ \end{center}
+ \caption{Computation of $x_2$ using the secant method.}
+ \label{tab:q7a}
+\end{table}
+
+So, $x_2=1.33$
+ 
+>>>>>>> Sync machines...
 \end{enumerate}
 
 \item (Heath 5.12) Newton's method for solving a scalar nonlinear equation $f(x) = 0$ requires computation of the derivative of $f$ at each iteration.  Suppose that we instead replace
