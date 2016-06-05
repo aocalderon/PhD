@@ -494,6 +494,12 @@ typedef struct {
   double dcache_bitline;
   double dcache_senseamp;
   double dcache_tagarray;
+  
+  double victim_decoder;
+  double victim_wordline;
+  double victim_bitline;
+  double victim_senseamp;
+  double victim_tagarray;
 
   double dtlb;
   double itlb;
@@ -526,6 +532,7 @@ typedef struct {
   double result_power;
   double icache_power;
   double dcache_power;
+  double victim_power;
   double dcache2_power;
 
   double clock_power;
@@ -574,6 +581,8 @@ double simple_array_decoder_power(int rows,int cols,int rports,int wports,int ca
 double simple_array_bitline_power(int rows,int cols,int rports,int wports,int cache);
 double simple_array_wordline_power(int rows,int cols,int rports,int wports,int cache);
 double squarify_new(int rows,int cols);
+void clear_cache_stats();
+void clear_cache_stats();
 void clear_access_stats();
 void update_power_stats();
 /* register power stats */

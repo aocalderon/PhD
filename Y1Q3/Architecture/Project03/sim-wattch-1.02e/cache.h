@@ -128,7 +128,7 @@ struct cache_blk_t
   /* DATA should be pointer-aligned due to preceeding field */
   /* NOTE: this is a variable-size tail array, this must be the LAST field
      defined in this structure! */
-  byte_t data[1];		/* actual data block starts here, block size
+  byte_t data;		/* actual data block starts here, block size
 				   should probably be a multiple of 8 */
 };
 
@@ -171,8 +171,9 @@ struct cache_t
 		     md_addr_t baddr,		/* program address to access */
 		     int bsize,			/* size of the cache block */
 		     struct cache_blk_t *blk,	/* ptr to cache block struct */
-		     tick_t now);		/* when fetch was initiated */
-
+		     tick_t now,  /* when fetch was initiated */
+		     md_addr_t repladdr);		
+		     
   /* derived data, for fast decoding */
   int hsize;			/* cache set hash table size */
   md_addr_t blk_mask;
@@ -202,6 +203,7 @@ struct cache_t
   /* last block to hit, used to optimize cache hit processing */
   md_addr_t last_tagset;	/* tag of last line accessed */
   struct cache_blk_t *last_blk;	/* cache block last accessed */
+  md_addr_t last_blk_addr;
 
   /* data blocks */
   byte_t *data;			/* pointer to data blocks allocation */

@@ -126,6 +126,8 @@ extern int bimod_config[];
 extern struct cache_t *cache_dl1;
 extern struct cache_t *cache_il1;
 extern struct cache_t *cache_dl2;
+/***************************/
+extern struct cache_t *victim_cache;
 
 extern struct cache_t *dtlb;
 extern struct cache_t *itlb;
@@ -151,6 +153,9 @@ static double lsq_power=0;
 static double regfile_power=0;
 static double icache_power=0;
 static double dcache_power=0;
+/********************/
+static double victim_power=0;
+
 static double dcache2_power=0;
 static double alu_power=0;
 static double falu_power=0;
@@ -164,6 +169,9 @@ static double lsq_power_cc1=0;
 static double regfile_power_cc1=0;
 static double icache_power_cc1=0;
 static double dcache_power_cc1=0;
+/********************/
+static double victim_power_cc1=0;
+
 static double dcache2_power_cc1=0;
 static double alu_power_cc1=0;
 static double resultbus_power_cc1=0;
@@ -176,6 +184,9 @@ static double lsq_power_cc2=0;
 static double regfile_power_cc2=0;
 static double icache_power_cc2=0;
 static double dcache_power_cc2=0;
+/********************/
+static double victim_power_cc2=0;
+
 static double dcache2_power_cc2=0;
 static double alu_power_cc2=0;
 static double resultbus_power_cc2=0;
@@ -188,6 +199,9 @@ static double lsq_power_cc3=0;
 static double regfile_power_cc3=0;
 static double icache_power_cc3=0;
 static double dcache_power_cc3=0;
+/********************/
+static double victim_power_cc3=0;
+
 static double dcache2_power_cc3=0;
 static double alu_power_cc3=0;
 static double resultbus_power_cc3=0;
@@ -216,6 +230,7 @@ extern counter_t lsq_access;
 extern counter_t regfile_access;
 extern counter_t icache_access;
 extern counter_t dcache_access;
+/***********************/
 extern counter_t victim_access;
 extern counter_t dcache2_access;
 extern counter_t alu_access;
@@ -247,6 +262,9 @@ static counter_t total_lsq_access=0;
 static counter_t total_regfile_access=0;
 static counter_t total_icache_access=0;
 static counter_t total_dcache_access=0;
+/********************/
+static counter_t total_victim_access=0;
+
 static counter_t total_dcache2_access=0;
 static counter_t total_alu_access=0;
 static counter_t total_resultbus_access=0;
@@ -258,9 +276,23 @@ static counter_t max_lsq_access;
 static counter_t max_regfile_access;
 static counter_t max_icache_access;
 static counter_t max_dcache_access;
+/********************/
+static counter_t max_victim_access;
+
 static counter_t max_dcache2_access;
 static counter_t max_alu_access;
 static counter_t max_resultbus_access;
+
+/******************************************************************************************************/
+/* CS203  Clearing victim cache                                                                       */
+/******************************************************************************************************/
+void clear_cache_stats(){
+	cache_flush(victim_cache,0);
+}
+
+/******************************************************************************************************/
+/*                                                                                                    */
+/******************************************************************************************************/
 
 void clear_access_stats()
 {
@@ -521,6 +553,19 @@ void update_power_stats()
   }
   else
     dcache_power_cc3+=turnoff_factor*(power.dcache_power+power.dtlb);
+    
+/************************************************/
+  if(victim_access) {
+    if(victim_access <= res_memport)
+      victim_power_cc1+=power.victim_power;
+    else
+      victim_power_cc1+=((double)victim_access/(double)res_memport)*power.victim_power;
+      victim_power_cc2+=((double)victim_access/(double)res_memport)*power.victim_power;
+      victim_power_cc3+=((double)victim_access/(double)res_memport)*power.victim_power;
+  }
+  else
+    victim_power_cc3+=turnoff_factor*power.victim_power;
+
 
   if(dcache2_access) {
     if(dcache2_access <= res_memport)
@@ -642,6 +687,9 @@ power_reg_stats(struct stat_sdb_t *sdb)	/* stats database */
 
   stat_reg_double(sdb, "dcache_power", "total power usage of dcache", &dcache_power, 0, NULL);
 
+/***********************************/
+  stat_reg_double(sdb, "victim_power", "total power usage of victim cache", &victim_power, 0, NULL);
+
   stat_reg_double(sdb, "dcache2_power", "total power usage of dcache2", &dcache2_power, 0, NULL);
 
   stat_reg_double(sdb, "alu_power", "total power usage of alu", &alu_power, 0, NULL);
@@ -666,6 +714,9 @@ power_reg_stats(struct stat_sdb_t *sdb)	/* stats database */
 
   stat_reg_formula(sdb, "avg_dcache_power", "avg power usage of dcache", "dcache_power/sim_cycle",  NULL);
 
+/***********************************/
+  stat_reg_formula(sdb, "avg_victim_power", "avg power usage of victim cache", "victim_power/sim_cycle",  NULL);
+
   stat_reg_formula(sdb, "avg_dcache2_power", "avg power usage of dcache2", "dcache2_power/sim_cycle",  NULL);
 
   stat_reg_formula(sdb, "avg_alu_power", "avg power usage of alu", "alu_power/sim_cycle",  NULL);
@@ -688,10 +739,12 @@ power_reg_stats(struct stat_sdb_t *sdb)	/* stats database */
 
   stat_reg_formula(sdb, "avg_issue_power", "average power of issue unit per cycle", "(resultbus_power + alu_power + dcache_power + dcache2_power + window_power + lsq_power)/ sim_cycle", /* format */NULL);
 
-  stat_reg_formula(sdb, "total_power", "total power per cycle","(rename_power + bpred_power + window_power + lsq_power + regfile_power + icache_power  + resultbus_power + clock_power + alu_power + dcache_power + dcache2_power)", NULL);
+/***********************************/  
+  stat_reg_formula(sdb, "total_power", "total power per cycle","(rename_power + bpred_power + window_power + lsq_power + regfile_power + icache_power  + resultbus_power + clock_power + alu_power + dcache_power + victim_power + dcache2_power)", NULL);
 
-  stat_reg_formula(sdb, "avg_total_power_cycle", "average total power per cycle","(rename_power + bpred_power + window_power + lsq_power + regfile_power + icache_power + resultbus_power + clock_power + alu_power + dcache_power + dcache2_power)/sim_cycle", NULL);
+  stat_reg_formula(sdb, "avg_total_power_cycle", "average total power per cycle","(rename_power + bpred_power + window_power + lsq_power + regfile_power + icache_power + resultbus_power + clock_power + alu_power + dcache_power + victim_power + dcache2_power)/sim_cycle", NULL);
 
+  
   stat_reg_formula(sdb, "avg_total_power_cycle_nofp_nod2", "average total power per cycle","(rename_power + bpred_power + window_power + lsq_power + regfile_power + icache_power + resultbus_power + clock_power + alu_power + dcache_power - falu_power )/sim_cycle", NULL);
 
   stat_reg_formula(sdb, "avg_total_power_insn", "average total power per insn","(rename_power + bpred_power + window_power + lsq_power + regfile_power + icache_power + resultbus_power + clock_power + alu_power + dcache_power + dcache2_power)/sim_total_insn", NULL);
@@ -898,6 +951,9 @@ power_reg_stats(struct stat_sdb_t *sdb)	/* stats database */
 
   stat_reg_counter(sdb, "total_dcache_access", "total number accesses of dcache", &total_dcache_access, 0, NULL);
 
+/****************************************/
+  stat_reg_counter(sdb, "total_victim_access", "total number accesses of victim cache", &total_victim_access, 0, NULL);
+
   stat_reg_counter(sdb, "total_dcache2_access", "total number accesses of dcache2", &total_dcache2_access, 0, NULL);
 
   stat_reg_counter(sdb, "total_alu_access", "total number accesses of alu", &total_alu_access, 0, NULL);
@@ -918,6 +974,9 @@ power_reg_stats(struct stat_sdb_t *sdb)	/* stats database */
 
   stat_reg_formula(sdb, "avg_dcache_access", "avg number accesses of dcache", "total_dcache_access/sim_cycle",  NULL);
 
+/****************************************/
+  stat_reg_formula(sdb, "avg_victim_access", "avg number accesses of victim cache", "total_victim_access/sim_cycle",  NULL);
+
   stat_reg_formula(sdb, "avg_dcache2_access", "avg number accesses of dcache2", "total_dcache2_access/sim_cycle",  NULL);
 
   stat_reg_formula(sdb, "avg_alu_access", "avg number accesses of alu", "total_alu_access/sim_cycle",  NULL);
@@ -937,6 +996,9 @@ power_reg_stats(struct stat_sdb_t *sdb)	/* stats database */
   stat_reg_counter(sdb, "max_icache_access", "max number accesses of icache", &max_icache_access, 0, NULL);
 
   stat_reg_counter(sdb, "max_dcache_access", "max number accesses of dcache", &max_dcache_access, 0, NULL);
+
+/****************************************/
+  stat_reg_counter(sdb, "max_victim_access", "max number accesses of dcache", &max_victim_access, 0, NULL);
 
   stat_reg_counter(sdb, "max_dcache2_access", "max number accesses of dcache2", &max_dcache2_access, 0, NULL);
 
@@ -1037,6 +1099,8 @@ void dump_power_stats(power)
   double reorder_power;
   double icache_power;
   double dcache_power;
+  /**********/
+  double victim_power;
   double dcache2_power;
   double dtlb_power;
   double itlb_power;
@@ -1045,6 +1109,9 @@ void dump_power_stats(power)
   icache_power = power->icache_power;
 
   dcache_power = power->dcache_power;
+
+  /**********/
+  victim_power = power->victim_power;
 
   dcache2_power = power->dcache2_power;
 
@@ -1085,9 +1152,10 @@ void dump_power_stats(power)
     power->regfile_wordline + power->regfile_bitline + 
     power->regfile_senseamp;
 
+/**************************/
   total_power = bpred_power + rename_power + window_power + regfile_power +
     power->resultbus + lsq_power + 
-    icache_power + dcache_power + dcache2_power + 
+    icache_power + dcache_power + victim_power + dcache2_power + 
     dtlb_power + itlb_power + power->clock_power + power->ialu_power +
     power->falu_power;
 
@@ -1146,6 +1214,15 @@ void dump_power_stats(power)
   fprintf(stderr," senseamp_power (W): %g\n",power->dcache_senseamp);
   fprintf(stderr," tagarray_power (W): %g\n",power->dcache_tagarray);
   fprintf(stderr,"Dtlb_power (W): %g (%.3g%%)\n",power->dtlb,100*power->dtlb/total_power);
+
+/***************************************************/
+  fprintf(stderr,"Victim Cache Power Consumption: %g  (%.3g%%)\n",victim_power,100*victim_power/total_power);
+  fprintf(stderr," decode_power (W): %g\n",power->victim_decoder);
+  fprintf(stderr," wordline_power (W): %g\n",power->victim_wordline);
+  fprintf(stderr," bitline_power (W): %g\n",power->victim_bitline);
+  fprintf(stderr," senseamp_power (W): %g\n",power->victim_senseamp);
+  fprintf(stderr," tagarray_power (W): %g\n",power->victim_tagarray);
+  
   fprintf(stderr,"Level 2 Cache Power Consumption: %g (%.3g%%)\n",dcache2_power,100*dcache2_power/total_power);
   fprintf(stderr," decode_power (W): %g\n",power->dcache2_decoder);
   fprintf(stderr," wordline_power (W): %g\n",power->dcache2_wordline);
@@ -2120,6 +2197,56 @@ void calculate_power(power)
     fprintf(stderr,"global clock power == %f\n",clockpower);
   }
 
+/******************************************/
+  time_parameters.cache_size = victim_cache->nsets * victim_cache->bsize * victim_cache->assoc; /* C */
+  time_parameters.block_size = victim_cache->bsize; /* B */
+  time_parameters.associativity = victim_cache->assoc; /* A */
+  time_parameters.number_of_sets = victim_cache->nsets; /* C/(B*A) */
+
+  calculate_time(&time_result,&time_parameters);
+  output_data(&time_result,&time_parameters);
+
+  ndwl=time_result.best_Ndwl;
+  ndbl=time_result.best_Ndbl;
+  nspd=time_result.best_Nspd;
+  ntwl=time_result.best_Ntwl;
+  ntbl=time_result.best_Ntbl;
+  ntspd=time_result.best_Ntspd;
+  c = time_parameters.cache_size;
+  b = time_parameters.block_size;
+  a = time_parameters.associativity;
+
+  rowsb = c/(b*a*ndbl*nspd);
+  colsb = 8*b*a*nspd/ndwl;
+
+  tagsize = va_size - ((int)logtwo(victim_cache->nsets) + (int)logtwo(victim_cache->bsize));
+  trowsb = c/(b*a*ntbl*ntspd);
+  tcolsb = a * (tagsize + 1 + 6) * ntspd/ntwl;
+
+  if(verbose) {
+    fprintf(stderr,"%d KB %d-way cache (%d-byte block size):\n",c,a,b);
+    fprintf(stderr,"ndwl == %d, ndbl == %d, nspd == %d\n",ndwl,ndbl,nspd);
+    fprintf(stderr,"%d sets of %d rows x %d cols\n",ndwl*ndbl,rowsb,colsb);
+    fprintf(stderr,"tagsize == %d\n",tagsize);
+  }
+
+  predeclength = rowsb * (RegCellHeight + WordlineSpacing);
+  wordlinelength = colsb *  (RegCellWidth + BitlineSpacing);
+  bitlinelength = rowsb * (RegCellHeight + WordlineSpacing);
+  
+
+  if(verbose)
+    fprintf(stderr,"victim power stats\n");
+  power->victim_decoder = array_decoder_power(rowsb,colsb,predeclength,1,1,cache);
+  power->victim_wordline = array_wordline_power(rowsb,colsb,wordlinelength,1,1,cache);
+  power->victim_bitline = array_bitline_power(rowsb,colsb,bitlinelength,1,1,cache);
+  power->victim_senseamp = senseamp_power(colsb);
+  power->victim_tagarray = simple_array_power(trowsb,tcolsb,1,1,cache);
+
+  power->victim_power = power->victim_decoder + power->victim_wordline + power->victim_bitline + power->victim_senseamp + power->victim_tagarray;
+
+/*********************************************/
+
   time_parameters.cache_size = cache_dl2->nsets * cache_dl2->bsize * cache_dl2->assoc; /* C */
   time_parameters.block_size = cache_dl2->bsize; /* B */
   time_parameters.associativity = cache_dl2->assoc; /* A */
@@ -2155,7 +2282,7 @@ void calculate_power(power)
   predeclength = rowsb * (RegCellHeight + WordlineSpacing);
   wordlinelength = colsb *  (RegCellWidth + BitlineSpacing);
   bitlinelength = rowsb * (RegCellHeight + WordlineSpacing);
-
+  
   if(verbose)
     fprintf(stderr,"dcache2 power stats\n");
   power->dcache2_decoder = array_decoder_power(rowsb,colsb,predeclength,1,1,cache);
@@ -2226,6 +2353,16 @@ void calculate_power(power)
   
   power->clock_power *= crossover_scaling;
 
+/**************/
+  power->victim_decoder *= crossover_scaling;
+  power->victim_wordline *= crossover_scaling;
+  power->victim_bitline *= crossover_scaling;
+  power->victim_senseamp *= crossover_scaling;
+  power->victim_tagarray *= crossover_scaling;
+
+  power->victim_power *= crossover_scaling;
+/*****************/
+
   power->dcache2_decoder *= crossover_scaling;
   power->dcache2_wordline *= crossover_scaling;
   power->dcache2_bitline *= crossover_scaling;
@@ -2255,6 +2392,8 @@ void calculate_power(power)
     power->itlb + 
     power->dcache_power + 
     power->dtlb + 
+    /**********/
+    power->victim_power +
     power->dcache2_power;
 
   power->total_power_nodcache2 =power->local_predict + power->global_predict + 
@@ -2278,6 +2417,8 @@ void calculate_power(power)
     power->itlb + 
     power->dcache_power + 
     power->dtlb + 
+    /**********/
+    power->victim_power +
     power->dcache2_power;
 
   power->bpred_power = power->btb + power->local_predict + power->global_predict + power->chooser + power->ras;
