@@ -494,15 +494,16 @@ dl1_access_fn(enum mem_cmd cmd,		/* access cmd, Read or Write */
 	      md_addr_t baddr,		/* block address to access */
 	      int bsize,		/* size of block to access */
 	      struct cache_blk_t *blk,	/* ptr to block in upper level */
-	      tick_t now)		/* time of access */
+	      tick_t now,    /* time of access */
+          md_addr_t rep_addr)		
 {
   unsigned int lat;
 
   if (victim_cache)
     {
       /* access next level of data cache hierarchy */
-      lat = cache_access(victim_cache, cmd, baddr, NULL, bsize,
-			 /* now */now, /* pudata */NULL, /* repl addr */NULL);
+      lat = vic_cache_access(victim_cache, cmd, baddr, NULL, bsize,
+			 /* now */now, /* pudata */NULL, /* repl addr */NULL, blk, rep_addr);
 
       /* Wattch -- Dcache2 access */
       victim_access++;
@@ -869,7 +870,7 @@ sim_reg_options(struct opt_odb_t *odb)
 /******************************************************************************************************/
   opt_reg_string(odb, "-cache:victim",
 		 "Victim cache config, i.e., {<config>|none}",
-		 &cache_dl1_opt, /*FIXME!!!*/"vic:1:16:1:l",
+		 &victim_cache_opt, /*FIXME!!!*/"vic:1:32:16:l",
 		 /* print */TRUE, NULL);
 		 
   opt_reg_int(odb, "-cache:viclat",
@@ -883,7 +884,7 @@ sim_reg_options(struct opt_odb_t *odb)
 
   opt_reg_string(odb, "-cache:dl1",
 		 "l1 data cache config, i.e., {<config>|none}",
-		 &victim_cache_opt, "dl1:128:32:4:l",
+		 &cache_dl1_opt, "dl1:128:32:4:l",
 		 /* print */TRUE, NULL);
 
   opt_reg_note(odb,
@@ -2388,7 +2389,7 @@ ruu_commit(void)
 
               /* commit store value to D-cache */
 		      lat =
-			cache_access(cache_dl1, Write, (LSQ[LSQ_head].addr&~3),
+			dl1_cache_access(cache_dl1, Write, (LSQ[LSQ_head].addr&~3),
 				     NULL, 4, sim_cycle, NULL, NULL);
 		      if (lat > cache_dl1_lat)
 			events |= PEV_CACHEMISS;
@@ -2989,7 +2990,7 @@ ruu_issue(void)
 				  dcache_access++;
 				  /* access the cache if non-faulting */
 				  load_lat =
-				    cache_access(cache_dl1, Read,
+				    dl1_cache_access(cache_dl1, Read,
 						 (rs->addr & ~3), NULL, 4,
 						 sim_cycle, NULL, NULL);
 				  if (load_lat > cache_dl1_lat)
@@ -4930,6 +4931,16 @@ sim_main(void)
   fetch_regs_PC = regs.regs_PC - sizeof(md_inst_t);
   fetch_pred_PC = regs.regs_PC;
   regs.regs_PC = regs.regs_PC - sizeof(md_inst_t);
+  
+/******************************************************************************************************/
+/* CS203  Clearing victim cache                                                                       */
+/******************************************************************************************************/
+  clear_cache_stats();
+  
+/******************************************************************************************************/
+/*                                                                                                    */
+/******************************************************************************************************/
+
 
   /* main simulator loop, NOTE: the pipe stages are traverse in reverse order
      to eliminate this/next state synchronization and relaxation problems */
