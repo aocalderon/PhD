@@ -299,5 +299,11 @@ unsigned int				/* latency of flush operation */
 cache_flush_addr(struct cache_t *cp,	/* cache instance to flush */
 		 md_addr_t addr,	/* address of block to flush */
 		 tick_t now);		/* time of cache flush */
+		 
+unsigned int				/* latency of access in cycles */
+cache_prefetch_block(struct cache_t *cp,	/* cache to access */
+	     md_addr_t addr,		/* address of prefetch */
+	     tick_t now		/* time of access */
+);
 
 #endif /* CACHE_H */

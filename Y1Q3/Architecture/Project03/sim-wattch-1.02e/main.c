@@ -230,7 +230,6 @@ main(int argc, char **argv, char **envp)
 {
   char *s;
   int i, exit_code;
-
 #ifndef _MSC_VER
   /* catch SIGUSR1 and dump intermediate stats */
   signal(SIGUSR1, signal_sim_stats);
@@ -288,6 +287,7 @@ main(int argc, char **argv, char **envp)
   /* FIXME: add stats intervals and max insts... */
 
   /* register all simulator-specific options */
+
   sim_reg_options(sim_odb);
 
   /* parse simulator options */
@@ -374,6 +374,7 @@ main(int argc, char **argv, char **envp)
   /* initialize the instruction decoder */
   md_init_decoder();
 
+
   /* initialize all simulation modules */
   sim_init();
 
@@ -409,6 +410,7 @@ main(int argc, char **argv, char **envp)
 
   /* omit option dump time from rate stats */
   sim_start_time = time((time_t *)NULL);
+
 
   if (init_quit)
     exit_now(0);
