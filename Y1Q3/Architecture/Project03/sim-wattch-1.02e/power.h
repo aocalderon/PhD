@@ -500,6 +500,12 @@ typedef struct {
   double victim_bitline;
   double victim_senseamp;
   double victim_tagarray;
+  
+  double buffer_decoder;
+  double buffer_wordline;
+  double buffer_bitline;
+  double buffer_senseamp;
+  double buffer_tagarray;
 
   double dtlb;
   double itlb;
@@ -533,6 +539,7 @@ typedef struct {
   double icache_power;
   double dcache_power;
   double victim_power;
+  double buffer_power;
   double dcache2_power;
 
   double clock_power;

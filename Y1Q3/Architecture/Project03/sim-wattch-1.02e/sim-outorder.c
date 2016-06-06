@@ -161,13 +161,19 @@ int RUU_size = 8;
 int LSQ_size = 4;
 
 /******************************************************************************************************/
-/* CS203  Declaring victim cache variables                                                            */
+/* CS203  Declaring new cache variables                                                               */
 /******************************************************************************************************/
 /* Victim cache config, i.e., {<config>|none} */
 static char *victim_cache_opt;
 
 /* Victim cache hit latency (in cycles) */
 static int victim_cache_lat;
+
+/* Victim cache config, i.e., {<config>|none} */
+static char *buffer_cache_opt;
+
+/* Victim cache hit latency (in cycles) */
+static int buffer_cache_lat;
 
 /******************************************************************************************************/
 /*                                                                                                    */
@@ -250,6 +256,7 @@ counter_t regfile_access=0;
 counter_t icache_access=0;
 counter_t dcache_access=0;
 counter_t victim_access=0;
+counter_t buffer_access=0;
 counter_t dcache2_access=0;
 counter_t alu_access=0;
 counter_t ialu_access=0;
@@ -434,11 +441,12 @@ struct cache_t *cache_dl1;
 struct cache_t *cache_dl2;
 
 /******************************************************************************************************/
-/* CS203  Declaring victim cache                                                                      */
+/* CS203  Declaring victim and buffer caches                                                          */
 /******************************************************************************************************/
 /* victim cache */
 struct cache_t *victim_cache;
-
+/* buffer cache */
+struct cache_t *buffer_cache;
 /******************************************************************************************************/
 /*                                                                                                    */
 /******************************************************************************************************/
@@ -516,8 +524,26 @@ dl1_access_fn(enum mem_cmd cmd,		/* access cmd, Read or Write */
 	  return 0;
 	}
     }
-  else
+  else if (buffer_cache)
     {
+      /* access next level of data cache hierarchy */
+      lat = buf_cache_access(buffer_cache, cmd, baddr, NULL, bsize,
+			 /* now */now, /* pudata */NULL, /* repl addr */NULL, blk, rep_addr);
+
+      /* Wattch -- Dcache2 access */
+      buffer_access++;
+
+      if (cmd == Read)
+	return lat;
+      else
+	{
+	  /* FIXME: unlimited write buffers */
+	  return 0;
+	}
+    } 
+    else
+    {
+
 	  if (cache_dl2)
 		{
 		  /* access next level of data cache hierarchy */
@@ -549,7 +575,35 @@ dl1_access_fn(enum mem_cmd cmd,		/* access cmd, Read or Write */
 	}
 }
 
+/* buffer cache l1 block miss handler function */
+static unsigned int			/* latency of block access */
+buffer_access_fn(enum mem_cmd cmd,		/* access cmd, Read or Write */
+	      md_addr_t baddr,		/* block address to access */
+	      int bsize,		/* size of block to access */
+	      struct cache_blk_t *blk,	/* ptr to block in upper level */
+	      tick_t now)		/* time of access */
+{
+  unsigned int lat;
 
+  if (cache_dl2)
+    {
+      /* access next level of data cache hierarchy */
+      lat = cache_access(cache_dl2, cmd, baddr, NULL, bsize,
+			 /* now */now, /* pudata */NULL, /* repl addr */NULL);
+
+      /* Wattch -- Dcache2 access */
+      dcache2_access++;
+
+      if (cmd == Read)
+		return lat;
+	else
+	{
+	  /* FIXME: unlimited write buffers */
+	  return 0;
+	}
+	}
+
+}
 
 /* victim cache l1 block miss handler function */
 static unsigned int			/* latency of block access */
@@ -877,6 +931,16 @@ sim_reg_options(struct opt_odb_t *odb)
 	      "Victim cache hit latency (in cycles)",
 	      &victim_cache_lat, /* default */1,
 	      /* print */TRUE, /* format */NULL);
+	      
+  opt_reg_string(odb, "-cache:buffer",
+		 "Buffer cache config, i.e., {<config>|none}",
+		 &buffer_cache_opt, /*FIXME!!!*/"buf:1:32:16:f",
+		 /* print */TRUE, NULL);
+		 
+  opt_reg_int(odb, "-cache:buflat",
+	      "Buffer cache hit latency (in cycles)",
+	      &buffer_cache_lat, /* default */1,
+	      /* print */TRUE, /* format */NULL);	      
 
 /******************************************************************************************************/
 /*                                                                                                    */
@@ -1192,12 +1256,74 @@ sim_check_options(struct opt_odb_t *odb,        /* options database */
 			cache_dl2 = cache_create(name, nsets, bsize, /* balloc */FALSE,
 							/* usize */0, assoc, cache_char2policy(c),
 							dl2_access_fn, /* hit lat */cache_dl2_lat);
-			if (sscanf(victim_cache_opt, "%[^:]:%d:%d:%d:%c",
+			if (strcmp(victim_cache_opt, "none")){
+				if (sscanf(victim_cache_opt, "%[^:]:%d:%d:%d:%c",
+						name, &nsets, &bsize, &assoc, &c) != 5)
+					fatal("bad victim cache parms: <name>:<nsets>:<bsize>:<assoc>:<repl>");
+				victim_cache = cache_create(name, nsets, bsize, /* balloc */FALSE,
+								/* usize */0, assoc, cache_char2policy(c),
+								victim_access_fn, /* hit lat */victim_cache_lat);
+			}
+		}
+	}
+
+/******************************************************************************************************/
+/*                                                                                                    */
+/******************************************************************************************************/
+
+/******************************************************************************************************/
+/* CS203  Creating buffer cache                                                                       */
+/******************************************************************************************************/
+	/* use a level 1 D-cache? */
+	if (!mystricmp(cache_dl1_opt, "none"))
+	{
+		cache_dl1 = NULL;
+
+		/* the level 2 D-cache cannot be defined */
+		if (strcmp(cache_dl2_opt, "none"))
+			fatal("the l1 data cache must defined if the l2 cache is defined");
+		cache_dl2 = NULL;
+		
+		/* the victim cache cannot be defined */
+		if (strcmp(buffer_cache_opt, "none"))
+			fatal("the l1 data cache must defined if the buffer cache is defined");
+		buffer_cache = NULL;
+	}
+	else /* dl1 is defined */
+	{
+		if (sscanf(cache_dl1_opt, "%[^:]:%d:%d:%d:%c", 
+				name, &nsets, &bsize, &assoc, &c) != 5)
+			fatal("bad l1 D-cache parms: <name>:<nsets>:<bsize>:<assoc>:<repl>");
+		cache_dl1 = cache_create(name, nsets, bsize, /* balloc */FALSE,
+						/* usize */0, assoc, cache_char2policy(c),
+						dl1_access_fn, /* hit lat */cache_dl1_lat);
+
+		/* is the level 2 D-cache defined? */
+		if (!mystricmp(cache_dl2_opt, "none"))
+		{
+			cache_dl2 = NULL;
+			
+			/* the buffer cache cannot be defined */
+			if (strcmp(buffer_cache_opt, "none"))
+				fatal("the l2 data cache must defined if the buffer cache is defined");
+			buffer_cache = NULL;
+		}
+		else /* dl2 is defined */
+		{
+			if (sscanf(cache_dl2_opt, "%[^:]:%d:%d:%d:%c",
 					name, &nsets, &bsize, &assoc, &c) != 5)
-				fatal("bad victim cache parms: <name>:<nsets>:<bsize>:<assoc>:<repl>");
-			victim_cache = cache_create(name, nsets, bsize, /* balloc */FALSE,
+				fatal("bad l2 D-cache parms: <name>:<nsets>:<bsize>:<assoc>:<repl>");
+			cache_dl2 = cache_create(name, nsets, bsize, /* balloc */FALSE,
 							/* usize */0, assoc, cache_char2policy(c),
-							victim_access_fn, /* hit lat */victim_cache_lat);
+							dl2_access_fn, /* hit lat */cache_dl2_lat);
+			if (strcmp(buffer_cache_opt, "none")){
+				if (sscanf(buffer_cache_opt, "%[^:]:%d:%d:%d:%c",
+						name, &nsets, &bsize, &assoc, &c) != 5)
+					fatal("bad buffer cache parms: <name>:<nsets>:<bsize>:<assoc>:<repl>");
+				buffer_cache = cache_create(name, nsets, bsize, /* balloc */FALSE,
+								/* usize */0, assoc, cache_char2policy(c),
+								buffer_access_fn, /* hit lat */buffer_cache_lat);
+			}
 		}
 	}
 
@@ -1486,6 +1612,8 @@ sim_reg_stats(struct stat_sdb_t *sdb)   /* stats database */
 /******************************************************************************************************/
   if (victim_cache)
     cache_reg_stats(victim_cache, sdb);
+  if (buffer_cache)
+    cache_reg_stats(buffer_cache, sdb);
 
 /******************************************************************************************************/
 /*                                                                                                    */
@@ -1563,9 +1691,9 @@ sim_init(void)
   /* allocate and initialize memory space */
   mem = mem_create("mem");
   mem_init(mem);
-
   /* compute static power estimates */
   calculate_power(&power);
+
 }
 
 /* default register state accessor, used by DLite */
@@ -2388,9 +2516,23 @@ ruu_commit(void)
 		      dcache_access++;
 
               /* commit store value to D-cache */
-		      lat =
-			dl1_cache_access(cache_dl1, Write, (LSQ[LSQ_head].addr&~3),
-				     NULL, 4, sim_cycle, NULL, NULL);
+              
+              /***************************************************/
+              
+              if(victim_cache){
+				  lat =
+				dl1_cache_access(cache_dl1, Write, (LSQ[LSQ_head].addr&~3),
+						 NULL, 4, sim_cycle, NULL, NULL);
+			  } else if(buffer_cache){
+				  lat =
+				dl1b_cache_access(cache_dl1, Write, (LSQ[LSQ_head].addr&~3),
+						 NULL, 4, sim_cycle, NULL, NULL);
+			  } else {
+				  lat =
+				cache_access(cache_dl1, Write, (LSQ[LSQ_head].addr&~3),
+						 NULL, 4, sim_cycle, NULL, NULL);			  
+			  }
+
 		      if (lat > cache_dl1_lat)
 			events |= PEV_CACHEMISS;
 		    }
@@ -2989,10 +3131,25 @@ ruu_issue(void)
 				  /* Wattch -- D-cache access */
 				  dcache_access++;
 				  /* access the cache if non-faulting */
+				  
+				  /***************************************************/
+				  if(victim_cache){
 				  load_lat =
 				    dl1_cache_access(cache_dl1, Read,
 						 (rs->addr & ~3), NULL, 4,
 						 sim_cycle, NULL, NULL);
+				  }else if(buffer_cache){
+				  load_lat =
+				    dl1b_cache_access(cache_dl1, Read,
+						 (rs->addr & ~3), NULL, 4,
+						 sim_cycle, NULL, NULL);
+				  }else{
+				    load_lat = cache_access(cache_dl1, Read,
+						 (rs->addr & ~3), NULL, 4,
+						 sim_cycle, NULL, NULL);					  
+				  }
+
+				  /***************************************************/
 				  if (load_lat > cache_dl1_lat)
 				    events |= PEV_CACHEMISS;
 				}
@@ -4831,6 +4988,7 @@ simoo_mstate_obj(FILE *stream,			/* output stream */
 void
 sim_main(void)
 {
+
   /* ignore any floating point exceptions, they may occur on mis-speculated
      execution paths */
   signal(SIGFPE, SIG_IGN);
@@ -4933,7 +5091,7 @@ sim_main(void)
   regs.regs_PC = regs.regs_PC - sizeof(md_inst_t);
   
 /******************************************************************************************************/
-/* CS203  Clearing victim cache                                                                       */
+/* CS203  Clearing new caches                                                                         */
 /******************************************************************************************************/
   clear_cache_stats();
   
@@ -4946,6 +5104,7 @@ sim_main(void)
      to eliminate this/next state synchronization and relaxation problems */
   for (;;)
     {
+//printf("** HERE!!! **\n");
       /* RUU/LSQ sanity checks */
       if (RUU_num < LSQ_num)
 	panic("RUU_num < LSQ_num");
