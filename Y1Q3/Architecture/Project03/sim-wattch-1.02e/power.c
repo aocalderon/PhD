@@ -128,7 +128,9 @@ extern struct cache_t *cache_il1;
 extern struct cache_t *cache_dl2;
 /***************************/
 extern struct cache_t *victim_cache;
-extern struct cache_t *buffer_cache;
+extern struct cache_t *dsbuffer_cache;
+extern struct cache_t *isbuffer_cache;
+
 
 extern struct cache_t *dtlb;
 extern struct cache_t *itlb;
@@ -156,7 +158,8 @@ static double icache_power=0;
 static double dcache_power=0;
 /********************/
 static double victim_power=0;
-static double buffer_power=0;
+static double dsbuffer_power=0;
+static double isbuffer_power=0;
 
 static double dcache2_power=0;
 static double alu_power=0;
@@ -173,7 +176,8 @@ static double icache_power_cc1=0;
 static double dcache_power_cc1=0;
 /********************/
 static double victim_power_cc1=0;
-static double buffer_power_cc1=0;
+static double dsbuffer_power_cc1=0;
+static double isbuffer_power_cc1=0;
 
 static double dcache2_power_cc1=0;
 static double alu_power_cc1=0;
@@ -189,7 +193,8 @@ static double icache_power_cc2=0;
 static double dcache_power_cc2=0;
 /********************/
 static double victim_power_cc2=0;
-static double buffer_power_cc2=0;
+static double dsbuffer_power_cc2=0;
+static double isbuffer_power_cc2=0;
 
 static double dcache2_power_cc2=0;
 static double alu_power_cc2=0;
@@ -205,7 +210,9 @@ static double icache_power_cc3=0;
 static double dcache_power_cc3=0;
 /********************/
 static double victim_power_cc3=0;
-static double buffer_power_cc3=0;
+static double dsbuffer_power_cc3=0;
+static double isbuffer_power_cc3=0;
+
 
 static double dcache2_power_cc3=0;
 static double alu_power_cc3=0;
@@ -237,7 +244,8 @@ extern counter_t icache_access;
 extern counter_t dcache_access;
 /***********************/
 extern counter_t victim_access;
-extern counter_t buffer_access;
+extern counter_t dsbuffer_access;
+extern counter_t isbuffer_access;
 
 extern counter_t dcache2_access;
 extern counter_t alu_access;
@@ -271,7 +279,8 @@ static counter_t total_icache_access=0;
 static counter_t total_dcache_access=0;
 /********************/
 static counter_t total_victim_access=0;
-static counter_t total_buffer_access=0;
+static counter_t total_dsbuffer_access=0;
+static counter_t total_isbuffer_access=0;
 
 static counter_t total_dcache2_access=0;
 static counter_t total_alu_access=0;
@@ -286,7 +295,8 @@ static counter_t max_icache_access;
 static counter_t max_dcache_access;
 /********************/
 static counter_t max_victim_access;
-static counter_t max_buffer_access;
+static counter_t max_dsbuffer_access;
+static counter_t max_isbuffer_access;
 
 static counter_t max_dcache2_access;
 static counter_t max_alu_access;
@@ -298,8 +308,11 @@ static counter_t max_resultbus_access;
 void clear_cache_stats(){
 	if(victim_cache)
 		cache_flush(victim_cache,0);
-	if(buffer_cache)
-		cache_flush(buffer_cache,0);
+	if(dsbuffer_cache)
+		cache_flush(dsbuffer_cache,0);
+	if(isbuffer_cache){
+		cache_flush(isbuffer_cache,0);
+	}
 }
 
 /******************************************************************************************************/
@@ -317,8 +330,9 @@ void clear_access_stats()
   dcache_access=0;
   /*************************/
   victim_access=0;
-  buffer_access=0;
-  
+  dsbuffer_access=0;
+  isbuffer_access=0;
+
   dcache2_access=0;
   alu_access=0;
   ialu_access=0;
@@ -581,16 +595,27 @@ void update_power_stats()
   else
     victim_power_cc3+=turnoff_factor*power.victim_power;
 /************************************************/
-  if(buffer_access) {
-    if(buffer_access <= res_memport)
-      buffer_power_cc1+=power.buffer_power;
+  if(dsbuffer_access) {
+    if(dsbuffer_access <= res_memport)
+      dsbuffer_power_cc1+=power.dsbuffer_power;
     else
-      buffer_power_cc1+=((double)buffer_access/(double)res_memport)*power.buffer_power;
-      buffer_power_cc2+=((double)buffer_access/(double)res_memport)*power.buffer_power;
-      buffer_power_cc3+=((double)buffer_access/(double)res_memport)*power.buffer_power;
+      dsbuffer_power_cc1+=((double)dsbuffer_access/(double)res_memport)*power.dsbuffer_power;
+      dsbuffer_power_cc2+=((double)dsbuffer_access/(double)res_memport)*power.dsbuffer_power;
+      dsbuffer_power_cc3+=((double)dsbuffer_access/(double)res_memport)*power.dsbuffer_power;
   }
   else
-    buffer_power_cc3+=turnoff_factor*power.buffer_power;
+    dsbuffer_power_cc3+=turnoff_factor*power.dsbuffer_power;
+/************************************************/
+  if(isbuffer_access) {
+    if(isbuffer_access <= res_memport)
+      isbuffer_power_cc1+=power.isbuffer_power;
+    else
+      isbuffer_power_cc1+=((double)isbuffer_access/(double)res_memport)*power.isbuffer_power;
+      isbuffer_power_cc2+=((double)isbuffer_access/(double)res_memport)*power.isbuffer_power;
+      isbuffer_power_cc3+=((double)isbuffer_access/(double)res_memport)*power.isbuffer_power;
+  }
+  else
+    isbuffer_power_cc3+=turnoff_factor*power.isbuffer_power;
 /************************************************/
 
   if(dcache2_access) {
@@ -715,7 +740,8 @@ power_reg_stats(struct stat_sdb_t *sdb)	/* stats database */
 
 /***********************************/
   stat_reg_double(sdb, "victim_power", "total power usage of victim cache", &victim_power, 0, NULL);
-  stat_reg_double(sdb, "buffer_power", "total power usage of buffer cache", &buffer_power, 0, NULL);
+  stat_reg_double(sdb, "dsbuffer_power", "total power usage of dsbuffer cache", &dsbuffer_power, 0, NULL);
+  stat_reg_double(sdb, "isbuffer_power", "total power usage of isbuffer cache", &isbuffer_power, 0, NULL);
 
   stat_reg_double(sdb, "dcache2_power", "total power usage of dcache2", &dcache2_power, 0, NULL);
 
@@ -743,7 +769,8 @@ power_reg_stats(struct stat_sdb_t *sdb)	/* stats database */
 
 /***********************************/
   stat_reg_formula(sdb, "avg_victim_power", "avg power usage of victim cache", "victim_power/sim_cycle",  NULL);
-  stat_reg_formula(sdb, "avg_buffer_power", "avg power usage of buffer cache", "buffer_power/sim_cycle",  NULL);
+  stat_reg_formula(sdb, "avg_dsbuffer_power", "avg power usage of dsbuffer cache", "dsbuffer_power/sim_cycle",  NULL);
+  stat_reg_formula(sdb, "avg_isbuffer_power", "avg power usage of isbuffer cache", "isbuffer_power/sim_cycle",  NULL);
 
   stat_reg_formula(sdb, "avg_dcache2_power", "avg power usage of dcache2", "dcache2_power/sim_cycle",  NULL);
 
@@ -768,7 +795,7 @@ power_reg_stats(struct stat_sdb_t *sdb)	/* stats database */
   stat_reg_formula(sdb, "avg_issue_power", "average power of issue unit per cycle", "(resultbus_power + alu_power + dcache_power + dcache2_power + window_power + lsq_power)/ sim_cycle", /* format */NULL);
 
 /***********************************/  
-  stat_reg_formula(sdb, "total_power", "total power per cycle","(rename_power + bpred_power + window_power + lsq_power + regfile_power + icache_power  + resultbus_power + clock_power + alu_power + dcache_power + victim_power + buffer_power + dcache2_power)", NULL);
+  stat_reg_formula(sdb, "total_power", "total power per cycle","(rename_power + bpred_power + window_power + lsq_power + regfile_power + icache_power  + resultbus_power + clock_power + alu_power + dcache_power + victim_power + dsbuffer_power + isbuffer_power + dcache2_power)", NULL);
 
   stat_reg_formula(sdb, "avg_total_power_cycle", "average total power per cycle","(rename_power + bpred_power + window_power + lsq_power + regfile_power + icache_power + resultbus_power + clock_power + alu_power + dcache_power + victim_power + dcache2_power)/sim_cycle", NULL);
 
@@ -981,7 +1008,8 @@ power_reg_stats(struct stat_sdb_t *sdb)	/* stats database */
 
 /****************************************/
   stat_reg_counter(sdb, "total_victim_access", "total number accesses of victim cache", &total_victim_access, 0, NULL);
-  stat_reg_counter(sdb, "total_buffer_access", "total number accesses of buffer cache", &total_buffer_access, 0, NULL);
+  stat_reg_counter(sdb, "total_dsbuffer_access", "total number accesses of dsbuffer cache", &total_dsbuffer_access, 0, NULL);
+  stat_reg_counter(sdb, "total_isbuffer_access", "total number accesses of isbuffer cache", &total_isbuffer_access, 0, NULL);
 
   stat_reg_counter(sdb, "total_dcache2_access", "total number accesses of dcache2", &total_dcache2_access, 0, NULL);
 
@@ -1005,7 +1033,8 @@ power_reg_stats(struct stat_sdb_t *sdb)	/* stats database */
 
 /****************************************/
   stat_reg_formula(sdb, "avg_victim_access", "avg number accesses of victim cache", "total_victim_access/sim_cycle",  NULL);
-  stat_reg_formula(sdb, "avg_buffer_access", "avg number accesses of buffer cache", "total_buffer_access/sim_cycle",  NULL);
+  stat_reg_formula(sdb, "avg_dsbuffer_access", "avg number accesses of dsbuffer cache", "total_dsbuffer_access/sim_cycle",  NULL);
+  stat_reg_formula(sdb, "avg_isbuffer_access", "avg number accesses of isbuffer cache", "total_isbuffer_access/sim_cycle",  NULL);
 
   stat_reg_formula(sdb, "avg_dcache2_access", "avg number accesses of dcache2", "total_dcache2_access/sim_cycle",  NULL);
 
@@ -1029,7 +1058,8 @@ power_reg_stats(struct stat_sdb_t *sdb)	/* stats database */
 
 /****************************************/
   stat_reg_counter(sdb, "max_victim_access", "max number accesses of victim", &max_victim_access, 0, NULL);
-  stat_reg_counter(sdb, "max_buffer_access", "max number accesses of buffer", &max_buffer_access, 0, NULL);
+  stat_reg_counter(sdb, "max_dsbuffer_access", "max number accesses of dsbuffer", &max_dsbuffer_access, 0, NULL);
+  stat_reg_counter(sdb, "max_isbuffer_access", "max number accesses of isbuffer", &max_isbuffer_access, 0, NULL);
 
   stat_reg_counter(sdb, "max_dcache2_access", "max number accesses of dcache2", &max_dcache2_access, 0, NULL);
 
@@ -1132,7 +1162,8 @@ void dump_power_stats(power)
   double dcache_power;
   /**********/
   double victim_power;
-  double buffer_power;
+  double dsbuffer_power;
+  double isbuffer_power;
   
   
   double dcache2_power;
@@ -1146,7 +1177,8 @@ void dump_power_stats(power)
 
   /**********/
   victim_power = power->victim_power;
-  buffer_power = power->buffer_power;
+  dsbuffer_power = power->dsbuffer_power;
+  isbuffer_power = power->isbuffer_power;
 
   dcache2_power = power->dcache2_power;
 
@@ -1190,7 +1222,7 @@ void dump_power_stats(power)
 /**************************/
   total_power = bpred_power + rename_power + window_power + regfile_power +
     power->resultbus + lsq_power + 
-    icache_power + dcache_power + victim_power + buffer_power + dcache2_power + 
+    icache_power + dcache_power + victim_power + dsbuffer_power + isbuffer_power + dcache2_power + 
     dtlb_power + itlb_power + power->clock_power + power->ialu_power +
     power->falu_power;
 
@@ -1257,12 +1289,18 @@ void dump_power_stats(power)
   fprintf(stderr," bitline_power (W): %g\n",power->victim_bitline);
   fprintf(stderr," senseamp_power (W): %g\n",power->victim_senseamp);
   fprintf(stderr," tagarray_power (W): %g\n",power->victim_tagarray);
-  fprintf(stderr,"Buffer Cache Power Consumption: %g  (%.3g%%)\n",buffer_power,100*buffer_power/total_power);
-  fprintf(stderr," decode_power (W): %g\n",power->buffer_decoder);
-  fprintf(stderr," wordline_power (W): %g\n",power->buffer_wordline);
-  fprintf(stderr," bitline_power (W): %g\n",power->buffer_bitline);
-  fprintf(stderr," senseamp_power (W): %g\n",power->buffer_senseamp);
-  fprintf(stderr," tagarray_power (W): %g\n",power->buffer_tagarray);
+  fprintf(stderr,"Data Buffer Cache Power Consumption: %g  (%.3g%%)\n",dsbuffer_power,100*dsbuffer_power/total_power);
+  fprintf(stderr," decode_power (W): %g\n",power->dsbuffer_decoder);
+  fprintf(stderr," wordline_power (W): %g\n",power->dsbuffer_wordline);
+  fprintf(stderr," bitline_power (W): %g\n",power->dsbuffer_bitline);
+  fprintf(stderr," senseamp_power (W): %g\n",power->dsbuffer_senseamp);
+  fprintf(stderr," tagarray_power (W): %g\n",power->dsbuffer_tagarray);
+  fprintf(stderr,"Instruction Buffer Cache Power Consumption: %g  (%.3g%%)\n",isbuffer_power,100*isbuffer_power/total_power);
+  fprintf(stderr," decode_power (W): %g\n",power->isbuffer_decoder);
+  fprintf(stderr," wordline_power (W): %g\n",power->isbuffer_wordline);
+  fprintf(stderr," bitline_power (W): %g\n",power->isbuffer_bitline);
+  fprintf(stderr," senseamp_power (W): %g\n",power->isbuffer_senseamp);
+  fprintf(stderr," tagarray_power (W): %g\n",power->isbuffer_tagarray);
   
   
   fprintf(stderr,"Level 2 Cache Power Consumption: %g (%.3g%%)\n",dcache2_power,100*dcache2_power/total_power);
@@ -2292,11 +2330,11 @@ void calculate_power(power)
 
 
 /******************************************/
-	if(buffer_cache){
-  time_parameters.cache_size = buffer_cache->nsets * buffer_cache->bsize * buffer_cache->assoc; /* C */
-  time_parameters.block_size = buffer_cache->bsize; /* B */
-  time_parameters.associativity = buffer_cache->assoc; /* A */
-  time_parameters.number_of_sets = buffer_cache->nsets; /* C/(B*A) */
+	if(dsbuffer_cache){
+  time_parameters.cache_size = dsbuffer_cache->nsets * dsbuffer_cache->bsize * dsbuffer_cache->assoc; /* C */
+  time_parameters.block_size = dsbuffer_cache->bsize; /* B */
+  time_parameters.associativity = dsbuffer_cache->assoc; /* A */
+  time_parameters.number_of_sets = dsbuffer_cache->nsets; /* C/(B*A) */
 
   calculate_time(&time_result,&time_parameters);
   output_data(&time_result,&time_parameters);
@@ -2314,7 +2352,7 @@ void calculate_power(power)
   rowsb = c/(b*a*ndbl*nspd);
   colsb = 8*b*a*nspd/ndwl;
 
-  tagsize = va_size - ((int)logtwo(buffer_cache->nsets) + (int)logtwo(buffer_cache->bsize));
+  tagsize = va_size - ((int)logtwo(dsbuffer_cache->nsets) + (int)logtwo(dsbuffer_cache->bsize));
   trowsb = c/(b*a*ntbl*ntspd);
   tcolsb = a * (tagsize + 1 + 6) * ntspd/ntwl;
 
@@ -2331,16 +2369,68 @@ void calculate_power(power)
   
 
   if(verbose)
-    fprintf(stderr,"buffer power stats\n");
-  power->buffer_decoder = array_decoder_power(rowsb,colsb,predeclength,1,1,cache);
-  power->buffer_wordline = array_wordline_power(rowsb,colsb,wordlinelength,1,1,cache);
-  power->buffer_bitline = array_bitline_power(rowsb,colsb,bitlinelength,1,1,cache);
-  power->buffer_senseamp = senseamp_power(colsb);
-  power->buffer_tagarray = simple_array_power(trowsb,tcolsb,1,1,cache);
+    fprintf(stderr,"data buffer power stats\n");
+  power->dsbuffer_decoder = array_decoder_power(rowsb,colsb,predeclength,1,1,cache);
+  power->dsbuffer_wordline = array_wordline_power(rowsb,colsb,wordlinelength,1,1,cache);
+  power->dsbuffer_bitline = array_bitline_power(rowsb,colsb,bitlinelength,1,1,cache);
+  power->dsbuffer_senseamp = senseamp_power(colsb);
+  power->dsbuffer_tagarray = simple_array_power(trowsb,tcolsb,1,1,cache);
 
-  power->buffer_power = power->buffer_decoder + power->buffer_wordline + power->buffer_bitline + power->buffer_senseamp + power->buffer_tagarray;
+  power->dsbuffer_power = power->dsbuffer_decoder + power->dsbuffer_wordline + power->dsbuffer_bitline + power->dsbuffer_senseamp + power->dsbuffer_tagarray;
 }
 /*********************************************/
+
+/******************************************/
+	if(isbuffer_cache){
+  time_parameters.cache_size = isbuffer_cache->nsets * isbuffer_cache->bsize * isbuffer_cache->assoc; /* C */
+  time_parameters.block_size = isbuffer_cache->bsize; /* B */
+  time_parameters.associativity = isbuffer_cache->assoc; /* A */
+  time_parameters.number_of_sets = isbuffer_cache->nsets; /* C/(B*A) */
+
+  calculate_time(&time_result,&time_parameters);
+  output_data(&time_result,&time_parameters);
+
+  ndwl=time_result.best_Ndwl;
+  ndbl=time_result.best_Ndbl;
+  nspd=time_result.best_Nspd;
+  ntwl=time_result.best_Ntwl;
+  ntbl=time_result.best_Ntbl;
+  ntspd=time_result.best_Ntspd;
+  c = time_parameters.cache_size;
+  b = time_parameters.block_size;
+  a = time_parameters.associativity;
+
+  rowsb = c/(b*a*ndbl*nspd);
+  colsb = 8*b*a*nspd/ndwl;
+
+  tagsize = va_size - ((int)logtwo(isbuffer_cache->nsets) + (int)logtwo(isbuffer_cache->bsize));
+  trowsb = c/(b*a*ntbl*ntspd);
+  tcolsb = a * (tagsize + 1 + 6) * ntspd/ntwl;
+
+  if(verbose) {
+    fprintf(stderr,"%d KB %d-way cache (%d-byte block size):\n",c,a,b);
+    fprintf(stderr,"ndwl == %d, ndbl == %d, nspd == %d\n",ndwl,ndbl,nspd);
+    fprintf(stderr,"%d sets of %d rows x %d cols\n",ndwl*ndbl,rowsb,colsb);
+    fprintf(stderr,"tagsize == %d\n",tagsize);
+  }
+
+  predeclength = rowsb * (RegCellHeight + WordlineSpacing);
+  wordlinelength = colsb *  (RegCellWidth + BitlineSpacing);
+  bitlinelength = rowsb * (RegCellHeight + WordlineSpacing);
+  
+
+  if(verbose)
+    fprintf(stderr,"Instruction buffer power stats\n");
+  power->isbuffer_decoder = array_decoder_power(rowsb,colsb,predeclength,1,1,cache);
+  power->isbuffer_wordline = array_wordline_power(rowsb,colsb,wordlinelength,1,1,cache);
+  power->isbuffer_bitline = array_bitline_power(rowsb,colsb,bitlinelength,1,1,cache);
+  power->isbuffer_senseamp = senseamp_power(colsb);
+  power->isbuffer_tagarray = simple_array_power(trowsb,tcolsb,1,1,cache);
+
+  power->isbuffer_power = power->isbuffer_decoder + power->isbuffer_wordline + power->isbuffer_bitline + power->isbuffer_senseamp + power->isbuffer_tagarray;
+}
+/*********************************************/
+
 
   time_parameters.cache_size = cache_dl2->nsets * cache_dl2->bsize * cache_dl2->assoc; /* C */
   time_parameters.block_size = cache_dl2->bsize; /* B */
