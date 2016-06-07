@@ -169,11 +169,17 @@ static char *victim_cache_opt;
 /* Victim cache hit latency (in cycles) */
 static int victim_cache_lat;
 
-/* Victim cache config, i.e., {<config>|none} */
-static char *buffer_cache_opt;
+/* Data Buffer cache config, i.e., {<config>|none} */
+static char *dsbuffer_cache_opt;
 
-/* Victim cache hit latency (in cycles) */
-static int buffer_cache_lat;
+/* Data Buffer cache hit latency (in cycles) */
+static int dsbuffer_cache_lat;
+
+/* Instruction Buffer cache config, i.e., {<config>|none} */
+static char *isbuffer_cache_opt;
+
+/* Instruction Buffer cache hit latency (in cycles) */
+static int isbuffer_cache_lat;
 
 /******************************************************************************************************/
 /*                                                                                                    */
@@ -256,8 +262,10 @@ counter_t regfile_access=0;
 counter_t icache_access=0;
 counter_t dcache_access=0;
 counter_t victim_access=0;
-counter_t buffer_access=0;
+counter_t dsbuffer_access=0;
+counter_t isbuffer_access=0;
 counter_t dcache2_access=0;
+counter_t icache2_access=0;
 counter_t alu_access=0;
 counter_t ialu_access=0;
 counter_t falu_access=0;
@@ -445,8 +453,10 @@ struct cache_t *cache_dl2;
 /******************************************************************************************************/
 /* victim cache */
 struct cache_t *victim_cache;
-/* buffer cache */
-struct cache_t *buffer_cache;
+/* data buffer cache */
+struct cache_t *dsbuffer_cache;
+/* instruction buffer cache */
+struct cache_t *isbuffer_cache;
 /******************************************************************************************************/
 /*                                                                                                    */
 /******************************************************************************************************/
@@ -524,14 +534,14 @@ dl1_access_fn(enum mem_cmd cmd,		/* access cmd, Read or Write */
 	  return 0;
 	}
     }
-  else if (buffer_cache)
+  else if (dsbuffer_cache)
     {
       /* access next level of data cache hierarchy */
-      lat = buf_cache_access(buffer_cache, cmd, baddr, NULL, bsize,
+      lat = dsbuf_cache_access(dsbuffer_cache, cmd, baddr, NULL, bsize,
 			 /* now */now, /* pudata */NULL, /* repl addr */NULL, blk, rep_addr);
 
       /* Wattch -- Dcache2 access */
-      buffer_access++;
+      dsbuffer_access++;
 
       if (cmd == Read)
 	return lat;
@@ -577,7 +587,7 @@ dl1_access_fn(enum mem_cmd cmd,		/* access cmd, Read or Write */
 
 /* buffer cache l1 block miss handler function */
 static unsigned int			/* latency of block access */
-buffer_access_fn(enum mem_cmd cmd,		/* access cmd, Read or Write */
+dsbuffer_access_fn(enum mem_cmd cmd,		/* access cmd, Read or Write */
 	      md_addr_t baddr,		/* block address to access */
 	      int bsize,		/* size of block to access */
 	      struct cache_blk_t *blk,	/* ptr to block in upper level */
@@ -589,6 +599,35 @@ buffer_access_fn(enum mem_cmd cmd,		/* access cmd, Read or Write */
     {
       /* access next level of data cache hierarchy */
       lat = cache_access(cache_dl2, cmd, baddr, NULL, bsize,
+			 /* now */now, /* pudata */NULL, /* repl addr */NULL);
+
+      /* Wattch -- Dcache2 access */
+      dcache2_access++;
+
+      if (cmd == Read)
+		return lat;
+	else
+	{
+	  /* FIXME: unlimited write buffers */
+	  return 0;
+	}
+	}
+
+}
+
+static unsigned int			/* latency of block access */
+isbuffer_access_fn(enum mem_cmd cmd,		/* access cmd, Read or Write */
+	      md_addr_t baddr,		/* block address to access */
+	      int bsize,		/* size of block to access */
+	      struct cache_blk_t *blk,	/* ptr to block in upper level */
+	      tick_t now)		/* time of access */
+{
+  unsigned int lat;
+
+  if (cache_il2)
+    {
+      /* access next level of data cache hierarchy */
+      lat = cache_access(cache_il2, cmd, baddr, NULL, bsize,
 			 /* now */now, /* pudata */NULL, /* repl addr */NULL);
 
       /* Wattch -- Dcache2 access */
@@ -662,32 +701,52 @@ il1_access_fn(enum mem_cmd cmd,		/* access cmd, Read or Write */
 	      md_addr_t baddr,		/* block address to access */
 	      int bsize,		/* size of block to access */
 	      struct cache_blk_t *blk,	/* ptr to block in upper level */
-	      tick_t now)		/* time of access */
+	      tick_t now,
+md_addr_t rep_addr)		/* time of access */
 {
   unsigned int lat;
-
-if (cache_il2)
+if (isbuffer_cache)
     {
-      /* access next level of inst cache hierarchy */
-      lat = cache_access(cache_il2, cmd, baddr, NULL, bsize,
-			 /* now */now, /* pudata */NULL, /* repl addr */NULL);
+      /* access next level of data cache hierarchy */
+      lat = isbuf_cache_access(isbuffer_cache, cmd, baddr, NULL, bsize,
+			 /* now */now, /* pudata */NULL, /* repl addr */NULL, blk, rep_addr);
 
       /* Wattch -- Dcache2 access */
-      dcache2_access++;
+      isbuffer_access++;
 
       if (cmd == Read)
 	return lat;
       else
-	panic("writes to instruction memory not supported");
-    }
-  else
-    {
-      /* access main memory */
-      if (cmd == Read)
-	return mem_access_latency(bsize);
-      else
-	panic("writes to instruction memory not supported");
-    }
+	{
+	  /* FIXME: unlimited write buffers */
+	  return 0;
+	}
+    } 
+else{
+
+	if (cache_il2)
+	    {
+	      /* access next level of inst cache hierarchy */
+	      lat = cache_access(cache_il2, cmd, baddr, NULL, bsize,
+				 /* now */now, /* pudata */NULL, /* repl addr */NULL);
+
+	      /* Wattch -- Dcache2 access */
+	      icache2_access++;
+
+	      if (cmd == Read)
+		return lat;
+	      else
+		panic("writes to instruction memory not supported");
+	    }
+	  else
+	    {
+	      /* access main memory */
+	      if (cmd == Read)
+		return mem_access_latency(bsize);
+	      else
+		panic("writes to instruction memory not supported");
+	    }
+	}
 }
 
 /* l2 inst cache block miss handler function */
@@ -932,15 +991,26 @@ sim_reg_options(struct opt_odb_t *odb)
 	      &victim_cache_lat, /* default */1,
 	      /* print */TRUE, /* format */NULL);
 	      
-  opt_reg_string(odb, "-cache:buffer",
-		 "Buffer cache config, i.e., {<config>|none}",
-		 &buffer_cache_opt, /*FIXME!!!*/"buf:1:32:16:f",
+  opt_reg_string(odb, "-cache:dsbuffer",
+		 "Data Buffer cache config, i.e., {<config>|none}",
+		 &dsbuffer_cache_opt, /*FIXME!!!*/"dsbuf:1:32:16:f",
 		 /* print */TRUE, NULL);
 		 
-  opt_reg_int(odb, "-cache:buflat",
-	      "Buffer cache hit latency (in cycles)",
-	      &buffer_cache_lat, /* default */1,
+  opt_reg_int(odb, "-cache:dsbuflat",
+	      "Data Buffer cache hit latency (in cycles)",
+	      &dsbuffer_cache_lat, /* default */1,
+	      /* print */TRUE, /* format */NULL);
+
+opt_reg_string(odb, "-cache:isbuffer",
+		 "Instruction Buffer cache config, i.e., {<config>|none}",
+		 &isbuffer_cache_opt, /*FIXME!!!*/"isbuf:1:32:16:f",
+		 /* print */TRUE, NULL);
+		 
+  opt_reg_int(odb, "-cache:isbuflat",
+	      "Instruction Buffer cache hit latency (in cycles)",
+	      &isbuffer_cache_lat, /* default */1,
 	      /* print */TRUE, /* format */NULL);	      
+	      
 
 /******************************************************************************************************/
 /*                                                                                                    */
@@ -960,7 +1030,7 @@ sim_reg_options(struct opt_odb_t *odb)
 "    <nsets>  - number of sets in the cache\n"
 "    <bsize>  - block size of the cache\n"
 "    <assoc>  - associativity of the cache\n"
-"    <repl>   - block replacement strategy, 'l'-LRU, 'f'-FIFO, 'r'-random\n"
+"    <repl>   - block replacement strategy, 'l'-LRU, 'f'-FIFO, 'r'-random, 'p'-PLRU\n"
 "\n"
 "    Examples:   -cache:dl1 dl1:4096:32:1:l\n"
 "                -dtlb dtlb:128:4096:32:r\n"
@@ -1272,7 +1342,7 @@ sim_check_options(struct opt_odb_t *odb,        /* options database */
 /******************************************************************************************************/
 
 /******************************************************************************************************/
-/* CS203  Creating buffer cache                                                                       */
+/* CS203  Creating data buffer cache                                                                       */
 /******************************************************************************************************/
 	/* use a level 1 D-cache? */
 	if (!mystricmp(cache_dl1_opt, "none"))
@@ -1285,9 +1355,9 @@ sim_check_options(struct opt_odb_t *odb,        /* options database */
 		cache_dl2 = NULL;
 		
 		/* the victim cache cannot be defined */
-		if (strcmp(buffer_cache_opt, "none"))
+		if (strcmp(dsbuffer_cache_opt, "none"))
 			fatal("the l1 data cache must defined if the buffer cache is defined");
-		buffer_cache = NULL;
+		dsbuffer_cache = NULL;
 	}
 	else /* dl1 is defined */
 	{
@@ -1304,9 +1374,9 @@ sim_check_options(struct opt_odb_t *odb,        /* options database */
 			cache_dl2 = NULL;
 			
 			/* the buffer cache cannot be defined */
-			if (strcmp(buffer_cache_opt, "none"))
-				fatal("the l2 data cache must defined if the buffer cache is defined");
-			buffer_cache = NULL;
+			if (strcmp(dsbuffer_cache_opt, "none"))
+				fatal("the l2 data cache must defined if the data buffer cache is defined");
+			dsbuffer_cache = NULL;
 		}
 		else /* dl2 is defined */
 		{
@@ -1316,19 +1386,23 @@ sim_check_options(struct opt_odb_t *odb,        /* options database */
 			cache_dl2 = cache_create(name, nsets, bsize, /* balloc */FALSE,
 							/* usize */0, assoc, cache_char2policy(c),
 							dl2_access_fn, /* hit lat */cache_dl2_lat);
-			if (strcmp(buffer_cache_opt, "none")){
-				if (sscanf(buffer_cache_opt, "%[^:]:%d:%d:%d:%c",
+			if (strcmp(dsbuffer_cache_opt, "none")){
+				if (sscanf(dsbuffer_cache_opt, "%[^:]:%d:%d:%d:%c",
 						name, &nsets, &bsize, &assoc, &c) != 5)
-					fatal("bad buffer cache parms: <name>:<nsets>:<bsize>:<assoc>:<repl>");
-				buffer_cache = cache_create(name, nsets, bsize, /* balloc */FALSE,
+					fatal("bad data buffer cache parms: <name>:<nsets>:<bsize>:<assoc>:<repl>");
+				dsbuffer_cache = cache_create(name, nsets, bsize, /* balloc */FALSE,
 								/* usize */0, assoc, cache_char2policy(c),
-								buffer_access_fn, /* hit lat */buffer_cache_lat);
+								dsbuffer_access_fn, /* hit lat */dsbuffer_cache_lat);
 			}
 		}
 	}
 
 /******************************************************************************************************/
 /*                                                                                                    */
+/******************************************************************************************************/
+
+/******************************************************************************************************/
+/* CS203  Creating instruction buffer cache                                                           */
 /******************************************************************************************************/
 
   /* use a level 1 I-cache? */
@@ -1340,9 +1414,14 @@ sim_check_options(struct opt_odb_t *odb,        /* options database */
       if (strcmp(cache_il2_opt, "none"))
 	fatal("the l1 inst cache must defined if the l2 cache is defined");
       cache_il2 = NULL;
+      /* the victim cache cannot be defined */
+      if (strcmp(isbuffer_cache_opt, "none"))
+	fatal("the l1 data cache must defined if the buffer cache is defined");
+      isbuffer_cache = NULL;
     }
   else if (!mystricmp(cache_il1_opt, "dl1"))
     {
+
       if (!cache_dl1)
 	fatal("I-cache l1 cannot access D-cache l1 as it's undefined");
       cache_il1 = cache_dl1;
@@ -1354,6 +1433,7 @@ sim_check_options(struct opt_odb_t *odb,        /* options database */
     }
   else if (!mystricmp(cache_il1_opt, "dl2"))
     {
+
       if (!cache_dl2)
 	fatal("I-cache l1 cannot access D-cache l2 as it's undefined");
       cache_il1 = cache_dl2;
@@ -1373,16 +1453,24 @@ sim_check_options(struct opt_odb_t *odb,        /* options database */
 			       il1_access_fn, /* hit lat */cache_il1_lat);
 
       /* is the level 2 D-cache defined? */
-      if (!mystricmp(cache_il2_opt, "none"))
+      if (!mystricmp(cache_il2_opt, "none")){
 	cache_il2 = NULL;
+      /* the buffer cache cannot be defined */
+	      if (strcmp(isbuffer_cache_opt, "none"))
+		fatal("here the l2 data cache must defined if the data buffer cache is defined");
+	      isbuffer_cache = NULL;
+
+      }
       else if (!mystricmp(cache_il2_opt, "dl2"))
 	{
 	  if (!cache_dl2)
 	    fatal("I-cache l2 cannot access D-cache l2 as it's undefined");
 	  cache_il2 = cache_dl2;
+
 	}
       else
 	{
+
 	  if (sscanf(cache_il2_opt, "%[^:]:%d:%d:%d:%c",
 		     name, &nsets, &bsize, &assoc, &c) != 5)
 	    fatal("bad l2 I-cache parms: "
@@ -1390,9 +1478,21 @@ sim_check_options(struct opt_odb_t *odb,        /* options database */
 	  cache_il2 = cache_create(name, nsets, bsize, /* balloc */FALSE,
 				   /* usize */0, assoc, cache_char2policy(c),
 				   il2_access_fn, /* hit lat */cache_il2_lat);
+	   
+	  if (strcmp(isbuffer_cache_opt, "none")){
+		if (sscanf(isbuffer_cache_opt, "%[^:]:%d:%d:%d:%c",
+		name, &nsets, &bsize, &assoc, &c) != 5)
+		   fatal("bad instruction buffer cache parms: <name>:<nsets>:<bsize>:<assoc>:<repl>");
+		isbuffer_cache = cache_create(name, nsets, bsize, FALSE,
+		0, assoc, cache_char2policy(c),
+		isbuffer_access_fn, isbuffer_cache_lat);
+	  }
+	  
 	}
     }
-
+/******************************************************************************************************/
+/*                                                                                                    */
+/******************************************************************************************************/
   /* use an I-TLB? */
   if (!mystricmp(itlb_opt, "none"))
     itlb = NULL;
@@ -1612,9 +1712,12 @@ sim_reg_stats(struct stat_sdb_t *sdb)   /* stats database */
 /******************************************************************************************************/
   if (victim_cache)
     cache_reg_stats(victim_cache, sdb);
-  if (buffer_cache)
-    cache_reg_stats(buffer_cache, sdb);
-
+  if (dsbuffer_cache){
+    cache_reg_stats(dsbuffer_cache, sdb);
+  }
+  if (isbuffer_cache){
+    cache_reg_stats(isbuffer_cache, sdb);
+  }
 /******************************************************************************************************/
 /*                                                                                                    */
 /******************************************************************************************************/
@@ -2523,9 +2626,9 @@ ruu_commit(void)
 				  lat =
 				dl1_cache_access(cache_dl1, Write, (LSQ[LSQ_head].addr&~3),
 						 NULL, 4, sim_cycle, NULL, NULL);
-			  } else if(buffer_cache){
+			  } else if(dsbuffer_cache){
 				  lat =
-				dl1b_cache_access(cache_dl1, Write, (LSQ[LSQ_head].addr&~3),
+				dl1dsb_cache_access(cache_dl1, Write, (LSQ[LSQ_head].addr&~3),
 						 NULL, 4, sim_cycle, NULL, NULL);
 			  } else {
 				  lat =
@@ -3138,9 +3241,9 @@ ruu_issue(void)
 				    dl1_cache_access(cache_dl1, Read,
 						 (rs->addr & ~3), NULL, 4,
 						 sim_cycle, NULL, NULL);
-				  }else if(buffer_cache){
+				  }else if(dsbuffer_cache){
 				  load_lat =
-				    dl1b_cache_access(cache_dl1, Read,
+				    dl1dsb_cache_access(cache_dl1, Read,
 						 (rs->addr & ~3), NULL, 4,
 						 sim_cycle, NULL, NULL);
 				  }else{
@@ -4792,11 +4895,18 @@ ruu_fetch(void)
 	  lat = cache_il1_lat;
 	  if (cache_il1)
 	    {
+			/*******************************************/
+               if(isbuffer_cache){
+		   lat = il1isb_cache_access(cache_il1, Read, IACOMPRESS(fetch_regs_PC),
+			     NULL, ISCOMPRESS(sizeof(md_inst_t)), sim_cycle,
+			     NULL, NULL);
+	       }else{
 	      /* access the I-cache */
 	      lat =
 		cache_access(cache_il1, Read, IACOMPRESS(fetch_regs_PC),
 			     NULL, ISCOMPRESS(sizeof(md_inst_t)), sim_cycle,
 			     NULL, NULL);
+	      }
 	      if (lat > cache_il1_lat)
 		last_inst_missed = TRUE;
 	    }
@@ -5082,8 +5192,7 @@ sim_main(void)
 	  regs.regs_NPC += sizeof(md_inst_t);
 	}
     }
-
-  fprintf(stderr, "sim: ** starting performance simulation **\n");
+  fprintf(stderr, "sim: ** starting performance simulation ******\n");
 
   /* set up timing simulation entry state */
   fetch_regs_PC = regs.regs_PC - sizeof(md_inst_t);
@@ -5104,7 +5213,6 @@ sim_main(void)
      to eliminate this/next state synchronization and relaxation problems */
   for (;;)
     {
-//printf("** HERE!!! **\n");
       /* RUU/LSQ sanity checks */
       if (RUU_num < LSQ_num)
 	panic("RUU_num < LSQ_num");
@@ -5167,7 +5275,8 @@ sim_main(void)
 	ruu_fetch_issue_delay--;
 
       /* Added by Wattch to update per-cycle power statistics */
-      update_power_stats();
+ 
+       update_power_stats();
 
       /* update buffer occupancy stats */
       IFQ_count += fetch_num;

@@ -100,7 +100,9 @@
 
 /* cache replacement policy */
 enum cache_policy {
-  LRU,		/* replace least recently used block (perfect LRU) */
+  LRU,	/* replace least recently used block (perfect LRU) */
+/*****************************/
+  PLRU,
   Random,	/* replace a random block */
   FIFO		/* replace the oldest block in the set */
 };
@@ -137,6 +139,7 @@ struct cache_set_t
 {
   struct cache_blk_t **hash;	/* hash table: for fast access w/assoc, NULL
 				   for low-assoc caches */
+  unsigned int PLRU_state;
   struct cache_blk_t *way_head;	/* head of way list */
   struct cache_blk_t *way_tail;	/* tail pf way list */
   struct cache_blk_t *blks;	/* cache blocks, allocated sequentially, so
