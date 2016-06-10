@@ -1,0 +1,128 @@
+\documentclass[11pt,twocolumn]{article}
+%\usepackage[hmargin=2.5cm,vmargin=3cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\hypersetup{
+colorlinks=false,
+hidelinks
+}
+\usepackage{minted}
+\usepackage{placeins}
+
+\setlength{\parindent}{1em}
+\setlength{\parskip}{0.5em}
+
+
+%opening
+\title{Resource Allocation Techniques for CDN Latency Reduction.}
+\author{
+   Christina Pavlopoulou\\
+  \small \texttt{cpavl001@ucr.edu}
+  \and
+   Niloufar Hosseini Pour\\
+  \small \texttt{nhoss003@ucr.edu}
+  \and
+   Andres Calderon\\
+  \small \texttt{acald013@ucr.edu}
+}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+CDN goal is to serve content to end-users with high availability and high performance.  In order to do that, locations for new CDN server deployment should be carefully analyzed.  In this project, we try to apply well-known resource allocation techniques to find the optimal locations to deploy new CDN servers.  We collect RTT data between different cities in North America and hypothetical current CDN servers.  We find the areas with the lowest time response and propose them as potential new locations for CDN server deployment. 
+\end{abstract}
+
+\section{Introduction}
+Internet had experienced huge changes in the last decades.  Content and user have increased exponentially each year.  The quality of service and the global access to information lead to content providers to search for mechanisms in order to improve the experience of their current and potential users.   
+
+Content delivery networks aim to reduce the time access of specific contents by bringing them closer to the user (figure \ref{fig:cdn}\footnote{\url{https://commons.wikimedia.org/wiki/File\%3ANCDN_-_CDN.png}}).  Different providers around the world offer both commercial (Akamai and Limelight) and open source (CoDeeN) solutions.
+
+With the constant increase of contents, one of the most important concerns of CDN providers is where to deploy a new server.  In this project, we implemented a resource allocation technique to minimize the time response of candidates and proposed an ordered list of possible locations. 
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.5\textwidth]{CDN.png}
+  \caption{CDN example.}\label{fig:cdn}
+\end{figure}
+
+\section{Methodology}
+Our methodology consists of five steps. First, we had to simulate a number of current CDN server and then collect a sample of possible candidates for future deployments.  Next, we had to measure the RTT response between our current servers and the candidates.  Finally, we used the collected data to built a graph and analyzed the performance of the candidates.  The following sections will provide more details for each of the steps.
+
+\subsection{CDNs Collection}
+We used Microsoft Azure: Cloud Computing Platform \& Services to collect current CDN servers.  We focused on USA and Canada and allocated servers on the following regions: East USA, Central USA, South Central USA, West USA, North Central USA, East Canada, Central Canada and Riverside.  Figure \ref{fig:cdns} shows the aforementioned locations.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.5\textwidth]{cdns.png}
+  \caption{Current CDN servers.}\label{fig:cdns}
+\end{figure}
+
+\subsection{Candidates Collection}
+For the candidates we used the Universities Worldwide webpage [cite] to collect a sample of university urls in the area of study.  We used python code to parse the web page and extract the url addresses and also for geocoding the real location of the url.  We started with 200 urls but after processing them we concluded with 97 valid urls.  The cleaning process consisted of removing duplicates, incorrect formats and those that did not response to a ping command.  Figure \ref{fig:candidates} presents the locations of the candidates.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.5\textwidth]{candidates.png}
+  \caption{Candidates location.}\label{fig:candidates}
+\end{figure}
+
+\subsection{Measuring RTT Metric}
+We developed a set of python scripts to run ping commands between the current servers deployed on the Azure network and the set of candidates located in different cities.  We transmitted 5 packages and computed the average ping time.  We collected a file from each current CDN server and then we merged them in order to build a graph.  
+
+\subsection{Building the Graph}
+To implement our graph, we used as nodes the current and candidates CDNs and as edges the ping time between them. We used the NetworkX python package to build the graph.  The final graph has 105 nodes and 776 edges.  Figure \ref{fig:graph} shows a representation of this graph.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.5\textwidth]{graph.png}
+  \caption{Graph representation.}\label{fig:graph}
+\end{figure}
+
+\subsection{Visualization}
+We exported the graph using a \texttt{shapefile} format.  It is a well-known format used for many GIS applications to visualize geographic data.  We used QGIS [cite] to illustrate the location of current and candidates CDN in the study area.  Figure \ref{fig:vis} shows this visualization.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.5\textwidth]{vis.png}
+  \caption{Graph representation.}\label{fig:vis}
+\end{figure}
+
+\begin{table}[h!]
+ \centering
+ \begin{center}
+\begin{tabular}{rrr}
+\toprule
+City & State & Avg Ping Time \\
+\midrule
+Clarksville & TN & 71.19775 \\
+Bloomsburg & PA & 69.86825 \\
+Athabasca & AB & 57.35125 \\
+Philadelphia & PA & 56.912875 \\
+Charlottetown & PE & 56.19075 \\
+Chicago & IL & 54.007875 \\
+Smithfield & RI & 52.443 \\
+Langley & BC & 52.4085 \\
+Thousand Oaks & CA & 50.99025 \\
+Boston & MA & 50.548125 \\
+\bottomrule
+ \end{tabular}
+ \end{center}
+ \caption{Top 10 best locations.}
+ \label{tab:rank}
+\end{table}
+
+\section{Results}
+To identify the candidate with the higher time response, we iterated at each candidate in the graph and computed its average ping time with each of the current CDNs. Finally we ordered the list of candidates ascendantly according to the average ping time.  Figure \ref{fig:results} shows the location of the two highest ping time response and probable future locations for a new CDN deployment.  The two cities that we propose are Clarksville (Tennessee) and Bloomsburg (Pennsylvania).  We propose these two locations given that their average ping time was very similar in comparison with the rest of possible candidates (see table \ref{tab:rank}).
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.5\textwidth]{results.png}
+  \caption{Output of test 2.}\label{fig:results}
+\end{figure}
+
+
+
+\end{document}
