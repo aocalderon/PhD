@@ -1,0 +1,137 @@
+\documentclass[10pt]{scrartcl}
+\usepackage{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{pdflscape}
+\usepackage{minted}
+\usepackage{placeins}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\hypersetup{
+colorlinks=false,
+hidelinks
+}
+
+\setlength{\parindent}{1em}
+\setlength{\parskip}{0.5em}
+
+
+%opening
+\title{Project 3 Report}
+\author{
+   Christina Pavlopoulou\\
+  \small \texttt{cpavl001@ucr.edu}
+  \and
+   Andres Calderon\\
+  \small \texttt{acald013@ucr.edu}
+}
+
+\begin{document}
+\maketitle
+
+\section{Implementation}
+\subsection{Victim Cache}
+To implement this part, we firstly added a new cache. To add the new cache we changed the following files:
+\begin{enumerate}
+ \item \texttt{sim-outorder.c}: There we checked if some requirements were satisfied.  We have to check if there is data level 1 cache. If it exists, then we can create it. Then, we had to register the victim cache with its default values as it is requested in the assignment. Then we created the cache itself.  Finally, we had to create a cache access function to declare what happens in every miss in the victim cache.
+ \item \texttt{power.h} and \texttt{power.c}: In these files, we added variables and functions to calculate the power consumption for victim cache. We based on the calculations for data cache level 1. 
+ \item \texttt{cache.c} and \texttt{cache.h}: Here, we created the \texttt{vic\_cache\_access} to define what will happen with replacements in a victim cache. According to the assignment, if we have a hit, the block must be transferred to dl1 cache, and the evicted block to victim cache, to replace the hit block. 
+\end{enumerate}
+
+\subsection{Stream Buffer}
+In this part of the assignment, we had to create two stream buffers, one for the dl1 and the other for the il1 cache. We observed that to add a stream buffer, we had to follow the same steps as we did for the above section. In the previous part, we only had to add one cache between dl1 and dl2. Now, we had to also add one cache between il1 and il2. We did the same procedure but instead of following dl1 cache, we followed the il1 cache. 
+
+\begin{enumerate}
+\item \texttt{cache.c}: We added a function called \texttt{cache\_prefetch\_block} to manage what is happening in a hit or miss block. In this case on a miss, the stream buffer prefetches all the 4 blocks after the miss block. 
+\end{enumerate}
+
+\subsection{Pseudo LRU replacement}
+In this part, we used the FIFO replacement policy as guide to create the PLRU policy. We changed the following files:
+
+\begin{enumerate}
+\item \texttt{sim-outorder.c}: We added the option for the PLRU policy in the replacement parameter that already existed for each cache. 
+\item \texttt{cache.c} and \texttt{cache.h}: In the \texttt{cache\_access} function, we create the PLRU case both in misses and in hits. Inside these cases, we use two functions to implement the code for the tree-based pseudo LRU replacement algorithm. 
+\end{enumerate}
+
+\section{Simulations}
+We run simulations using the GCC and Anagram applications.  For both cases, we run first a baseline evaluation of \texttt{sim-outourder} with the default parameters without the deployment of neither victim or stream buffers caches.  Then, each new cache implementation was evaluated.  First, we test \texttt{sim-outourder} with a victim cache (without the stream buffers), and then with both, instruction and data, stream buffers (without the victim cache).  Finally, we run \texttt{sim-outourder} setting the replacement policy of the data cache level 1 to the new implementation of Pseudo-LRU.
+\subsection{Results for GCC}
+We compare two metrics to measure performance: the total simulation time in cycles and CPI.  Figures \ref{fig:gcc}a and \ref{fig:gcc}b show the performance results on these two metrics for victim caches and stream buffers compared to the baseline.  We can see a considerable improvement of both implementations, but the use of an instruction and data stream buffer seems to bring the best results.
+
+In the case of power consumption we measure the total power per cycle and the average total power per instruction and we compare them to the baseline.  Figures \ref{fig:gcc}c and \ref{fig:gcc}d show a similar trend already seen with the performance metrics.  Both caches reduce the power consumption with a greater reduction in the case of the stream buffers. 
+
+\begin{figure}
+\minipage{0.5\textwidth}
+  \includegraphics[width=\linewidth]{./Plots/gcc_1.pdf}
+  \centering{\tiny a}
+\endminipage\hfill
+\minipage{0.5\textwidth}
+  \includegraphics[width=\linewidth]{./Plots/gcc_2.pdf}
+  \centering{\tiny b}
+\endminipage\hfill
+\minipage{0.5\textwidth}%
+  \includegraphics[width=\linewidth]{./Plots/gcc_3.pdf}
+  \centering{\tiny c}
+\endminipage
+\minipage{0.5\textwidth}%
+  \includegraphics[width=\linewidth]{./Plots/gcc_4.pdf}
+  \centering{\tiny d}
+\endminipage
+\caption{GCC metrics comparison. (a) Total time in cycles for the GCC simulation. (b) Cycles per instruction (CPI) for the GCC simulation. (c) Total power per cycle for the GCC simulation. (d) Average power per instruction for the GCC simulation.}\label{fig:gcc}
+\end{figure}
+
+\FloatBarrier
+\subsection{Results for Anagram}
+We used the same metrics to measure performance (CPI and time in cycles).  Figures \ref{fig:anagram}a and \ref{fig:anagram}b show the performance results.  Although the new cache implementations still gave important improvements, for this application the victim cache offered the best performance.
+
+Similarly, the power consumption follows the same trend.  Figures \ref{fig:anagram}c and \ref{fig:anagram}d show the results for the total power per cycle and average power per instruction respectively.  We can see that for this application, the victim cache seems to bring better consumption rate that the stream buffers.  Overall, both implementation are good alternatives to improve performance and power consumption.
+
+\begin{figure}[h!]
+\minipage{0.5\textwidth}
+  \includegraphics[width=\linewidth]{./Plots/anagram_1.pdf}
+  \centering{\tiny a}
+\endminipage\hfill
+\minipage{0.5\textwidth}
+  \includegraphics[width=\linewidth]{./Plots/anagram_2.pdf}
+  \centering{\tiny b}
+\endminipage\hfill
+\minipage{0.5\textwidth}%
+  \includegraphics[width=\linewidth]{./Plots/anagram_3.pdf}
+  \centering{\tiny c}
+\endminipage
+\minipage{0.5\textwidth}%
+  \includegraphics[width=\linewidth]{./Plots/anagram_4.pdf}
+  \centering{\tiny d}
+\endminipage
+\caption{Anagram metrics comparison. (a) Total time in cycles for the Anagram simulation. (b) Cycles per instruction (CPI) for the Anagram simulation. (c) Total power per cycle for the Anagram simulation. (d) Average power per instruction for the Anagram simulation.}\label{fig:anagram}
+\end{figure}
+
+\FloatBarrier
+\subsection{Pseudo LRU}
+Table \ref{tab:gcc_plru} shows the comparison after the implementation of PLRU. We can see that the result are slightly worse than the baseline.  However, since LRU is more expensive, PLRU is a nice alternative with similar performance. 
+
+\begin{table}[h]
+ \centering
+ \begin{center}
+\begin{tabular}{rrr}
+\toprule
+Metric & Replacement policy& Value \\
+\midrule
+Cycles per instruction & 	Baseline & 	1.0838 \\
+	 & PLRU & 	1.084 \\
+Total power per cycle & 	Baseline & 	2969016.2831 \\
+	 & PLRU & 	2969447.0122 \\
+Average total power per instruction & 	Baseline & 	67.3323 \\
+	 & PLRU	 & 67.3359 \\
+\bottomrule
+ \end{tabular}
+ \end{center}
+ \caption{PLRU comparison with baseline.}
+ \label{tab:gcc_plru}
+\end{table}
+
+
+
+
+\end{document}
