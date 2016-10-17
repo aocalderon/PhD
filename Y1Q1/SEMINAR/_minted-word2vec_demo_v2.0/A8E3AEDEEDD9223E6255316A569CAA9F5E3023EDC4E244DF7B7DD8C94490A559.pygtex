@@ -1,0 +1,13 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGdefault{c}{\PYGdefaultZsh{}\PYGdefaultZsh{} Text model saving vocabulary}
+./word2vec \PYGdefaultZhy{}train text8\PYGdefaultZus{}small \PYGdefaultZhy{}output vectors\PYGdefaultZus{}small\PYGdefaultZus{}50.txt \PYGdefaultZhy{}cbow \PYGdefault{l+m}{1} \PYGdefaultZhy{}size \PYGdefault{l+m}{50} \PYGdefaultZhy{}window \PYGdefault{l+m}{5} \PYGdefaultZhy{}negative \PYGdefault{l+m}{0} \PYGdefaultZhy{}hs \PYGdefault{l+m}{25} \PYGdefaultZhy{}threads \PYGdefault{l+m}{1} \PYGdefaultZhy{}iter \PYGdefault{l+m}{4} \PYGdefaultZhy{}binary \PYGdefault{l+m}{0} \PYGdefaultZhy{}save\PYGdefaultZhy{}vocab vocab.txt
+\PYGdefault{c}{\PYGdefaultZsh{}\PYGdefaultZsh{} Text model with just 3 dimensions}
+./word2vec \PYGdefaultZhy{}train text8\PYGdefaultZus{}small \PYGdefaultZhy{}output vectors\PYGdefaultZus{}small\PYGdefaultZus{}3.txt \PYGdefaultZhy{}cbow \PYGdefault{l+m}{1} \PYGdefaultZhy{}size \PYGdefault{l+m}{3} \PYGdefaultZhy{}window \PYGdefault{l+m}{5} \PYGdefaultZhy{}negative \PYGdefault{l+m}{0} \PYGdefaultZhy{}hs \PYGdefault{l+m}{25} \PYGdefaultZhy{}threads \PYGdefault{l+m}{1} \PYGdefaultZhy{}iter \PYGdefault{l+m}{4} \PYGdefaultZhy{}binary \PYGdefault{l+m}{0} 
+\PYGdefault{c}{\PYGdefaultZsh{}\PYGdefaultZsh{} See the results...}
+\PYGdefault{n+nb}{echo} \PYGdefault{l+s+s2}{\PYGdefaultZdq{}Text model size 50...\PYGdefaultZdq{}}
+head \PYGdefaultZhy{}n \PYGdefault{l+m}{5} vectors\PYGdefaultZus{}small\PYGdefaultZus{}50.txt
+\PYGdefault{n+nb}{echo} \PYGdefault{l+s+s2}{\PYGdefaultZdq{}Vocabulary...\PYGdefaultZdq{}}
+head \PYGdefaultZhy{}n \PYGdefault{l+m}{5} vocab.txt 
+\PYGdefault{n+nb}{echo} \PYGdefault{l+s+s2}{\PYGdefaultZdq{}Text model size 3...\PYGdefaultZdq{}}
+head \PYGdefaultZhy{}n \PYGdefault{l+m}{5} vectors\PYGdefaultZus{}small\PYGdefaultZus{}3.txt 
+\end{Verbatim}

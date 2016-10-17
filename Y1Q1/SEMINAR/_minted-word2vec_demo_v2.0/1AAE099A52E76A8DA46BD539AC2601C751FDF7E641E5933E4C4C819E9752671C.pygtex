@@ -1,0 +1,16 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGdefault{c}{\PYGdefaultZsh{}\PYGdefaultZsh{} Same that before...}
+make
+\PYGdefault{k}{if} \PYGdefault{o}{[} ! \PYGdefaultZhy{}e text8 \PYGdefault{o}{]}\PYGdefault{p}{;} \PYGdefault{k}{then}
+  wget http://mattmahoney.net/dc/text8.zip \PYGdefaultZhy{}O text8.gz
+  gzip \PYGdefaultZhy{}d text8.gz \PYGdefaultZhy{}f
+\PYGdefault{k}{fi}
+\PYGdefault{n+nb}{echo} \PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}
+\PYGdefault{n+nb}{echo }Note that \PYGdefault{k}{for} the word analogy to perform well, the model 
+\PYGdefault{n+nb}{echo }should be trained on much larger data \PYGdefault{n+nb}{set}
+\PYGdefault{n+nb}{echo }Example input: paris france berlin
+\PYGdefault{n+nb}{echo} \PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}\PYGdefaultZhy{}
+\PYGdefault{n+nb}{time} ./word2vec \PYGdefaultZhy{}train text8 \PYGdefaultZhy{}output vectors.bin \PYGdefaultZhy{}cbow \PYGdefault{l+m}{1} \PYGdefaultZhy{}size \PYGdefault{l+m}{200} \PYGdefaultZhy{}window \PYGdefault{l+m}{8} \PYGdefaultZhy{}negative \PYGdefault{l+m}{25} \PYGdefaultZhy{}hs \PYGdefault{l+m}{0} \PYGdefaultZhy{}sample 1e\PYGdefaultZhy{}4 \PYGdefaultZhy{}threads \PYGdefault{l+m}{20} \PYGdefaultZhy{}binary \PYGdefault{l+m}{1} \PYGdefaultZhy{}iter 15
+\PYGdefault{c}{\PYGdefaultZsh{}\PYGdefaultZsh{} Call word\PYGdefaultZhy{}analogy script...}
+./word\PYGdefaultZhy{}analogy vectors.bin
+\end{Verbatim}
