@@ -1,0 +1,35 @@
+\documentclass[a4paper, 12pt]{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage[square]{natbib}
+\usepackage{url}
+\usepackage{graphicx}
+
+%opening
+\title{Project Proposal}
+\author{Andres Calderon}
+
+\begin{document}
+
+\maketitle
+ 
+Recently increase use of location-aware devices (such as GPS, Smart-phones and RFID tags) has allowed the collection of a vast amount of data with a spatial component linked to them.  Different studies have focused in analyzing and mining this kind of collections \citep{leung_knowledge_2010}\citep{Miller_2001}.  In this area, trajectory datasets have emerged as an interesting field where diverse kind of patterns can be identified \citep{zheng_computing_2011}\citep{vieira_spatio-temporal_2013}.  For instance, authors have proposed techniques to discover motion spatial patterns such as moving clusters\citep{kalnis_discovering_2005}, convoys\citep{jeung_discovery_2008} and flocks \citep{benkert_reporting_2006}\citep{gudmundsson_computing_2006}.  In particular, \citep{vieira_-line_2009} and \citep{turdukulov_visual_2014} propose two novel algorithms to find moving flock patterns in very large spatio-temporal datasets.  
+ 
+A flock pattern is defined as a group of entities which move together for a defined lapse of time \citep{benkert_reporting_2006}.  Applications to this kind of patterns are diverse and range from surveillance to integrated transport systems.  For example, \citep{turdukulov_visual_2014} explore the finding of this class of patterns to discover similarities between tropical cyclone paths. Also, \citep{calderon_mining_2011} finds moving flock patterns in iceberg trajectories to understand their movement behavior and how they related to changes in ocean's currents. 
+ 
+The algorithms proposed by \citep{vieira_-line_2009} and \citep{turdukulov_visual_2014} share the same initial strategy to detect flock patterns.  In that, first they find clusters of points which could be close enough to initiate a flock for each time interval.  This is a costly operation due to the large number of points and intervals to be analyzed.  The technique uses a grid-based index and a stencil (see figure~\ref{fig:grid}) to speed up the process but the complexity is still high.
+
+\begin{figure}[t]
+ \centering
+ \includegraphics[width=0.3\textwidth]{./grid.png}
+ \caption{Grid-based index used in \citep{vieira_-line_2009}.}
+ \label{fig:grid}
+\end{figure}
+ 
+I already have access to sequential implementations of the algorithms in Java and Python, so it would not be difficult to code a port in C.  Then, I plan to use a convolution kernel to find clusters of points as is required.  Finally, I hope to compare both implementations to find some improvements. 
+ 
+Certainly, the computation of each stencil in parallel should improve the overall performance of the algorithm.
+
+\bibliographystyle{plainnat}
+\bibliography{proposal}
+
+\end{document}

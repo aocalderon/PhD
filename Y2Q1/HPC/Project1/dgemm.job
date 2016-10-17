@@ -1,0 +1,13 @@
+#!/bin/sh
+#PBS -l nodes=1:nogpu:ppn=16,walltime=00:30:00
+
+module purge
+module load mvapich2-1.9a2/gnu-4.6.2
+module load gcc-4.6.2   
+
+./dgemm 64
+./dgemm 128
+./dgemm 256
+./dgemm 512
+./dgemm 1024
+./dgemm 2014

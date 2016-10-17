@@ -1,0 +1,77 @@
+\documentclass[10pt]{scrartcl}
+\usepackage[utf8]{inputenc}
+%\usepackage[left=2cm, right=2cm, top=2cm, bottom=3cm]{geometry}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\hypersetup{
+colorlinks=false,
+hidelinks
+}
+\usepackage{minted}
+\usepackage{xcolor}
+\usepackage{lineno}
+
+\title{Lab 1 Report}
+\author{
+   Andres Calderon\\
+  \small \texttt{acald013@ucr.edu}
+}
+\begin{document}
+\maketitle
+
+\section{Questions}
+\subsection{dgemm0 and dgemm1}
+\begin{itemize}
+ \item Assume your computer is able to complete 4 double floating-point operations per cycle when operands are in registers and it takes an additional delay of 100 cycles to access any operands that are not in registers. The clock frequency of your computer is 2 Ghz.
+
+How long it will take for your computer to finish the following algorithm \texttt{dgemm0} and \texttt{dgemm1} respectively for n= 1000?  How much time is wasted on accessing operands that are not in registers? 
+\end{itemize}
+
+
+
+In the case of \texttt{dgemm0}, it takes $2$ floating-point operation (an addition and a product) and $3$ access to memory (for each matrix). So, it will take 2 floating-point operation each of them taking a quarter of cycle and 3 memory accesses each of them taking 100 cycles per iteration.  As the total number of iteration is $n^3$, we have:
+
+$$(2 \times \frac{1}{4} + 3 \times 100) \times 1000^3$$
+$$(\frac{1}{2} + 300) \times 10^9$$
+
+As the frequency of your computer is 2 Ghz, we have:
+
+$$\frac{(\frac{1}{2} + 300) \times 10^9}{2 \times 10^9} = 150.25$$
+
+From here, 150s are spent on access memory and just 0.25s on floating-point operations.
+
+In the case of \texttt{dgemm1}, the computation is similar but it just take 2 access to memory per iteration.
+
+$$(2 \times \frac{1}{4} + 2 \times 100) \times 1000^3$$
+$$(\frac{1}{2} + 200) \times 10^9$$
+
+As the frequency of your computer is 2 Ghz, we have:
+
+$$\frac{(\frac{1}{2} + 200) \times 10^9}{2 \times 10^9} = 100.25$$
+
+So, although it spent the same amount of time for floating-point operations, it just spent 100s accessing memory.
+
+\begin{itemize}
+ \item Implement the algorithm \texttt{dgemm0} and \texttt{dgemm1} and test them on TARDIS with n= 64, 128, 256, 512, 1024, 2048. Measure the time spend in the triple loop for each algorithm. Calculate the performance (in Gflops) of each algorithm.
+\end{itemize}
+
+
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.6\textwidth]{plot}
+  \caption{Matrix multiplication performance.}\label{fig:plot}
+\end{figure}
+
+\clearpage
+\section*{Appendix}
+\subsection*{Source code}
+\inputminted[
+fontsize=\footnotesize,
+tabsize=2,
+linenos
+]{c}{dgemm.c}
+
+
+\end{document}
