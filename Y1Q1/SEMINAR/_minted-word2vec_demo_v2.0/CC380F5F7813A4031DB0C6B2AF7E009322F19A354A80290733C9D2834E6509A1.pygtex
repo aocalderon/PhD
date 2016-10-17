@@ -1,0 +1,8 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGdefault{c}{\PYGdefaultZsh{}\PYGdefaultZsh{} Get a small file...}
+head \PYGdefaultZhy{}c \PYGdefault{l+m}{5000000} text8 \PYGdefaultZgt{} text8\PYGdefaultZus{}small 
+\PYGdefault{c}{\PYGdefaultZsh{}\PYGdefaultZsh{} Build the model...}
+./word2vec \PYGdefaultZhy{}train text8\PYGdefaultZus{}small \PYGdefaultZhy{}output vectors\PYGdefaultZus{}small.bin \PYGdefaultZhy{}cbow \PYGdefault{l+m}{1} \PYGdefaultZhy{}size \PYGdefault{l+m}{100} \PYGdefaultZhy{}window \PYGdefault{l+m}{5} \PYGdefaultZhy{}negative \PYGdefault{l+m}{0} \PYGdefaultZhy{}hs \PYGdefault{l+m}{25} \PYGdefaultZhy{}threads \PYGdefault{l+m}{1} \PYGdefaultZhy{}iter \PYGdefault{l+m}{4} \PYGdefaultZhy{}min\PYGdefaultZhy{}count \PYGdefault{l+m}{2} \PYGdefaultZhy{}binary \PYGdefault{l+m}{1} 
+\PYGdefault{c}{\PYGdefaultZsh{}\PYGdefaultZsh{} Query word distances...}
+./distance vectors\PYGdefaultZus{}small.bin 
+\end{Verbatim}
