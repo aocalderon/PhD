@@ -1,0 +1,771 @@
+%% LyX 2.1.4 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass{beamer}
+\usepackage{mathptmx}
+\usepackage{graphicx}
+\usepackage{minted}
+\usepackage{xcolor}
+
+\definecolor{LightGray}{gray}{0.9}
+
+\ifx\hypersetup\undefined
+  \AtBeginDocument{%
+    \hypersetup{unicode=true,
+ bookmarksnumbered=false,bookmarksopen=false,
+ breaklinks=false,pdfborder={0 0 0},colorlinks=false}
+  }
+\else
+  \hypersetup{unicode=true,
+ bookmarksnumbered=false,bookmarksopen=false,
+ breaklinks=false,pdfborder={0 0 0},colorlinks=false}
+\fi
+
+\makeatletter
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Textclass specific LaTeX commands.
+ % this default might be overridden by plain title style
+ \newcommand\makebeamertitle{\frame{\maketitle}}%
+ % (ERT) argument for the TOC
+ \AtBeginDocument{%
+   \let\origtableofcontents=\tableofcontents
+   \def\tableofcontents{\@ifnextchar[{\origtableofcontents}{\gobbletableofcontents}}
+   \def\gobbletableofcontents#1{\origtableofcontents}
+ }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
+\usetheme{Warsaw}
+% or ...
+\useoutertheme{infolines}
+\addtobeamertemplate{headline}{}{\vskip2pt}
+
+\setbeamercovered{transparent}
+% or whatever (possibly just delete it)
+
+
+
+\setbeamertemplate{footline}
+{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+    \usebeamerfont{date in head/foot}\insertshortdate{}\hspace*{2em}
+    \insertframenumber{} / \inserttotalframenumber\hspace*{2ex} 
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+\usepackage{pifont}
+\usepackage{animate}
+\makeatother
+
+\begin{document}
+
+\title[CG\_Hadoop]{CG\_Hadoop: computational geometry in MapReduce.}
+\subtitle{Ahmed Eldawy, Yuan Li, Mohamed F. Mokbel and Ravi Janardan \\ \small University of Minnesota.}
+\author{Andres Calderon}
+%\institute{University of California, Riverside}
+
+\makebeamertitle
+
+% \AtBeginSection[]{
+%   \frame<beamer>{ 
+%     \frametitle{Agenda}   
+%     \tableofcontents[currentsubsection] 
+%   }
+% }
+
+\newif\iflattersubsect
+
+\AtBeginSection[] {
+    \begin{frame}<beamer>
+    \frametitle{Agenda} %
+    \tableofcontents[currentsection]  
+    \end{frame}
+    \lattersubsectfalse
+}
+
+\AtBeginSubsection[] {
+    % \iflattersubsect
+    \begin{frame}<beamer>
+    \frametitle{Agenda} %
+    \tableofcontents[currentsubsection]  
+    \end{frame}
+    % \fi
+    % \lattersubsecttrue
+}
+
+\begin{frame}{Agenda}
+  \tableofcontents{}
+\end{frame}
+
+\section{Background}
+
+\begin{frame}{Introduction}
+  \begin{itemize}
+    \item Hadoop is widely used on many applications...
+    \begin{itemize}
+      \item Machine learning, Graph processing, Sorting...
+    \end{itemize}
+    \item But we are watching a big [spatial] data explosion...
+    \begin{itemize}
+      \item satellites, smart phones, space telescopes, medical devices...
+    \end{itemize}
+   \end{itemize}
+   \centering
+  \begin{minipage}{.45\linewidth}
+    \includegraphics[width=\linewidth]{Figures/sentinel.jpg}
+  \end{minipage}
+  \hspace{.05\linewidth}
+  \begin{minipage}{.45\linewidth}
+    \includegraphics[width=\linewidth]{Figures/medical.jpg}
+  \end{minipage}
+\end{frame}
+
+\begin{frame}{Introduction}    
+  \begin{itemize}
+    \item Computational geometry operations are quite costly.
+    \begin{itemize}
+      \item Convex hull - 4 billion points - up to three hours.
+      \item Polygon union - 5 million polygons - around one hour.
+    \end{itemize}
+  \end{itemize}
+   \centering
+  \begin{minipage}{.45\linewidth}
+    \includegraphics[width=\linewidth]{Figures/ch.png}
+  \end{minipage}
+  \hspace{.05\linewidth}
+  \begin{minipage}{.45\linewidth}
+    \includegraphics[width=\linewidth]{Figures/pu.png}
+  \end{minipage}
+\end{frame}
+
+\begin{frame}{SpatialHadoop}    
+  \begin{itemize}
+    \item Extend Hadoop for spatial analysis.
+    \begin{itemize}
+      \item Efficient operation for spatial querying.
+      \item Support for spatial types (point, polygons, rectangle).
+      \item Spatial partitioning and indexing techniques (Grid, R-tree, R+-tree).
+      \item Open source (\url{http://spatialhadoop.cs.umn.edu/}).
+    \end{itemize}
+  \end{itemize}
+   \centering
+   \includegraphics[clip, trim=2cm 24.2cm 11cm 1cm,width=1\linewidth]{Figures/index2} \\
+   \flushright  \tiny{(Eldawy and Mokbel, 2015)}
+\end{frame}
+
+\begin{frame}{CG\_Hadoop}    
+  \begin{itemize}
+    \item Apply a divide and conquer approach.
+    \item Exploit spatial indexing and early pruning (SpatialHadoop).
+    \item Main idea:
+    \begin{enumerate}
+      \item Partition the input.
+      \item Filter partitions that do not contribute to the answer when it is possible.
+      \item Apply the algorithm locally for each partition.
+      \item Merge the local answers to compute a global result.
+    \end{enumerate}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{CG\_Hadoop}    
+   \centering
+   \includegraphics[width=0.6\linewidth]{Figures/arch.png} 
+\end{frame}
+
+\section{Computational Geometry Operations}
+
+\subsection{Union}
+
+\begin{frame}{Union}   
+  \centering
+  \includegraphics[clip, trim=2cm 22.8cm 12.5cm 1.8cm,width=0.8\linewidth]{Figures/ops} 
+\end{frame}
+
+\begin{frame}{Traditional algorithm}   
+  \centering
+  \includegraphics[width=1\linewidth]{Figures/example.png} 
+\end{frame}
+
+\begin{frame}{Hadoop - Partition}   
+  \centering
+  \includegraphics[clip, trim=0.5cm 2cm 6cm 1cm,width=0.6\linewidth]{Figures/union1} 
+\end{frame}
+
+\begin{frame}{Hadoop - Partition}   
+  \centering
+  \includegraphics[clip, trim=0.5cm 2cm 6cm 1cm,width=0.6\linewidth]{Figures/union2} 
+\end{frame}
+
+\begin{frame}{Hadoop - Local union}   
+  \centering
+  \includegraphics[clip, trim=0.5cm 2cm 6cm 1cm,width=0.6\linewidth]{Figures/union3} 
+\end{frame}
+
+\begin{frame}{Hadoop - Global union}   
+  \centering
+  \includegraphics[clip, trim=0.5cm 2cm 6cm 1cm,width=0.6\linewidth]{Figures/union4}
+\end{frame}
+
+\begin{frame}{Hadoop - Global union}   
+  \centering
+  \includegraphics[clip, trim=0.5cm 2cm 6cm 1cm,width=0.6\linewidth]{Figures/union5} 
+\end{frame}
+
+\begin{frame}{SpatialHadoop - Partition}   
+  \centering
+  \includegraphics[clip, trim=0.5cm 2cm 6cm 1cm,width=0.6\linewidth]{Figures/union1} 
+\end{frame}
+
+\begin{frame}{SpatialHadoop - Partition}   
+  \centering
+  \includegraphics[clip, trim=0.5cm 2cm 6cm 1cm,width=0.6\linewidth]{Figures/union2sh}
+\end{frame}
+
+\begin{frame}{SpatialHadoop - Local union}   
+  \centering
+  \includegraphics[clip, trim=0.5cm 2cm 6cm 1cm,width=0.6\linewidth]{Figures/union3sh} 
+\end{frame}
+
+\begin{frame}{SpatialHadoop - Global union}   
+  \centering
+  \includegraphics[clip, trim=0.5cm 2cm 6cm 1cm,width=0.6\linewidth]{Figures/union4sh}
+\end{frame}
+
+\begin{frame}{SpatialHadoop - Global union}   
+  \centering
+  \includegraphics[clip, trim=0.5cm 2cm 6cm 1cm,width=0.6\linewidth]{Figures/union5sh} 
+\end{frame}
+
+\subsection{Skyline}
+
+\begin{frame}{Skyline}
+   \centering
+  \begin{minipage}{.45\linewidth}
+    \includegraphics[width=\linewidth]{Figures/skyline/input.png}
+  \end{minipage}
+  \hspace{.05\linewidth}
+  \begin{minipage}{.45\linewidth}
+    \includegraphics[width=\linewidth]{Figures/skyline/output.png}
+  \end{minipage}
+\end{frame}
+
+\begin{frame}{Divide and conquer approach}
+  \centering
+  \includegraphics[width=1\linewidth]{Figures/skyline/example.png} 
+\end{frame}
+
+\begin{frame}{Hadoop - Partition}
+  \centering
+  \includegraphics[width=0.6\linewidth]{Figures/skyline/skyline-0.png} 
+\end{frame}
+
+\begin{frame}{Hadoop - Partition}
+  \centering
+  \includegraphics[width=0.6\linewidth]{Figures/skyline/skyline-1.png} 
+\end{frame}
+
+\begin{frame}{Hadoop - Partition}
+  \centering
+  \includegraphics[width=0.6\linewidth]{Figures/skyline/skyline-2.png} 
+\end{frame}
+
+\begin{frame}{Hadoop - Local}
+  \centering
+  \includegraphics[width=0.6\linewidth]{Figures/skyline/skyline-3.png} 
+\end{frame}
+
+\begin{frame}{Hadoop - Local}
+  \centering
+  \includegraphics[width=0.6\linewidth]{Figures/skyline/skyline-4.png} 
+\end{frame}
+
+\begin{frame}{Hadoop - Global}
+  \centering
+  \includegraphics[width=0.6\linewidth]{Figures/skyline/skyline-5.png} 
+\end{frame}
+
+\begin{frame}{Hadoop - Global}
+  \centering
+  \includegraphics[width=0.6\linewidth]{Figures/skyline/skyline-6.png} 
+\end{frame}
+
+% \begin{frame}{Skyline}
+% Hadoop \\
+%   \centering
+%   %\animategraphics[autopause,controls,width=0.7\linewidth]{3}{Figures/skyline/skyline-}{0}{6}
+% \end{frame}
+
+\begin{frame}{Skyline in SpatialHadoop}   
+  \centering
+  \includegraphics[clip, trim=12.5cm 20cm 3cm 1.5cm,width=0.7\linewidth]{Figures/figure4} 
+\end{frame}
+
+\begin{frame}{SpatialHadoop - Partition}
+  \centering
+  \includegraphics[width=0.6\linewidth]{Figures/skyline/sh-0.png} 
+\end{frame}
+
+\begin{frame}{SpatialHadoop - Partition}
+  \centering
+  \includegraphics[width=0.6\linewidth]{Figures/skyline/sh-1.png} 
+\end{frame}
+
+\begin{frame}{SpatialHadoop - Pruning}
+  \centering
+  \includegraphics[width=0.6\linewidth]{Figures/skyline/sh-2.png} 
+\end{frame}
+
+\begin{frame}{SpatialHadoop - Pruning}
+  \centering
+  \includegraphics[width=0.6\linewidth]{Figures/skyline/sh-3.png} 
+\end{frame}
+
+\begin{frame}{SpatialHadoop - Local}
+  \centering
+  \includegraphics[width=0.6\linewidth]{Figures/skyline/sh-4.png} 
+\end{frame}
+
+\begin{frame}{SpatialHadoop - Local}
+  \centering
+  \includegraphics[width=0.6\linewidth]{Figures/skyline/sh-5.png} 
+\end{frame}
+
+\begin{frame}{SpatialHadoop - Global}
+  \centering
+  \includegraphics[width=0.6\linewidth]{Figures/skyline/sh-6.png} 
+\end{frame}
+
+\begin{frame}{SpatialHadoop - Global}
+  \centering
+  \includegraphics[width=0.6\linewidth]{Figures/skyline/sh-7.png} 
+\end{frame}
+
+% \begin{frame}{Skyline}
+% SpatialHadoop \\
+%   \centering
+%   %\animategraphics[autopause,controls,width=0.7\linewidth]{3}{Figures/skyline/sh-}{0}{7}
+% \end{frame}
+
+\subsection{Convex Hull}
+
+\begin{frame}{Convex Hull}
+   \centering
+  \begin{minipage}{.45\linewidth}
+    \includegraphics[width=\linewidth]{Figures/ch/input.png}
+  \end{minipage}
+  \hspace{.05\linewidth}
+  \begin{minipage}{.45\linewidth}
+    \includegraphics[width=\linewidth]{Figures/ch/output.png}
+  \end{minipage}
+\end{frame}
+
+\begin{frame}{Andrew's Monotone Chain algorithm}
+  \centering
+  \animategraphics[loop,controls,width=.4\linewidth]{3}{Figures/convex-hull/frame-}{0}{139}
+\end{frame}
+
+\begin{frame}{Hadoop - Partition}
+  \centering
+  \includegraphics[width=0.6\linewidth]{Figures/ch/ch-0.png} 
+\end{frame}
+
+\begin{frame}{Hadoop - Partition}
+  \centering
+  \includegraphics[width=0.6\linewidth]{Figures/ch/ch-1.png} 
+\end{frame}
+
+\begin{frame}{Hadoop - Partition}
+  \centering
+  \includegraphics[width=0.6\linewidth]{Figures/ch/ch-2.png} 
+\end{frame}
+
+\begin{frame}{Hadoop - Local}
+  \centering
+  \includegraphics[width=0.6\linewidth]{Figures/ch/ch-3.png} 
+\end{frame}
+
+\begin{frame}{Hadoop - Local}
+  \centering
+  \includegraphics[width=0.6\linewidth]{Figures/ch/ch-4.png} 
+\end{frame}
+
+\begin{frame}{Hadoop - Global}
+  \centering
+  \includegraphics[width=0.6\linewidth]{Figures/ch/ch-5.png} 
+\end{frame}
+
+\begin{frame}{Hadoop - Global}
+  \centering
+  \includegraphics[width=0.6\linewidth]{Figures/ch/ch-6.png} 
+\end{frame}
+
+\begin{frame}{Hadoop - Global}
+  \centering
+  \includegraphics[width=0.6\linewidth]{Figures/ch/ch-7.png} 
+\end{frame}
+
+% \begin{frame}{Convex Hull}
+% Hadoop \\
+%   \centering
+%   %\animategraphics[loop,controls,width=.55\linewidth]{3}{Figures/ch/ch-}{0}{7}
+% \end{frame}
+
+\begin{frame}{Convex hull in SpatialHadoop}   
+  \centering
+  \includegraphics[clip, trim=1cm 19cm 10.5cm 1cm,width=0.8\linewidth]{Figures/figure56} 
+\end{frame}
+
+\begin{frame}{SpatialHadoop - Partition}
+  \centering
+  \includegraphics[width=0.6\linewidth]{Figures/ch/sh-0.png} 
+\end{frame}
+
+\begin{frame}{SpatialHadoop - Partition}
+  \centering
+  \includegraphics[width=0.6\linewidth]{Figures/ch/sh-1.png} 
+\end{frame}
+
+\begin{frame}{SpatialHadoop - Pruning}
+  \centering
+  \includegraphics[width=0.6\linewidth]{Figures/ch/sh-2.png} 
+\end{frame}
+
+\begin{frame}{SpatialHadoop - Pruning}
+  \centering
+  \includegraphics[width=0.6\linewidth]{Figures/ch/sh-3.png} 
+\end{frame}
+
+\begin{frame}{SpatialHadoop - Local}
+  \centering
+  \includegraphics[width=0.6\linewidth]{Figures/ch/sh-4.png} 
+\end{frame}
+
+\begin{frame}{SpatialHadoop - Global}
+  \centering
+  \includegraphics[width=0.6\linewidth]{Figures/ch/sh-5.png} 
+\end{frame}
+
+\begin{frame}{SpatialHadoop - Global}
+  \centering
+  \includegraphics[width=0.6\linewidth]{Figures/ch/sh-6.png} 
+\end{frame}
+
+% \begin{frame}{Convex Hull}
+% SpatialHadoop \\
+%   \centering
+%   %\animategraphics[loop,controls,width=.55\linewidth]{3}{Figures/ch/sh-}{0}{6}
+% \end{frame}
+
+\subsection{Farthest Pair}
+
+\begin{frame}{Farthest Pair}
+   \centering
+  \begin{minipage}{.45\linewidth}
+    \includegraphics[width=\linewidth]{Figures/fp/input.png}
+  \end{minipage}
+  \hspace{.05\linewidth}
+  \begin{minipage}{.45\linewidth}
+    \includegraphics[width=\linewidth]{Figures/fp/output.png}
+  \end{minipage}
+\end{frame}
+
+\begin{frame}{Rotating Calipers method}
+  \centering
+  \animategraphics[loop,controls,width=.5\linewidth]{5}{Figures/calipers/frame-}{0}{18}
+\end{frame}
+
+\begin{frame}{Hadoop - Partition}
+  \centering
+  \includegraphics[width=0.6\linewidth]{Figures/fp/h-0.png} 
+\end{frame}
+\begin{frame}{Hadoop - Partition}
+  \centering
+  \includegraphics[width=0.6\linewidth]{Figures/fp/h-1.png} 
+\end{frame}
+\begin{frame}{Hadoop - Local}
+  \centering
+  \includegraphics[width=0.6\linewidth]{Figures/fp/h-2.png} 
+\end{frame}
+\begin{frame}{Hadoop - Local}
+  \centering
+  \includegraphics[width=0.6\linewidth]{Figures/fp/h-3.png} 
+\end{frame}
+\begin{frame}{Hadoop - Local}
+  \centering
+  \includegraphics[width=0.6\linewidth]{Figures/fp/h-4.png} 
+\end{frame}
+\begin{frame}{Hadoop - Global}
+  \centering
+  \includegraphics[width=0.6\linewidth]{Figures/fp/h-5.png} 
+\end{frame}
+\begin{frame}{Hadoop - Global}
+  \centering
+  \includegraphics[width=0.6\linewidth]{Figures/fp/h-6.png} 
+\end{frame}
+
+% \begin{frame}{Farthest Pair}
+% Hadoop \\
+%   \centering
+%   %\animategraphics[loop,controls,width=.55\linewidth]{5}{Figures/fp/h-}{0}{6}
+% \end{frame}
+
+\begin{frame}{Farthest pair in SpatialHadoop}   
+  \centering
+  \includegraphics[clip, trim=11.5cm 20cm 2cm 1cm,width=0.7\linewidth]{Figures/figure56} 
+\end{frame}
+
+\begin{frame}{SpatialHadoop - Partition}
+  \centering
+  \includegraphics[width=0.6\linewidth]{Figures/fp/sh-0.png} 
+\end{frame}
+\begin{frame}{SpatialHadoop - Partition}
+  \centering
+  \includegraphics[width=0.6\linewidth]{Figures/fp/sh-1.png} 
+\end{frame}
+\begin{frame}{SpatialHadoop - Pruning}
+  \centering
+  \includegraphics[width=0.6\linewidth]{Figures/fp/sh-2.png} 
+\end{frame}
+\begin{frame}{SpatialHadoop - Pruning}
+  \centering
+  \includegraphics[width=0.6\linewidth]{Figures/fp/sh-3.png} 
+\end{frame}
+\begin{frame}{SpatialHadoop - Pruning}
+  \centering
+  \includegraphics[width=0.6\linewidth]{Figures/fp/sh-4.png} 
+\end{frame}
+\begin{frame}{SpatialHadoop - Local}
+  \centering
+  \includegraphics[width=0.6\linewidth]{Figures/fp/sh-5.png} 
+\end{frame}
+\begin{frame}{SpatialHadoop - Local}
+  \centering
+  \includegraphics[width=0.6\linewidth]{Figures/fp/sh-6.png} 
+\end{frame}
+\begin{frame}{SpatialHadoop - Global}
+  \centering
+  \includegraphics[width=0.6\linewidth]{Figures/fp/sh-7.png} 
+\end{frame}
+\begin{frame}{SpatialHadoop - Global}
+  \centering
+  \includegraphics[width=0.6\linewidth]{Figures/fp/sh-8.png} 
+\end{frame}
+
+% \begin{frame}{Farthest Pair}
+% SpatialHadoop \\
+%   \centering
+%   %\animategraphics[loop,controls,width=.55\linewidth]{5}{Figures/fp/sh-}{0}{8}
+% \end{frame}
+
+\subsection{Closest Pair}
+
+\begin{frame}{Closest Pair}
+   \centering
+  \begin{minipage}{.45\linewidth}
+    \includegraphics[width=\linewidth]{Figures/cp/input.png}
+  \end{minipage}
+  \hspace{.05\linewidth}
+  \begin{minipage}{.45\linewidth}
+    \includegraphics[width=\linewidth]{Figures/cp/output.png}
+  \end{minipage}
+\end{frame}
+
+\begin{frame}{Divide and conquer approach}
+  \centering
+  \includegraphics[width=1\linewidth]{Figures/cp/example.png}
+\end{frame}
+
+\begin{frame}{Hadoop - Partition}
+  \centering
+  \includegraphics[width=0.6\linewidth]{Figures/cp/sh-0.png} 
+\end{frame}
+\begin{frame}{Hadoop - Partition}
+  \centering
+  \includegraphics[width=0.6\linewidth]{Figures/cp/sh-1.png} 
+\end{frame}
+\begin{frame}{Hadoop - Local}
+  \centering
+  \includegraphics[width=0.6\linewidth]{Figures/cp/sh-2.png} 
+\end{frame}
+\begin{frame}{Hadoop - Global}
+  \centering
+  \includegraphics[width=0.6\linewidth]{Figures/cp/sh-3.png} 
+\end{frame}
+\begin{frame}{Hadoop - Global}
+  \centering
+  \includegraphics[width=0.6\linewidth]{Figures/cp/sh-4.png} 
+\end{frame}
+
+% \begin{frame}{Closest Pair}
+% Hadoop \\
+%   \centering
+%   %\animategraphics[loop,controls,width=.55\linewidth]{5}{Figures/cp/sh-}{0}{5}
+% \end{frame}
+
+\begin{frame}{Closest pair in SpatialHadoop}   
+  \centering
+  \includegraphics[clip, trim=1cm 18cm 10.5cm 1cm,width=0.75\linewidth]{Figures/figure7} 
+\end{frame}
+
+\begin{frame}{SpatialHadoop - Partition}
+  \centering
+  \includegraphics[width=0.6\linewidth]{Figures/cp/h-0.png} 
+\end{frame}
+\begin{frame}{SpatialHadoop - Partition}
+  \centering
+  \includegraphics[width=0.6\linewidth]{Figures/cp/h-1.png} 
+\end{frame}
+\begin{frame}{SpatialHadoop - Local}
+  \centering
+  \includegraphics[width=0.6\linewidth]{Figures/cp/h-2.png} 
+\end{frame}
+\begin{frame}{SpatialHadoop - Local}
+  \centering
+  \includegraphics[width=0.6\linewidth]{Figures/cp/h-3.png} 
+\end{frame}
+\begin{frame}{SpatialHadoop - Local}
+  \centering
+  \includegraphics[width=0.6\linewidth]{Figures/cp/h-4.png} 
+\end{frame}
+\begin{frame}{SpatialHadoop - Global}
+  \centering
+  \includegraphics[width=0.6\linewidth]{Figures/cp/h-5.png} 
+\end{frame}
+\begin{frame}{SpatialHadoop - Global}
+  \centering
+  \includegraphics[width=0.6\linewidth]{Figures/cp/h-6.png} 
+\end{frame}
+
+% \begin{frame}{Closest Pair}
+% SpatialHadoop \\
+%   \centering
+%   %\animategraphics[loop,controls,width=.55\linewidth]{5}{Figures/cp/h-}{0}{6}
+% \end{frame}
+
+\section{Experiments}
+
+\begin{frame}{Setup}
+\begin{itemize}
+ \item Cluster of 25 nodes:
+ \begin{itemize}
+  \item HDD from 50GB to 200GB.
+  \item RAM from 2GB to 8GB.
+  \item Processors 2.2GHz to 3GHz
+ \end{itemize}
+ \item Single machine:
+ \begin{itemize}
+  \item HDD 2TB.
+  \item RAM 16GB.
+  \item Processor 3.4GHz.
+ \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Datasets}
+\begin{itemize}
+ \item Real datasets (from OpenStreetMap):
+ \begin{itemize}
+  \item OSM1: 164M polygons, 80GB.
+  \item OSM2: 1.7B points, 52GB.
+ \end{itemize}
+ \item Synthetic dataset:
+ \begin{itemize}
+  \item SYNTH: 3.8B points, 128GB.
+  \item Five different distributions.
+ \end{itemize}
+\end{itemize}
+  \centering
+  \includegraphics[width=0.8\linewidth]{Figures/experiments/datasets.png} \\
+\end{frame}
+
+\begin{frame}{Union}
+  \centering
+  \includegraphics[width=0.6\linewidth]{Figures/experiments/01-union.png} \\
+  OSM1
+\end{frame}
+
+\begin{frame}{Others}
+  \centering
+  \includegraphics[width=0.6\linewidth]{Figures/experiments/02-others.png} \\
+  OSM2
+\end{frame}
+
+\begin{frame}{Skyline}    
+  \begin{minipage}{.45\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{Figures/experiments/03-cor.png} \\
+    Correlated
+  \end{minipage}
+  \hspace{.05\linewidth}
+  \begin{minipage}{.45\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{Figures/experiments/04-anticor.png} \\
+    Anti-correlated
+  \end{minipage}
+\end{frame}
+
+\begin{frame}{Convex hull}    
+  \begin{minipage}{.45\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{Figures/experiments/05-uniform.png} \\
+    Uniform
+  \end{minipage}
+  \hspace{.05\linewidth}
+  \begin{minipage}{.45\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{Figures/experiments/06-gaussian.png} \\
+    Gaussian
+  \end{minipage}
+\end{frame}
+
+\begin{frame}{Closest/Farthest pair}    
+  \begin{minipage}{.45\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{Figures/experiments/07-farthest.png} \\
+    Farthest Pair
+  \end{minipage}
+  \hspace{.05\linewidth}
+  \begin{minipage}{.45\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{Figures/experiments/08-closest.png} \\
+    Closest Pair
+  \end{minipage}
+\end{frame}
+
+\section{Conclusions}
+
+\begin{frame}{Conclusions}
+  \begin{itemize}
+    \item This paper introduced CG\_Hadoop as a scalable and efficient MapReduce library.
+    \item Focused on 5 fundamental computational geometry problems...
+    \begin{itemize}
+      \item Polygon union, Skyline, Convex hull, Farthest and Closest Pairs.
+    \end{itemize}
+    \item Provided versions for Apache Hadoop and SpatialHadoop systems.
+    \item Distributed approach speed up performance.
+    \item Spatial partitioning allows early pruning which make it even more efficient. 
+    \item Achieve up to 29x and 260x better performance.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Future ideas}
+  \begin{itemize}
+    \item Working on more complex operations, for example motion patterns.
+    \item Explore ports to new distributed platforms such as Spark or Simba.
+  \end{itemize}
+\end{frame}
+
+
+\subsection*{Thanks...}
+
+\begin{frame}{}
+  \centering
+  \huge Thank you!!! \\
+  \vspace{2cm}
+  \large Do you have any question?
+\end{frame}
+
+\end{document}
