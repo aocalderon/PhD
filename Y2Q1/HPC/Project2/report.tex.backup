@@ -43,7 +43,7 @@ hidelinks
  \end{enumerate}
 \end{enumerate}
 
-\subsection{Matrix 10x10}
+\subsection{Matrix 10x10} \label{m10}
 Given the size of the line and the cache, the three matrices will fit on the cache at the same time.  The pattern access will not have effect such there will not be cache misses.  However, it has to be noted that the first access will not be on cache.  Given the line size of $10$, the first every $10^{th}$ element load will count as a miss.  In conclusion, for each algorithm, for each matrix, the $10^{th}$ element will have $1$ read cache miss, the initial access to the cache, and all the remaining element will have $0$. 
 
 \section{Part 2}
@@ -58,17 +58,19 @@ Note that using block of 10x10 will allow to fit blocks from each matrix on cach
  \end{enumerate}
  \item \textbf{kij and ikj}
  \begin{enumerate}
-  \item Matrix A:
-  \item Matrix B:
-  \item Matrix C:
+  \item Matrix A: This matrix follows a fixed-position access pattern.  The number of read cache misses is similar to matrix C of the previous algorithm. Each $10^{th}$ element will have $1$ read cache miss, the remaining elements $0$.
+  \item Matrix B: This matrix follows a row-wise access pattern equal to the matrix A of the previous algorithm.  The number of read cache misses is $1000$ in each $10^{th}$ element.  The remaining elements will not count read cache misses.
+  \item Matrix C: As this matrix also follows a row-wise access pattern, the number of read cache misses is the same that the previous matrix.
  \end{enumerate}
  \item \textbf{jki and kji}
  \begin{enumerate}
-  \item Matrix A:
-  \item Matrix B:
-  \item Matrix C:
+  \item Matrix A: This matrix follow a column-wise access pattern.  The number of read cache misses is similar to matrix B of the first algorithm.  There will be $1000$ read cache misses for each element of this matrix.
+  \item Matrix B: This matrix follows a fixed-position access pattern.  The number of read cache misses is similar to matrix C of the first algorithm.  There will be $1$ read cache miss for each $10^{th}$ element.  The remaining elements will not have any misses.
+  \item Matrix C: As this matrix follows the same access pattern that matrix A of this algorithm, the number of read cache misses will be the same ($1000$ read cache misses for each element).
  \end{enumerate}
 \end{enumerate}
+
+
 
 
 
