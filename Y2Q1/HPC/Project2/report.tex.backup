@@ -1,0 +1,84 @@
+\documentclass[10pt]{scrartcl}
+\usepackage[utf8]{inputenc}
+%\usepackage[left=2cm, right=2cm, top=2cm, bottom=3cm]{geometry}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\hypersetup{
+colorlinks=false,
+hidelinks
+}
+\usepackage{minted}
+\usepackage{xcolor}
+\usepackage{lineno}
+
+\title{Lab 2 Report}
+\author{
+   Andres Calderon\\
+  \small \texttt{acald013@ucr.edu}
+}
+\begin{document}
+\maketitle
+
+\section{Part 1}
+\subsection{Matrix 10000x10000}
+\begin{enumerate}
+ \item \textbf{ijk and jik}
+ \begin{enumerate}
+  \item Matrix A: The pattern access for this matrix is row-wise.  As the line size is $10$, every $10^{th}$ element will be a cache miss but the remaining elements will have a free ride and they will be on cache when they will be requested.  So, each $10^{th}$ element will have $n$ (10000) cache misses, the remaining element will have $0$.
+  \item Matrix B: As this matrix is accessed in column-wise fashion all its elements will not be on cache.  The line size is too short to load the next element, so each element access will count as a cache miss.  Indeed the number of cache misses for each element is $n$ (10000).
+  \item Matrix C: This matrix is accessed in a fixed-position pattern.  Each element is read just one time but after that the cache has to read all the element from matrices A and B.  The cache size is too short to load all those elements and keep the previous C element.  So each element in matrix C will count $1$ read cache miss.
+ \end{enumerate}
+ \item \textbf{kij and ikj}
+ \begin{enumerate}
+  \item Matrix A: For these cases matrix A follows a fixed-position pattern access.  Each element is read just one time but as cache size is too short for keeping track of elements for the inner loop, each access will be a miss on cache.  The number of read cache misses for each element of A is $1$.
+  \item Matrix B: Matrix B follows a row-wise access pattern, so for a line size of $10$ just every $10^{th}$ element will be a cache miss.  The number of cache misses for every $10^{th}$ element is $n$ (10000) and $0$ for the remaining elements. 
+  \item Matrix C: The patter access for Matrix C is similar than previous for Matrix B.  Just every $10^{th}$ element will be a cache miss.  So, the number of cache misses for every $10^{th}$ element is $n$ (10000) and $0$ for the remaining elements.   
+ \end{enumerate}
+ \item \textbf{jki and kji}
+ \begin{enumerate}
+  \item Matrix A: Matrix A has a column-wise access pattern in these cases.  As it was mentioned before, the line size is too short to prevent cache misses and every access will count as one.  The number of read cache misses of every element of A is $n$ (10000).
+  \item Matrix B: This matrix is accessed in a fixed-position fashion. Each element is read just one time but, as the cache size is too short, every of them will count as a cache miss.  The total number of read cache misses is $1$ for each element.
+  \item Matrix C: Similar that matrix A, this matrix as a column-wise access pattern.  So, the number of read cache misses of every element of C is $n$ (10000). 
+ \end{enumerate}
+\end{enumerate}
+
+\subsection{Matrix 10x10}
+Given the size of the line and the cache, the three matrices will fit on the cache at the same time.  The pattern access will not have effect such there will not be cache misses.  However, it has to be noted that the first access will not be on cache.  Given the line size of $10$, the first every $10^{th}$ element load will count as a miss.  In conclusion, for each algorithm, for each matrix, the $10^{th}$ element will have $1$ read cache miss, the initial access to the cache, and all the remaining element will have $0$. 
+
+\section{Part 2}
+\subsection{Matrix 10000x10000}
+Note that using block of 10x10 will allow to fit blocks from each matrix on cache without troubles.  Given the settings each block reading will cost just 10 read misses for the initial load.  After that, all the access in the inner loops will have a free ride.  So, this algorithm will iterate the matrices block by block in similar fashion as in the previous part.  The difference will be than the number of iterations will be reduced by the size of the block.  The number iterations will be given by $\frac{n}{b}$, where is the size of the block.  In our particular case, with a block size of $10$, the algorithm will perform $\frac{10000}{10}=1000$ iterations.
+\begin{enumerate}
+ \item \textbf{ijk and jik}
+ \begin{enumerate}
+  \item Matrix A: This matrix follow a row-wise access pattern similar that in previous part. Given the line size of $10$, every $10^{th}$ element it will have a new load to the cache.  However, thanks to blocking the number of read cache misses for each $10^{th}$ element is reduced to $\frac{n}{b}=\frac{10000}{10}=1000$. The remaining elements will count $0$ read cache misses. 
+  \item Matrix B: As this matrix follow a column-wise access pattern each of the elements will count as a read cache miss.  Even the use of the blocks, the line size is still too short.  However, similar than in the previous case, the number of read cache misses is reduced by the size of the block.  This matrix will count $1000$ read cache misses for each element.
+  \item Matrix C: This matris follow a fixed-position access pattern.  Each element of the matrix is computed just one time.  However, the blocked version algorithm allows to keep blocks of this matrix on cache.  As a result, the number of read cache misses is just $1$ for every $10^{th}$ element.  The remaining elements will count $0$ read cache misses.  
+ \end{enumerate}
+ \item \textbf{kij and ikj}
+ \begin{enumerate}
+  \item Matrix A:
+  \item Matrix B:
+  \item Matrix C:
+ \end{enumerate}
+ \item \textbf{jki and kji}
+ \begin{enumerate}
+  \item Matrix A:
+  \item Matrix B:
+  \item Matrix C:
+ \end{enumerate}
+\end{enumerate}
+
+
+
+
+
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.6\textwidth]{plot}
+  \caption{Matrix multiplication performance.}\label{fig:plot}
+\end{figure}
+
+\end{document}
