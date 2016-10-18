@@ -63,7 +63,7 @@
 \begin{document}
 
 \title[CG\_Hadoop]{CG\_Hadoop: computational geometry in MapReduce.}
-\subtitle{Ahmed Eldawy, Yuan Li, Mohamed F. Mokbel and Ravi Janardan \\ \small University of Minnesota.}
+\subtitle{Ahmed Eldawy, Yuan Li, Mohamed F. Mokbel and Ravi Janardan \\ \small SIGSPATIAL'13.}
 \author{Andres Calderon}
 %\institute{University of California, Riverside}
 
@@ -160,6 +160,14 @@
   \begin{itemize}
     \item Apply a divide and conquer approach.
     \item Exploit spatial indexing and early pruning (SpatialHadoop).
+    \item Achieve up to 260x increase performance.
+    \item Part of the operation layer of SpatialHadoop.
+    \item Run under Hadoop, but not the same performance.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{CG\_Hadoop}    
+  \begin{itemize}
     \item Main idea:
     \begin{enumerate}
       \item Partition the input.
@@ -170,10 +178,6 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}{CG\_Hadoop}    
-   \centering
-   \includegraphics[width=0.6\linewidth]{Figures/arch.png} 
-\end{frame}
 
 \section{Computational Geometry Operations}
 
@@ -184,54 +188,69 @@
   \includegraphics[clip, trim=2cm 22.8cm 12.5cm 1.8cm,width=0.8\linewidth]{Figures/ops} 
 \end{frame}
 
-\begin{frame}{Hadoop - Partition}   
+\begin{frame}{Traditional algorithm}   
   \centering
-  \includegraphics[clip, trim=0.5cm 2cm 6cm 1cm,width=0.6\linewidth]{Figures/union1} 
+  \includegraphics[width=1\linewidth]{Figures/example.png} 
 \end{frame}
 
 \begin{frame}{Hadoop - Partition}   
   \centering
-  \includegraphics[clip, trim=0.5cm 2cm 6cm 1cm,width=0.6\linewidth]{Figures/union2} 
+  \includegraphics[clip, trim=0.5cm 2.5cm 6cm 1cm,width=0.6\linewidth]{Figures/union1} 
+  \\ \begin{center}\begin{tabular}{ccc}\textbf{Partition} & Local & Global\end{tabular}\end{center}
+\end{frame}
+
+\begin{frame}{Hadoop - Partition}   
+  \centering
+  \includegraphics[clip, trim=0.5cm 2.5cm 6cm 1cm,width=0.6\linewidth]{Figures/union2} 
+  \\ \begin{center}\begin{tabular}{ccc}\textbf{Partition} & Local & Global\end{tabular}\end{center}
 \end{frame}
 
 \begin{frame}{Hadoop - Local union}   
   \centering
-  \includegraphics[clip, trim=0.5cm 2cm 6cm 1cm,width=0.6\linewidth]{Figures/union3} 
+  \includegraphics[clip, trim=0.5cm 2.5cm 6cm 1cm,width=0.6\linewidth]{Figures/union3} 
+  \\ \begin{center}\begin{tabular}{ccc}Partition & \textbf{Local}& Global\end{tabular}\end{center}
 \end{frame}
 
 \begin{frame}{Hadoop - Global union}   
   \centering
-  \includegraphics[clip, trim=0.5cm 2cm 6cm 1cm,width=0.6\linewidth]{Figures/union4}
+  \includegraphics[clip, trim=0.5cm 2.5cm 6cm 1cm,width=0.6\linewidth]{Figures/union4}
+  \\ \begin{center}\begin{tabular}{ccc}Partition & Local & \textbf{Global}\end{tabular}\end{center}
 \end{frame}
 
 \begin{frame}{Hadoop - Global union}   
   \centering
-  \includegraphics[clip, trim=0.5cm 2cm 6cm 1cm,width=0.6\linewidth]{Figures/union5} 
+  \includegraphics[clip, trim=0.5cm 2.5cm 6cm 1cm,width=0.6\linewidth]{Figures/union5} 
+  \\ \begin{center}\begin{tabular}{ccc} Partition & Local & \textbf{Global} \end{tabular}\end{center}
 \end{frame}
 
 \begin{frame}{SpatialHadoop - Partition}   
   \centering
-  \includegraphics[clip, trim=0.5cm 2cm 6cm 1cm,width=0.6\linewidth]{Figures/union1} 
+  \includegraphics[clip, trim=0.5cm 2.5cm 6cm 1cm,width=0.6\linewidth]{Figures/union1} 
+  \\ \begin{center}\begin{tabular}{ccc} \textbf{Partition} & Local & Global \end{tabular}\end{center}
 \end{frame}
 
 \begin{frame}{SpatialHadoop - Partition}   
   \centering
-  \includegraphics[clip, trim=0.5cm 2cm 6cm 1cm,width=0.6\linewidth]{Figures/union2sh}
+  \includegraphics[clip, trim=0.5cm 2.5cm 6cm 1cm,width=0.6\linewidth]{Figures/union2sh}
+  \\ \begin{center}\begin{tabular}{ccc} \textbf{Partition} & Local & Global \end{tabular}\end{center}
 \end{frame}
 
 \begin{frame}{SpatialHadoop - Local union}   
   \centering
-  \includegraphics[clip, trim=0.5cm 2cm 6cm 1cm,width=0.6\linewidth]{Figures/union3sh} 
+  \includegraphics[clip, trim=0.5cm 2.5cm 6cm 1cm,width=0.6\linewidth]{Figures/union3sh} 
+  \\ \begin{center}\begin{tabular}{ccc} Partition & \textbf{Local} & Global \end{tabular}\end{center}
 \end{frame}
 
 \begin{frame}{SpatialHadoop - Global union}   
   \centering
-  \includegraphics[clip, trim=0.5cm 2cm 6cm 1cm,width=0.6\linewidth]{Figures/union4sh}
+  \includegraphics[clip, trim=0.5cm 2.5cm 6cm 1cm,width=0.6\linewidth]{Figures/union4sh}
+  \\ \begin{center}\begin{tabular}{ccc} Partition & Local & \textbf{Global} \end{tabular}\end{center}
 \end{frame}
 
 \begin{frame}{SpatialHadoop - Global union}   
   \centering
-  \includegraphics[clip, trim=0.5cm 2cm 6cm 1cm,width=0.6\linewidth]{Figures/union5sh} 
+  \includegraphics[clip, trim=0.5cm 2.5cm 6cm 1cm,width=0.6\linewidth]{Figures/union5sh} 
+  \\ \begin{center}\begin{tabular}{ccc} Partition & Local & \textbf{Global} \end{tabular}\end{center}
 \end{frame}
 
 \subsection{Skyline}
@@ -255,36 +274,43 @@
 \begin{frame}{Hadoop - Partition}
   \centering
   \includegraphics[width=0.6\linewidth]{Figures/skyline/skyline-0.png} 
+  \\ \begin{center}\begin{tabular}{ccc} \textbf{Partition} & Local & Global \end{tabular}\end{center}
 \end{frame}
 
 \begin{frame}{Hadoop - Partition}
   \centering
   \includegraphics[width=0.6\linewidth]{Figures/skyline/skyline-1.png} 
+  \\ \begin{center}\begin{tabular}{ccc} \textbf{Partition} & Local & Global \end{tabular}\end{center}
 \end{frame}
 
 \begin{frame}{Hadoop - Partition}
   \centering
   \includegraphics[width=0.6\linewidth]{Figures/skyline/skyline-2.png} 
+  \\ \begin{center}\begin{tabular}{ccc} \textbf{Partition} & Local & Global \end{tabular}\end{center}
 \end{frame}
 
 \begin{frame}{Hadoop - Local}
   \centering
   \includegraphics[width=0.6\linewidth]{Figures/skyline/skyline-3.png} 
+  \\ \begin{center}\begin{tabular}{ccc} Partition & \textbf{Local} & Global \end{tabular}\end{center}
 \end{frame}
 
 \begin{frame}{Hadoop - Local}
   \centering
   \includegraphics[width=0.6\linewidth]{Figures/skyline/skyline-4.png} 
+  \\ \begin{center}\begin{tabular}{ccc} Partition & \textbf{Local} & Global \end{tabular}\end{center}
 \end{frame}
 
 \begin{frame}{Hadoop - Global}
   \centering
   \includegraphics[width=0.6\linewidth]{Figures/skyline/skyline-5.png} 
+  \\ \begin{center}\begin{tabular}{ccc} Partition & Local & \textbf{Global} \end{tabular}\end{center}
 \end{frame}
 
 \begin{frame}{Hadoop - Global}
   \centering
   \includegraphics[width=0.6\linewidth]{Figures/skyline/skyline-6.png} 
+  \\ \begin{center}\begin{tabular}{ccc} Partition & Local & \textbf{Global} \end{tabular}\end{center}
 \end{frame}
 
 % \begin{frame}{Skyline}
@@ -301,41 +327,49 @@
 \begin{frame}{SpatialHadoop - Partition}
   \centering
   \includegraphics[width=0.6\linewidth]{Figures/skyline/sh-0.png} 
+  \\ \begin{center}\begin{tabular}{cccc} \textbf{Partition} & Pruning & Local & Global \end{tabular}\end{center}
 \end{frame}
 
 \begin{frame}{SpatialHadoop - Partition}
   \centering
   \includegraphics[width=0.6\linewidth]{Figures/skyline/sh-1.png} 
+  \\ \begin{center}\begin{tabular}{cccc} \textbf{Partition} & Pruning & Local & Global \end{tabular}\end{center}
 \end{frame}
 
 \begin{frame}{SpatialHadoop - Pruning}
   \centering
   \includegraphics[width=0.6\linewidth]{Figures/skyline/sh-2.png} 
+  \\ \begin{center}\begin{tabular}{cccc} Partition & \textbf{Pruning} & Local & Global \end{tabular}\end{center}
 \end{frame}
 
 \begin{frame}{SpatialHadoop - Pruning}
   \centering
   \includegraphics[width=0.6\linewidth]{Figures/skyline/sh-3.png} 
+  \\ \begin{center}\begin{tabular}{cccc} Partition & \textbf{Pruning} & Local & Global \end{tabular}\end{center}
 \end{frame}
 
 \begin{frame}{SpatialHadoop - Local}
   \centering
   \includegraphics[width=0.6\linewidth]{Figures/skyline/sh-4.png} 
+  \\ \begin{center}\begin{tabular}{cccc} Partition & Pruning & \textbf{Local} & Global \end{tabular}\end{center}
 \end{frame}
 
 \begin{frame}{SpatialHadoop - Local}
   \centering
   \includegraphics[width=0.6\linewidth]{Figures/skyline/sh-5.png} 
+  \\ \begin{center}\begin{tabular}{cccc} Partition & Pruning & \textbf{Local} & Global \end{tabular}\end{center}
 \end{frame}
 
 \begin{frame}{SpatialHadoop - Global}
   \centering
   \includegraphics[width=0.6\linewidth]{Figures/skyline/sh-6.png} 
+  \\ \begin{center}\begin{tabular}{cccc} Partition & Pruning & Local & \textbf{Global} \end{tabular}\end{center}
 \end{frame}
 
 \begin{frame}{SpatialHadoop - Global}
   \centering
   \includegraphics[width=0.6\linewidth]{Figures/skyline/sh-7.png} 
+  \\ \begin{center}\begin{tabular}{cccc} Partition & Pruning & Local & \textbf{Global} \end{tabular}\end{center}
 \end{frame}
 
 % \begin{frame}{Skyline}
@@ -364,42 +398,50 @@
 
 \begin{frame}{Hadoop - Partition}
   \centering
-  \includegraphics[width=0.6\linewidth]{Figures/ch/ch-0.png} 
+  \includegraphics[width=0.55\linewidth]{Figures/ch/ch-0.png} 
+  \\ \begin{center}\begin{tabular}{ccc} \textbf{Partition} & Local & Global \end{tabular}\end{center}
 \end{frame}
 
 \begin{frame}{Hadoop - Partition}
   \centering
-  \includegraphics[width=0.6\linewidth]{Figures/ch/ch-1.png} 
+  \includegraphics[width=0.55\linewidth]{Figures/ch/ch-1.png} 
+  \\ \begin{center}\begin{tabular}{ccc} \textbf{Partition} & Local & Global \end{tabular}\end{center}
 \end{frame}
 
 \begin{frame}{Hadoop - Partition}
   \centering
-  \includegraphics[width=0.6\linewidth]{Figures/ch/ch-2.png} 
+  \includegraphics[width=0.55\linewidth]{Figures/ch/ch-2.png} 
+  \\ \begin{center}\begin{tabular}{ccc} \textbf{Partition} & Local & Global \end{tabular}\end{center}
 \end{frame}
 
 \begin{frame}{Hadoop - Local}
   \centering
-  \includegraphics[width=0.6\linewidth]{Figures/ch/ch-3.png} 
+  \includegraphics[width=0.55\linewidth]{Figures/ch/ch-3.png} 
+  \\ \begin{center}\begin{tabular}{ccc} Partition & \textbf{Local} & Global \end{tabular}\end{center}
 \end{frame}
 
 \begin{frame}{Hadoop - Local}
   \centering
-  \includegraphics[width=0.6\linewidth]{Figures/ch/ch-4.png} 
+  \includegraphics[width=0.55\linewidth]{Figures/ch/ch-4.png} 
+  \\ \begin{center}\begin{tabular}{ccc} Partition & \textbf{Local} & Global \end{tabular}\end{center}
 \end{frame}
 
 \begin{frame}{Hadoop - Global}
   \centering
-  \includegraphics[width=0.6\linewidth]{Figures/ch/ch-5.png} 
+  \includegraphics[width=0.55\linewidth]{Figures/ch/ch-5.png} 
+  \\ \begin{center}\begin{tabular}{ccc} Partition & Local & \textbf{Global} \end{tabular}\end{center}
 \end{frame}
 
 \begin{frame}{Hadoop - Global}
   \centering
-  \includegraphics[width=0.6\linewidth]{Figures/ch/ch-6.png} 
+  \includegraphics[width=0.55\linewidth]{Figures/ch/ch-6.png} 
+  \\ \begin{center}\begin{tabular}{ccc} Partition & Local & \textbf{Global} \end{tabular}\end{center}
 \end{frame}
 
 \begin{frame}{Hadoop - Global}
   \centering
-  \includegraphics[width=0.6\linewidth]{Figures/ch/ch-7.png} 
+  \includegraphics[width=0.55\linewidth]{Figures/ch/ch-7.png} 
+  \\ \begin{center}\begin{tabular}{ccc} Partition & Local & \textbf{Global} \end{tabular}\end{center}
 \end{frame}
 
 % \begin{frame}{Convex Hull}
@@ -415,37 +457,44 @@
 
 \begin{frame}{SpatialHadoop - Partition}
   \centering
-  \includegraphics[width=0.6\linewidth]{Figures/ch/sh-0.png} 
+  \includegraphics[width=0.55\linewidth]{Figures/ch/sh-0.png} 
+  \\ \begin{center}\begin{tabular}{cccc} \textbf{Partition} & Pruning & Local & Global \end{tabular}\end{center}
 \end{frame}
 
 \begin{frame}{SpatialHadoop - Partition}
   \centering
-  \includegraphics[width=0.6\linewidth]{Figures/ch/sh-1.png} 
+  \includegraphics[width=0.55\linewidth]{Figures/ch/sh-1.png} 
+  \\ \begin{center}\begin{tabular}{cccc} \textbf{Partition} & Pruning & Local & Global \end{tabular}\end{center}
 \end{frame}
 
 \begin{frame}{SpatialHadoop - Pruning}
   \centering
-  \includegraphics[width=0.6\linewidth]{Figures/ch/sh-2.png} 
+  \includegraphics[width=0.55\linewidth]{Figures/ch/sh-2.png} 
+  \\ \begin{center}\begin{tabular}{cccc} Partition & \textbf{Pruning} & Local & Global \end{tabular}\end{center}
 \end{frame}
 
 \begin{frame}{SpatialHadoop - Pruning}
   \centering
-  \includegraphics[width=0.6\linewidth]{Figures/ch/sh-3.png} 
+  \includegraphics[width=0.55\linewidth]{Figures/ch/sh-3.png} 
+  \\ \begin{center}\begin{tabular}{cccc} Partition & \textbf{Pruning} & Local & Global \end{tabular}\end{center}
 \end{frame}
 
 \begin{frame}{SpatialHadoop - Local}
   \centering
-  \includegraphics[width=0.6\linewidth]{Figures/ch/sh-4.png} 
+  \includegraphics[width=0.55\linewidth]{Figures/ch/sh-4.png} 
+  \\ \begin{center}\begin{tabular}{cccc} Partition & Pruning & \textbf{Local} & Global \end{tabular}\end{center}
 \end{frame}
 
 \begin{frame}{SpatialHadoop - Global}
   \centering
-  \includegraphics[width=0.6\linewidth]{Figures/ch/sh-5.png} 
+  \includegraphics[width=0.55\linewidth]{Figures/ch/sh-5.png} 
+  \\ \begin{center}\begin{tabular}{cccc} Partition & Pruning & Local & \textbf{Global} \end{tabular}\end{center}
 \end{frame}
 
 \begin{frame}{SpatialHadoop - Global}
   \centering
-  \includegraphics[width=0.6\linewidth]{Figures/ch/sh-6.png} 
+  \includegraphics[width=0.55\linewidth]{Figures/ch/sh-6.png} 
+  \\ \begin{center}\begin{tabular}{cccc} Partition & Pruning & Local & \textbf{Global} \end{tabular}\end{center}
 \end{frame}
 
 % \begin{frame}{Convex Hull}
@@ -474,31 +523,38 @@
 
 \begin{frame}{Hadoop - Partition}
   \centering
-  \includegraphics[width=0.6\linewidth]{Figures/fp/h-0.png} 
+  \includegraphics[width=0.55\linewidth]{Figures/fp/h-0.png} 
+  \\ \begin{center}\begin{tabular}{ccc} \textbf{Partition} & Local & Global \end{tabular}\end{center}
 \end{frame}
 \begin{frame}{Hadoop - Partition}
   \centering
-  \includegraphics[width=0.6\linewidth]{Figures/fp/h-1.png} 
+  \includegraphics[width=0.55\linewidth]{Figures/fp/h-1.png} 
+  \\ \begin{center}\begin{tabular}{ccc} \textbf{Partition} & Local & Global \end{tabular}\end{center}
 \end{frame}
 \begin{frame}{Hadoop - Local}
   \centering
-  \includegraphics[width=0.6\linewidth]{Figures/fp/h-2.png} 
+  \includegraphics[width=0.55\linewidth]{Figures/fp/h-2.png} 
+  \\ \begin{center}\begin{tabular}{ccc} Partition & \textbf{Local} & Global \end{tabular}\end{center}
 \end{frame}
 \begin{frame}{Hadoop - Local}
   \centering
-  \includegraphics[width=0.6\linewidth]{Figures/fp/h-3.png} 
+  \includegraphics[width=0.55\linewidth]{Figures/fp/h-3.png} 
+  \\ \begin{center}\begin{tabular}{ccc} Partition & \textbf{Local} & Global \end{tabular}\end{center}
 \end{frame}
 \begin{frame}{Hadoop - Local}
   \centering
-  \includegraphics[width=0.6\linewidth]{Figures/fp/h-4.png} 
+  \includegraphics[width=0.55\linewidth]{Figures/fp/h-4.png} 
+  \\ \begin{center}\begin{tabular}{ccc} Partition & \textbf{Local} & Global \end{tabular}\end{center}
 \end{frame}
 \begin{frame}{Hadoop - Global}
   \centering
-  \includegraphics[width=0.6\linewidth]{Figures/fp/h-5.png} 
+  \includegraphics[width=0.55\linewidth]{Figures/fp/h-5.png} 
+  \\ \begin{center}\begin{tabular}{ccc} Partition & Local & \textbf{Global} \end{tabular}\end{center}
 \end{frame}
 \begin{frame}{Hadoop - Global}
   \centering
-  \includegraphics[width=0.6\linewidth]{Figures/fp/h-6.png} 
+  \includegraphics[width=0.55\linewidth]{Figures/fp/h-6.png} 
+  \\ \begin{center}\begin{tabular}{ccc} Partition & Local & \textbf{Global} \end{tabular}\end{center}
 \end{frame}
 
 % \begin{frame}{Farthest Pair}
@@ -514,39 +570,48 @@
 
 \begin{frame}{SpatialHadoop - Partition}
   \centering
-  \includegraphics[width=0.6\linewidth]{Figures/fp/sh-0.png} 
+  \includegraphics[width=0.55\linewidth]{Figures/fp/sh-0.png} 
+  \\ \begin{center}\begin{tabular}{cccc} \textbf{Partition} & Pruning & Local & Global \end{tabular}\end{center}
 \end{frame}
 \begin{frame}{SpatialHadoop - Partition}
   \centering
-  \includegraphics[width=0.6\linewidth]{Figures/fp/sh-1.png} 
+  \includegraphics[width=0.55\linewidth]{Figures/fp/sh-1.png} 
+  \\ \begin{center}\begin{tabular}{cccc} \textbf{Partition} & Pruning & Local & Global \end{tabular}\end{center}
 \end{frame}
 \begin{frame}{SpatialHadoop - Pruning}
   \centering
-  \includegraphics[width=0.6\linewidth]{Figures/fp/sh-2.png} 
+  \includegraphics[width=0.55\linewidth]{Figures/fp/sh-2.png} 
+  \\ \begin{center}\begin{tabular}{cccc} Partition & \textbf{Pruning} & Local & Global \end{tabular}\end{center}
 \end{frame}
 \begin{frame}{SpatialHadoop - Pruning}
   \centering
-  \includegraphics[width=0.6\linewidth]{Figures/fp/sh-3.png} 
+  \includegraphics[width=0.55\linewidth]{Figures/fp/sh-3.png} 
+  \\ \begin{center}\begin{tabular}{cccc} Partition & \textbf{Pruning} & Local & Global \end{tabular}\end{center}
 \end{frame}
 \begin{frame}{SpatialHadoop - Pruning}
   \centering
-  \includegraphics[width=0.6\linewidth]{Figures/fp/sh-4.png} 
+  \includegraphics[width=0.55\linewidth]{Figures/fp/sh-4.png} 
+  \\ \begin{center}\begin{tabular}{cccc} Partition & \textbf{Pruning} & Local & Global \end{tabular}\end{center}
 \end{frame}
 \begin{frame}{SpatialHadoop - Local}
   \centering
-  \includegraphics[width=0.6\linewidth]{Figures/fp/sh-5.png} 
+  \includegraphics[width=0.55\linewidth]{Figures/fp/sh-5.png} 
+  \\ \begin{center}\begin{tabular}{cccc} Partition & Pruning & \textbf{Local} & Global \end{tabular}\end{center}
 \end{frame}
 \begin{frame}{SpatialHadoop - Local}
   \centering
-  \includegraphics[width=0.6\linewidth]{Figures/fp/sh-6.png} 
+  \includegraphics[width=0.55\linewidth]{Figures/fp/sh-6.png} 
+  \\ \begin{center}\begin{tabular}{cccc} Partition & Pruning & \textbf{Local} & Global \end{tabular}\end{center}
 \end{frame}
 \begin{frame}{SpatialHadoop - Global}
   \centering
-  \includegraphics[width=0.6\linewidth]{Figures/fp/sh-7.png} 
+  \includegraphics[width=0.55\linewidth]{Figures/fp/sh-7.png} 
+  \\ \begin{center}\begin{tabular}{cccc} Partition & Pruning & Local & \textbf{Global} \end{tabular}\end{center}
 \end{frame}
 \begin{frame}{SpatialHadoop - Global}
   \centering
-  \includegraphics[width=0.6\linewidth]{Figures/fp/sh-8.png} 
+  \includegraphics[width=0.55\linewidth]{Figures/fp/sh-8.png} 
+  \\ \begin{center}\begin{tabular}{cccc} Partition & Pruning & Local & \textbf{Global} \end{tabular}\end{center}
 \end{frame}
 
 % \begin{frame}{Farthest Pair}
@@ -575,23 +640,28 @@
 
 \begin{frame}{Hadoop - Partition}
   \centering
-  \includegraphics[width=0.6\linewidth]{Figures/cp/sh-0.png} 
+  \includegraphics[width=0.55\linewidth]{Figures/cp/sh-0.png} 
+  \\ \begin{center}\begin{tabular}{ccc} \textbf{Partition} & Local & Global \end{tabular}\end{center}
 \end{frame}
 \begin{frame}{Hadoop - Partition}
   \centering
-  \includegraphics[width=0.6\linewidth]{Figures/cp/sh-1.png} 
+  \includegraphics[width=0.55\linewidth]{Figures/cp/sh-1.png} 
+  \\ \begin{center}\begin{tabular}{ccc} \textbf{Partition} & Local & Global \end{tabular}\end{center}
 \end{frame}
 \begin{frame}{Hadoop - Local}
   \centering
-  \includegraphics[width=0.6\linewidth]{Figures/cp/sh-2.png} 
+  \includegraphics[width=0.55\linewidth]{Figures/cp/sh-2.png} 
+  \\ \begin{center}\begin{tabular}{ccc} Partition & \textbf{Local} & Global \end{tabular}\end{center}
 \end{frame}
 \begin{frame}{Hadoop - Global}
   \centering
-  \includegraphics[width=0.6\linewidth]{Figures/cp/sh-3.png} 
+  \includegraphics[width=0.55\linewidth]{Figures/cp/sh-3.png} 
+  \\ \begin{center}\begin{tabular}{ccc} Partition & Local & \textbf{Global} \end{tabular}\end{center}
 \end{frame}
 \begin{frame}{Hadoop - Global}
   \centering
-  \includegraphics[width=0.6\linewidth]{Figures/cp/sh-4.png} 
+  \includegraphics[width=0.55\linewidth]{Figures/cp/sh-4.png} 
+  \\ \begin{center}\begin{tabular}{ccc} Partition & Local & \textbf{Global} \end{tabular}\end{center}
 \end{frame}
 
 % \begin{frame}{Closest Pair}
@@ -607,31 +677,38 @@
 
 \begin{frame}{SpatialHadoop - Partition}
   \centering
-  \includegraphics[width=0.6\linewidth]{Figures/cp/h-0.png} 
+  \includegraphics[width=0.55\linewidth]{Figures/cp/h-0.png} 
+  \\ \begin{center}\begin{tabular}{cccc} \textbf{Partition} & Local & Pruning & Global \end{tabular}\end{center}
 \end{frame}
 \begin{frame}{SpatialHadoop - Partition}
   \centering
-  \includegraphics[width=0.6\linewidth]{Figures/cp/h-1.png} 
+  \includegraphics[width=0.55\linewidth]{Figures/cp/h-1.png} 
+  \\ \begin{center}\begin{tabular}{cccc} \textbf{Partition} & Local & Pruning & Global \end{tabular}\end{center}
 \end{frame}
 \begin{frame}{SpatialHadoop - Local}
   \centering
-  \includegraphics[width=0.6\linewidth]{Figures/cp/h-2.png} 
+  \includegraphics[width=0.55\linewidth]{Figures/cp/h-2.png} 
+  \\ \begin{center}\begin{tabular}{cccc} Partition & \textbf{Local} & Pruning & Global \end{tabular}\end{center}
 \end{frame}
 \begin{frame}{SpatialHadoop - Local}
   \centering
-  \includegraphics[width=0.6\linewidth]{Figures/cp/h-3.png} 
+  \includegraphics[width=0.55\linewidth]{Figures/cp/h-3.png} 
+  \\ \begin{center}\begin{tabular}{cccc} Partition & \textbf{Local} & Pruning & Global \end{tabular}\end{center}
 \end{frame}
-\begin{frame}{SpatialHadoop - Local}
+\begin{frame}{SpatialHadoop - Pruning}
   \centering
-  \includegraphics[width=0.6\linewidth]{Figures/cp/h-4.png} 
+  \includegraphics[width=0.55\linewidth]{Figures/cp/h-4.png} 
+  \\ \begin{center}\begin{tabular}{cccc} Partition & Local & \textbf{Pruning} & Global \end{tabular}\end{center}
 \end{frame}
 \begin{frame}{SpatialHadoop - Global}
   \centering
-  \includegraphics[width=0.6\linewidth]{Figures/cp/h-5.png} 
+  \includegraphics[width=0.55\linewidth]{Figures/cp/h-5.png} 
+  \\ \begin{center}\begin{tabular}{cccc} Partition & Local & Pruning & \textbf{Global} \end{tabular}\end{center}
 \end{frame}
 \begin{frame}{SpatialHadoop - Global}
   \centering
-  \includegraphics[width=0.6\linewidth]{Figures/cp/h-6.png} 
+  \includegraphics[width=0.55\linewidth]{Figures/cp/h-6.png} 
+  \\ \begin{center}\begin{tabular}{cccc} Partition & Local & Pruning & \textbf{Global} \end{tabular}\end{center}
 \end{frame}
 
 % \begin{frame}{Closest Pair}
