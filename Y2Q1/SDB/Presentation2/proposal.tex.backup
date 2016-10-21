@@ -1,0 +1,135 @@
+%% LyX 2.1.4 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass{beamer}
+\usepackage{mathptmx}
+\usepackage{graphicx}
+\usepackage{minted}
+\usepackage{xcolor}
+
+\definecolor{LightGray}{gray}{0.9}
+
+\ifx\hypersetup\undefined
+  \AtBeginDocument{%
+    \hypersetup{unicode=true,
+ bookmarksnumbered=false,bookmarksopen=false,
+ breaklinks=false,pdfborder={0 0 0},colorlinks=false}
+  }
+\else
+  \hypersetup{unicode=true,
+ bookmarksnumbered=false,bookmarksopen=false,
+ breaklinks=false,pdfborder={0 0 0},colorlinks=false}
+\fi
+
+\makeatletter
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Textclass specific LaTeX commands.
+ % this default might be overridden by plain title style
+ \newcommand\makebeamertitle{\frame{\maketitle}}%
+ % (ERT) argument for the TOC
+ \AtBeginDocument{%
+   \let\origtableofcontents=\tableofcontents
+   \def\tableofcontents{\@ifnextchar[{\origtableofcontents}{\gobbletableofcontents}}
+   \def\gobbletableofcontents#1{\origtableofcontents}
+ }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
+\usetheme{Warsaw}
+% or ...
+\useoutertheme{infolines}
+\addtobeamertemplate{headline}{}{\vskip2pt}
+
+\setbeamercovered{transparent}
+% or whatever (possibly just delete it)
+
+
+
+\setbeamertemplate{footline}
+{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}%\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+    \usebeamerfont{date in head/foot}\insertshortdate{}\hspace*{2em}
+    \insertframenumber{} / \inserttotalframenumber\hspace*{2ex} 
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+\usepackage{pifont}
+\usepackage{animate}
+\makeatother
+
+\begin{document}
+
+\title{Towards Parallel Detection of Moving Flock Patterns in Large Spatiotemporal Datasets}
+\author{Andres Calderon}
+%\institute{University of California, Riverside}
+
+\makebeamertitle
+
+% \AtBeginSection[]{
+%   \frame<beamer>{ 
+%     \frametitle{Agenda}   
+%     \tableofcontents[currentsubsection] 
+%   }
+% }
+
+\newif\iflattersubsect
+
+\AtBeginSection[] {
+    \begin{frame}<beamer>
+    \frametitle{Agenda} %
+    \tableofcontents[currentsection]  
+    \end{frame}
+    \lattersubsectfalse
+}
+
+\AtBeginSubsection[] {
+    % \iflattersubsect
+    \begin{frame}<beamer>
+    \frametitle{Agenda} %
+    \tableofcontents[currentsubsection]  
+    \end{frame}
+    % \fi
+    % \lattersubsecttrue
+}
+
+\begin{frame}{Agenda}
+  \tableofcontents{}
+\end{frame}
+
+\section{Background}
+
+\begin{frame}{Introduction}
+  \begin{itemize}
+    \item Hadoop is widely used on many applications...
+    \begin{itemize}
+      \item Machine learning, Graph processing, Sorting...
+    \end{itemize}
+    \item But we are watching a big [spatial] data explosion...
+    \begin{itemize}
+      \item satellites, smart phones, space telescopes, medical devices...
+    \end{itemize}
+   \end{itemize}
+   \centering
+  \begin{minipage}{.45\linewidth}
+    %\includegraphics[width=\linewidth]{Figures/sentinel.jpg}
+  \end{minipage}
+  \hspace{.05\linewidth}
+  \begin{minipage}{.45\linewidth}
+    %\includegraphics[width=\linewidth]{Figures/medical.jpg}
+  \end{minipage}
+\end{frame}
+
+
+\subsection*{Thanks...}
+
+\begin{frame}{}
+  \centering
+  \huge Thank you!!! \\
+  \vspace{2cm}
+  \large Do you have any question?
+\end{frame}
+
+\end{document}
