@@ -20,8 +20,8 @@ calculateDisk <- function(x1, y1, x2, y2){
   return(NULL)
 }
 
-n = 200
-epsilon = n / 10
+n = 40
+epsilon = 2
 r2 = (epsilon / 2)^2
 size = 3
 
@@ -44,7 +44,9 @@ for(i in 1:nrow(data)){
     draw.circle(centers[3], centers[4], epsilon/2, nv = 1000, border = 2, col = NA, lty = 2, lwd = 0.5)    
   }
 }
-points(x, y, pch = 21, cex = 0.5, col = 1, bg = 1)
+points(pointset$x, pointset$y, pch = 21, cex = 0.5, col = 1, bg = 1)
+abline(h=n/2, lty = 2)
+abline(v=n/2, lty = 2)
 box()
 
 pdf("test.pdf",width=size,height=size)

@@ -188,6 +188,8 @@
   \\ \vspace{0.1cm} \tiny (Vieira et al, 2009)
 \end{frame}
 
+\subsection{BFE algorithm}
+
 \begin{frame}{BFE algorithm}
   \begin{itemize}
    \item Two steps algorithm:\pause
@@ -226,6 +228,8 @@
   \centering \includegraphics[page=2,height=0.7\textheight]{Figures/flock/f10}
 \end{frame}
 
+\subsection{Finding the disks (a.k.a The Problem)}
+
 \begin{frame}{Finding the disks...}
   \begin{itemize}
    \item Finding the set of disks is no trivial.
@@ -239,6 +243,36 @@
 \begin{frame}{Finding the disks...}
   \centering
   %\animategraphics[autoplay, loop,width=0.85\textheight]{1}{Figures/n/n-}{0}{14}
+\end{frame}
+
+\section{Proposal}
+
+\begin{frame}{Spatial In Memory Big data Analytics}
+  \centering \includegraphics[width=0.3\textwidth]{Figures/logo.png}
+  \begin{itemize}
+   \item Simba is a distributed in-memory spatial analytics engine based on Apache Spark (Xie et al, 2016).
+   \begin{itemize}
+    \item Extends the SQL and DataFrame query interfaces of Spark SQL.
+    \item Supports building native (spatial) indexes over RDDs.
+    \item Implements efficient algorithms for different spatial operators.
+    \item Introduces spatial and index-aware optimizers to Spark SQL.
+    \item Open source [\url{http://www.cs.utah.edu/~dongx/simba/}]
+   \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Spatial In Memory Big data Analytics}
+  \centering 
+  \includegraphics[page=6,clip,trim=2cm 21.5cm 11.5cm 2.2cm,height=0.5\textheight]{Figures/simba}
+    \\ \vspace{0.5cm} \flushright \tiny (Xie et al, 2016)
+\end{frame}
+
+\begin{frame}{Goals...}
+  \begin{enumerate}
+   \item Design a parallel program to find the set of disk in a given time interval.
+   \item Implement the new version in an In-Memory Distributed System (Simba).
+   \item Test the implementation using different settings and datasets.
+  \end{enumerate}
 \end{frame}
 
 \subsection*{Thanks...}
