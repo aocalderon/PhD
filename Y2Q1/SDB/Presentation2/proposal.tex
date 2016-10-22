@@ -1,6 +1,7 @@
 %% LyX 2.1.4 created this file.  For more info, see http://www.lyx.org/.
 %% Do not edit unless you really know what you are doing.
 \documentclass{beamer}
+\usepackage{amssymb}
 \usepackage{mathptmx}
 \usepackage{graphicx}
 \usepackage{minted}
@@ -31,6 +32,7 @@
    \def\gobbletableofcontents#1{\origtableofcontents}
  }
 
+ 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
 \usetheme{Warsaw}
 % or ...
@@ -110,6 +112,8 @@
   \end{itemize}
   \centering
   \includegraphics[width=0.8\linewidth]{Figures/trajs.png}
+  \\ \flushright \tiny (Jing et al, 2013)
+  
 \end{frame}
 
 \begin{frame}{Movement patterns}
@@ -118,30 +122,34 @@
   \end{itemize}
   \centering
   \includegraphics[width=0.55\linewidth]{Figures/patterns}
+  \\ \vspace{0.5cm} \tiny (Gudmundsson et al, 2008)
 \end{frame}
 
 \begin{frame}{Applications}
   \begin{itemize}
-    \item Integrated transportation systems...
+    \item Transportation...
   \end{itemize}
   \centering
   \includegraphics[clip, trim=0cm 1cm 0cm 0cm, width=1\linewidth]{Figures/its.png}
+  \\ \vspace{0.5cm} \tiny (Zhang et al, 2016)
 \end{frame}
 
 \begin{frame}{Applications}
   \begin{itemize}
-    \item Tropical cyclones path similarity...
+    \item Weather...
   \end{itemize}
   \centering
   \includegraphics[width=0.7\linewidth]{Figures/cyclones.png}
+  \\ \vspace{0.5cm} \tiny (Turdukulov et al, 2014)
 \end{frame}
 
 \begin{frame}{Applications}
   \begin{itemize}
-    \item Iceberg movement...
+    \item Climate change...
   \end{itemize}
   \centering
   \includegraphics[width=0.5\linewidth]{Figures/icebergs.png}
+  \\  \tiny (Calderon, 2011)
 \end{frame}
 
 \begin{frame}{Applications}
@@ -150,57 +158,87 @@
   \end{itemize}
   \centering
   \includegraphics[width=0.7\linewidth]{Figures/birds1/frame-13.png}
+  \\ \vspace{0.5cm} \tiny (Majka, 2016)
 \end{frame}
-
-% \begin{frame}{Applications}
-%   \begin{itemize}
-%     \item Ecology...
-%   \end{itemize}
-%   \centering
-%   \animategraphics[autoplay, loop,width=.7\textheight]{5}{Figures/birds1/frame-}{0}{13}
-%   %\\ \vspace{1cm} \tiny source
-% \end{frame}
 
 \begin{frame}{Applications}
   \begin{itemize}
     \item Ecology...
   \end{itemize}
   \centering
-  % \animategraphics[autoplay, loop,width=1\textheight]{5}{Figures/birds2/frame-}{0}{51}
-  %\\ \vspace{1cm} \tiny source
+  % \animategraphics[autoplay, loop,width=1\textheight]{5}{Figures/birds2/frame-}{0}{51}//
+  \vspace{0.5cm} \tiny (Fink et al, 2014)
 \end{frame}
 
-\begin{frame}{Flock example}
+\section{Flock Patterns}
+
+% \begin{frame}{Flock Patterns}
+%   \begin{definition}[$(\mu,\epsilon,\delta)-flock$]
+%     \tiny Given a set of $n$ trajectories where each trajectory consists of $\tau$ line segments, a flock in a time interval $T=[t_i,t_j]$, where $j-i+1 \geq \delta$, consists of at least $\mu$ entities such that for every point in time within $T$ there is a disk of radius $\epsilon$ that contains all the $\mu$ entities. Note that $\mu, \delta \in \mathbb{N}$ and $\epsilon > 0$ are given constants (Benkert et al, 2008).
+%   \end{definition}
+%   \centering \includegraphics[clip, trim=11cm 18cm 2cm 4.5cm,height=0.6\textheight]{Figures/flock}
+%   \\ \vspace{0.1cm} \tiny (Vieira et al, 2009)
+% \end{frame}
+
+\begin{frame}{Flock Patterns}
+  \begin{definition}[$(\mu,\epsilon,\delta)-flock$]
+    Sets of at least \alert{ $\mu$ } objects moving close enough (\alert{ $\epsilon$ }) for at least \alert{ $\delta$ } time intervals (Benkert et al, 2008). 
+  \end{definition}
+  \centering \includegraphics[clip, trim=11cm 18cm 2cm 4.5cm,height=0.6\textheight]{Figures/flock}
+  \\ \vspace{0.1cm} \tiny (Vieira et al, 2009)
+\end{frame}
+
+\begin{frame}{BFE algorithm}
+  \begin{itemize}
+   \item Two steps algorithm:\pause
+   \begin{enumerate}
+    \item Find sets of disks at each time interval.\pause
+    \item Join consecutive time intervals detecting disks with same objects.
+   \end{enumerate}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{BFE algorithm}
   \centering \includegraphics[page=2,height=0.7\textheight]{Figures/flock/f0}
 \end{frame}
-\begin{frame}{Flock example}
+\begin{frame}{BFE algorithm}
   \centering \includegraphics[page=2,height=0.7\textheight]{Figures/flock/f1}
 \end{frame}
-\begin{frame}{Flock example}
+\begin{frame}{BFE algorithm}
   \centering \includegraphics[page=2,height=0.7\textheight]{Figures/flock/f3}
 \end{frame}
-\begin{frame}{Flock example}
+\begin{frame}{BFE algorithm}
   \centering \includegraphics[page=2,height=0.7\textheight]{Figures/flock/f4}
 \end{frame}
-\begin{frame}{Flock example}
+\begin{frame}{BFE algorithm}
   \centering \includegraphics[page=2,height=0.7\textheight]{Figures/flock/f5}
 \end{frame}
-\begin{frame}{Flock example}
+\begin{frame}{BFE algorithm}
   \centering \includegraphics[page=2,height=0.7\textheight]{Figures/flock/f7}
 \end{frame}
-\begin{frame}{Flock example}
+\begin{frame}{BFE algorithm}
   \centering \includegraphics[page=2,height=0.7\textheight]{Figures/flock/f8}
 \end{frame}
-\begin{frame}{Flock example}
+\begin{frame}{BFE algorithm}
   \centering \includegraphics[page=2,height=0.7\textheight]{Figures/flock/f9}
 \end{frame}
-\begin{frame}{Flock example}
+\begin{frame}{BFE algorithm}
   \centering \includegraphics[page=2,height=0.7\textheight]{Figures/flock/f10}
 \end{frame}
 
-\begin{frame}{Finding maximal disks...}
+\begin{frame}{Finding the disks...}
+  \begin{itemize}
+   \item Finding the set of disks is no trivial.
+   \item Vieira et al. (2009) proposed a polynomial solution ($O(2n^2)$).
+  \end{itemize}
+  \centering 
+  \includegraphics[page=4,clip,trim=4.1cm 12.4cm 13.5cm 13cm,height=0.26\textheight]{Figures/online} \\
+  \includegraphics[page=5,clip,trim=1.8cm 13.4cm 11.2cm 12.2cm,height=0.35\textheight]{Figures/online}
+\end{frame}
+
+\begin{frame}{Finding the disks...}
   \centering
-  \includegraphics[height=0.55\paperwidth]{Figures/test}
+  %\animategraphics[autoplay, loop,width=0.85\textheight]{1}{Figures/n/n-}{0}{14}
 \end{frame}
 
 \subsection*{Thanks...}
