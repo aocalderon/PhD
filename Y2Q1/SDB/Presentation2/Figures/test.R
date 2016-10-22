@@ -20,9 +20,9 @@ calculateDisk <- function(x1, y1, x2, y2){
   return(NULL)
 }
 
-epsilon = 10
+n = 200
+epsilon = n / 10
 r2 = (epsilon / 2)^2
-n = 50
 size = 3
 
 x = runif(n, 0, n)
