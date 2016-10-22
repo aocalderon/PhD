@@ -182,11 +182,13 @@
 
 \begin{frame}{Flock Patterns}
   \begin{definition}[$(\mu,\epsilon,\delta)-flock$]
-    Sets of at least $\mu$ objects moving close enough ($\epsilon$) at least for $\delta$ time intervals (Benkert et al, 2008). 
+    Sets of at least \alert{ $\mu$ } objects moving close enough (\alert{ $\epsilon$ }) for at least \alert{ $\delta$ } time intervals (Benkert et al, 2008). 
   \end{definition}
   \centering \includegraphics[clip, trim=11cm 18cm 2cm 4.5cm,height=0.6\textheight]{Figures/flock}
   \\ \vspace{0.1cm} \tiny (Vieira et al, 2009)
 \end{frame}
+
+\subsection{BFE algorithm}
 
 \begin{frame}{BFE algorithm}
   \begin{itemize}
@@ -226,9 +228,50 @@
   \centering \includegraphics[page=2,height=0.7\textheight]{Figures/flock/f10}
 \end{frame}
 
+\subsection{Finding the disks (a.k.a The Problem)}
+
+\begin{frame}{Finding the disks...}
+  \begin{itemize}
+   \item Finding the set of disks is no trivial.
+   \item Vieira et al. (2009) proposed a polynomial solution ($O(2n^2)$).
+  \end{itemize}
+  \centering 
+  \includegraphics[page=4,clip,trim=4.1cm 12.4cm 13.5cm 13cm,height=0.26\textheight]{Figures/online} \\
+  \includegraphics[page=5,clip,trim=1.8cm 13.4cm 11.2cm 12.2cm,height=0.35\textheight]{Figures/online}
+\end{frame}
+
 \begin{frame}{Finding the disks...}
   \centering
-  \includegraphics[height=0.55\paperwidth]{Figures/test}
+  %\animategraphics[autoplay, loop,width=0.85\textheight]{1}{Figures/n/n-}{0}{14}
+\end{frame}
+
+\section{Proposal}
+
+\begin{frame}{Spatial In Memory Big data Analytics}
+  \centering \includegraphics[width=0.3\textwidth]{Figures/logo.png}
+  \begin{itemize}
+   \item Simba is a distributed in-memory spatial analytics engine based on Apache Spark (Xie et al, 2016).
+   \begin{itemize}
+    \item Extends the SQL and DataFrame query interfaces of Spark SQL.
+    \item Supports building native (spatial) indexes over RDDs.
+    \item Implements efficient algorithms for different spatial operators.
+    \item Introduces spatial and index-aware optimizers to Spark SQL.
+    \item Open source [\url{http://www.cs.utah.edu/~dongx/simba/}]
+   \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Spatial In Memory Big data Analytics}
+  \centering 
+  \includegraphics[page=6,clip,trim=2cm 21.5cm 11.5cm 2.2cm,height=0.5\textheight]{Figures/simba}
+\end{frame}
+
+\begin{frame}{Goals...}
+  \begin{enumerate}
+   \item Design a parallel program to find the set of disk in a given time interval.
+   \item Implement the new version in an In-Memory Distributed System (Simba).
+   \item Test the implementation using different settings and datasets.
+  \end{enumerate}
 \end{frame}
 
 \subsection*{Thanks...}
