@@ -5,6 +5,7 @@
 \usepackage{mathptmx}
 \usepackage{graphicx}
 \usepackage{minted}
+\usepackage{transparent}
 \usepackage{xcolor}
 
 \definecolor{LightGray}{gray}{0.9}
@@ -81,7 +82,7 @@
 
 \AtBeginSection[] {
     \begin{frame}<beamer>
-    \frametitle{Agenda} %
+    \frametitle{Outline} %
     \tableofcontents[currentsection]  
     \end{frame}
     \lattersubsectfalse
@@ -90,14 +91,14 @@
 \AtBeginSubsection[] {
     % \iflattersubsect
     \begin{frame}<beamer>
-    \frametitle{Agenda} %
+    \frametitle{Outline} %
     \tableofcontents[currentsubsection]  
     \end{frame}
     % \fi
     % \lattersubsecttrue
 }
 
-\begin{frame}{Agenda}
+\begin{frame}{Outline}
   \tableofcontents{}
 \end{frame}
 
@@ -113,7 +114,6 @@
   \centering
   \includegraphics[width=0.8\linewidth]{Figures/trajs.png}
   \\ \flushright \tiny (Jing et al, 2013)
-  
 \end{frame}
 
 \begin{frame}{Movement patterns}
@@ -166,19 +166,11 @@
     \item Ecology...
   \end{itemize}
   \centering
-  % \animategraphics[autoplay, loop,width=1\textheight]{5}{Figures/birds2/frame-}{0}{51}//
+  \animategraphics[autoplay, loop,width=1\textheight]{5}{Figures/birds2/frame-}{0}{51}\\
   \vspace{0.5cm} \tiny (Fink et al, 2014)
 \end{frame}
 
 \section{Flock Patterns}
-
-% \begin{frame}{Flock Patterns}
-%   \begin{definition}[$(\mu,\epsilon,\delta)-flock$]
-%     \tiny Given a set of $n$ trajectories where each trajectory consists of $\tau$ line segments, a flock in a time interval $T=[t_i,t_j]$, where $j-i+1 \geq \delta$, consists of at least $\mu$ entities such that for every point in time within $T$ there is a disk of radius $\epsilon$ that contains all the $\mu$ entities. Note that $\mu, \delta \in \mathbb{N}$ and $\epsilon > 0$ are given constants (Benkert et al, 2008).
-%   \end{definition}
-%   \centering \includegraphics[clip, trim=11cm 18cm 2cm 4.5cm,height=0.6\textheight]{Figures/flock}
-%   \\ \vspace{0.1cm} \tiny (Vieira et al, 2009)
-% \end{frame}
 
 \begin{frame}{Flock Patterns}
   \begin{definition}[$(\mu,\epsilon,\delta)-flock$]
@@ -242,26 +234,55 @@
 
 \begin{frame}{Finding the disks...}
   \centering
-  %\animategraphics[autoplay, loop,width=0.85\textheight]{1}{Figures/n/n-}{0}{14}
+  \animategraphics[autoplay, loop,width=0.85\textheight]{2}{Figures/n/c-}{0}{9}
 \end{frame}
 
-\section{Proposal}
+\section{Proposal (a.k.a. The Solution)}
 
-\begin{frame}{Spatial In Memory Big data Analytics}
-  \centering \includegraphics[width=0.3\textwidth]{Figures/logo.png}
+\begin{frame}{Can be done in parallel?}
+  \begin{minipage}{.7\linewidth} \includegraphics[page=1,height=0.9\linewidth]{Figures/d} \end{minipage}
+  \begin{minipage}{.10\linewidth} Partition \\ Local \\ Pruning \\ Global \end{minipage}
+\end{frame}
+\begin{frame}{Can be done in parallel?}
+  \begin{minipage}{.7\linewidth} \includegraphics[page=2,height=0.9\linewidth]{Figures/d} \end{minipage}
+  \begin{minipage}{.10\linewidth} \textbf{Partition} \\ Local \\ Pruning \\ Global \end{minipage}
+\end{frame}
+\begin{frame}{Can be done in parallel?}
+  \begin{minipage}{.7\linewidth} \includegraphics[page=3,height=0.9\linewidth]{Figures/d} \end{minipage}
+  \begin{minipage}{.10\linewidth} Partition \\ \textbf{Local} \\ Pruning \\ Global \end{minipage}
+\end{frame}
+\begin{frame}{Can be done in parallel?}
+  \begin{minipage}{.7\linewidth} \includegraphics[page=4,height=0.9\linewidth]{Figures/d} \end{minipage}
+  \begin{minipage}{.10\linewidth} Partition \\ \textbf{Local} \\ Pruning \\ Global \end{minipage}
+\end{frame}
+\begin{frame}{Can be done in parallel?}
+  \begin{minipage}{.7\linewidth} \includegraphics[page=5,height=0.9\linewidth]{Figures/d} \end{minipage}
+  \begin{minipage}{.10\linewidth} Partition \\ Local \\ \textbf{Pruning} \\ Global \end{minipage}
+\end{frame}
+\begin{frame}{Can be done in parallel?}
+  \begin{minipage}{.7\linewidth} \includegraphics[page=6,height=0.9\linewidth]{Figures/d} \end{minipage}
+  \begin{minipage}{.10\linewidth} Partition \\ Local \\ Pruning \\ \textbf{Global} \end{minipage}
+\end{frame}
+\begin{frame}{Can be done in parallel?}
+  \begin{minipage}{.7\linewidth} \includegraphics[page=7,height=0.9\linewidth]{Figures/d} \end{minipage}
+  \begin{minipage}{.10\linewidth} Partition \\ Local \\ Pruning \\ \textbf{Global} \end{minipage}
+\end{frame}
+
+\begin{frame}{In Memory MapReduce Analytics}
+  \centering \includegraphics[width=0.4\textwidth]{Figures/logo.png}
   \begin{itemize}
    \item Simba is a distributed in-memory spatial analytics engine based on Apache Spark (Xie et al, 2016).
-   \begin{itemize}
-    \item Extends the SQL and DataFrame query interfaces of Spark SQL.
-    \item Supports building native (spatial) indexes over RDDs.
-    \item Implements efficient algorithms for different spatial operators.
-    \item Introduces spatial and index-aware optimizers to Spark SQL.
-    \item Open source [\url{http://www.cs.utah.edu/~dongx/simba/}]
-   \end{itemize}
+%    \begin{itemize}
+%     \item Extends the SQL and DataFrame query interfaces of Spark SQL.
+%     \item Supports building native (spatial) indexes over RDDs.
+%     \item Implements efficient algorithms for different spatial operators.
+%     \item Introduces spatial and index-aware optimizers to Spark SQL.
+%     \item Open source [\url{http://www.cs.utah.edu/~dongx/simba/}]
+%    \end{itemize}
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Spatial In Memory Big data Analytics}
+\begin{frame}{In Memory MapReduce Analytics}
   \centering 
   \includegraphics[page=6,clip,trim=2cm 21.5cm 11.5cm 2.2cm,height=0.5\textheight]{Figures/simba}
     \\ \vspace{0.5cm} \flushright \tiny (Xie et al, 2016)
@@ -275,7 +296,7 @@
   \end{enumerate}
 \end{frame}
 
-\subsection*{Thanks...}
+\section*{Thank you...}
 
 \begin{frame}{}
   \centering
