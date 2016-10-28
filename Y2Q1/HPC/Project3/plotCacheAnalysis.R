@@ -28,7 +28,8 @@ data <- unique(data[, Time:=mean(Time), by=list(CO, CP)])
 
 table = cast(data, CO ~ CP)
 # names(table) = c("Cache", labels)
-table[4,6] = NA
+table[4,5] = NA
+table = table[3:5,]
 pdf("cache.pdf", width = 7, height = 5)
 color2D.matplot(table[,2:ncol(table)], 
                 show.values = 6,
@@ -36,12 +37,13 @@ color2D.matplot(table[,2:ncol(table)],
                 xlab = "Cache size for the prime array",
                 ylab = "Cache size for the odds array",
                 vcex = 0.75,
-                vcol = "#555555",
-                na.color = "darkgreen",
-                extremes = c("green","yellow", "red"))
+                vcol = "#444444",
+                yrev = T,
+                na.color = "green",
+                extremes = c("#00DD00","yellow", "red"))
 axis(1, at = seq_len(ncol(table) - 1) - 0.5, labels = names(table)[2:ncol(table)], tick = FALSE, cex.axis = 0.75)
 axis(2, at = seq_len(nrow(table)) - 0.5, labels = rev(table$CO), tick = FALSE, las = 1, cex.axis = 0.75)
-textbox(c(4.15,5), 2.6, c("0.370178"), box = F, cex=.85, col="black")
+textbox(c(3.15,4), 1.55, c("0.379629"), box = F, cex=.85, col="black")
 dev.off()
 # table = xtable(table, caption = "Comparing the different values of cache size for odds and prime arrays.", label = "tab:table3", align="cccccc")
 # addtorow <- list()

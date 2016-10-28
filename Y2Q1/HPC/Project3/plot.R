@@ -39,7 +39,7 @@ color2D.matplot(table[,2:5],
 axis(3, at = seq_len(ncol(table) - 1) - 0.5, labels = labels, tick = FALSE, cex.axis = 0.75)
 axis(2, at = seq_len(nrow(table)) - 0.5, labels = rev(table$Cores), tick = FALSE, las = 1, cex.axis = 0.75)
 
-table = xtable(table, caption = "Comparing the four versions of the Sieve of Erastosthenes.", label = "tab:table", align="cccccc")
+table = xtable(table, caption = "Comparing the four versions of the Sieve of Erastosthenes.", label = "tab:table1", align="cccccc")
 addtorow <- list()
 addtorow$pos <- list(0)
 addtorow$command <- c(paste0("\\textbf{Number of} & \\multicolumn{4}{c}{\\textbf{", legend_title,"}} \\\\\n \\textbf{Cores} & \\textbf{", paste0(labels, collapse = "} & \\textbf{"), "} \\\\\n"))
