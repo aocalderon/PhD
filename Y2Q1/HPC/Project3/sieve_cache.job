@@ -1,0 +1,9 @@
+#!/bin/sh
+n=100000000
+for i in 32 64 128 256 512 1024 
+do
+	for j in 32 64 128 256 512 1024 
+	do 
+		mpirun -np 4 ./sieve_cache $n $i $j
+	done
+done

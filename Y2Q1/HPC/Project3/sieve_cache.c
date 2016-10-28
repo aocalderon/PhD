@@ -22,6 +22,7 @@ int main (int argc, char *argv[]) {
    unsigned long long i;
    int id; /* Process ID number */
    unsigned long index; /* Index of current prime */
+   unsigned long odds_block_size;
    unsigned long prime_block_size;
    unsigned long iprime_block_size;
    unsigned long long low_value; /* Lowest value on this proc */
@@ -42,7 +43,7 @@ int main (int argc, char *argv[]) {
    MPI_Comm_size (MPI_COMM_WORLD, &p);
    MPI_Barrier(MPI_COMM_WORLD);
    elapsed_time = -MPI_Wtime();
-   if (argc != 2) {
+   if (argc != 4) {
       if (!id) printf ("Command line: %s <m>\n", argv[0]);
       MPI_Finalize();
       exit (1);
@@ -50,6 +51,10 @@ int main (int argc, char *argv[]) {
    //n = atoll(argv[1]);
    char *e;
    n = strtoull(argv[1], &e, 10);
+   int obs = atoi(argv[2]);
+   int pbs = atoi(argv[3]);
+   odds_block_size = obs * obs;
+   prime_block_size = pbs * pbs;
 
    /* Compute number of odds between 3 to n */
    n_size = (n + 1) / 2;
@@ -97,11 +102,8 @@ int main (int argc, char *argv[]) {
    
    unsigned long long start;
    unsigned long long end;
-   unsigned long step;
-   step = 1024 * 1024;
-   prime_block_size = 32 * 32;
-   for(start = 0; start <= size; start += step + 1){
-       end = start + step;
+   for(start = 0; start <= size; start += odds_block_size + 1){
+       end = start + odds_block_size;
        if(end > size) end = size;
        position = 2 + 2 * start + 1;
        /* Start from 3 */
@@ -145,7 +147,7 @@ int main (int argc, char *argv[]) {
    /* Print the results */
    if (!id) {
       global_count++;  //Counting 2 as prime...
-      printf ("S3, %llu, %d, %d, %10.6f\n", n, p, global_count, elapsed_time);
+      printf ("%d, %d, %llu, %d, %d, %10.6f\n", obs, pbs, n, p, global_count, elapsed_time);
    }
    MPI_Finalize ();
    return 0;
