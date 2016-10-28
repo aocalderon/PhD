@@ -2,8 +2,9 @@ library(data.table)
 library(ggplot2)
 library(reshape)
 library(xtable)
+library(plotrix)
 
-data <- read.csv("t.csv", header = F)
+data <- read.csv("cache.csv", header = F)
 data <- data[,c(1,2,6)]
 names(data) = c("CO","CP","Time")
 data <- data.table(data)
