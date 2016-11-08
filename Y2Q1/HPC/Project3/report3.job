@@ -1,0 +1,11 @@
+#!/bin/sh
+#PBS -l nodes=4:nogpu:ppn=32,walltime=01:00:00
+
+module load gcc-4.7.2
+module load mvapich2-1.9/gcc-4.7.2
+
+mpirun -np 128 ./sieve0 10000000000
+mpirun -np 128 ./sieve1 10000000000
+mpirun -np 128 ./sieve2 10000000000
+mpirun -np 128 ./sieve3 10000000000
+

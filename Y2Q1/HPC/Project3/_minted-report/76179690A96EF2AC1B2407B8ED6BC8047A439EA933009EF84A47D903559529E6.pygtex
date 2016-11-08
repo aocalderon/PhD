@@ -1,0 +1,14 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGdefault{c+ch}{\PYGdefaultZsh{}!/bin/sh}
+\PYGdefault{c+c1}{\PYGdefaultZsh{}PBS \PYGdefaultZhy{}l nodes=8:nogpu:ppn=32,walltime=01:00:00}
+
+module load gcc\PYGdefaultZhy{}4.7.2
+module load mvapich2\PYGdefaultZhy{}1.9/gcc\PYGdefaultZhy{}4.7.2
+
+\PYGdefault{n+nv}{n}\PYGdefault{o}{=}10000000000
+\PYGdefault{n+nv}{np}\PYGdefault{o}{=}256
+mpirun \PYGdefaultZhy{}np \PYGdefault{n+nv}{\PYGdefaultZdl{}np} ./sieve0 \PYGdefault{n+nv}{\PYGdefaultZdl{}n}
+mpirun \PYGdefaultZhy{}np \PYGdefault{n+nv}{\PYGdefaultZdl{}np} ./sieve1 \PYGdefault{n+nv}{\PYGdefaultZdl{}n}
+mpirun \PYGdefaultZhy{}np \PYGdefault{n+nv}{\PYGdefaultZdl{}np} ./sieve2 \PYGdefault{n+nv}{\PYGdefaultZdl{}n}
+mpirun \PYGdefaultZhy{}np \PYGdefault{n+nv}{\PYGdefaultZdl{}np} ./sieve3 \PYGdefault{n+nv}{\PYGdefaultZdl{}n}
+\end{Verbatim}

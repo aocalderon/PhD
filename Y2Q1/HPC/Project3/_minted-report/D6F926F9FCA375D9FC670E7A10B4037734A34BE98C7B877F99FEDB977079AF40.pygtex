@@ -1,0 +1,118 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGdefault{c+cm}{/*}
+\PYGdefault{c+cm}{ * Sieve of Eratosthenes}
+\PYGdefault{c+cm}{ *}
+\PYGdefault{c+cm}{ * Programmed by Michael J. Quinn}
+\PYGdefault{c+cm}{ *}
+\PYGdefault{c+cm}{ * Last modification: 7 September 2001}
+\PYGdefault{c+cm}{ */}
+\PYGdefault{c+cp}{\PYGdefaultZsh{}include} \PYGdefault{c+cpf}{\PYGdefaultZdq{}mpi.h\PYGdefaultZdq{} }
+\PYGdefault{c+cp}{\PYGdefaultZsh{}include} \PYGdefault{c+cpf}{\PYGdefaultZlt{}math.h\PYGdefaultZgt{} }
+\PYGdefault{c+cp}{\PYGdefaultZsh{}include} \PYGdefault{c+cpf}{\PYGdefaultZlt{}stdio.h\PYGdefaultZgt{}}
+\PYGdefault{c+cp}{\PYGdefaultZsh{}include} \PYGdefault{c+cpf}{\PYGdefaultZlt{}stdlib.h\PYGdefaultZgt{} }
+\PYGdefault{c+cp}{\PYGdefaultZsh{}define MIN(a,b) ((a)\PYGdefaultZlt{}(b)?(a):(b))}
+
+\PYGdefault{k+kt}{int} \PYGdefault{n+nf}{main} \PYGdefault{p}{(}\PYGdefault{k+kt}{int} \PYGdefault{n}{argc}\PYGdefault{p}{,} \PYGdefault{k+kt}{char} \PYGdefault{o}{*}\PYGdefault{n}{argv}\PYGdefault{p}{[])} \PYGdefault{p}{\PYGdefaultZob{}}
+	\PYGdefault{k+kt}{unsigned} \PYGdefault{k+kt}{int} \PYGdefault{n}{count}\PYGdefault{p}{;} \PYGdefault{c+cm}{/* Local prime count */}
+	\PYGdefault{k+kt}{double} \PYGdefault{n}{elapsed\PYGdefaultZus{}time}\PYGdefault{p}{;} \PYGdefault{c+cm}{/* Parallel execution time */}
+	\PYGdefault{k+kt}{unsigned} \PYGdefault{k+kt}{long}  \PYGdefault{n}{first}\PYGdefault{p}{;} \PYGdefault{c+cm}{/* Index of first multiple */}
+	\PYGdefault{k+kt}{unsigned} \PYGdefault{k+kt}{int} \PYGdefault{n}{global\PYGdefaultZus{}count}\PYGdefault{p}{;} \PYGdefault{c+cm}{/* Global prime count */}
+	\PYGdefault{k+kt}{unsigned} \PYGdefault{k+kt}{long} \PYGdefault{k+kt}{long} \PYGdefault{n}{high\PYGdefaultZus{}value}\PYGdefault{p}{;} \PYGdefault{c+cm}{/* Highest value on this proc */}
+	\PYGdefault{k+kt}{unsigned} \PYGdefault{k+kt}{long} \PYGdefault{k+kt}{long} \PYGdefault{n}{i}\PYGdefault{p}{;}
+	\PYGdefault{k+kt}{int} \PYGdefault{n}{id}\PYGdefault{p}{;} \PYGdefault{c+cm}{/* Process ID number */}
+	\PYGdefault{k+kt}{unsigned} \PYGdefault{k+kt}{long} \PYGdefault{n}{index}\PYGdefault{p}{;} \PYGdefault{c+cm}{/* Index of current prime */}
+	\PYGdefault{k+kt}{unsigned} \PYGdefault{k+kt}{long} \PYGdefault{k+kt}{long} \PYGdefault{n}{low\PYGdefaultZus{}value}\PYGdefault{p}{;} \PYGdefault{c+cm}{/* Lowest value on this proc */}
+	\PYGdefault{k+kt}{char} \PYGdefault{o}{*}\PYGdefault{n}{marked}\PYGdefault{p}{;} \PYGdefault{c+cm}{/* Portion of 2,...,\PYGdefaultZsq{}n\PYGdefaultZsq{} */}
+	\PYGdefault{k+kt}{unsigned} \PYGdefault{k+kt}{long} \PYGdefault{k+kt}{long} \PYGdefault{k+kt}{int}  \PYGdefault{n}{n}\PYGdefault{p}{;} \PYGdefault{c+cm}{/* Sieving from 2, ..., \PYGdefaultZsq{}n\PYGdefaultZsq{} */}
+	\PYGdefault{k+kt}{int} \PYGdefault{n}{p}\PYGdefault{p}{;} \PYGdefault{c+cm}{/* Number of processes */}
+	\PYGdefault{k+kt}{unsigned} \PYGdefault{k+kt}{long} \PYGdefault{n}{proc0\PYGdefaultZus{}size}\PYGdefault{p}{;} \PYGdefault{c+cm}{/* Size of proc 0\PYGdefaultZsq{}s subarray */}
+	\PYGdefault{k+kt}{unsigned} \PYGdefault{k+kt}{long} \PYGdefault{n}{prime}\PYGdefault{p}{;} \PYGdefault{c+cm}{/* Current prime */}
+	\PYGdefault{k+kt}{unsigned} \PYGdefault{k+kt}{long} \PYGdefault{k+kt}{long} \PYGdefault{n}{size}\PYGdefault{p}{;} \PYGdefault{c+cm}{/* Elements in \PYGdefaultZsq{}marked\PYGdefaultZsq{} */}
+	\PYGdefault{k+kt}{unsigned} \PYGdefault{k+kt}{long} \PYGdefault{k+kt}{long} \PYGdefault{n}{n\PYGdefaultZus{}size}\PYGdefault{p}{;} \PYGdefault{c+cm}{/* Number of odds between 3 to n */}
+
+	\PYGdefault{n}{MPI\PYGdefaultZus{}Init} \PYGdefault{p}{(}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{argc}\PYGdefault{p}{,} \PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{argv}\PYGdefault{p}{);}
+	\PYGdefault{c+cm}{/* Start the timer */}
+	\PYGdefault{n}{MPI\PYGdefaultZus{}Comm\PYGdefaultZus{}rank} \PYGdefault{p}{(}\PYGdefault{n}{MPI\PYGdefaultZus{}COMM\PYGdefaultZus{}WORLD}\PYGdefault{p}{,} \PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{id}\PYGdefault{p}{);}
+	\PYGdefault{n}{MPI\PYGdefaultZus{}Comm\PYGdefaultZus{}size} \PYGdefault{p}{(}\PYGdefault{n}{MPI\PYGdefaultZus{}COMM\PYGdefaultZus{}WORLD}\PYGdefault{p}{,} \PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{p}\PYGdefault{p}{);}
+	\PYGdefault{n}{MPI\PYGdefaultZus{}Barrier}\PYGdefault{p}{(}\PYGdefault{n}{MPI\PYGdefaultZus{}COMM\PYGdefaultZus{}WORLD}\PYGdefault{p}{);}
+	\PYGdefault{n}{elapsed\PYGdefaultZus{}time} \PYGdefault{o}{=} \PYGdefault{o}{\PYGdefaultZhy{}}\PYGdefault{n}{MPI\PYGdefaultZus{}Wtime}\PYGdefault{p}{();}
+	\PYGdefault{k}{if} \PYGdefault{p}{(}\PYGdefault{n}{argc} \PYGdefault{o}{!=} \PYGdefault{l+m+mi}{2}\PYGdefault{p}{)} \PYGdefault{p}{\PYGdefaultZob{}}
+		\PYGdefault{k}{if} \PYGdefault{p}{(}\PYGdefault{o}{!}\PYGdefault{n}{id}\PYGdefault{p}{)} \PYGdefault{n}{printf} \PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}Command line: \PYGdefaultZpc{}s \PYGdefaultZlt{}m\PYGdefaultZgt{}}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{p}{,} \PYGdefault{n}{argv}\PYGdefault{p}{[}\PYGdefault{l+m+mi}{0}\PYGdefault{p}{]);}
+		\PYGdefault{n}{MPI\PYGdefaultZus{}Finalize}\PYGdefault{p}{();}
+		\PYGdefault{n}{exit} \PYGdefault{p}{(}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{);}
+	\PYGdefault{p}{\PYGdefaultZcb{}}
+	\PYGdefault{c+cm}{/* Read N as a unsigned long long from the arguments */}
+	\PYGdefault{k+kt}{char} \PYGdefault{o}{*}\PYGdefault{n}{e}\PYGdefault{p}{;}
+	\PYGdefault{n}{n} \PYGdefault{o}{=} \PYGdefault{n}{strtoull}\PYGdefault{p}{(}\PYGdefault{n}{argv}\PYGdefault{p}{[}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{],} \PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{e}\PYGdefault{p}{,} \PYGdefault{l+m+mi}{10}\PYGdefault{p}{);}
+
+	\PYGdefault{c+cm}{/* Compute number of odds between 3 to n */}
+	\PYGdefault{n}{n\PYGdefaultZus{}size} \PYGdefault{o}{=} \PYGdefault{p}{(}\PYGdefault{n}{n} \PYGdefault{o}{+} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{)} \PYGdefault{o}{/} \PYGdefault{l+m+mi}{2}\PYGdefault{p}{;}
+
+	\PYGdefault{c+cm}{/* Figure out this process\PYGdefaultZsq{}s share of the array, as}
+\PYGdefault{c+cm}{	  well as the integers represented by the first and}
+\PYGdefault{c+cm}{	  last array elements */}
+	  
+	\PYGdefault{c+cm}{/* Adjust the formula to remove the even positions */}
+	\PYGdefault{n}{low\PYGdefaultZus{}value}  \PYGdefault{o}{=} \PYGdefault{l+m+mi}{2} \PYGdefault{o}{+} \PYGdefault{p}{(}\PYGdefault{l+m+mi}{2} \PYGdefault{o}{*} \PYGdefault{p}{(}\PYGdefault{n}{id} \PYGdefault{o}{*} \PYGdefault{p}{(}\PYGdefault{n}{n\PYGdefaultZus{}size} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{)} \PYGdefault{o}{/} \PYGdefault{n}{p}\PYGdefault{p}{))} \PYGdefault{o}{+} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{;}
+	\PYGdefault{n}{high\PYGdefaultZus{}value} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{2} \PYGdefault{o}{+} \PYGdefault{p}{(}\PYGdefault{l+m+mi}{2} \PYGdefault{o}{*} \PYGdefault{p}{(((}\PYGdefault{n}{id} \PYGdefault{o}{+} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{)} \PYGdefault{o}{*} \PYGdefault{p}{(}\PYGdefault{n}{n\PYGdefaultZus{}size} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{)} \PYGdefault{o}{/} \PYGdefault{n}{p}\PYGdefault{p}{)} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{))} \PYGdefault{o}{+} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{;}
+	\PYGdefault{c+cm}{/* Now we only need half of the size */}
+	\PYGdefault{n}{size} \PYGdefault{o}{=} \PYGdefault{p}{(}\PYGdefault{n}{high\PYGdefaultZus{}value} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{n}{low\PYGdefaultZus{}value} \PYGdefault{o}{+} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{)} \PYGdefault{o}{/} \PYGdefault{l+m+mi}{2}\PYGdefault{p}{;}
+	\PYGdefault{c+cm}{/* Bail out if all the primes used for sieving are not all held by process 0 */}
+	\PYGdefault{n}{proc0\PYGdefaultZus{}size} \PYGdefault{o}{=} \PYGdefault{p}{(}\PYGdefault{n}{n\PYGdefaultZus{}size} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{)} \PYGdefault{o}{/} \PYGdefault{n}{p}\PYGdefault{p}{;}
+	\PYGdefault{k}{if} \PYGdefault{p}{((}\PYGdefault{l+m+mi}{2} \PYGdefault{o}{+} \PYGdefault{p}{(}\PYGdefault{l+m+mi}{2} \PYGdefault{o}{*} \PYGdefault{n}{proc0\PYGdefaultZus{}size}\PYGdefault{p}{)} \PYGdefault{o}{+} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{)} \PYGdefault{o}{\PYGdefaultZlt{}} \PYGdefault{p}{(}\PYGdefault{k+kt}{int}\PYGdefault{p}{)} \PYGdefault{n}{sqrt}\PYGdefault{p}{((}\PYGdefault{k+kt}{double}\PYGdefault{p}{)} \PYGdefault{n}{n}\PYGdefault{p}{))} \PYGdefault{p}{\PYGdefaultZob{}}
+		\PYGdefault{k}{if} \PYGdefault{p}{(}\PYGdefault{o}{!}\PYGdefault{n}{id}\PYGdefault{p}{)} \PYGdefault{n}{printf} \PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}Too many processes}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{p}{);}
+		\PYGdefault{n}{MPI\PYGdefaultZus{}Finalize}\PYGdefault{p}{();}
+		\PYGdefault{n}{exit} \PYGdefault{p}{(}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{);}
+	\PYGdefault{p}{\PYGdefaultZcb{}}
+	\PYGdefault{c+cm}{/* Allocate this process\PYGdefaultZsq{}s share of the array. */}
+	\PYGdefault{n}{marked} \PYGdefault{o}{=} \PYGdefault{p}{(}\PYGdefault{k+kt}{char} \PYGdefault{o}{*}\PYGdefault{p}{)} \PYGdefault{n}{malloc} \PYGdefault{p}{(}\PYGdefault{n}{size}\PYGdefault{p}{);}
+	\PYGdefault{k}{if} \PYGdefault{p}{(}\PYGdefault{n}{marked} \PYGdefault{o}{==} \PYGdefault{n+nb}{NULL}\PYGdefault{p}{)} \PYGdefault{p}{\PYGdefaultZob{}}
+		\PYGdefault{n}{printf} \PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}Cannot allocate enough memory}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{p}{);}
+		\PYGdefault{n}{MPI\PYGdefaultZus{}Finalize}\PYGdefault{p}{();}
+		\PYGdefault{n}{exit} \PYGdefault{p}{(}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{);}
+	\PYGdefault{p}{\PYGdefaultZcb{}}
+	\PYGdefault{k}{for} \PYGdefault{p}{(}\PYGdefault{n}{i} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;} \PYGdefault{n}{i} \PYGdefault{o}{\PYGdefaultZlt{}=} \PYGdefault{n}{size}\PYGdefault{p}{;} \PYGdefault{n}{i}\PYGdefault{o}{++}\PYGdefault{p}{)} \PYGdefault{n}{marked}\PYGdefault{p}{[}\PYGdefault{n}{i}\PYGdefault{p}{]} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
+	\PYGdefault{k}{if} \PYGdefault{p}{(}\PYGdefault{o}{!}\PYGdefault{n}{id}\PYGdefault{p}{)} \PYGdefault{n}{index} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
+
+	\PYGdefault{c+cm}{/* Start from 3 */}
+	\PYGdefault{n}{prime} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{3}\PYGdefault{p}{;}
+	\PYGdefault{k}{do} \PYGdefault{p}{\PYGdefaultZob{}}
+		\PYGdefault{c+cm}{/* Divide by 2 to manage only odd positions */}
+		\PYGdefault{k}{if} \PYGdefault{p}{(}\PYGdefault{n}{prime} \PYGdefault{o}{*} \PYGdefault{n}{prime} \PYGdefault{o}{\PYGdefaultZgt{}} \PYGdefault{n}{low\PYGdefaultZus{}value}\PYGdefault{p}{)}
+			\PYGdefault{n}{first} \PYGdefault{o}{=} \PYGdefault{p}{(}\PYGdefault{n}{prime} \PYGdefault{o}{*} \PYGdefault{n}{prime} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{n}{low\PYGdefaultZus{}value}\PYGdefault{p}{)} \PYGdefault{o}{/} \PYGdefault{l+m+mi}{2}\PYGdefault{p}{;}
+		\PYGdefault{k}{else} \PYGdefault{p}{\PYGdefaultZob{}}
+			\PYGdefault{k}{if} \PYGdefault{p}{(}\PYGdefault{o}{!}\PYGdefault{p}{(}\PYGdefault{n}{low\PYGdefaultZus{}value} \PYGdefault{o}{\PYGdefaultZpc{}} \PYGdefault{n}{prime}\PYGdefault{p}{))} \PYGdefault{n}{first} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
+			\PYGdefault{k}{else}\PYGdefault{p}{\PYGdefaultZob{}}
+				\PYGdefault{n}{first} \PYGdefault{o}{=} \PYGdefault{n}{prime} \PYGdefault{o}{\PYGdefaultZhy{}} \PYGdefault{p}{(}\PYGdefault{n}{low\PYGdefaultZus{}value} \PYGdefault{o}{\PYGdefaultZpc{}} \PYGdefault{n}{prime}\PYGdefault{p}{);}
+				\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{o}{!}\PYGdefault{p}{(}\PYGdefault{n}{first} \PYGdefault{o}{\PYGdefaultZpc{}} \PYGdefault{l+m+mi}{2}\PYGdefault{p}{))} \PYGdefault{n}{first} \PYGdefault{o}{=} \PYGdefault{n}{first} \PYGdefault{o}{/} \PYGdefault{l+m+mi}{2}\PYGdefault{p}{;}
+				\PYGdefault{k}{else} \PYGdefault{n}{first} \PYGdefault{o}{=} \PYGdefault{p}{(}\PYGdefault{n}{first} \PYGdefault{o}{+} \PYGdefault{n}{prime}\PYGdefault{p}{)} \PYGdefault{o}{/} \PYGdefault{l+m+mi}{2}\PYGdefault{p}{;} 
+			\PYGdefault{p}{\PYGdefaultZcb{}}
+		\PYGdefault{p}{\PYGdefaultZcb{}}
+		\PYGdefault{k}{for} \PYGdefault{p}{(}\PYGdefault{n}{i} \PYGdefault{o}{=} \PYGdefault{n}{first}\PYGdefault{p}{;} \PYGdefault{n}{i} \PYGdefault{o}{\PYGdefaultZlt{}=} \PYGdefault{n}{size}\PYGdefault{p}{;} \PYGdefault{n}{i} \PYGdefault{o}{+=} \PYGdefault{n}{prime}\PYGdefault{p}{)\PYGdefaultZob{}}
+			\PYGdefault{n}{marked}\PYGdefault{p}{[}\PYGdefault{n}{i}\PYGdefault{p}{]} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{;}
+		\PYGdefault{p}{\PYGdefaultZcb{}}
+		\PYGdefault{k}{if} \PYGdefault{p}{(}\PYGdefault{o}{!}\PYGdefault{n}{id}\PYGdefault{p}{)} \PYGdefault{p}{\PYGdefaultZob{}}
+			\PYGdefault{k}{while} \PYGdefault{p}{(}\PYGdefault{n}{marked}\PYGdefault{p}{[}\PYGdefault{o}{++}\PYGdefault{n}{index}\PYGdefault{p}{]);}
+			\PYGdefault{c+cm}{/* Pick up the next odd prime */}
+			\PYGdefault{n}{prime} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{2} \PYGdefault{o}{+} \PYGdefault{p}{(}\PYGdefault{l+m+mi}{2} \PYGdefault{o}{*} \PYGdefault{n}{index} \PYGdefault{o}{+} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{);}
+		\PYGdefault{p}{\PYGdefaultZcb{}}
+		\PYGdefault{k}{if} \PYGdefault{p}{(}\PYGdefault{n}{p} \PYGdefault{o}{\PYGdefaultZgt{}} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{)} \PYGdefault{n}{MPI\PYGdefaultZus{}Bcast} \PYGdefault{p}{(}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{prime}\PYGdefault{p}{,} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{,} \PYGdefault{n}{MPI\PYGdefaultZus{}INT}\PYGdefault{p}{,} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{,} \PYGdefault{n}{MPI\PYGdefaultZus{}COMM\PYGdefaultZus{}WORLD}\PYGdefault{p}{);}
+	\PYGdefault{p}{\PYGdefaultZcb{}} \PYGdefault{k}{while} \PYGdefault{p}{(}\PYGdefault{n}{prime} \PYGdefault{o}{*} \PYGdefault{n}{prime} \PYGdefault{o}{\PYGdefaultZlt{}=} \PYGdefault{n}{n}\PYGdefault{p}{);}
+	\PYGdefault{n}{count} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
+	\PYGdefault{k}{for} \PYGdefault{p}{(}\PYGdefault{n}{i} \PYGdefault{o}{=} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;} \PYGdefault{n}{i} \PYGdefault{o}{\PYGdefaultZlt{}=} \PYGdefault{n}{size}\PYGdefault{p}{;} \PYGdefault{n}{i}\PYGdefault{o}{++}\PYGdefault{p}{)}
+		\PYGdefault{k}{if} \PYGdefault{p}{(}\PYGdefault{o}{!}\PYGdefault{n}{marked}\PYGdefault{p}{[}\PYGdefault{n}{i}\PYGdefault{p}{])\PYGdefaultZob{}}
+			\PYGdefault{n}{count}\PYGdefault{o}{++}\PYGdefault{p}{;}
+		\PYGdefault{p}{\PYGdefaultZcb{}}
+	\PYGdefault{k}{if}\PYGdefault{p}{(}\PYGdefault{n}{p} \PYGdefault{o}{\PYGdefaultZgt{}} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{)} 
+		\PYGdefault{n}{MPI\PYGdefaultZus{}Reduce} \PYGdefault{p}{(}\PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{count}\PYGdefault{p}{,} \PYGdefault{o}{\PYGdefaultZam{}}\PYGdefault{n}{global\PYGdefaultZus{}count}\PYGdefault{p}{,} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{,} \PYGdefault{n}{MPI\PYGdefaultZus{}INT}\PYGdefault{p}{,} \PYGdefault{n}{MPI\PYGdefaultZus{}SUM}\PYGdefault{p}{,} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{,} \PYGdefault{n}{MPI\PYGdefaultZus{}COMM\PYGdefaultZus{}WORLD}\PYGdefault{p}{);}
+	\PYGdefault{c+cm}{/* Stop the timer */}
+	\PYGdefault{n}{elapsed\PYGdefaultZus{}time} \PYGdefault{o}{+=} \PYGdefault{n}{MPI\PYGdefaultZus{}Wtime}\PYGdefault{p}{();}
+	\PYGdefault{c+cm}{/* Print the results */}
+	\PYGdefault{k}{if} \PYGdefault{p}{(}\PYGdefault{o}{!}\PYGdefault{n}{id}\PYGdefault{p}{)} \PYGdefault{p}{\PYGdefaultZob{}}
+		\PYGdefault{n}{global\PYGdefaultZus{}count}\PYGdefault{o}{++}\PYGdefault{p}{;}  \PYGdefault{c+c1}{//Counting 2 as prime...}
+		\PYGdefault{n}{printf}\PYGdefault{p}{(}\PYGdefault{l+s}{\PYGdefaultZdq{}S1, \PYGdefaultZpc{}llu, \PYGdefaultZpc{}d, \PYGdefaultZpc{}d, \PYGdefaultZpc{}10.6f}\PYGdefault{l+s+se}{\PYGdefaultZbs{}n}\PYGdefault{l+s}{\PYGdefaultZdq{}}\PYGdefault{p}{,} \PYGdefault{n}{n}\PYGdefault{p}{,} \PYGdefault{n}{p}\PYGdefault{p}{,} \PYGdefault{n}{global\PYGdefaultZus{}count}\PYGdefault{p}{,} \PYGdefault{n}{elapsed\PYGdefaultZus{}time}\PYGdefault{p}{);}
+	\PYGdefault{p}{\PYGdefaultZcb{}}
+	\PYGdefault{n}{MPI\PYGdefaultZus{}Finalize} \PYGdefault{p}{();}
+	\PYGdefault{k}{return} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{;}
+\PYGdefault{p}{\PYGdefaultZcb{}}
+\end{Verbatim}
