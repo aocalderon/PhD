@@ -34,9 +34,9 @@ Implementation of Part 3 can be seen in section \ref{sec:sieve3} of the appendix
 
 \section{Analysis}
 \subsection{Block size estimation}
-Before to run the benchmark we have to set the values for the block sizes for the prime and odd arrays for part 3.  A combination of different values were deployed to estimate those values empirically.  Figure \ref{fig:cache} shows the execution time with values for the odd block size ranging from 256 to 1024 and for the prime block size ranging from 32 to 1024.  
+Before to run the benchmark we have to set the values for the block sizes for the prime and odd arrays for Part 3.  A combination of different values were deployed to estimate those values empirically.  Figure \ref{fig:cache} shows the execution time with values for the odd block size ranging from 256 to 1024 and for the prime block size ranging from 32 to 1024.  
 
-For this experiment 8 nodes and 32 processors per node were used ($n=10^{10}$). Red cell background in figure \ref{fig:cache} illustrates worst performance and green color highlights the best ones.  This shows that the best combination is 512 and 256 for the odd and prime arrays respectively.  These values were used in the implementation of part 3 (see lines 99 and 100 in appendix \ref{sec:sieve3}).
+For this experiment 8 nodes and 32 processors per node were used ($n=10^{10}$). Red cell background in figure \ref{fig:cache} illustrates worst performance and green color highlights the best ones.  This shows that the best combination is 512 and 256 for the odd and prime arrays respectively.  These values were used in the implementation of the third optimization (see lines 99 and 100 in appendix \ref{sec:sieve3}).
 
 \begin{figure}
   \centering
@@ -49,7 +49,7 @@ Two sets of experiments were run to measure the performance of the optimizations
 
 We can see than the best response is achieved by optimization 3 as expected.  It has to be noted that there is no much difference between optimization 1 and 2.  This can be explained by the high speed networking infrastructure of Tardis.  In this case, the communication cost does not have much impact in the time execution.
 
-The performance gain between the baseline and the optimization shows an increase of 5x.  Similarly, an increase in the number of cores used will give a performance increase of 8x.  Overall, between a baseline algorithm running over a reduced number of cores and the implementation of the 3 optimizations using more number of cores the performance increase is the 40x.
+The performance gain between the baseline and the optimizations shows an increase of 5x.  Similarly, an increase in the number of cores will give a performance increase of 8x.  Overall, between a baseline algorithm running over a reduced number of cores and the implementation of the 3 optimizations using more number of cores the performance increase is the 40x.
 
 \begin{table}[ht]
 \centering
@@ -169,7 +169,16 @@ linenos
 
 \clearpage
 \section{Outputs}\label{sec:outputs}
-The outputs of the two jobs are similar.  They have five columns.  The first one is a tag to identify the optimization (S0:Baseline, S1:Removing evens, S2:Remeving Bcast and S3:Reorder loops). The second one is the size of $n$ (for these cases $n=10^{10}$). Then, the third column shows the number of processors used. Fourth column shows the total number of primes less or equal to $n$ (note that all the implementation compute the same number).  The last column shows the execution time. 
+To compile:
+
+\inputminted[
+fontsize=\footnotesize,
+tabsize=2,
+frame=single
+]{bash}{compile.sh}
+
+The outputs of the two jobs are similar.  They have five columns.  The first one is a tag to identify the optimization (S0:Baseline, S1:Removing evens, S2:Remeving Bcast and S3:Reorder loops). The second one is the size of $n$ (for these cases $n=10^{10}$). Then, the third column shows the number of processors used. Fourth column shows the total number of primes less or equal to $n$ (note that all the implementations computed the same number).  The last column shows the execution time in seconds. 
+
 \subsection{Output 1}
 \inputminted[
 fontsize=\footnotesize,
