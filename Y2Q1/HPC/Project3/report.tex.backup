@@ -1,0 +1,184 @@
+\documentclass[10pt]{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage[left=3cm, right=3cm, top=3cm, bottom=3cm]{geometry}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\hypersetup{
+colorlinks=false,
+hidelinks
+}
+\usepackage{minted}
+\usepackage{xcolor}
+\usepackage{lineno}
+\usepackage{tikz}
+\usetikzlibrary{tikzmark}
+
+
+\title{Lab 3 Report}
+\author{
+   Andres Calderon\\
+  \small \texttt{acald013@ucr.edu}
+}
+\begin{document}
+\maketitle
+
+\section{Part 1}
+Implementation of Part 1 can be seen in section \ref{sec:sieve1} of the appendix.
+
+\section{Part 2}
+Implementation of Part 2 can be seen in section \ref{sec:sieve2} of the appendix.
+
+\section{Part 3}
+Implementation of Part 3 can be seen in section \ref{sec:sieve3} of the appendix.
+
+\section{Analysis}
+\subsection{Block size estimation}
+Before to run the benchmark we have to set the values for the block sizes for the prime and odd arrays for part 3.  A combination of different values were deployed to estimate those values empirically.  Figure \ref{fig:cache} shows the execution time with values for the odd block size ranging from 256 to 1024 and for the prime block size ranging from 32 to 1024.  
+
+For this experiment 8 nodes and 32 processors per node were used ($n=10^{10}$). Red cell background in figure \ref{fig:cache} illustrates worst performance and green color highlights the best ones.  This shows that the best combination is 512 and 256 for the odd and prime arrays respectively.  These values were used in the implementation of part 3 (see lines 99 and 100 in appendix \ref{sec:sieve3}).
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\textwidth]{cache}
+  \caption{Execution time in seconds of different cache sizes for prime and odds arrays.}\label{fig:cache}
+\end{figure}
+
+\subsection{Experiments}
+Two sets of experiments were run to measure the performance of the optimizations.  The first one run five iterations of the job presented in appendix \ref{sec:job1} ranging the number of processors from 4 to 30 on steps of 2.  The average of the five runs are shown in table \ref{tab:table1} and figure \ref{fig:plot}.  This experiment run over 10 nodes using 3 processors for each node.
+
+We can see than the best response is achieved by optimization 3 as expected.  It has to be noted that there is no much difference between optimization 1 and 2.  This can be explained by the high speed networking infrastructure of Tardis.  In this case, the communication cost does not have much impact in the time execution.
+
+The performance gain between the baseline and the optimization shows an increase of 5x.  Similarly, an increase in the number of cores used will give a performance increase of 8x.  Overall, between a baseline algorithm running over a reduced number of cores and the implementation of the 3 optimizations using more number of cores the performance increase is the 40x.
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{cccccc}
+  \toprule
+  \textbf{Number of} & \multicolumn{5}{c}{\textbf{Optimization}} \\
+ \textbf{Cores} & \textbf{Baseline} & \textbf{Remove evens} & \textbf{Remove Bcast} & \textbf{Reorder loops} & \\
+ \midrule
+  4 & 92.40 & 44.75 & 44.61 & 18.92 & \tikzmark{1}\\ 
+    6 & 63.15 & 30.96 & 30.31 & 12.45 & \\ 
+    8 & 47.10 & 23.17 & 22.41 & 9.11 & \\ 
+   10 & 39.85 & 18.95 & 18.11 & 7.04 & \\ 
+   12 & 33.27 & 16.00 & 15.22 & 5.99 & \\ 
+   14 & 27.97 & 13.64 & 12.99 & 5.11 & \\ 
+   16 & 24.91 & 12.11 & 11.43 & 4.51 & \\ 
+   18 & 22.07 & 10.71 & 10.13 & 4.01 & \\ 
+   20 & 19.52 & 9.56 & 9.10 & 3.54 & \\ 
+   22 & 17.59 & 8.67 & 8.28 & 3.24 & \\ 
+   24 & 16.17 & 7.92 & 7.67 & 2.85 & \\ 
+   26 & 14.96 & 7.34 & 7.05 & 2.75 & \\ 
+   28 & 13.85 & 6.79 & 6.55 & 2.54 & \\ 
+   30 & 13.12 & 6.40 & 6.20 & 2.39 & \\ 
+   & \tikzmark{3}    &      &      &      & \tikzmark{2}\\ 
+   \bottomrule
+\end{tabular}
+\begin{tikzpicture}[overlay, remember picture, xshift=-0.75\baselineskip, yshift=0.25\baselineskip, shorten >=1pt, shorten <=.5pt]
+  \draw [->] ({pic cs:1}) -- node [text midway,right] {\tiny \textbf{8x}}({pic cs:2});
+  \draw [->] ({pic cs:3}) -- node [text midway,below] {\tiny \textbf{5x}} ({pic cs:2});
+\end{tikzpicture}
+\caption{Comparing the four versions of the Sieve of Erastosthenes.} 
+\label{tab:table1}
+\end{table}
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=\textwidth]{plot}
+  \caption{Execution time of the Sieve of Erastosthenes and its optimizations.}\label{fig:plot}
+\end{figure}
+
+The second experiment follows the requirements of the project.  It uses 32, 64, 128 and 256 processors running under 1, 2, 4 and 8 nodes respectively.  Similarly, five runs were deployed running the script shown in section \ref{sec:job2} and the averages were taken.  Table \ref{tab:table2} and figure \ref{fig:plot2} illustrate the results.  
+
+We can see a similar behavior that the previous experiment.  However, the difference between optimization 1 and 2 almost disappear when a high number of processors are used.  In addition, table \ref{tab:table2} shows that the performance increase between baseline and the three implementations growth to 17x.  Overall, the total performance gain using this configuration is almost 120x.
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{cccccl}
+  \toprule
+  \textbf{Number of} & \multicolumn{5}{c}{\textbf{Optimization}} \\
+ \textbf{Cores} & \textbf{Baseline} & \textbf{Remove evens} & \textbf{Remove Bcast} & \textbf{Reorder loops} & \\
+ \midrule
+ 32 & 28.18 & 13.82 & 13.74 & 2.72 & \tikzmark{a}\\ 
+   64 & 14.28 & 6.99 & 6.77 & 1.36 &\\ 
+  128 & 13.03 & 6.32 & 6.31 & 0.73 &\\ 
+  256 & 6.55 & 3.17 & 3.11 & 0.37 &\\ 
+  & \tikzmark{c} &      &      &	& \tikzmark{b}\\	
+   \bottomrule
+\end{tabular}
+\begin{tikzpicture}[overlay, remember picture, xshift=-0.75\baselineskip, yshift=0.25\baselineskip, shorten >=1pt, shorten <=.5pt]
+  \draw [->] ({pic cs:a}) -- node [text midway,right] {\tiny \textbf{7x}}({pic cs:b});
+  \draw [->] ({pic cs:c}) -- node [text midway,below] {\tiny \textbf{17x}} ({pic cs:b});
+\end{tikzpicture}
+\caption{Comparing the four versions of the Sieve of Erastosthenes.} 
+\label{tab:table2}
+\end{table}
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=\textwidth]{plot2}
+  \caption{Execution time of the Sieve of Erastosthenes and its optimizations.}\label{fig:plot2}
+\end{figure}
+
+\clearpage
+\appendix
+
+\section{Source code}
+
+\subsection{sieve1.c (Removing evens...)}\label{sec:sieve1}
+\inputminted[
+fontsize=\footnotesize,
+tabsize=2,
+linenos
+]{c}{sieve1.c}
+
+\subsection{sieve2.c (Removing Bcast...)}\label{sec:sieve2}
+\inputminted[
+fontsize=\footnotesize,
+tabsize=2,
+linenos
+]{c}{sieve2.c}
+
+\subsection{sieve3.c (Reorder loops...)}\label{sec:sieve3}
+\inputminted[
+fontsize=\footnotesize,
+tabsize=2,
+linenos
+]{c}{sieve3.c}
+
+\clearpage
+\section{Jobs}
+\subsection{Job 1}\label{sec:job1}
+\inputminted[
+fontsize=\footnotesize,
+tabsize=2,
+frame=single,
+linenos
+]{bash}{sieve_1.job}
+
+\subsection{Job 2}\label{sec:job2}
+\inputminted[
+fontsize=\footnotesize,
+tabsize=2,
+frame=single,
+linenos
+]{bash}{sieve_2.job}
+
+\clearpage
+\section{Outputs}\label{outputs}
+\subsection{Output 1}
+\inputminted[
+fontsize=\footnotesize,
+tabsize=2,
+frame=single
+]{bash}{output1.sh}
+
+\subsection{Output 2}
+\inputminted[
+fontsize=\footnotesize,
+tabsize=2,
+frame=single
+]{bash}{output2.sh}
+
+\end{document}

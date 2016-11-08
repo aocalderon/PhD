@@ -2,17 +2,22 @@
 % Thu Oct 27 23:11:00 2016
 \begin{table}[ht]
 \centering
-\begin{tabular}{ccccc}
+\begin{tabular}{cccccl}
   \toprule
-  \textbf{Number of} & \multicolumn{4}{c}{\textbf{Optimization}} \\
- \textbf{Cores} & \textbf{Baseline} & \textbf{Remove evens} & \textbf{Remove Bcast} & \textbf{Reorder loops} \\
+  \textbf{Number of} & \multicolumn{5}{c}{\textbf{Optimization}} \\
+ \textbf{Cores} & \textbf{Baseline} & \textbf{Remove evens} & \textbf{Remove Bcast} & \textbf{Reorder loops} & \\
  \midrule
- 32 & 28.18 & 13.82 & 13.74 & 2.72 \\ 
-   64 & 14.28 & 6.99 & 6.77 & 1.36 \\ 
-  128 & 13.03 & 6.32 & 6.31 & 0.73 \\ 
-  256 & 6.55 & 3.17 & 3.11 & 0.37 \\ 
+ 32 & 28.18 & 13.82 & 13.74 & 2.72 & \tikzmark{a}\\ 
+   64 & 14.28 & 6.99 & 6.77 & 1.36 &\\ 
+  128 & 13.03 & 6.32 & 6.31 & 0.73 &\\ 
+  256 & 6.55 & 3.17 & 3.11 & 0.37 &\\ 
+  \tikzmark{c} &      &      &      &	& \tikzmark{b}\\	
    \bottomrule
 \end{tabular}
+\begin{tikzpicture}[overlay, remember picture, xshift=-0.75\baselineskip, yshift=0.25\baselineskip, shorten >=1pt, shorten <=.5pt]
+  \draw [->] ({pic cs:a}) -- node [text midway,right] {\tiny 8x}({pic cs:b});
+  \draw [->] ({pic cs:c}) -- node [text midway,below] {\tiny 10x} ({pic cs:b});
+\end{tikzpicture}
 \caption{Comparing the four versions of the Sieve of Erastosthenes.} 
 \label{tab:table2}
 \end{table}

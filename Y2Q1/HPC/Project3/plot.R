@@ -21,9 +21,9 @@ g = ggplot(data=data, aes(x=factor(Cores), y=Time, group=S, colour=S, shape=S)) 
     scale_shape_discrete(name = legend_title,  breaks = breaks, labels = labels) +
     scale_linetype_discrete(name = legend_title, breaks = breaks, labels = labels)
 
-pdf("plot.pdf", width = 10.5, height = 7.5)
+#pdf("plot.pdf", width = 10.5, height = 7.5)
 plot(g)
-dev.off()
+#dev.off()
 
 table = cast(data, Cores ~ S)
 names(table) = c("Cores", labels)

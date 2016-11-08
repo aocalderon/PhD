@@ -1,0 +1,15 @@
+#!/bin/sh
+#PBS -l nodes=10:nogpu:ppn=3,walltime=01:00:00
+
+module load gcc-4.7.2
+module load mvapich2-1.9/gcc-4.7.2
+
+n=10000000000
+for i in {4..8..2} 
+do 
+	mpirun -np $i ./sieve0 $n
+	mpirun -np $i ./sieve1 $n
+	mpirun -np $i ./sieve2 $n
+	mpirun -np $i ./sieve3 $n
+done
+
