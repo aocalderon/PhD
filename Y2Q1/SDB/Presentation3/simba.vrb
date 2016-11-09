@@ -1,0 +1,21 @@
+\frametitle{Spark SQL Overview}
+\centering
+  \begin{minted}[fontsize=\tiny,tabsize=8,breaklines,framesep=10pt,frame=single]{python}
+	# Apply functions to results of SQL queries.
+	context = HiveContext(sc)
+	results = context.sql("""
+				SELECT
+					*
+				FROM
+					people""")
+	names = results.map(lambda p: p.name)
+	# Query and join different data sources.
+	context.jsonFile("s3n://...").registerTempTable("json")
+	results = context.sql("""
+				SELECT
+				      *
+				FROM
+				      people
+				JOIN
+				      json ...""")
+  \end{minted}
