@@ -1,0 +1,14 @@
+\PassOptionsToPackage{demo}{graphicx}%% Only for demo here
+\documentclass{beamer}
+\def\Put(#1,#2)#3{\leavevmode\makebox(0,0){\put(#1,#2){#3}}}
+\begin{document}
+
+\begin{frame}
+\Put(0,0){\color{blue}\includegraphics[height=3cm]{img2}}\pause
+
+\Put(50,50){\color{blue}\includegraphics[height=3cm]{img2}}\pause
+
+\Put(100,100){\color{red}\includegraphics[height=3cm]{img3}}
+\end{frame}
+
+\end{document}

@@ -1,0 +1,235 @@
+%% LyX 2.1.4 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass{beamer}
+\usepackage{minted}
+\usepackage{animate}
+\usepackage{graphicx}
+\def\Put(#1,#2)#3{\leavevmode\makebox(0,0){\put(#1,#2){#3}}}
+
+\definecolor{LightGray}{gray}{0.9}
+
+\ifx\hypersetup\undefined
+  \AtBeginDocument{%
+    \hypersetup{unicode=true,
+ bookmarksnumbered=false,bookmarksopen=false,
+ breaklinks=false,pdfborder={0 0 0},colorlinks=false}
+  }
+\else
+  \hypersetup{unicode=true,
+ bookmarksnumbered=false,bookmarksopen=false,
+ breaklinks=false,pdfborder={0 0 0},colorlinks=false}
+\fi
+
+\makeatletter
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Textclass specific LaTeX commands.
+ % this default might be overridden by plain title style
+ \newcommand\makebeamertitle{\frame{\maketitle}}%
+ % (ERT) argument for the TOC
+ \AtBeginDocument{%
+   \let\origtableofcontents=\tableofcontents
+   \def\tableofcontents{\@ifnextchar[{\origtableofcontents}{\gobbletableofcontents}}
+   \def\gobbletableofcontents#1{\origtableofcontents}
+ }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
+\usetheme{Warsaw}
+% or ...
+\useoutertheme{infolines}
+\addtobeamertemplate{headline}{}{\vskip2pt}
+
+\setbeamercovered{transparent}
+% or whatever (possibly just delete it)
+
+
+
+\setbeamertemplate{footline}
+{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+    \usebeamerfont{date in head/foot}\insertshortdate{}\hspace*{2em}
+    \insertframenumber{} / \inserttotalframenumber\hspace*{2ex} 
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+\makeatother
+
+\begin{document}
+
+\title[Simba]{Simba: Efficient In-Memory Spatial Analytics.}
+\subtitle{Dong Xie, Feifei Li, Bin Yao, Gefei Li, Liang Zhou and Minyi Guo \\ \small SIGMOD'16.}
+\author{Andres Calderon}
+%\institute{University of California, Riverside}
+
+\makebeamertitle
+
+% \AtBeginSection[]{
+%   \frame<beamer>{ 
+%     \frametitle{Agenda}   
+%     \tableofcontents[currentsubsection] 
+%   }
+% }
+
+\newif\iflattersubsect
+
+\AtBeginSection[] {
+    \begin{frame}<beamer>
+    \frametitle{Agenda} %
+    \tableofcontents[currentsection]  
+    \end{frame}
+    \lattersubsectfalse
+}
+
+\AtBeginSubsection[] {
+    % \iflattersubsect
+    \begin{frame}<beamer>
+    \frametitle{Agenda} %
+    \tableofcontents[currentsubsection]  
+    \end{frame}
+    % \fi
+    % \lattersubsecttrue
+}
+
+\begin{frame}{Agenda}
+  \tableofcontents{}
+\end{frame}
+
+\section{Background}
+
+\begin{frame}{Introduction}
+  \begin{itemize}
+    \item There has been an explosion in the amount of spatial data in recent years...
+  \end{itemize} \vspace{3cm}
+  \Put(60,10)  {\includegraphics[width=3cm, height=3cm]{Figures/img1.png}}
+\end{frame}
+
+\begin{frame}[noframenumbering]{Introduction}
+  \begin{itemize}
+    \item There has been an explosion in the amount of spatial data in recent years...
+  \end{itemize} \vspace{3cm}
+  \Put(60,10)  {\includegraphics[width=3cm, height=3cm]{Figures/img1.png}}
+  \Put(100,50)  {\includegraphics[width=3cm, height=3cm]{Figures/img2.jpg}}
+\end{frame}
+
+\begin{frame}[noframenumbering]{Introduction}
+  \begin{itemize}
+    \item There has been an explosion in the amount of spatial data in recent years...
+  \end{itemize} \vspace{3cm}
+  \Put(60,10)  {\includegraphics[width=3cm, height=3cm]{Figures/img1.png}}
+  \Put(100,50)  {\includegraphics[width=3cm, height=3cm]{Figures/img2.jpg}}
+  \Put(150,100){\includegraphics[width=3cm, height=3cm]{Figures/img3.jpg}}
+\end{frame}
+
+\begin{frame}{Introduction}
+  \begin{itemize}
+    \item But remember that ``Spatial is Special''...
+  \end{itemize}
+  \centering
+  \includegraphics[width=0.75\linewidth]{Figures/logos.png}
+\end{frame}
+
+\begin{frame}{Introduction}
+  \begin{itemize}
+    \item Why do we need a new tool???
+  \end{itemize}
+  \centering
+  \includegraphics[width=0.3\linewidth]{Figures/simba-logo.png}
+\end{frame}
+
+\begin{frame}{Introduction}
+  \begin{itemize}
+    \item Simba: \textbf{S}patial \textbf{I}n \textbf{M}emory \textbf{B}ig data \textbf{A}nalytics.
+    \begin{itemize}
+     \item Extends Spark SQL with important spatial operations.\pause
+     \item Offers simple APIs for both SQL and DataFrame.\pause
+     \item Support two-layer spatial indexing over RDDs (low latency).\pause
+     \item Designs a SQL context to run spatial queries in parallel (high throughput).\pause
+     \item Introduces spatial-aware and cost-based optimizations to select good spatial plans.
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\section{Computational Geometry Operations}
+
+\subsection{Union}
+
+
+\subsection{Skyline}
+
+\subsection{Convex Hull}
+
+
+\section{Experiments}
+
+\begin{frame}{Setup}
+\begin{itemize}
+ \item Cluster of 25 nodes:
+ \begin{itemize}
+  \item HDD from 50GB to 200GB.
+  \item RAM from 2GB to 8GB.
+  \item Processors 2.2GHz to 3GHz
+ \end{itemize}
+ \item Single machine:
+ \begin{itemize}
+  \item HDD 2TB.
+  \item RAM 16GB.
+  \item Processor 3.4GHz.
+ \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Datasets}
+\begin{itemize}
+ \item Real datasets (from OpenStreetMap):
+ \begin{itemize}
+  \item OSM1: 164M polygons, 80GB.
+  \item OSM2: 1.7B points, 52GB.
+ \end{itemize}
+ \item Synthetic dataset:
+ \begin{itemize}
+  \item SYNTH: 3.8B points, 128GB.
+  \item Five different distributions.
+ \end{itemize}
+\end{itemize}
+  \centering
+  \includegraphics[width=0.5\linewidth]{Figures/img2.jpg} \\
+\end{frame}
+
+\section{Conclusions}
+
+\begin{frame}{Conclusions}
+  \begin{itemize}
+    \item This paper introduced CG\_Hadoop as a scalable and efficient MapReduce library.
+    \item Focused on 5 fundamental computational geometry problems...
+    \begin{itemize}
+      \item Polygon union, Skyline, Convex hull, Farthest and Closest Pairs.
+    \end{itemize}
+    \item Provided versions for Apache Hadoop and SpatialHadoop systems.
+    \item Distributed approach speed up performance.
+    \item Spatial partitioning allows early pruning which make it even more efficient. 
+    \item Achieve up to 29x and 260x better performance.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Future ideas}
+  \begin{itemize}
+    \item Working on more complex operations, for example motion patterns.
+    \item Explore ports to new distributed platforms such as Spark or Simba.
+  \end{itemize}
+\end{frame}
+
+
+\subsection*{Thanks...}
+
+\begin{frame}{}
+  \centering
+  \huge Thank you!!! \\
+  \vspace{2cm}
+  \large Do you have any question?
+\end{frame}
+
+\end{document}
