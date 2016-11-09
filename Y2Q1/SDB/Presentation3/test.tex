@@ -1,0 +1,31 @@
+\PassOptionsToPackage{demo}{graphicx}%% Only for demo here
+\documentclass{beamer}
+\usepackage{tikz}
+\def\Put(#1,#2)#3{\leavevmode\makebox(0,0){\put(#1,#2){#3}}}
+\begin{document}
+
+\begin{frame}
+\Put(0,0){\color{blue}\includegraphics[height=3cm]{img2}}\pause
+
+\Put(50,50){\color{blue}\includegraphics[height=3cm]{img2}}\pause
+
+\Put(100,100){\color{red}\includegraphics[height=3cm]{img3}}
+\end{frame}
+
+\begin{frame}[noframenumbering]{Simba Architecture}
+  Simba is an extension of Spark SQL across the system stack.
+  \centering
+  \begin{minipage}{.75\linewidth} 
+    \begin{tikzpicture}
+      \node[anchor=south west,inner sep=0] at (0,0) {\includegraphics[clip, trim=2cm 21.75cm 11.1cm 1cm, page=4, width=\linewidth]{simba_paper}};
+      \draw[blue,very thick,rounded corners] (4.4,1.85) rectangle (9,2.32);
+      \draw[red,very thick,rounded corners] (2.06,2.37) rectangle (9,2.83);
+      \draw[magenta,very thick,rounded corners] (0,2.88) rectangle (9,3.35);
+      \draw[olive,very thick,rounded corners] (0,3.4) rectangle (9,3.85);
+    \end{tikzpicture}
+  \end{minipage}
+  \begin{minipage}{.21\linewidth} \tiny \color{blue}Indexing \\ \color{red} New query optimizations \\ \color{magenta} Efficient spatial operators \\ \color{olive} Programming interface \end{minipage}  
+\end{minipage}  
+\end{frame}
+
+\end{document}
