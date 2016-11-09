@@ -5,6 +5,7 @@
 \usepackage{animate}
 \usepackage{graphicx}
 \def\Put(#1,#2)#3{\leavevmode\makebox(0,0){\put(#1,#2){#3}}}
+\usepackage{tikz}
 
 \definecolor{LightGray}{gray}{0.9}
 
@@ -104,24 +105,42 @@
   \begin{itemize}
     \item There has been an explosion in the amount of spatial data in recent years...
   \end{itemize} \vspace{3cm}
-  \Put(60,10)  {\includegraphics[width=3cm, height=3cm]{Figures/img1.png}}
+  \Put(60,0)  {\includegraphics[width=3cm, height=3cm]{Figures/autonomous_cars.jpg}}
 \end{frame}
 
 \begin{frame}[noframenumbering]{Introduction}
   \begin{itemize}
     \item There has been an explosion in the amount of spatial data in recent years...
   \end{itemize} \vspace{3cm}
-  \Put(60,10)  {\includegraphics[width=3cm, height=3cm]{Figures/img1.png}}
-  \Put(100,50)  {\includegraphics[width=3cm, height=3cm]{Figures/img2.jpg}}
+  \Put(60,0)  {\includegraphics[width=3cm, height=3cm]{Figures/autonomous_cars.jpg}}
+  \Put(100,40)  {\includegraphics[width=3cm, height=3cm]{Figures/survillance.png}}
 \end{frame}
 
 \begin{frame}[noframenumbering]{Introduction}
   \begin{itemize}
     \item There has been an explosion in the amount of spatial data in recent years...
   \end{itemize} \vspace{3cm}
-  \Put(60,10)  {\includegraphics[width=3cm, height=3cm]{Figures/img1.png}}
-  \Put(100,50)  {\includegraphics[width=3cm, height=3cm]{Figures/img2.jpg}}
-  \Put(150,100){\includegraphics[width=3cm, height=3cm]{Figures/img3.jpg}}
+  \Put(60,0)  {\includegraphics[width=3cm, height=3cm]{Figures/autonomous_cars.jpg}}
+  \Put(100,40)  {\includegraphics[width=3cm, height=3cm]{Figures/survillance.png}}
+  \Put(150,90){\includegraphics[width=3cm, height=3cm]{Figures/urban_planning.png}}
+\end{frame}
+
+\begin{frame}[noframenumbering]{Introduction}
+  \begin{itemize}
+    \item There has been an explosion in the amount of spatial data in recent years...
+  \end{itemize} \vspace{3cm}
+  \Put(60,0)  {\includegraphics[width=3cm, height=3cm]{Figures/autonomous_cars.jpg}}
+  \Put(100,40)  {\includegraphics[width=3cm, height=3cm]{Figures/survillance.png}}
+  \Put(150,90){\includegraphics[width=3cm, height=3cm]{Figures/urban_planning.png}}
+  \Put(200,140){\includegraphics[width=3cm, height=3cm]{Figures/agricultural.png}}
+\end{frame}
+
+\begin{frame}{Introduction}
+  \begin{itemize}
+    \item The applications and commercial interest is clear...
+  \end{itemize}
+  \centering
+  \includegraphics[width=0.75\linewidth]{Figures/apps.png}
 \end{frame}
 
 \begin{frame}{Introduction}
@@ -129,7 +148,23 @@
     \item But remember that ``Spatial is Special''...
   \end{itemize}
   \centering
-  \includegraphics[width=0.75\linewidth]{Figures/logos.png}
+  \includegraphics[clip, trim=0cm 5.75cm 0cm 0cm, width=0.75\linewidth]{Figures/logos.png}
+\end{frame}
+
+\begin{frame}[noframenumbering]{Introduction}
+  \begin{itemize}
+    \item But remember that ``Spatial is Special''...
+  \end{itemize}
+  \centering
+  \includegraphics[clip, trim=0cm 2.4cm 0cm 0cm, width=0.75\linewidth]{Figures/logos.png}
+\end{frame}
+
+\begin{frame}[noframenumbering]{Introduction}
+  \begin{itemize}
+    \item But remember that ``Spatial is Special''...
+  \end{itemize}
+  \centering
+  \includegraphics[clip, trim=0cm 0cm 0cm 0cm, width=0.75\linewidth]{Figures/logos.png}
 \end{frame}
 
 \begin{frame}{Introduction}
@@ -140,15 +175,96 @@
   \includegraphics[width=0.3\linewidth]{Figures/simba-logo.png}
 \end{frame}
 
+\begin{frame}{Introduction}
+\begin{itemize}
+\item Problems of Existing Systems...
+  \begin{itemize}
+    \item Single node database (low scalability) \\
+	  \scriptsize{ArcGIS, PostGIS, Oracle Spatial.}
+    \item \normalsize Disk-oriented cluster computation (low performance) \\
+	  \scriptsize{Hadoop-GIS, SpatialHadoop, GeoMesa.}
+    \item \normalsize No native support for spatial operators \\
+	  \scriptsize{Spark SQL, MemSQL}
+    \item \normalsize No sophisticated query planner and optimizer \\
+	  \scriptsize{SpatialSpark, GeoSpark}
+  \end{itemize}
+\end{itemize}
+\end{frame}
 
-\section{Computational Geometry Operations}
+\begin{frame}{Introduction}
+  \begin{itemize}
+    \item Simba: \textbf{S}patial \textbf{I}n \textbf{M}emory \textbf{B}ig data \textbf{A}nalytics.
+    \begin{enumerate}
+     \item Extends Spark SQL to support spatial queries and offers simple APIs for both SQL and DataFrame.\pause
+     \item Support two-layer spatial indexing over RDDs (low latency).\pause
+     \item Designs a SQL context to run important spatial operations in parallel (high throughput).\pause
+     \item Introduces spatial-aware and cost-based optimizations to select good spatial plans.
+    \end{enumerate}
+  \end{itemize}
+\end{frame}
 
-\subsection{Union}
+\begin{frame}{Introduction}
+  \centering
+  \includegraphics[clip, trim=1cm 20cm 10cm 1cm, page=3, width=0.9\linewidth]{simba_paper}
+\end{frame}
+
+\section{Simba Architecture Overview}
+
+\begin{frame}[fragile]{Spark SQL Overview}
+  Spark SQL is Apache Spark's module for working with structured data.\pause
+  \begin{itemize}
+   \item Seamlessly mixes SQL queries with Spark programs.\pause
+   \item Connects to any data source the same way.\pause
+   \item Includes a highly extensible cost-based optimizer (\textit{Catalyst}).\pause
+   \item Spark SQL is a full-fledged query engine based on the underlying Spark core.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Spark SQL Overview}
+  \centering
+  \begin{minted}[fontsize=\tiny,tabsize=8,breaklines,framesep=10pt,frame=single]{python}
+	# Apply functions to results of SQL queries.
+	context = HiveContext(sc)
+	results = context.sql("""
+				SELECT 
+					* 
+				FROM 
+					people""")
+	names = results.map(lambda p: p.name)
+	# Query and join different data sources.
+	context.jsonFile("s3n://...").registerTempTable("json")
+	results = context.sql("""
+				SELECT 
+				      * 
+				FROM 
+				      people
+				JOIN 
+				      json ...""")
+  \end{minted}
+\end{frame}
+
+\begin{frame}{Simba Architecture}
+  Simba is an extension of Spark SQL across the system stack.
+  \centering
+  \begin{minipage}{.75\linewidth} 
+    \begin{tikzpicture}
+      \node[anchor=south west,inner sep=0] at (0,0) {\includegraphics[clip, trim=2cm 21.75cm 11.1cm 1cm, page=4, width=\linewidth]{simba_paper}};
+      \draw[red,very thick,rounded corners] (0,3.43) rectangle (9,3.93);
+    \end{tikzpicture}
+  \end{minipage}
+  \begin{minipage}{.21\linewidth} \tiny 1.Programming interface \\ 2.Table indexing \\ 3.Efficient spatial operators \\ 4.New query optimizations \end{minipage}  
+\end{frame}
+
+\subsection{Programming Interface}
 
 
-\subsection{Skyline}
+\subsection{Indexing}
 
-\subsection{Convex Hull}
+
+\subsection{Spatial Operations}
+
+
+\subsection{Optimization}
 
 
 \section{Experiments}

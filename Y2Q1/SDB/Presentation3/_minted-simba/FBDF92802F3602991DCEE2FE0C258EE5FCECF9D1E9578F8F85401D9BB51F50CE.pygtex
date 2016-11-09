@@ -1,0 +1,19 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+	\PYGdefault{c+c1}{\PYGdefaultZsh{} Apply functions to results of SQL queries.}
+	\PYGdefault{n}{context} \PYGdefault{o}{=} \PYGdefault{n}{HiveContext}\PYGdefault{p}{(}\PYGdefault{n}{sc}\PYGdefault{p}{)}
+	\PYGdefault{n}{results} \PYGdefault{o}{=} \PYGdefault{n}{context}\PYGdefault{o}{.}\PYGdefault{n}{sql}\PYGdefault{p}{(}\PYGdefault{l+s+s2}{\PYGdefaultZdq{}\PYGdefaultZdq{}\PYGdefaultZdq{}}
+\PYGdefault{l+s+s2}{				SELECT}
+\PYGdefault{l+s+s2}{					*}
+\PYGdefault{l+s+s2}{				FROM}
+\PYGdefault{l+s+s2}{					people\PYGdefaultZdq{}\PYGdefaultZdq{}\PYGdefaultZdq{}}\PYGdefault{p}{)}
+	\PYGdefault{n}{names} \PYGdefault{o}{=} \PYGdefault{n}{results}\PYGdefault{o}{.}\PYGdefault{n}{map}\PYGdefault{p}{(}\PYGdefault{k}{lambda} \PYGdefault{n}{p}\PYGdefault{p}{:} \PYGdefault{n}{p}\PYGdefault{o}{.}\PYGdefault{n}{name}\PYGdefault{p}{)}
+	\PYGdefault{c+c1}{\PYGdefaultZsh{} Query and join different data sources.}
+	\PYGdefault{n}{context}\PYGdefault{o}{.}\PYGdefault{n}{jsonFile}\PYGdefault{p}{(}\PYGdefault{l+s+s2}{\PYGdefaultZdq{}s3n://...\PYGdefaultZdq{}}\PYGdefault{p}{)}\PYGdefault{o}{.}\PYGdefault{n}{registerTempTable}\PYGdefault{p}{(}\PYGdefault{l+s+s2}{\PYGdefaultZdq{}json\PYGdefaultZdq{}}\PYGdefault{p}{)}
+	\PYGdefault{n}{results} \PYGdefault{o}{=} \PYGdefault{n}{context}\PYGdefault{o}{.}\PYGdefault{n}{sql}\PYGdefault{p}{(}\PYGdefault{l+s+s2}{\PYGdefaultZdq{}\PYGdefaultZdq{}\PYGdefaultZdq{}}
+\PYGdefault{l+s+s2}{				SELECT}
+\PYGdefault{l+s+s2}{				      *}
+\PYGdefault{l+s+s2}{				FROM}
+\PYGdefault{l+s+s2}{				      people}
+\PYGdefault{l+s+s2}{				JOIN}
+\PYGdefault{l+s+s2}{				      json ...\PYGdefaultZdq{}\PYGdefaultZdq{}\PYGdefaultZdq{}}\PYGdefault{p}{)}
+\end{Verbatim}
