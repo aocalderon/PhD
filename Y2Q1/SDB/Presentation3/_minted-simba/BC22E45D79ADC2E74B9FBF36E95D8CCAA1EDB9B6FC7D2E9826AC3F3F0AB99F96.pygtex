@@ -1,0 +1,10 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{SELECT}
+\PYG{o}{*}
+\PYG{k}{FROM}
+\PYG{n}{drones} \PYG{k}{AS} \PYG{n}{d1}
+\PYG{n}{DISTANCE} \PYG{k}{JOIN}
+\PYG{n}{drones} \PYG{k}{AS} \PYG{n}{d2}
+\PYG{k}{ON}
+\PYG{n}{POINT}\PYG{p}{(}\PYG{n}{d2}\PYG{p}{.}\PYG{n}{x}\PYG{p}{,} \PYG{n}{d2}\PYG{p}{.}\PYG{n}{y}\PYG{p}{,} \PYG{n}{d2}\PYG{p}{.}\PYG{n}{z}\PYG{p}{)} \PYG{k}{IN} \PYG{n}{CIRCLERANGE}\PYG{p}{(}\PYG{n}{POINT}\PYG{p}{(}\PYG{n}{d1}\PYG{p}{.}\PYG{n}{x}\PYG{p}{,} \PYG{n}{d1}\PYG{p}{.}\PYG{n}{y}\PYG{p}{,} \PYG{n}{d1}\PYG{p}{.}\PYG{n}{z}\PYG{p}{),} \PYG{l+m+mi}{20}\PYG{p}{.}\PYG{l+m+mi}{0}\PYG{p}{).}
+\end{Verbatim}
