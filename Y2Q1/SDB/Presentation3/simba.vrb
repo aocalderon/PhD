@@ -1,21 +1,8 @@
-\frametitle{Spark SQL Overview}
+\frametitle{Two-level indexing strategy}
 \centering
-  \begin{minted}[fontsize=\tiny,tabsize=8,breaklines,framesep=10pt,frame=single]{python}
-	# Apply functions to results of SQL queries.
-	context = HiveContext(sc)
-	results = context.sql("""
-				SELECT
-					*
-				FROM
-					people""")
-	names = results.map(lambda p: p.name)
-	# Query and join different data sources.
-	context.jsonFile("s3n://...").registerTempTable("json")
-	results = context.sql("""
-				SELECT
-				      *
-				FROM
-				      people
-				JOIN
-				      json ...""")
+  \includegraphics[page=6,clip,trim=2cm 21.5cm 11.5cm 2.2cm,height=0.55\textheight]{simba_paper}
+  \vspace{0.5cm}
+  \begin{minted}[fontsize=\small,tabsize=6,breaklines,framesep=3pt,frame=single,escapeinside=~~,mathescape=true]{sql}
+    CREATE INDEX idx_name ON R(~$x_1, ... , x_m$~) USE idx_type
+    DROP INDEX idx_name ON table_name
   \end{minted}
