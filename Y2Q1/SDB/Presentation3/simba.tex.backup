@@ -5,6 +5,7 @@
 \usepackage{animate}
 \usepackage{graphicx}
 \def\Put(#1,#2)#3{\leavevmode\makebox(0,0){\put(#1,#2){#3}}}
+\usepackage{color}
 \usepackage{tikz}
 
 \definecolor{LightGray}{gray}{0.9}
@@ -247,82 +248,205 @@
   Simba is an extension of Spark SQL across the system stack.
   \centering
   \begin{minipage}{.75\linewidth} 
+    \includegraphics[clip, trim=2cm 21.75cm 11.1cm 1cm, page=4, width=\linewidth]{simba_paper}
+  \end{minipage}
+  \begin{minipage}{.21\linewidth} \tiny \color{white} Indexing \\ Optimizations \\ Spatial operations \\ Programming interface \end{minipage}  
+\end{frame}
+
+\begin{frame}[noframenumbering]{Simba Architecture}
+  Simba is an extension of Spark SQL across the system stack.
+  \centering
+  \begin{minipage}{.75\linewidth} 
     \begin{tikzpicture}
       \node[anchor=south west,inner sep=0] at (0,0) {\includegraphics[clip, trim=2cm 21.75cm 11.1cm 1cm, page=4, width=\linewidth]{simba_paper}};
-      \draw[red,very thick,rounded corners] (0,3.43) rectangle (9,3.93);
+      \draw[blue,very thick,rounded corners] (4.4,1.85) rectangle (8.95,2.32);
+      \draw[blue,very thick,rounded corners] (2.07,2.37) rectangle (4.04,2.83);
     \end{tikzpicture}
   \end{minipage}
-  \begin{minipage}{.21\linewidth} \tiny 1.Programming interface \\ 2.Table indexing \\ 3.Efficient spatial operators \\ 4.New query optimizations \end{minipage}  
+  \begin{minipage}{.21\linewidth} \tiny \color{blue} Indexing \\ \color{white} Optimizations \\ Spatial operations \\ Programming interface \end{minipage}  
+\end{frame}
+
+\begin{frame}[noframenumbering]{Simba Architecture}
+  Simba is an extension of Spark SQL across the system stack.
+  \centering
+  \begin{minipage}{.75\linewidth} 
+    \begin{tikzpicture}
+      \node[anchor=south west,inner sep=0] at (0,0) {\includegraphics[clip, trim=2cm 21.75cm 11.1cm 1cm, page=4, width=\linewidth]{simba_paper}};
+      \draw[blue,very thick,rounded corners] (4.4,1.85) rectangle (8.95,2.32);
+      \draw[blue,very thick,rounded corners] (2.07,2.37) rectangle (4.04,2.83);
+      \draw[red,very thick,rounded corners] (4.08,2.37) rectangle (8.95,2.83);
+    \end{tikzpicture}
+  \end{minipage}
+  \begin{minipage}{.21\linewidth} \tiny \color{blue} Indexing \\ \color{red} Optimizations \\ \color{white} Spatial operations \\ Programming interface \end{minipage}  
+\end{frame}
+
+\begin{frame}[noframenumbering]{Simba Architecture}
+  Simba is an extension of Spark SQL across the system stack.
+  \centering
+  \begin{minipage}{.75\linewidth} 
+    \begin{tikzpicture}
+      \node[anchor=south west,inner sep=0] at (0,0) {\includegraphics[clip, trim=2cm 21.75cm 11.1cm 1cm, page=4, width=\linewidth]{simba_paper}};
+      \draw[blue,very thick,rounded corners] (4.4,1.85) rectangle (8.95,2.32);
+      \draw[blue,very thick,rounded corners] (2.07,2.37) rectangle (4.04,2.83);
+      \draw[red,very thick,rounded corners] (4.08,2.37) rectangle (8.95,2.83);
+      \draw[magenta,very thick,rounded corners] (0.03,2.88) rectangle (8.95,3.35);
+    \end{tikzpicture}
+  \end{minipage}
+  \begin{minipage}{.21\linewidth} \tiny \color{blue} Indexing \\ \color{red} Optimizations \\ \color{magenta} Spatial operations \\ \color{white} Programming interface \end{minipage}  
+\end{frame}
+
+\begin{frame}[noframenumbering]{Simba Architecture}
+  Simba is an extension of Spark SQL across the system stack.
+  \centering
+  \begin{minipage}{.75\linewidth} 
+    \begin{tikzpicture}
+      \node[anchor=south west,inner sep=0] at (0,0) {\includegraphics[clip, trim=2cm 21.75cm 11.1cm 1cm, page=4, width=\linewidth]{simba_paper}};
+      \draw[blue,very thick,rounded corners] (4.4,1.85) rectangle (8.95,2.32);
+      \draw[blue,very thick,rounded corners] (2.07,2.37) rectangle (4.04,2.83);
+      \draw[red,very thick,rounded corners] (4.08,2.37) rectangle (8.95,2.83);
+      \draw[magenta,very thick,rounded corners] (0.03,2.88) rectangle (8.95,3.35);
+      \draw[olive,very thick,rounded corners] (0.03,3.4) rectangle (8.95,3.85);
+    \end{tikzpicture}
+  \end{minipage}
+  \begin{minipage}{.21\linewidth} \tiny \color{blue}Indexing \\ \color{red} Optimizations \\ \color{magenta} Spatial operations \\ \color{olive} Programming interface \end{minipage}  
+\end{frame}
+
+\begin{frame}{Query Load in Simba}
+  \centering
+  \includegraphics[clip, trim=10.5cm 22.2cm 1cm 1cm, page=4, width=\linewidth]{simba_paper}
 \end{frame}
 
 \subsection{Programming Interface}
 
+\begin{frame}[fragile]{Programming Interface}
+  Support rich query types natively in the kernel...\\ \\
+  \centering
+  \begin{minipage}{.45\linewidth} 
+  \begin{minted}[fontsize=\scriptsize,tabsize=5,breaklines,framesep=3pt,frame=single]{sql}
+SELECT 
+	*
+FROM 
+	points
+SORT BY 
+	(x - 2) * (x - 2) + 
+	(y - 3) * (y - 3)
+LIMIT 
+	5
+  \end{minted}
+  \end{minipage} $\Longrightarrow$
+  \begin{minipage}{.45\linewidth}  
+  \begin{minted}[fontsize=\scriptsize,tabsize=5,breaklines,framesep=3pt,frame=single]{sql}  
+SELECT 
+	*
+FROM 
+	points
+WHERE 
+	POINT(x, y) IN 
+		KNN(POINT(2, 3), 5)
+  \end{minted}
+  \end{minipage}
+\end{frame}
+
+\begin{frame}[fragile]{Programming Interface}
+  Achieve something that is impossible in Spark SQL...\\ 
+  \centering
+  \begin{minted}[fontsize=\small,tabsize=6,breaklines,framesep=3pt,frame=single]{sql}
+SELECT 
+	*
+FROM 
+	queries q 
+KNN JOIN 
+	pois p
+ON 
+	POINT(p.x, p.y) IN KNN(POINT(q.x, q.y), 3)
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]{Programming Interface}
+  Fully compatible with standard SQL operators...\\ 
+  \centering
+  \begin{minted}[fontsize=\scriptsize,tabsize=6,breaklines,framesep=3pt,frame=single]{sql}
+SELECT 
+	p.id, count(*) AS n
+FROM 
+	pois AS p
+DISTANCE JOIN 
+	restaurants AS r
+ON 
+	POINT(r.lat, r.lng) IN CIRCLERANGE(POINT(p.lat, p.lng), 200.0)
+GROUP BY 
+	p.id
+ORDER BY 
+	n
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]{Programming Interface}
+  Same level of flexibility for DataFrames...\\ 
+  \centering
+  \begin{minted}[fontsize=\scriptsize,tabsize=6,breaklines,framesep=3pt,frame=single]{python}
+pois.distanceJoin(restaurants, Point(pois("lat"), pois("lng")), 
+			Point(restaurants("lat"), restaurants("lng")), 3.0)
+	.groupBy(pois("id"))
+	.agg(count("*").as("n"))
+	.sort("n").show()
+  \end{minted}
+\end{frame}
 
 \subsection{Indexing}
 
+\begin{frame}{Table Indexing}
+\begin{itemize}
+ \item In Spark SQL:
+ \begin{itemize}
+  \item \texttt{Record} $\rightarrow$ \texttt{Row}
+  \item  \texttt{Table} $\rightarrow$ \texttt{RDD[Row]}
+ \end{itemize} \item Spark SQL makes a full scan of RDDs.
+ \begin{itemize}
+  \item Inefficient for spatial queries!!!
+ \end{itemize}
+ \item Solution: native \textbf{two-level} indexing over RDDs
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Table Indexing}
+\begin{itemize}
+ \item \textbf{\texttt{IndexRDD}}
+ \begin{itemize}
+  \item Pack all \texttt{Row} objects within a RDD partition into an array.
+ \end{itemize}
+
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]{Two-level indexing strategy}
+  \centering 
+  \includegraphics[page=6,clip,trim=2cm 21.5cm 11.5cm 2.2cm,height=0.55\textheight]{simba_paper}
+  \vspace{0.5cm}
+  \begin{minted}[fontsize=\small,tabsize=6,breaklines,framesep=3pt,frame=single,escapeinside=~~,mathescape=true]{sql}
+    CREATE INDEX idx_name ON R(~$x_1, ... , x_m$~) USE idx_type
+    DROP INDEX idx_name ON table_name
+  \end{minted}
+\end{frame}
 
 \subsection{Spatial Operations}
 
-
 \subsection{Optimization}
 
-
 \section{Experiments}
-
-\begin{frame}{Setup}
-\begin{itemize}
- \item Cluster of 25 nodes:
- \begin{itemize}
-  \item HDD from 50GB to 200GB.
-  \item RAM from 2GB to 8GB.
-  \item Processors 2.2GHz to 3GHz
- \end{itemize}
- \item Single machine:
- \begin{itemize}
-  \item HDD 2TB.
-  \item RAM 16GB.
-  \item Processor 3.4GHz.
- \end{itemize}
-\end{itemize}
-\end{frame}
-
-\begin{frame}{Datasets}
-\begin{itemize}
- \item Real datasets (from OpenStreetMap):
- \begin{itemize}
-  \item OSM1: 164M polygons, 80GB.
-  \item OSM2: 1.7B points, 52GB.
- \end{itemize}
- \item Synthetic dataset:
- \begin{itemize}
-  \item SYNTH: 3.8B points, 128GB.
-  \item Five different distributions.
- \end{itemize}
-\end{itemize}
-  \centering
-  \includegraphics[width=0.5\linewidth]{Figures/img2.jpg} \\
-\end{frame}
 
 \section{Conclusions}
 
 \begin{frame}{Conclusions}
   \begin{itemize}
-    \item This paper introduced CG\_Hadoop as a scalable and efficient MapReduce library.
-    \item Focused on 5 fundamental computational geometry problems...
-    \begin{itemize}
-      \item Polygon union, Skyline, Convex hull, Farthest and Closest Pairs.
-    \end{itemize}
-    \item Provided versions for Apache Hadoop and SpatialHadoop systems.
-    \item Distributed approach speed up performance.
-    \item Spatial partitioning allows early pruning which make it even more efficient. 
-    \item Achieve up to 29x and 260x better performance.
+    \item  
   \end{itemize}
 \end{frame}
 
 \begin{frame}{Future ideas}
   \begin{itemize}
-    \item Working on more complex operations, for example motion patterns.
-    \item Explore ports to new distributed platforms such as Spark or Simba.
+    \item 
   \end{itemize}
 \end{frame}
 

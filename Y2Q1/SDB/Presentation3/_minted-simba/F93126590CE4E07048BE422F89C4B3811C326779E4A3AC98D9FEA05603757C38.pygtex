@@ -1,0 +1,14 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGdefault{k}{SELECT}
+	\PYGdefault{n}{p}\PYGdefault{p}{.}\PYGdefault{n}{id}\PYGdefault{p}{,} \PYGdefault{k}{count}\PYGdefault{p}{(}\PYGdefault{o}{*}\PYGdefault{p}{)} \PYGdefault{k}{AS} \PYGdefault{n}{n}
+\PYGdefault{k}{FROM}
+	\PYGdefault{n}{pois} \PYGdefault{k}{AS} \PYGdefault{n}{p}
+\PYGdefault{n}{DISTANCE} \PYGdefault{k}{JOIN}
+	\PYGdefault{n}{restaurants} \PYGdefault{k}{AS} \PYGdefault{n}{r}
+\PYGdefault{k}{ON}
+	\PYGdefault{n}{POINT}\PYGdefault{p}{(}\PYGdefault{n}{r}\PYGdefault{p}{.}\PYGdefault{n}{lat}\PYGdefault{p}{,} \PYGdefault{n}{r}\PYGdefault{p}{.}\PYGdefault{n}{lng}\PYGdefault{p}{)} \PYGdefault{k}{IN} \PYGdefault{n}{CIRCLERANGE}\PYGdefault{p}{(}\PYGdefault{n}{POINT}\PYGdefault{p}{(}\PYGdefault{n}{p}\PYGdefault{p}{.}\PYGdefault{n}{lat}\PYGdefault{p}{,} \PYGdefault{n}{p}\PYGdefault{p}{.}\PYGdefault{n}{lng}\PYGdefault{p}{),} \PYGdefault{l+m+mi}{200}\PYGdefault{p}{.}\PYGdefault{l+m+mi}{0}\PYGdefault{p}{)}
+\PYGdefault{k}{GROUP} \PYGdefault{k}{BY}
+	\PYGdefault{n}{p}\PYGdefault{p}{.}\PYGdefault{n}{id}
+\PYGdefault{k}{ORDER} \PYGdefault{k}{BY}
+	\PYGdefault{n}{n}
+\end{Verbatim}
