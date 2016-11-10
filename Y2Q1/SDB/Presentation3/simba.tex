@@ -7,6 +7,7 @@
 \def\Put(#1,#2)#3{\leavevmode\makebox(0,0){\put(#1,#2){#3}}}
 \usepackage{color}
 \usepackage{tikz}
+\usepackage{amssymb}
 
 \definecolor{LightGray}{gray}{0.9}
 
@@ -149,7 +150,7 @@
     \item But remember that ``Spatial is Special''...
   \end{itemize}
   \centering
-  \includegraphics[clip, trim=0cm 5.75cm 0cm 0cm, width=0.75\linewidth]{Figures/logos.png}
+  \includegraphics[clip, trim=0cm 5.6cm 0cm 0cm, width=0.75\linewidth]{Figures/logos.png}
 \end{frame}
 
 \begin{frame}[noframenumbering]{Introduction}
@@ -206,24 +207,24 @@
 
 \begin{frame}{Introduction}
   \centering
-  \includegraphics[clip, trim=1cm 20cm 10cm 1cm, page=3, width=0.9\linewidth]{simba_paper}
+  \includegraphics[clip, trim=1cm 20.5cm 10cm 1cm, page=3, width=0.9\linewidth]{simba_paper}
 \end{frame}
 
 \section{Simba Architecture Overview}
 
-\begin{frame}[fragile]{Spark SQL Overview}
+\begin{frame}{Spark SQL Overview}
   Spark SQL is Apache Spark's module for working with structured data.\pause
   \begin{itemize}
-   \item Seamlessly mixes SQL queries with Spark programs.\pause
-   \item Connects to any data source the same way.\pause
-   \item Includes a highly extensible cost-based optimizer (\textit{Catalyst}).\pause
+   \item Seamlessly mixes SQL queries with Spark programs.
+   \item Connects to any data source the same way.
+   \item Includes a highly extensible cost-based optimizer (\textit{Catalyst}).
    \item Spark SQL is a full-fledged query engine based on the underlying Spark core.
   \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]{Spark SQL Overview}
   \centering
-  \begin{minted}[fontsize=\tiny,tabsize=8,breaklines,framesep=10pt,frame=single]{python}
+  \begin{minted}[fontsize=\footnotesize,tabsize=8,breaklines,framesep=10pt,frame=single]{python}
 	# Apply functions to results of SQL queries.
 	context = HiveContext(sc)
 	results = context.sql("""
@@ -313,7 +314,7 @@
 
 \begin{frame}{Query Load in Simba}
   \centering
-  \includegraphics[clip, trim=10.5cm 22.2cm 1cm 1cm, page=4, width=\linewidth]{simba_paper}
+  \includegraphics[clip, trim=10.5cm 22.7cm 1cm 1cm, page=4, width=\linewidth]{simba_paper}
 \end{frame}
 
 \subsection{Programming Interface}
@@ -400,7 +401,7 @@ pois.distanceJoin(restaurants, Point(pois("lat"), pois("lng")),
  \item In Spark SQL:
  \begin{itemize}
   \item \texttt{Record} $\rightarrow$ \texttt{Row}
-  \item  \texttt{Table} $\rightarrow$ \texttt{RDD[Row]}
+  \item \texttt{Table} $\rightarrow$ \texttt{RDD[Row]}
  \end{itemize} \item Spark SQL makes a full scan of RDDs.
  \begin{itemize}
   \item Inefficient for spatial queries!!!
@@ -423,17 +424,34 @@ pois.distanceJoin(restaurants, Point(pois("lat"), pois("lng")),
   \begin{itemize}
    \item \mintinline{scala}{type IndexRDD[Row] = RDD[IPartition[Row]]}
   \end{itemize}
-
-
  \end{itemize}
-
 \end{itemize}
 \end{frame}
 
+\begin{frame}{Three-Phases Index Construction}
+  \begin{itemize}\pause
+  \item \textbf{Partition}
+    \begin{itemize}
+      \item Concerns: Partition size, Data locality and Load balancing.
+      \item \texttt{Partitioner} abstract class.
+      \item STRPartitioner (based on Sort-Tile-Recursive algorithm).
+    \end{itemize}\pause
+  \item \textbf{Local Index}
+    \begin{itemize}
+      \item \texttt{RDD[Row]} $\rightarrow$ \texttt{IndexRDD[Row]}.
+      \item Collects statistics from each partition (number of records, partition boundaries, ...).
+    \end{itemize}\pause
+  \item \textbf{Global Index}
+    \begin{itemize}
+      \item Enables to prune irrelevant partitions.
+      \item Can use different types of indexes and keep them in memory.
+    \end{itemize}    
+  \end{itemize}
+\end{frame}
 
 \begin{frame}[fragile]{Two-level indexing strategy}
   \centering 
-  \includegraphics[page=6,clip,trim=2cm 21.5cm 11.5cm 2.2cm,height=0.55\textheight]{simba_paper}
+  \includegraphics[page=6,clip,trim=2cm 22cm 11.5cm 2.2cm,height=0.55\textheight]{simba_paper}
   \vspace{0.5cm}
   \begin{minted}[fontsize=\small,tabsize=6,breaklines,framesep=3pt,frame=single,escapeinside=~~,mathescape=true]{sql}
     CREATE INDEX idx_name ON R(~$x_1, ... , x_m$~) USE idx_type
@@ -443,21 +461,208 @@ pois.distanceJoin(restaurants, Point(pois("lat"), pois("lng")),
 
 \subsection{Spatial Operations}
 
+\begin{frame}{Range Queries}
+  \begin{itemize}
+   \item $range(Q,R)$
+   \item Two steps: Global filtering + Local processing.
+  \end{itemize}
+  \centering 
+  \includegraphics[clip,trim=7cm 4cm 7cm 6.5cm,height=0.45\textheight]{Figures/range}
+\end{frame}
+
+\begin{frame}{kNN Queries}
+  \begin{itemize}
+   \item $kNN(q,R)$
+   \item Good performance thanks to:
+   \begin{itemize}
+    \item Local indexes.
+    \item Pruning bound that is sufficient to cover global kNN results.
+   \end{itemize}
+  \end{itemize}
+  \centering 
+  \includegraphics[page=6,clip,trim=11.5cm 22.4cm 2cm 2cm,height=0.45\textheight]{simba_paper}
+\end{frame}
+
+\begin{frame}{Distance Join}
+  \begin{itemize}
+   \item $R \Join_\tau S$
+   \item DJSpark algorithm.
+  \end{itemize}  
+  \centering 
+  \includegraphics[page=7,clip,trim=11.5cm 22.6cm 2cm 2cm,width=\textwidth]{simba_paper}
+\end{frame}
+
+\begin{frame}{kNN Join}
+  \begin{itemize}
+   \item $R \Join_{kNN} S$
+   \item General methodology:
+    \begin{enumerate}
+      \item Producing buckets: R and S are divided into $n_1$ ($n_2$) equal-sized blocks.  Every pair of blocks $(R_i,S_j)$ are shuffled to a bucket.
+      \item Local kNN join:Performs $kNN(r,S_j)$ for every $r \in R$
+      \item Merge: Finds global $kNN$ of every $r \in R$ among its $n_2k$ local $kNNs$.
+    \end{enumerate}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{kNN Join}
+  \begin{itemize}
+   \item $R \Join_{kNN} S$
+   \item Explores several methods:
+   \begin{itemize}
+    \item BKJSpark-N: Block nested loop $kNN$ join in Spark.
+    \item BKJSpark-R: Block R-tree $kNN$ join in Spark.
+    \item VKJSpark: Voronoi $kNN$ join in Spark.
+    \item ZKJSpark: z-value $kNN$ join in Spark.
+    \item RKJSpark: R-tree $kNN$ join in Spark.
+   \end{itemize}
+  \end{itemize}
+\end{frame}
+
 \subsection{Optimization}
 
+\begin{frame}{Query Optimizer}
+  \begin{itemize}
+   \item Index and geometry-awareness optimizations.
+   \item Index scan optimization: for better index utilization.
+   \item Selectivity estimation + Cost-based Optimization.
+   \begin{itemize}
+    \item Selectivity estimation over local indexes
+    \item Choose a proper plan: scan or use index.
+   \end{itemize}
+   \item Spatial predicates merging
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Query Optimizer}
+  \centering
+  \includegraphics[page=8,clip,trim=11.6cm 22.5cm 2.5cm 2cm,width=\textwidth]{simba_paper}
+\end{frame}
+
+\begin{frame}{Query Optimizer}
+  \begin{itemize}
+   \item Partition size auto-tuning.
+   \begin{itemize}
+    \item Data locality and load balancing through a good partitioner (STR Partitioner).
+    \item Memory fitness using record-size estimator.
+   \end{itemize}
+   \item Broadcast join optimization: small table joins large table.
+   \item Logical partitioning optimization for kNN joins.
+   \begin{itemize}
+    \item Provides tighter pruning bounds.
+   \end{itemize}
+   \end{itemize}
+\end{frame}
+
 \section{Experiments}
+
+\begin{frame}{Setup}
+  \begin{itemize}
+    \item 10 nodes cluster
+    \item Processors: 6-core Intel Xeon E5 (1.6 to 2.0 GHz)
+    \item RAM: 20 to 56 GB.
+    \item Ubuntu 14.04 LTS, Hadoop 2.4.1, Spark 1.3.0
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Datasets}
+  \begin{itemize}
+    \item OSM (OpenStreetMap)
+    \begin{itemize}
+     \item 2.2 Billion records, 132GB.
+     \item Five fields: ID, a two-dimensional coordinate and two text information.
+    \end{itemize}
+    \item GDEL (Global Data on Events, Language and Tone)
+    \begin{itemize}
+     \item 75 Million records
+     \item Seven attributes: timestamp, three two-dimensional coordinates (start, end and action of the event).
+    \end{itemize}
+    \item RC (Synthetic dataset)
+    \begin{itemize}
+     \item 1 Million to 1 Billion records, 2 to 6 dimensions.
+     \item Clusters randomly generated using Gaussian distributions.
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\subsection{Comparison with Existing Systems}
+\begin{frame}{Range and kNN Operations (OSM)}
+  \centering
+  \includegraphics[page=10,clip,trim=11cm 23.1cm 2.5cm 1.8cm,width=\textwidth]{simba_paper}
+\end{frame}
+
+\begin{frame}{Join Operations (OSM)}
+  \centering
+  \includegraphics[page=10,clip,trim=11cm 13cm 6.5cm 12.5cm,width=0.8\textwidth]{simba_paper}
+\end{frame}
+
+\begin{frame}{Index Construction Time (OSM)}
+  \centering
+  \includegraphics[page=10,clip,trim=2cm 23.3cm 15.5cm 1.8cm,width=0.8\textwidth]{simba_paper}
+\end{frame}
+
+\begin{frame}{Index Storage Overhead (OSM)}
+  \centering
+  \includegraphics[page=10,clip,trim=2cm 19.5cm 11.3cm 5.5cm,width=\textwidth]{simba_paper}
+\end{frame}
+
+\subsection{Comparison against Spark SQL}
+
+\begin{frame}{Range Query Performance (OSM)}
+  \centering
+  \includegraphics[page=11,clip,trim=2cm 19.7cm 11.3cm 1.8cm,width=0.8\textwidth]{simba_paper}
+\end{frame}
+
+\begin{frame}{kNN Query Performance (OSM)}
+  \centering
+  \includegraphics[page=11,clip,trim=11.2cm 19.7cm 2.2cm 1.8cm,width=0.8\textwidth]{simba_paper}
+\end{frame}
+
+\begin{frame}{Range Query Performance (GDELT)}
+  \centering
+  \includegraphics[page=12,clip,trim=2cm 19.3cm 11.3cm 5.3cm,width=\textwidth]{simba_paper}
+\end{frame}
+
+\begin{frame}{kNN Query Performance (GDELT)}
+  \centering
+  \includegraphics[page=12,clip,trim=11.2cm 22.8cm 2.2cm 1.8cm,width=\textwidth]{simba_paper}
+\end{frame}
+
+\subsection{Distance and kNN Join Methods}
+
+\begin{frame}{Distance Join Performance (OSM)}
+  \centering
+  \includegraphics[page=11,clip,trim=11.2cm 16.2cm 2.2cm 8.8cm,width=\textwidth]{simba_paper}
+\end{frame}
+
+\begin{frame}{kNN Join Performance (OSM)}
+  \centering
+  \includegraphics[page=12,clip,trim=2cm 23.2cm 11.3cm 1.8cm,width=\textwidth]{simba_paper}
+\end{frame}
+
+\begin{frame}{Join Operations Performance (RC)}
+  \centering
+  \includegraphics[page=12,clip,trim=11.2cm 19.2cm 2.1cm 5.8cm,width=\textwidth]{simba_paper}
+\end{frame}
 
 \section{Conclusions}
 
 \begin{frame}{Conclusions}
   \begin{itemize}
-    \item  
+    \item Simba: A distributed in-memory spatial analytics engine.\pause
+    \item Indexing support for efficient query processing.\pause
+    \item Spatial operator implementation tailored towards Spark.\pause
+    \item Spatial and index-aware optimizations.\pause
+    \item User-friendly SQL and DataFrame API.\pause
+    \item No changes to Spark kernel, easier migration to higher version Spark.\pause
+    \item Superior performance compared against other systems.
   \end{itemize}
 \end{frame}
 
 \begin{frame}{Future ideas}
-  \begin{itemize}
-    \item 
+  \begin{itemize}\pause
+    \item Explore complex spatio-temporal patterns.\pause
+    \item Native support to geometry objects and operations.\pause
+    \item Spatial joins over predicates.
   \end{itemize}
 \end{frame}
 
