@@ -1,8 +1,10 @@
-\frametitle{Two-level indexing strategy}
-\centering
-  \includegraphics[page=6,clip,trim=2cm 22cm 11.5cm 2.2cm,height=0.55\textheight]{simba_paper}
-  \vspace{0.5cm}
-  \begin{minted}[fontsize=\small,tabsize=6,breaklines,framesep=3pt,frame=single,escapeinside=~~,mathescape=true]{sql}
-    CREATE INDEX idx_name ON R(~$x_1, ... , x_m$~) USE idx_type
-    DROP INDEX idx_name ON table_name
+\frametitle{DataFrame Support}
+Same level of flexibility for DataFrames...\\
+  \centering
+  \begin{minted}[fontsize=\scriptsize,tabsize=6,breaklines,framesep=3pt,frame=single]{python}
+pois.distanceJoin(restaurants, Point(pois("lat"), pois("lng")),
+Point(restaurants("lat"), restaurants("lng")), 200.0)
+.groupBy(pois("id"))
+.agg(count("*").as("n"))
+.sort("n").show()
   \end{minted}

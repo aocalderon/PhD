@@ -348,22 +348,74 @@ WHERE
   \end{minipage}
 \end{frame}
 
-\begin{frame}[fragile]{Programming Interface}
-  Achieve something that is impossible in Spark SQL...\\ 
-  \centering
-  \begin{minted}[fontsize=\small,tabsize=6,breaklines,framesep=3pt,frame=single]{sql}
+\begin{frame}[fragile]{Spatial Predicates}
+  \centering 
+  \texttt{RANGE}, \texttt{CIRCLERANGE} and \texttt{KNN}...\\ 
+  \begin{minted}[fontsize=\tiny,tabsize=6,breaklines,framesep=3pt,frame=single]{sql}
 SELECT 
-	*
+	* 
 FROM 
-	queries q 
-KNN JOIN 
-	pois p
-ON 
-	POINT(p.x, p.y) IN KNN(POINT(q.x, q.y), 3)
+	points p
+WHERE 
+	POINT(p.x, p.y) IN RANGE(POINT(10, 5), POINT(15, 8)).
+  \end{minted}
+  \begin{minted}[fontsize=\tiny,tabsize=6,breaklines,framesep=3pt,frame=single]{sql}
+SELECT 
+	* 
+FROM 
+	points p
+WHERE 
+	POINT(p.x, p.y) IN CIRCLERANGE(POINT(4, 5), 10)
+  \end{minted}
+  \begin{minted}[fontsize=\tiny,tabsize=6,breaklines,framesep=3pt,frame=single]{sql}
+SELECT 
+	* 
+FROM 
+	points p
+WHERE 
+	POINT(p.x, p.y) IN KNN(POINT(4, 5), 3)
   \end{minted}
 \end{frame}
 
-\begin{frame}[fragile]{Programming Interface}
+\begin{frame}[fragile]{Spatial Joins}
+  \centering 
+  \texttt{DISTANCE JOIN} and \texttt{KNN JOIN}...\\ 
+  \begin{minted}[fontsize=\tiny,tabsize=6,breaklines,framesep=3pt,frame=single]{sql}
+SELECT 
+	* 
+FROM 
+	hotels AS h 
+KNN JOIN 
+	pois AS p
+ON 
+	POINT(p.x, p.y) IN KNN(POINT(h.x, h.y), 5)
+  \end{minted}
+  \begin{minted}[fontsize=\tiny,tabsize=6,breaklines,framesep=3pt,frame=single]{sql}
+SELECT 
+	* 
+FROM 
+	drones AS d1 
+DISTANCE JOIN 
+	drones AS d2
+ON 
+	POINT(d2.x, d2.y, d2.z) IN CIRCLERANGE(POINT(d1.x, d1.y, d1.z), 20.0).
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]{Index Management}
+  \centering 
+  \texttt{CREATE INDEX} and \texttt{DROP INDEX}...\\ 
+  \begin{minted}[fontsize=\small,tabsize=6,framesep=3pt,frame=single,escapeinside=~~,mathescape=true]{sql}
+    CREATE INDEX pointIndex ON sensor(x, y, z) USE RTREE
+    DROP INDEX pointIndex ON sensor
+  \end{minted}  
+  \begin{minted}[fontsize=\small,tabsize=6,framesep=3pt,frame=single,escapeinside=~~,mathescape=true]{sql}
+    CREATE INDEX idx_name ON R(~$x_1, ... , x_m$~) USE idx_type
+    DROP INDEX idx_name ON table_name
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]{Compound Queries}
   Fully compatible with standard SQL operators...\\ 
   \centering
   \begin{minted}[fontsize=\scriptsize,tabsize=6,breaklines,framesep=3pt,frame=single]{sql}
@@ -382,12 +434,12 @@ ORDER BY
   \end{minted}
 \end{frame}
 
-\begin{frame}[fragile]{Programming Interface}
+\begin{frame}[fragile]{DataFrame Support}
   Same level of flexibility for DataFrames...\\ 
   \centering
   \begin{minted}[fontsize=\scriptsize,tabsize=6,breaklines,framesep=3pt,frame=single]{python}
 pois.distanceJoin(restaurants, Point(pois("lat"), pois("lng")), 
-			Point(restaurants("lat"), restaurants("lng")), 3.0)
+			Point(restaurants("lat"), restaurants("lng")), 200.0)
 	.groupBy(pois("id"))
 	.agg(count("*").as("n"))
 	.sort("n").show()
@@ -449,14 +501,9 @@ pois.distanceJoin(restaurants, Point(pois("lat"), pois("lng")),
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{Two-level indexing strategy}
+\begin{frame}{Two-level indexing strategy}
   \centering 
   \includegraphics[page=6,clip,trim=2cm 22cm 11.5cm 2.2cm,height=0.55\textheight]{simba_paper}
-  \vspace{0.5cm}
-  \begin{minted}[fontsize=\small,tabsize=6,breaklines,framesep=3pt,frame=single,escapeinside=~~,mathescape=true]{sql}
-    CREATE INDEX idx_name ON R(~$x_1, ... , x_m$~) USE idx_type
-    DROP INDEX idx_name ON table_name
-  \end{minted}
 \end{frame}
 
 \subsection{Spatial Operations}
