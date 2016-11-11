@@ -1,10 +1,10 @@
-\frametitle{DataFrame Support}
-Same level of flexibility for DataFrames...\\
+\frametitle{Distance Join}
+\begin{itemize}
+   \item $R \Join_\tau S$
+   \item DJSpark algorithm.
+  \end{itemize}
   \centering
-  \begin{minted}[fontsize=\scriptsize,tabsize=6,breaklines,framesep=3pt,frame=single]{python}
-pois.distanceJoin(restaurants, Point(pois("lat"), pois("lng")),
-Point(restaurants("lat"), restaurants("lng")), 200.0)
-.groupBy(pois("id"))
-.agg(count("*").as("n"))
-.sort("n").show()
+  \includegraphics[page=7,clip,trim=11.5cm 22.55cm 2cm 2cm,width=\textwidth]{simba_paper}
+  \begin{minted}[fontsize=\tiny]{sql}
+	  SELECT * FROM R DISTANCE JOIN S ON POINT(S.x, S.y) IN CIRCLERANGE(POINT(R.x, R.y), 5.0)
   \end{minted}

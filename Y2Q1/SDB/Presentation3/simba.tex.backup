@@ -9,6 +9,13 @@
 \usepackage{tikz}
 \usepackage{amssymb}
 
+\newcommand\blfootnote[1]{%
+  \begingroup
+  \renewcommand\thefootnote{}\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \endgroup
+}
+
 \definecolor{LightGray}{gray}{0.9}
 
 \ifx\hypersetup\undefined
@@ -81,7 +88,7 @@
 
 \AtBeginSection[] {
     \begin{frame}<beamer>
-    \frametitle{Agenda} %
+    \frametitle{Outline} %
     \tableofcontents[currentsection]  
     \end{frame}
     \lattersubsectfalse
@@ -90,18 +97,14 @@
 \AtBeginSubsection[] {
     % \iflattersubsect
     \begin{frame}<beamer>
-    \frametitle{Agenda} %
+    \frametitle{Outline} %
     \tableofcontents[currentsubsection]  
     \end{frame}
     % \fi
     % \lattersubsecttrue
 }
 
-\begin{frame}{Agenda}
-  \tableofcontents{}
-\end{frame}
-
-\section{Background}
+\section*{Introduction}
 
 \begin{frame}{Introduction}
   \begin{itemize}
@@ -137,7 +140,7 @@
   \Put(200,140){\includegraphics[width=3cm, height=3cm]{Figures/agricultural.png}}
 \end{frame}
 
-\begin{frame}{Introduction}
+\begin{frame}{Applications}
   \begin{itemize}
     \item The applications and commercial interest is clear...
   \end{itemize}
@@ -145,7 +148,7 @@
   \includegraphics[width=0.75\linewidth]{Figures/apps.png}
 \end{frame}
 
-\begin{frame}{Introduction}
+\begin{frame}{Spatial is Special}
   \begin{itemize}
     \item But remember that ``Spatial is Special''...
   \end{itemize}
@@ -153,7 +156,7 @@
   \includegraphics[clip, trim=0cm 5.6cm 0cm 0cm, width=0.75\linewidth]{Figures/logos.png}
 \end{frame}
 
-\begin{frame}[noframenumbering]{Introduction}
+\begin{frame}[noframenumbering]{Spatial is Special}
   \begin{itemize}
     \item But remember that ``Spatial is Special''...
   \end{itemize}
@@ -161,7 +164,7 @@
   \includegraphics[clip, trim=0cm 2.4cm 0cm 0cm, width=0.75\linewidth]{Figures/logos.png}
 \end{frame}
 
-\begin{frame}[noframenumbering]{Introduction}
+\begin{frame}[noframenumbering]{Spatial is Special}
   \begin{itemize}
     \item But remember that ``Spatial is Special''...
   \end{itemize}
@@ -169,7 +172,7 @@
   \includegraphics[clip, trim=0cm 0cm 0cm 0cm, width=0.75\linewidth]{Figures/logos.png}
 \end{frame}
 
-\begin{frame}{Introduction}
+\begin{frame}{Is there room for improvements?}
   \begin{itemize}
     \item Why do we need a new tool???
   \end{itemize}
@@ -177,7 +180,7 @@
   \includegraphics[width=0.3\linewidth]{Figures/simba-logo.png}
 \end{frame}
 
-\begin{frame}{Introduction}
+\begin{frame}{Yes, there is!!!}
 \begin{itemize}
 \item Problems of Existing Systems...
   \begin{itemize}
@@ -185,15 +188,15 @@
 	  \scriptsize{ArcGIS, PostGIS, Oracle Spatial.}
     \item \normalsize Disk-oriented cluster computation (low performance) \\
 	  \scriptsize{Hadoop-GIS, SpatialHadoop, GeoMesa.}
-    \item \normalsize No native support for spatial operators \\
-	  \scriptsize{Spark SQL, MemSQL}
     \item \normalsize No sophisticated query planner and optimizer \\
 	  \scriptsize{SpatialSpark, GeoSpark}
+    \item \normalsize No native support for spatial operators \\
+	  \scriptsize{Spark SQL, MemSQL}
   \end{itemize}
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Introduction}
+\begin{frame}{Contributions}
   \begin{itemize}
     \item Simba: \textbf{S}patial \textbf{I}n \textbf{M}emory \textbf{B}ig data \textbf{A}nalytics.
     \begin{enumerate}
@@ -205,10 +208,15 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Introduction}
+\begin{frame}{Comparison with existing systems}
   \centering
   \includegraphics[clip, trim=1cm 20.5cm 10cm 1cm, page=3, width=0.9\linewidth]{simba_paper}
 \end{frame}
+
+\begin{frame}{Outline}
+  \tableofcontents{}
+\end{frame}
+
 
 \section{Simba Architecture Overview}
 
@@ -312,15 +320,15 @@
   \begin{minipage}{.21\linewidth} \tiny \color{blue}Indexing \\ \color{red} Optimizations \\ \color{magenta} Spatial operations \\ \color{olive} Programming interface \end{minipage}  
 \end{frame}
 
-\begin{frame}{Query Load in Simba}
-  \centering
-  \includegraphics[clip, trim=10.5cm 22.7cm 1cm 1cm, page=4, width=\linewidth]{simba_paper}
-\end{frame}
-
 \subsection{Programming Interface}
 
 \begin{frame}[fragile]{Programming Interface}
-  Support rich query types natively in the kernel...\\ \\
+  \begin{itemize}
+   \item Support rich query types natively in the kernel...
+   \begin{itemize}
+    \item \scriptsize The 5 nearest entries to point (2,3).
+   \end{itemize}
+  \end{itemize}
   \centering
   \begin{minipage}{.45\linewidth} 
   \begin{minted}[fontsize=\scriptsize,tabsize=5,breaklines,framesep=3pt,frame=single]{sql}
@@ -349,8 +357,10 @@ WHERE
 \end{frame}
 
 \begin{frame}[fragile]{Spatial Predicates}
-  \centering 
-  \texttt{RANGE}, \texttt{CIRCLERANGE} and \texttt{KNN}...\\ 
+  \begin{itemize}
+   \item \texttt{RANGE}, \texttt{CIRCLERANGE} and \texttt{KNN}...
+   \begin{itemize}
+    \item \scriptsize Show me the points inside a rectangle:
   \begin{minted}[fontsize=\tiny,tabsize=6,breaklines,framesep=3pt,frame=single]{sql}
 SELECT 
 	* 
@@ -359,6 +369,7 @@ FROM
 WHERE 
 	POINT(p.x, p.y) IN RANGE(POINT(10, 5), POINT(15, 8)).
   \end{minted}
+    \item \scriptsize Show me the points laying 10m around:
   \begin{minted}[fontsize=\tiny,tabsize=6,breaklines,framesep=3pt,frame=single]{sql}
 SELECT 
 	* 
@@ -367,6 +378,7 @@ FROM
 WHERE 
 	POINT(p.x, p.y) IN CIRCLERANGE(POINT(4, 5), 10)
   \end{minted}
+    \item \scriptsize Show me the 3 nearest points:
   \begin{minted}[fontsize=\tiny,tabsize=6,breaklines,framesep=3pt,frame=single]{sql}
 SELECT 
 	* 
@@ -375,11 +387,15 @@ FROM
 WHERE 
 	POINT(p.x, p.y) IN KNN(POINT(4, 5), 3)
   \end{minted}
+  \end{itemize}
+  \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{Spatial Predicates}
-  \centering 
-  \texttt{DISTANCE JOIN} and \texttt{KNN JOIN}...\\ 
+\begin{frame}[fragile]{Spatial Joins}
+  \begin{itemize}
+   \item \texttt{KNN JOIN} and \texttt{DISTANCE JOIN}...
+   \begin{itemize}
+    \item \scriptsize List the 5 nearest hotels around Points of Interest.
   \begin{minted}[fontsize=\tiny,tabsize=6,breaklines,framesep=3pt,frame=single]{sql}
 SELECT 
 	* 
@@ -390,6 +406,7 @@ KNN JOIN
 ON 
 	POINT(p.x, p.y) IN KNN(POINT(h.x, h.y), 5)
   \end{minted}
+  \item \scriptsize Show me drones that are close to each other (less that 20m).
   \begin{minted}[fontsize=\tiny,tabsize=6,breaklines,framesep=3pt,frame=single]{sql}
 SELECT 
 	* 
@@ -400,24 +417,35 @@ DISTANCE JOIN
 ON 
 	POINT(d2.x, d2.y, d2.z) IN CIRCLERANGE(POINT(d1.x, d1.y, d1.z), 20.0).
   \end{minted}
+  \end{itemize}
+  \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]{Index Management}
-  \centering 
-  \texttt{CREATE INDEX} and \texttt{DROP INDEX}...\\ 
-  \begin{minted}[fontsize=\small,tabsize=6,framesep=3pt,frame=single,escapeinside=~~,mathescape=true]{sql}
-    CREATE INDEX pointIndex ON sensor(x, y, z) USE RTREE
-    DROP INDEX pointIndex ON sensor
+  \begin{itemize}
+  \item \texttt{CREATE INDEX} and \texttt{DROP INDEX}...
+  \begin{itemize}
+   \item Create a 3D index on the sensor table using a R-tree:
+  \begin{minted}[fontsize=\scriptsize,tabsize=6,framesep=3pt,frame=single,escapeinside=~~,mathescape=true]{sql}
+CREATE INDEX pointIndex ON sensor(x, y, z) USE RTREE
+
+DROP INDEX pointIndex ON sensor
   \end{minted}  
-  \begin{minted}[fontsize=\small,tabsize=6,framesep=3pt,frame=single,escapeinside=~~,mathescape=true]{sql}
-    CREATE INDEX idx_name ON R(~$x_1, ... , x_m$~) USE idx_type
-    DROP INDEX idx_name ON table_name
-  \end{minted}
+  \item Generic use:
+  \begin{minted}[fontsize=\scriptsize,tabsize=6,framesep=3pt,frame=single,escapeinside=~~,mathescape=true]{sql}
+CREATE INDEX idx_name ON R(~$x_1, ... , x_m$~) USE idx_type
+
+DROP INDEX idx_name ON table_name
+  \end{minted}  
+  \end{itemize}
+  \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]{Compound Queries}
-  Fully compatible with standard SQL operators...\\ 
-  \centering
+  \begin{itemize}
+   \item Fully compatible with standard SQL operators...
+   \begin{itemize}
+    \item Let's count the number of restaurants around 200m of a POI (sort locations by the count):
   \begin{minted}[fontsize=\scriptsize,tabsize=6,breaklines,framesep=3pt,frame=single]{sql}
 SELECT 
 	p.id, count(*) AS n
@@ -432,18 +460,23 @@ GROUP BY
 ORDER BY 
 	n
   \end{minted}
+   \end{itemize}
+  \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]{DataFrame Support}
-  Same level of flexibility for DataFrames...\\ 
-  \centering
-  \begin{minted}[fontsize=\scriptsize,tabsize=6,breaklines,framesep=3pt,frame=single]{python}
-pois.distanceJoin(restaurants, Point(pois("lat"), pois("lng")), 
-			Point(restaurants("lat"), restaurants("lng")), 3.0)
-	.groupBy(pois("id"))
-	.agg(count("*").as("n"))
-	.sort("n").show()
+  \begin{itemize}
+   \item Same level of flexibility for DataFrames...
+   \begin{itemize}
+    \item Let's count the number of restaurants around 200m of a POI (sort locations by the count):
+  \begin{minted}[fontsize=\small,tabsize=6,breaklines,framesep=3pt,frame=single]{scala}
+pois.distanceJoin(restaurants, Point(pois("lat"), pois("lng")), Point(restaurants("lat"), restaurants("lng")), 200.0)
+.groupBy(pois("id"))
+.agg(count("*").as("n"))
+.sort("n").show()
   \end{minted}
+   \end{itemize}
+  \end{itemize}
 \end{frame}
 
 \subsection{Indexing}
@@ -480,19 +513,24 @@ pois.distanceJoin(restaurants, Point(pois("lat"), pois("lng")),
 \end{itemize}
 \end{frame}
 
+\begin{frame}{Two-level indexing strategy}
+  \centering 
+  \includegraphics[page=6,clip,trim=2cm 22cm 11.5cm 2.2cm,width=\textwidth]{simba_paper}
+\end{frame}
+
 \begin{frame}{Three-Phases Index Construction}
-  \begin{itemize}\pause
+  \begin{itemize}
   \item \textbf{Partition}
     \begin{itemize}
       \item Concerns: Partition size, Data locality and Load balancing.
       \item \texttt{Partitioner} abstract class.
       \item STRPartitioner (based on Sort-Tile-Recursive algorithm).
-    \end{itemize}\pause
+    \end{itemize}
   \item \textbf{Local Index}
     \begin{itemize}
       \item \texttt{RDD[Row]} $\rightarrow$ \texttt{IndexRDD[Row]}.
       \item Collects statistics from each partition (number of records, partition boundaries, ...).
-    \end{itemize}\pause
+    \end{itemize}
   \item \textbf{Global Index}
     \begin{itemize}
       \item Enables to prune irrelevant partitions.
@@ -501,23 +539,21 @@ pois.distanceJoin(restaurants, Point(pois("lat"), pois("lng")),
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{Two-level indexing strategy}
-  \centering 
-  \includegraphics[page=6,clip,trim=2cm 22cm 11.5cm 2.2cm,height=0.55\textheight]{simba_paper}
-\end{frame}
-
 \subsection{Spatial Operations}
 
-\begin{frame}{Range Queries}
+\begin{frame}[fragile]{Range Queries}
   \begin{itemize}
    \item $range(Q,R)$
    \item Two steps: Global filtering + Local processing.
   \end{itemize}
   \centering 
   \includegraphics[clip,trim=7cm 4cm 7cm 6.5cm,height=0.45\textheight]{Figures/range}
+  \begin{minted}[fontsize=\tiny]{sql}
+		SELECT * FROM points p WHERE POINT(p.x, p.y) IN RANGE(POINT(5,5), POINT(10,8)) 
+  \end{minted}
 \end{frame}
 
-\begin{frame}{kNN Queries}
+\begin{frame}[fragile]{kNN Queries}
   \begin{itemize}
    \item $kNN(q,R)$
    \item Good performance thanks to:
@@ -528,15 +564,22 @@ pois.distanceJoin(restaurants, Point(pois("lat"), pois("lng")),
   \end{itemize}
   \centering 
   \includegraphics[page=6,clip,trim=11.5cm 22.4cm 2cm 2cm,height=0.45\textheight]{simba_paper}
+  \vspace{3mm}
+  \begin{minted}[fontsize=\tiny]{sql}
+		    SELECT * FROM points p WHERE POINT(p.x, p.y) IN KNN(POINT(5,8), 5) 
+  \end{minted}  
 \end{frame}
 
-\begin{frame}{Distance Join}
+\begin{frame}[fragile]{Distance Join}
   \begin{itemize}
    \item $R \Join_\tau S$
    \item DJSpark algorithm.
   \end{itemize}  
   \centering 
-  \includegraphics[page=7,clip,trim=11.5cm 22.6cm 2cm 2cm,width=\textwidth]{simba_paper}
+  \includegraphics[page=7,clip,trim=11.5cm 22.55cm 2cm 2cm,width=\textwidth]{simba_paper}
+  \begin{minted}[fontsize=\tiny]{sql}
+	  SELECT * FROM R DISTANCE JOIN S ON POINT(S.x, S.y) IN CIRCLERANGE(POINT(R.x, R.y), 5.0)
+  \end{minted}    
 \end{frame}
 
 \begin{frame}{kNN Join}
@@ -567,37 +610,58 @@ pois.distanceJoin(restaurants, Point(pois("lat"), pois("lng")),
 
 \subsection{Optimization}
 
-\begin{frame}{Query Optimizer}
+\begin{frame}{Why does it extend Catalyst?}
+  \begin{enumerate}
+   \item The number of partition plays an important role in performance tuning.
+   \item Spatial indexes demands new logical optimization rules and spatial predicates management. 
+   \item Indexing optimization cause more overheads than savings (Cost based optimization).
+   \end{enumerate} 
+\end{frame}
+
+\begin{frame}{Partition estimation}
+	\begin{itemize}
+		\item Cost model to estimate partition size:
+		\begin{itemize}
+			\item Use of a sampling based approach to build estimator.
+		\end{itemize}
+		\item Cost model + Partition strategy:
+		\begin{enumerate}
+			\item Partitions are balanced.
+			\item Each partition fits in memory.
+			\item Number of partitions proportional to number of workers.
+		\end{enumerate}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Index awareness optimizations}
+  \centering
+  \includegraphics[page=8,clip,trim=11.6cm 22.5cm 2.5cm 2cm,width=\textwidth]{simba_paper}\blfootnote{\tiny DNF: Disjunctive Normal Form}
+\end{frame}
+
+\begin{frame}{Spatial predicates merging}
   \begin{itemize}
-   \item Index and geometry-awareness optimizations.
-   \item Index scan optimization: for better index utilization.
-   \item Selectivity estimation + Cost-based Optimization.
+   \item Geometric properties to merge spatial predicates.
    \begin{itemize}
-    \item Selectivity estimation over local indexes
-    \item Choose a proper plan: scan or use index.
+    \item i.e. \mintinline[fontsize=\scriptsize]{r}{x > 3 AND x < 5 AND y > 1 AND y < 6} can be merged into a range query on \mintinline[fontsize=\scriptsize]{scala}{(POINT(3, 1), POINT(5, 6))}.
+    \item i.e. Two conjunctive range queries on \mintinline[fontsize=\scriptsize]{scala}{(POINT(3, 1), POINT(5, 6)) AND (POINT(4, 0), POINT(9, 3))} can be merged into a single range query on \mintinline[fontsize=\scriptsize]{scala}{(POINT(4, 1), POINT(5, 3))}.
+    \includegraphics[clip,trim=0cm 1.5cm 0cm 1.5cm,width=0.6\textwidth]{Figures/predicates}
    \end{itemize}
-   \item Spatial predicates merging
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Query Optimizer}
-  \centering
-  \includegraphics[page=8,clip,trim=11.6cm 22.5cm 2.5cm 2cm,width=\textwidth]{simba_paper}
-\end{frame}
-
-\begin{frame}{Query Optimizer}
-  \begin{itemize}
-   \item Partition size auto-tuning.
-   \begin{itemize}
-    \item Data locality and load balancing through a good partitioner (STR Partitioner).
-    \item Memory fitness using record-size estimator.
-   \end{itemize}
-   \item Broadcast join optimization: small table joins large table.
-   \item Logical partitioning optimization for kNN joins.
-   \begin{itemize}
-    \item Provides tighter pruning bounds.
-   \end{itemize}
-   \end{itemize}
+\begin{frame}{Selectivity + CBO}
+	\begin{itemize}
+	\item Selectivity estimation + Cost-based Optimization.
+	\begin{itemize}
+	 \item Selectivity estimation over local indexes
+	 \item Choose a proper plan: scan or use index.
+	\end{itemize}
+	\item Broadcast join optimization: small table joins large table.
+	\item Logical partitioning optimization for kNN joins.
+	\begin{itemize}
+		\item Provides tighter pruning bounds.
+	\end{itemize}
+	\end{itemize}
 \end{frame}
 
 \section{Experiments}

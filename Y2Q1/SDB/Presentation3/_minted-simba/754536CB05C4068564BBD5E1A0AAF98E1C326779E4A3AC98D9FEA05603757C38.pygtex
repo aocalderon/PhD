@@ -1,0 +1,10 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGdefault{k}{SELECT}
+	\PYGdefault{o}{*}
+\PYGdefault{k}{FROM}
+	\PYGdefault{n}{drones} \PYGdefault{k}{AS} \PYGdefault{n}{d1}
+\PYGdefault{n}{DISTANCE} \PYGdefault{k}{JOIN}
+	\PYGdefault{n}{drones} \PYGdefault{k}{AS} \PYGdefault{n}{d2}
+\PYGdefault{k}{ON}
+	\PYGdefault{n}{POINT}\PYGdefault{p}{(}\PYGdefault{n}{d2}\PYGdefault{p}{.}\PYGdefault{n}{x}\PYGdefault{p}{,} \PYGdefault{n}{d2}\PYGdefault{p}{.}\PYGdefault{n}{y}\PYGdefault{p}{,} \PYGdefault{n}{d2}\PYGdefault{p}{.}\PYGdefault{n}{z}\PYGdefault{p}{)} \PYGdefault{k}{IN} \PYGdefault{n}{CIRCLERANGE}\PYGdefault{p}{(}\PYGdefault{n}{POINT}\PYGdefault{p}{(}\PYGdefault{n}{d1}\PYGdefault{p}{.}\PYGdefault{n}{x}\PYGdefault{p}{,} \PYGdefault{n}{d1}\PYGdefault{p}{.}\PYGdefault{n}{y}\PYGdefault{p}{,} \PYGdefault{n}{d1}\PYGdefault{p}{.}\PYGdefault{n}{z}\PYGdefault{p}{),} \PYGdefault{l+m+mi}{20}\PYGdefault{p}{.}\PYGdefault{l+m+mi}{0}\PYGdefault{p}{).}
+\end{Verbatim}

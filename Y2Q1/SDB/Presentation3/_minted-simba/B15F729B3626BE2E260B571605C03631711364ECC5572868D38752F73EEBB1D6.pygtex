@@ -1,7 +1,0 @@
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYG{n}{pois}\PYG{o}{.}\PYG{n}{distanceJoin}\PYG{p}{(}\PYG{n}{restaurants}\PYG{p}{,} \PYG{n}{Point}\PYG{p}{(}\PYG{n}{pois}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}lat\PYGZdq{}}\PYG{p}{),} \PYG{n}{pois}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}lng\PYGZdq{}}\PYG{p}{)),}
-\PYG{n}{Point}\PYG{p}{(}\PYG{n}{restaurants}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}lat\PYGZdq{}}\PYG{p}{),} \PYG{n}{restaurants}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}lng\PYGZdq{}}\PYG{p}{)),} \PYG{l+m+mf}{200.0}\PYG{p}{)}
-\PYG{o}{.}\PYG{n}{groupBy}\PYG{p}{(}\PYG{n}{pois}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}id\PYGZdq{}}\PYG{p}{))}
-\PYG{o}{.}\PYG{n}{agg}\PYG{p}{(}\PYG{n}{count}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}*\PYGZdq{}}\PYG{p}{)}\PYG{o}{.}\PYG{k}{as}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}n\PYGZdq{}}\PYG{p}{))}
-\PYG{o}{.}\PYG{n}{sort}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}n\PYGZdq{}}\PYG{p}{)}\PYG{o}{.}\PYG{n}{show}\PYG{p}{()}
-\end{Verbatim}
