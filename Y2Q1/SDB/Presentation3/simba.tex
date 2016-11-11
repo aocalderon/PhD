@@ -208,15 +208,9 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Comparison with existing systems}
-  \centering
-  \includegraphics[clip, trim=1cm 20.5cm 10cm 1cm, page=3, width=0.9\linewidth]{simba_paper}
-\end{frame}
-
 \begin{frame}{Outline}
   \tableofcontents{}
 \end{frame}
-
 
 \section{Simba Architecture Overview}
 
@@ -622,7 +616,7 @@ pois.distanceJoin(restaurants, Point(pois("lat"), pois("lng")), Point(restaurant
 	\begin{itemize}
 		\item Cost model to estimate partition size:
 		\begin{itemize}
-			\item Use of a sampling based approach to build estimator.
+			\item Use of a sampling based approach to build estimators.
 		\end{itemize}
 		\item Cost model + Partition strategy:
 		\begin{enumerate}
@@ -760,6 +754,13 @@ pois.distanceJoin(restaurants, Point(pois("lat"), pois("lng")), Point(restaurant
   \huge Thank you!!! \\
   \vspace{2cm}
   \large Do you have any question?
+\end{frame}
+
+\appendix
+
+\begin{frame}[noframenumbering]{Comparison with existing systems}
+  \centering
+  \includegraphics[clip, trim=1cm 20.5cm 10cm 1cm, page=3, width=0.9\linewidth]{simba_paper}
 \end{frame}
 
 \begin{frame}[noframenumbering]{Index Construction Time (OSM)}
