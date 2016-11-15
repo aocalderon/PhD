@@ -1,0 +1,9 @@
+#!/bin/sh
+#PBS -l nodes=10:nogpu:ppn=3,walltime=01:00:00
+
+cd SDB/
+
+for i in `seq 10 10 100` 
+do 
+	./bfe.py 100 2 3 P${i}K.csv
+done
