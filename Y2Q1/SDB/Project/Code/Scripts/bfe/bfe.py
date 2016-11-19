@@ -133,7 +133,7 @@ class BFEFlock(object):
         
 
         t2 = round(time.time()-t1,3)
-        print("BFE,{3},{0},{1},{2}".format(tag, centers_size, t2, Maximal.epsilon))
+        print("BFE,{3},{0},{1},{2}".format(tag, centers_size, t2, float(Maximal.epsilon)))
         
         # db.createTableTest()
         # db.insertTest(filename,self.epsilon,mu, delta, t2, flocks, tag)

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-for i in `seq 10 10 100` 
+for epsilon in `seq $1 $2 $3` 
 do 
-	./bfe.py 100 2 3 P${i}K.csv
+	./bfe.py $epsilon 2 3 /opt/Datasets/Beijing/$4
 done
