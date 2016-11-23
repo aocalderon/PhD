@@ -2,5 +2,5 @@
 
 for epsilon in `seq $1 $2 $3` 
 do 
-	spark-submit pbfe.jar /opt/Datasets/Beijing/$4 $epsilon
+	spark-submit pbfe.jar $4 $epsilon
 done
