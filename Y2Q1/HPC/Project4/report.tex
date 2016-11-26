@@ -29,7 +29,7 @@ hidelinks
  \\ 
  \textbf{Answer}\\
  \\
- According to Amdahl's law:
+ According to Amdahl's Law:
  $$ \psi \leq \frac{1}{f + \frac{1 - f}{p}} $$
  As $p=10$ and $f$ is the sequential part equal to 5\%, the formula becomes:
  $$ \psi \leq \frac{1}{0.05 + \frac{1 - 0.05}{10}} $$
@@ -41,7 +41,7 @@ hidelinks
  \\ 
  \textbf{Answer}\\
  \\
- Similarly, following Amdahl's law:
+ Similarly, following Amdahl's Law:
  $$ \psi \leq \frac{1}{f + \frac{1 - f}{p}} $$
  We have $f=0.6$ and we want $\psi=10$, so the formula becomes:
  $$ 10 \leq \frac{1}{0.06 + \frac{1 - 0.06}{p}} $$
@@ -57,7 +57,7 @@ hidelinks
  \\ 
  \textbf{Answer}\\
  \\
- To answer this question we need to follow Amdahl's law to find $f$ when $p \rightarrow \infty$:
+ To answer this question we need to follow Amdahl's Law to find $f$ when $p \rightarrow \infty$:
  $$ 50 \leq \frac{1}{f + \frac{1 - f}{\infty}} $$
  As the expression $\frac{1 - f}{\infty}$ becomes $0$ we have:
  $$ 50 \leq \frac{1}{f} $$
@@ -69,7 +69,7 @@ hidelinks
  \\ 
  \textbf{Answer}\\
  \\
- Similarly to the last question, we have $\psi=9$ and $p=10$.  Replacing on Amdahl's law we have:
+ Similarly to the last question, we have $\psi=9$ and $p=10$.  Replacing on Amdahl's Law we have:
  $$ 9 \leq \frac{1}{f + \frac{1 - f}{10}} $$
  $$ f + \frac{1 - f}{10} \leq \frac{1}{9} $$
  $$ \frac{10f + 1 - f}{10} \leq \frac{1}{9} $$
@@ -79,12 +79,89 @@ hidelinks
  $$ f \leq 0.0123 $$
  We conclude that the maximum fraction of the computation that may consist of inherently sequential operations cannot be greater than 1.23\%.
  
- \item Brandon's parallel program executes in 242 seconds on 16 processors. Through benchmarking he determines that 9 seconds is spent performing initializations and cleanup on one processor. During the remaining 233 seconds, all 16 processors are active. What is the scaled speedup achieved by Brandon's program?
- \item Courtney benchmarks one of her parallel programs executing on 40 processors. She discovers that it spends 99 percent of its time inside parallel code. What is the scaled speedup of her program?
- \item If a parallel program achieves a speedup of 9 with 10 processors, is it possible to achieve a speedup of 90 with 100 processors if it is ran with the same problem size on the same parallel platform? Why?
- \item Assume a parallel program takes 1000 seconds to finish when using 1 processor and 500 seconds to finish when using 4 processors. What is the minimum time to finish the program when using 16 processors? Assume the problem size is fixed.
- \item Let $n \geqslant f(p)$ denote the isoefficiency relation of a parallel system and $M(n)$ denote the amount of memory required to store a problem of size $n$. Use the scalability function to rank the parallel systems shown below from most scalable to least scalable.
- \item Assume the computation time for your sequential matrix-matrix multiplication program is $2n^3$, and, in the parallel version of the program, the communication time is $16n^2log_2p$. For a problem size $n$, the total memory needed for the algorithm is $24n^2$ bytes. If your parallel computer has 1024 cores with 1 Gbytes DRAM per core, what is the maximum speed up you can achieve on your computer? If you want to achieve a speed up of 256, what is the minimum problem size you need to run your program with?
+ \item Brandon's parallel program executes in 242 seconds on 16 processors. Through benchmarking he determines that 9 seconds is spent performing initializations and cleanup on one processor. During the remaining 233 seconds, all 16 processors are active. What is the scaled speedup achieved by Brandon's program?\\
+ \\ 
+ \textbf{Answer}\\
+ \\
+ According to Gustafson-Barsis' Law we have:
+ $$\psi \leq p + (1 - p)s$$
+ As $p=16$ and $s=\frac{9}{242} = 0.037$ the formula becomes:
+ $$\psi \leq 16 + (1 - 16)0.037$$
+ $$\psi \leq 16 - 0.55$$
+ $$\psi \leq 15.44$$
+ The scaled speedup which can be achieved is 15.44. 
+ 
+ \item Courtney benchmarks one of her parallel programs executing on 40 processors. She discovers that it spends 99 percent of its time inside parallel code. What is the scaled speedup of her program?\\
+ \\ 
+ \textbf{Answer}\\
+ \\
+ Similarly, applying Gustafson-Barsis' Law we have $p=40$ and $s=0.01$:
+ $$\psi \leq 40 + (1 - 40)0.01$$
+ $$\psi \leq 40 - 0.39$$
+ $$\psi \leq 39.61$$
+ The scaled speedup which can be achieved is 39.61. 
+ 
+ 
+ \item If a parallel program achieves a speedup of 9 with 10 processors, is it possible to achieve a speedup of 90 with 100 processors if it is ran with the same problem size on the same parallel platform? Why?\\
+ \\ 
+ \textbf{Answer}\\
+ \\
+ According to the Karp-Flatt metric:
+ $$e=\frac{\frac{1}{\psi}-\frac{1}{p}}{1-\frac{1}{p}}$$
+ As $\psi=9$ and $p=10$ we have:
+ $$e=\frac{\frac{1}{9}-\frac{1}{10}}{1-\frac{1}{10}}$$
+ $$e=\frac{0.011}{0.9} = 0.012$$
+ If we would like to achive a speedup of 90 ($\psi=90$) with 100 processors ($p=10$), the Karp-Flatt metric should be:
+ $$e=\frac{\frac{1}{90}-\frac{1}{100}}{1-\frac{1}{100}}$$
+ $$e=\frac{0.0011}{0.99} = 0.0011$$
+ It is unlikely that the Karp-Flatt metric decreases when more processors are added, so it is not possible to achieve the above-mentioned assumption.
+ 
+ \item Assume a parallel program takes 1000 seconds to finish when using 1 processor and 500 seconds to finish when using 4 processors. What is the minimum time to finish the program when using 16 processors? Assume the problem size is fixed.\\
+ \\ 
+ \textbf{Answer}\\
+ \\
+ 
+ \item Let $n \geqslant f(p)$ denote the isoefficiency relation of a parallel system and $M(n)$ denote the amount of memory required to store a problem of size $n$. Use the scalability function to rank the parallel systems shown below from most scalable to least scalable.\\
+ \\ 
+ \textbf{Answer}\\
+ \\
+ According the scalability function $\frac{M(f(p))}{p}$ we can solve each system as follows:
+ \begin{enumerate}
+  \item $f(p)=Cp$ and $M(n)=n^2$:
+  $$\frac{M(f(p))}{p} = \frac{M(Cp)}{p} = \frac{C^2p^2}{p} = C^2p$$
+  \item $f(p)=C\sqrt{p}\log{p}$ and $M(n)=n^2$:
+  $$\frac{M(f(p))}{p} = \frac{M(C\sqrt{p}\log{p})}{p} = \frac{C^2p\log^2{p}}{p} = C^2\log^2{p}$$
+  \item $f(p)=C\sqrt{p}$ and $M(n)=n^2$:
+  $$\frac{M(f(p))}{p} = \frac{M(C\sqrt{p})}{p} = \frac{C^2p}{p} = C^2$$
+  \item $f(p)=Cp\log{p}$ and $M(n)=n^2$:
+  $$\frac{M(f(p))}{p} = \frac{M(Cp\log{p})}{p} = \frac{C^2p^2\log^2{p}}{p} = C^2p\log^2{p}$$
+  \item $f(p)=Cp$ and $M(n)=n$:
+  $$\frac{M(f(p))}{p} = \frac{M(Cp)}{p} = \frac{Cp}{p} = C$$
+  \item $f(p)=p^C$ and $M(n)=n$:
+  $$\frac{M(f(p))}{p} = \frac{M(p^C)}{p} = \frac{p^C}{p} = p^{C-1}$$
+  As $1 < C < 2$ we can assume $\mathcal{O}(p)$.
+  \item $f(p)=p^C$ and $M(n)=n$:
+  $$\frac{M(f(p))}{p} = \frac{M(p^C)}{p} = \frac{p^C}{p} = p^{C-1}$$
+  As $2 < C < 3$ we can assume $\mathcal{O}(p^2)$.
+ \end{enumerate}
+ So the rank of the parallel systems from most to least scalable is:
+\begin{itemize}
+    \item[$1^{st}$] System e
+    \item[$2^{nd}$] System c
+    \item[$3^{rd}$] System b
+    \item[$4^{th}$] System f
+    \item[$5^{th}$] System a
+    \item[$6^{th}$] System d
+    \item[$7^{th}$] System g
+\end{itemize}
+
+
+ 
+ \item Assume the computation time for your sequential matrix-matrix multiplication program is $2n^3$, and, in the parallel version of the program, the communication time is $16n^2log_2p$. For a problem size $n$, the total memory needed for the algorithm is $24n^2$ bytes. If your parallel computer has 1024 cores with 1 Gbytes DRAM per core, what is the maximum speed up you can achieve on your computer? If you want to achieve a speed up of 256, what is the minimum problem size you need to run your program with?\\
+ \\ 
+ \textbf{Answer}\\
+ \\
+ 
 \end{enumerate}
 
 \end{document}
