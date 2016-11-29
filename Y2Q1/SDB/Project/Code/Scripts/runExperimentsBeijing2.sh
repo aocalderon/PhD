@@ -1,7 +1,12 @@
 #!/bin/bash
 
-OUTPUT="Beijing_PBFE2_N10K-100K_E10-200"
+OUTPUT="Beijing_PBFE-SQL-POSTFILTER_N10K-100K_E10-200"
 START=`date`
-./runExperimentsBeijing.sh > ${OUTPUT}.csv
+{ time ./runExperimentsBeijing.sh > ${OUTPUT}.csv; } 2> .time
+TIME=`tail -n 3 .time`
 END=`date`
-echo -e "START:\n${START}\nDATASET:\n${OUTPUT}\nEND:\n${END}\n\nJust PBFE2" | mail -s "${OUTPUT} ${START}..." -A ${OUTPUT}.csv acald013@ucr.edu
+echo -e "${TIME}\nDone!!!"
+
+MSG="Comparing PBFE-SQL-POSTFILER vs PBFE."
+echo -e "START:\n${START}\nDATASET:\n${OUTPUT}\nEND:\n${END}\nTIME:\n${TIME}\n\n${MSG}" | mail -s "${OUTPUT} ${START}..." -A ${OUTPUT}.csv acald013@ucr.edu
+echo "Email sent."
