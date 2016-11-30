@@ -34,16 +34,16 @@ object PBFE {
   }
   
   def main(args: Array[String]) : Unit = {
-    val sparkConf = new SparkConf().setAppName("PBFE").setMaster("local[*]")
+    val sparkConf = new SparkConf().setAppName("PBFE")
     val sc = new SparkContext(sparkConf)
     val sqlContext = new SQLContext(sc)
     if(args.length == 2)
       sc.setLogLevel("ERROR")
     else
       sc.setLogLevel(args(2))
-    sqlContext.setConf("spark.sql.shuffle.partitions", 4.toString)
-    sqlContext.setConf("spark.sql.sampleRate", 1.toString)
-    sqlContext.setConf("spark.sql.partitioner.strTransferThreshold", 1000000.toString)
+    // sqlContext.setConf("spark.sql.shuffle.partitions", 4.toString)
+    // sqlContext.setConf("spark.sql.sampleRate", 1.toString)
+    // sqlContext.setConf("spark.sql.partitioner.strTransferThreshold", 1000000.toString)
 
     import sqlContext.implicits._
 
@@ -60,7 +60,6 @@ object PBFE {
        .filter( (x:Row) => x.getInt(0) > x.getInt(3) )
        .map( (x: Row) => calculateDisks(x) )
     var n = disks.count()
-    // pairs.collect()
     val time2 = System.currentTimeMillis()
     println("PBFE," + epsilon + "," + tag + "," + 2*n + "," + (time2 - time1) / 1000.0)
 
