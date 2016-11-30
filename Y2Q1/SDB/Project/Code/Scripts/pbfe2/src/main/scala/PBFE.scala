@@ -62,7 +62,7 @@ object PBFE {
     var n = disks.count()
     // pairs.collect()
     val time2 = System.currentTimeMillis()
-    println("PBFE," + epsilon + "," + tag + "," + 2 * n + "," + (time2 - time1) / 1000.0)
+    println("PBFE," + epsilon + "," + tag + "," + 2*n + "," + (time2 - time1) / 1000.0)
 
     sc.stop()
   }

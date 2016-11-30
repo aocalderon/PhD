@@ -54,9 +54,9 @@ object PBFE {
 
     val time1 = System.currentTimeMillis()
     val pairs = p1.distanceJoin(p2, Point(p1("x"), p1("y")), Point(p2("x2"), p2("y2")), epsilon).filter("id < id2")
-    pairs.collect()
+    val n = pairs.count()
     val time2 = System.currentTimeMillis()
-    println("PBFE2," + epsilon + "," + tag + "," + 2 * pairs.count() + "," + (time2 - time1) / 1000.0)
+    println("PBFE-DF-FILTER," + epsilon + "," + tag + "," + 2*n  + "," + (time2 - time1) / 1000.0)
 
     sc.stop()
   }

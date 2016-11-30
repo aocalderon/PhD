@@ -45,11 +45,13 @@ sql = """
     DISTANCE JOIN 
         p2 
     ON 
-        POINT(p2.lng, p2.lat) IN CIRCLERANGE(POINT(p1.lng, p1.lat), {0})""".format(epsilon)
-pairs = sqlContext.sql(sql).rdd.filter(lambda pair: pair[0] < pair[3]).map(calculateDisks)
-ndisks = pairs.count()
+        POINT(p2.lng, p2.lat) IN CIRCLERANGE(POINT(p1.lng, p1.lat), {0})
+    WHERE
+		p1.id < p2.id""".format(epsilon)
+pairs = sqlContext.sql(sql).map(calculateDisks)
+n = pairs.count()
 t2 = round(time.time() - t1,3)
-print("PBFE-SQL-POSTFILTER,{0},{1},{2},{3}".format(float(epsilon),tag,2 * ndisks,t2))
+print("PBFE-SQL,{0},{1},{2},{3}".format(float(epsilon), tag, 2*n, t2))
 
 
 
