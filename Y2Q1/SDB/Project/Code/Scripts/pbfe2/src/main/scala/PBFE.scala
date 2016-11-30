@@ -41,9 +41,6 @@ object PBFE {
       sc.setLogLevel("ERROR")
     else
       sc.setLogLevel(args(2))
-    // sqlContext.setConf("spark.sql.shuffle.partitions", 4.toString)
-    // sqlContext.setConf("spark.sql.sampleRate", 1.toString)
-    // sqlContext.setConf("spark.sql.partitioner.strTransferThreshold", 1000000.toString)
 
     import sqlContext.implicits._
 
