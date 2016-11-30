@@ -32,16 +32,16 @@ object PBFE {
   }
   
   def main(args: Array[String]) : Unit = {
-    val sparkConf = new SparkConf().setAppName("PBFE").setMaster("local[*]")
+    val sparkConf = new SparkConf().setAppName("PBFE")
     val sc = new SparkContext(sparkConf)
     val sqlContext = new SQLContext(sc)
     if(args.length == 2)
       sc.setLogLevel("ERROR")
     else
       sc.setLogLevel(args(2))
-    sqlContext.setConf("spark.sql.shuffle.partitions", 4.toString)
-    sqlContext.setConf("spark.sql.sampleRate", 1.toString)
-    sqlContext.setConf("spark.sql.partitioner.strTransferThreshold", 1000000.toString)
+    // sqlContext.setConf("spark.sql.shuffle.partitions", 4.toString)
+    // sqlContext.setConf("spark.sql.sampleRate", 1.toString)
+    // sqlContext.setConf("spark.sql.partitioner.strTransferThreshold", 1000000.toString)
 
     import sqlContext.implicits._
 
