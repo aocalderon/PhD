@@ -6,7 +6,7 @@ from os.path import basename, splitext
 from pyspark import SparkConf, SparkContext
 from pyspark.sql import SQLContext, Row
 
-conf = (SparkConf().setMaster("local[*]").setAppName("PBFE"))
+conf = (SparkConf().setAppName("PBFE"))
 sc = SparkContext(conf = conf)
 sqlContext = SQLContext(sc)
 
@@ -52,6 +52,3 @@ pairs = sqlContext.sql(sql).map(calculateDisks)
 n = pairs.count()
 t2 = round(time.time() - t1,3)
 print("PBFE-SQL,{0},{1},{2},{3}".format(float(epsilon), tag, 2*n, t2))
-
-
-
