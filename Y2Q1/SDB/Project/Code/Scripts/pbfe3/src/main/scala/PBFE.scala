@@ -39,9 +39,6 @@ object PBFE {
       sc.setLogLevel("ERROR")
     else
       sc.setLogLevel(args(2))
-    // sqlContext.setConf("spark.sql.shuffle.partitions", 4.toString)
-    // sqlContext.setConf("spark.sql.sampleRate", 1.toString)
-    // sqlContext.setConf("spark.sql.partitioner.strTransferThreshold", 1000000.toString)
 
     import sqlContext.implicits._
 
@@ -56,7 +53,7 @@ object PBFE {
     val pairs = p1.distanceJoin(p2, Point(p1("x"), p1("y")), Point(p2("x2"), p2("y2")), epsilon).filter("id < id2")
     val n = pairs.count()
     val time2 = System.currentTimeMillis()
-    println("PBFE-DF-FILTER," + epsilon + "," + tag + "," + 2*n  + "," + (time2 - time1) / 1000.0)
+    println("PBFE-DF," + epsilon + "," + tag + "," + 2*n  + "," + (time2 - time1) / 1000.0)
 
     sc.stop()
   }
