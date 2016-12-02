@@ -34,21 +34,24 @@ def calculateDisks(pair):
     return Row(id1=pair[0],id2=pair[3],lat1=h1,lng1=k1,lat2=h2,lng2=k2)
 
 points = sc.textFile(filename).map(lambda line: line.split(",")).map(lambda p: Row(id=p[0], lat=float(p[1]), lng=float(p[2]))).toDF()
-t1 = time.time()
-points.registerTempTable("p1")
-points.registerTempTable("p2")
-sql = """
-    SELECT 
-        * 
-    FROM 
-        p1 
-    DISTANCE JOIN 
-        p2 
-    ON 
-        POINT(p2.lng, p2.lat) IN CIRCLERANGE(POINT(p1.lng, p1.lat), {0})
-    WHERE
+points.cache()
+for i in [10, 20, 30]:
+	sample = points.limit(i * 1000)
+	t1 = time.time()
+	sample.registerTempTable("p1")
+	sample.registerTempTable("p2")
+	sql = """
+	    SELECT 
+	        * 
+	    FROM 
+	        p1 
+	    DISTANCE JOIN 
+	        p2 
+	    ON 
+	        POINT(p2.lng, p2.lat) IN CIRCLERANGE(POINT(p1.lng, p1.lat), {0})
+	    WHERE
 		p1.id < p2.id""".format(epsilon)
-pairs = sqlContext.sql(sql).map(calculateDisks)
-n = pairs.count()
-t2 = round(time.time() - t1,3)
-print("PBFE-SQL,{0},{1},{2},{3}".format(float(epsilon), tag, 2*n, t2))
+	pairs = sqlContext.sql(sql).map(calculateDisks)
+	n = pairs.count()
+	t2 = round(time.time() - t1, 3)
+	print("PBFE,{0},{1},{2},{3}".format(float(epsilon), tag, 2*n, t2))
