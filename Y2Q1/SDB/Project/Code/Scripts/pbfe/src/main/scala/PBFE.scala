@@ -1,14 +1,12 @@
 import org.apache.spark.sql.{Point, SQLContext}
 import org.apache.spark.{SparkConf, SparkContext}
 
-import scala.math.Ordered.orderingToOrdered
-
 object PBFE {
 
   case class PointItem(id: Int, x: Double, y: Double)
 
   def main(args: Array[String]): Unit = {
-    val sparkConf = new SparkConf().setAppName("DataFrameApiExample").setMaster("local[*]")
+    val sparkConf = new SparkConf().setAppName("PBFE")
     val sc = new SparkContext(sparkConf)
     val sqlContext = new SQLContext(sc)
     sc.setLogLevel("ERROR")
