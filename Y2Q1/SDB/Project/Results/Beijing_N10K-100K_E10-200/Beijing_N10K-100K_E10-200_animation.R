@@ -2,10 +2,10 @@ library(animation)
 library(ggplot2)
 
 ani.options(interval=0.25,
-            movie.name = "Beijing10K-100K_E10-200", 
+            movie.name = "Beijing_N10K-100K_E10-200", 
             ani.height = 750, 
             ani.width = 750)
-data <- read.csv("Beijing10K-100K_E10-200.csv", header = F)
+data <- read.csv("Beijing_N10K-100K_E10-200.csv", header = F)
 saveGIF({
   for(i in seq(10,100,10)){
     dataset <- paste0(i,"K")
