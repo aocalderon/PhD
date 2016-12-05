@@ -1,0 +1,9 @@
+\frametitle{Bug report}
+\begin{itemize}
+    \item Found a workaround using the DataFrame API:
+    \begin{minted}[fontsize=\tiny,tabsize=4,breaklines,framesep=10pt,frame=single]{java}
+// Code for Spark DataFrame API (Scala)
+val pairs = p1.distanceJoin(p2, Point(p1("x"), p1("y")), Point(p2("x2"), p2("y2")), epsilon)
+val disks = pairs.rdd.filter( (x:Row) => x.getInt(0) > x.getInt(3) )
+    \end{minted}
+  \end{itemize}

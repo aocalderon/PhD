@@ -1,0 +1,10 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} Code for Spark\PYGZhy{}SQL (Python)}
+\PYG{n}{sql} \PYG{o}{=} \PYG{l+s+s2}{\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+\PYG{l+s+s2}{    SELECT *}
+\PYG{l+s+s2}{    FROM p1}
+\PYG{l+s+s2}{    DISTANCE JOIN p2}
+\PYG{l+s+s2}{    ON POINT(p2.lng, p2.lat) IN CIRCLERANGE(POINT(p1.lng, p1.lat), \PYGZob{}0\PYGZcb{})}
+\PYG{l+s+s2}{    WHERE p1.id \PYGZlt{} p2.id\PYGZdq{}\PYGZdq{}\PYGZdq{}}\PYG{o}{.}\PYG{n}{format}\PYG{p}{(}\PYG{n}{epsilon}\PYG{p}{)}
+\PYG{n}{pairs} \PYG{o}{=} \PYG{n}{sqlContext}\PYG{o}{.}\PYG{n}{sql}\PYG{p}{(}\PYG{n}{sql}\PYG{p}{)}
+\end{Verbatim}

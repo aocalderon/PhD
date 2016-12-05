@@ -8,7 +8,7 @@ ani.options(interval=0.5,
 data <- read.csv("Porto_PBFE_N1M-16M_E2-10.csv", header = F)
 ylimit = max(data$V5)
 saveGIF({
-  for(i in c(1,2,4,8)){
+  for(i in c(1,2,4,8,16)){
     dataset <- paste0(i,"M")
     sample <- data[data$V3 == dataset,c(1,2,5)]
     names(sample) = c("Algorithm","Epsilon", "Time")

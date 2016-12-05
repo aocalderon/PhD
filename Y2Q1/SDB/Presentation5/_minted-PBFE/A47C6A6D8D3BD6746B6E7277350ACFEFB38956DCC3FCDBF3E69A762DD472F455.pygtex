@@ -1,0 +1,4 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{// Code for Spark DataFrame API (Scala)}
+\PYG{n}{val} \PYG{n}{pairs} \PYG{o}{=} \PYG{n}{p1}\PYG{o}{.}\PYG{n+na}{distanceJoin}\PYG{o}{(}\PYG{n}{p2}\PYG{o}{,} \PYG{n}{Point}\PYG{o}{(}\PYG{n}{p1}\PYG{o}{(}\PYG{l+s}{\PYGZdq{}x\PYGZdq{}}\PYG{o}{),} \PYG{n}{p1}\PYG{o}{(}\PYG{l+s}{\PYGZdq{}y\PYGZdq{}}\PYG{o}{)),} \PYG{n}{Point}\PYG{o}{(}\PYG{n}{p2}\PYG{o}{(}\PYG{l+s}{\PYGZdq{}x2\PYGZdq{}}\PYG{o}{),} \PYG{n}{p2}\PYG{o}{(}\PYG{l+s}{\PYGZdq{}y2\PYGZdq{}}\PYG{o}{)),} \PYG{n}{epsilon}\PYG{o}{)} \PYG{o}{.}\PYG{n+na}{filter}\PYG{o}{(}\PYG{l+s}{\PYGZdq{}id \PYGZlt{} id2\PYGZdq{}}\PYG{o}{)}
+\end{Verbatim}
