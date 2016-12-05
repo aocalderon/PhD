@@ -43,7 +43,7 @@
  }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
-\usetheme{Warsaw}
+\usetheme{Malmoe}
 % or ...
 \useoutertheme{infolines}
 \addtobeamertemplate{headline}{}{\vskip2pt}
@@ -111,7 +111,7 @@
   \begin{itemize}
     \item Anything that could move (or could be moved), will be tracked...
     \begin{itemize}
-      \item Smart phones, GPS, RFID, WiFi, Bluetooth, IoT, Remote sensing...
+      \item Smart phones, GPS, RFID, WiFi, Bluetooth, ZigBee, IoT, Satellites, Drones...
     \end{itemize}
   \end{itemize}
   \centering
@@ -334,14 +334,25 @@ val disks = pairs.rdd.filter( (x:Row) => x.getInt(0) > x.getInt(3) )
   \includegraphics[height=0.85\textheight]{Figures/Porto_Speedup}
 \end{frame}
 
-\section{Conclusions}
+\section{Conclusions and Future work}
 
 \begin{frame}{Conclusions}
-  \begin{itemize}
-   \item An implementation of a parallel method to detect disks for the BFE algorithm has been presented.
-   \item The method prove to be scalable and reliable.
+  \begin{itemize}\pause
+   \item An implementation of a parallel method to detect disks for the BFE algorithm has been presented.\pause
+   \item The method proves to be scalable and reliable.\pause
+   \item Execution time improves up to 3 orders of magnitude compared to the sequential code.\pause
+   \item Good behavior of Scaleup and Speedup metrics.\pause
+   \item DISTANCE `SELF' JOIN's depict a better performance using DataFrame or RDD filters (avoid Spark-SQL).\pause
   \end{itemize}
+\end{frame}
 
+\begin{frame}{Future work}
+  \begin{itemize}\pause
+   \item Work on a parallel strategy to prune redundant and `under $\mu$' disks.\pause
+   \item Work on a parallel strategy to join the sets of valid disks between time intervals.\pause
+   \item Explore more datasets to optimize Speedup and Scaleup values.\pause
+   \item Data pre-processing and result visualization are still open issues.
+  \end{itemize}
 \end{frame}
 
 \subsection*{Thanks...}
