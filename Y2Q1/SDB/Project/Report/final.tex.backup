@@ -47,9 +47,9 @@ The algorithm proposed by \citep{vieira_-line_2009} presents an initial strategy
 
 Given the high complexity of the task, it should not be surprising the use of parallelism to increase performance.  \cite{fort_parallel_2014} use extremal and intersection sets to report maximal, longest and largest flocks on the GPU with the limitations of its memory model.  
 
-Indeed, despite the popularity of cluster computing frameworks (in particular whose supporting spatial capabilities \citep{eldawy_spatialhadoop:_2014, yu_demonstration_2016, pellechia_geomesa:_2015-1, xie_simba:_2016-1}) there are not significant advances in this area.  At the best of our knowledge, this work is the first to explore in-memory distributed systems towards the detection of moving flock patterns.
+Indeed, despite the popularity of cluster computing frameworks (in particular whose supporting spatial capabilities \citep{eldawy_spatialhadoop:_2014, yu_demonstration_2016, pellechia_geomesa:_2015, xie_simba:_2016}) there are not significant advances in this area.  At the best of our knowledge, this work is the first to explore in-memory distributed systems towards the detection of moving flock patterns.
 
-\begin{figure}[t]
+\begin{figure}
  \centering
  \includegraphics[width=0.3\textwidth]{./figures/grid.png}
  \caption{Grid-based index used in \cite{vieira_-line_2009}.}
@@ -61,34 +61,77 @@ Indeed, despite the popularity of cluster computing frameworks (in particular wh
 % 
 % "Finding disks" seems to be very low-level for someone skimming over the report. You might want to give it a simpler title such as "Parallelizing Flock Detection" or something along these lines. It will be also a good idea to give a brief background on Simba in a separate section in case readers are not familiar with it. You only need to mention the parts that are relevant to your work.
 
-Given that the finding of disks at each time interval is one of the most costly operations towards the detection of moving flock patterns, the main goal of this work is to implement a parallel method to detect that set of disks.  In order to do that, we will use the spatial operations offered by Simba \citep{xie_simba:_2016-1}, a distributed in-memory spatial analytics engine based on Apache Spark. This section explains the details of the algorithm implemented in Simba and how some spatial predicates introduced by it can leverage the finding of disks.
+Given that the finding of disks at each time interval is one of the most costly operations towards the detection of moving flock patterns, the main goal of this work is to implement a parallel method to detect that set of disks.  In order to do that, we will use the spatial operations offered by Simba \citep{xie_simba:_2016}, a distributed in-memory spatial analytics engine based on Apache Spark. This section explains the details of the algorithm implemented in Simba and how some spatial predicates introduced by it can leverage the finding of disks.
 
-\subsection{Spatial operation on Simba}
-Simba (Spatial In-Memory Big data Analytics) extends the Spark SQL engine to provide rich spatial operations through both SQL and the DataFrame API.  Besides, it introduces two-layer spatial indexing and cost-based optimizations to support efficient spatial queries.  Simba is open source and public available at the project homepage\footnote{\url{http://www.cs.utah.edu/~dongx/simba/}}.
+\subsection{Spatial operations on Simba}
+Simba (Spatial In-Memory Big data Analytics) extends the Spark SQL engine to provide rich spatial operations through both SQL and the DataFrame API.  Besides, it introduces two-layer spatial indexing and cost-based optimizations to support efficient spatial queries in parallel.  Simba is open source and public available at the project homepage\footnote{\url{http://www.cs.utah.edu/~dongx/simba/}}.
 
-In particular, DISTANCE JOIN and CIRCLERANGE operators were used in order to find groups of points lying close enough each other.  The algorithm uses a user-defined distance ($\varepsilon$) to define the diameter of the disk.  Figure he SQL statement used to find pairs of points inside an $\varepsilon$.
+In particular, \texttt{DISTANCE JOIN} and \texttt{CIRCLERANGE} operators were used in order to find groups of points lying close enough each other.  The algorithm uses a user-defined distance ($\varepsilon$) to define the diameter of the disk.  Figure \ref{fig:sql} shows the SQL statement used to find pairs of points inside an $\varepsilon$ distance in parallel.
 
-\begin{figure}[t]
+\begin{figure}
  \centering
-    \begin{minted}[fontsize=\tiny,tabsize=4,breaklines,framesep=10pt,frame=single]{sql}
-    SELECT * 
-    FROM points p1
-    DISTANCE JOIN points p2 
-    ON POINT(p2.x, p2.y) IN CIRCLERANGE(POINT(p1.x, p1.y), \varepsilon)
-    WHERE p1.id < p2.id
+    \begin{minted}[fontsize=\footnotesize,tabsize=8,breaklines,framesep=10pt,frame=single, escapeinside=||,mathescape=true]{sql}
+SELECT 
+	* 
+FROM 
+	points p1
+|\color{blue}{DISTANCE JOIN}|
+	points p2 
+ON 
+	POINT(p2.x, p2.y) IN |\color{blue}{CIRCLERANGE}|(POINT(p1.x, p1.y), |$\varepsilon$|)
+WHERE 
+	p1.id < p2.id
     \end{minted}
- \caption{Grid-based index used in \cite{vieira_-line_2009}.}
+ \caption{SQL statement on Simba to find points lying inside an $\varepsilon$ distance.}
  \label{fig:sql}
 \end{figure}
 
+\subsection{Finding disks for pairs of points}
+Once the set of pairs of points has been found, a map function computes the center of the two possible disks per each pair according to the BFE algorithm.  \cite{vieira_-line_2009} states that:  ``For each such pair there are exactly two disks with radius $\varepsilon/2$ that have those points on their circumference''.  Figure \ref{fig:theorem} illustrates how to find the center of those disks.
 
+\begin{figure}
+ \centering
+ \includegraphics{figures/theorem} 
+ \caption{Disks for $\{p_1,p_2\},\ d(p_1,p_2) \leq \varepsilon$ \citep{vieira_-line_2009}.}
+ \label{fig:theorem}
+\end{figure}
 
+After that, the complete set of candidate disks is collected and ready to be processed by the following phases of the BFE algorithm. 
+
+The implementation of the proposed method was written in Scala 2.10.6 and tested in Simba/Spark 1.6.0.  The current code can be accessed at the authors' repository\footnote{ \url{https://github.com/aocalderon/PhD/tree/master/Y2Q1/SDB/Project/Code/Scripts/pbfe2}}.
 
 \section{Experiments}\label{sec:experiments}
 % The setup and details about the datasets I plan to use will be discussed in this section.  It will show some figures comparing the implementation with a sequential version of the algorithm.
 % 
 % This part was very generic in your report outline. You need to be more specific on which datasets you will use and the types of experiments you want to run. Mainly, I'm interested to know the questions you aim to answer in the experiments section.
 
+The main idea of the experiments is to assess the performance of the parallel method against a sequential version of the BFE algorithm proposed by \citep{vieira_-line_2009}.  A public available implementation can be accessed at this repository\footnote{\url{https://github.com/poldrosky/FPFlock}}.  The source code was modified to stop after the finding of the disks and report the total number of disks computed.  Same configuration was followed by the parallel implementation.
+
+Next, a set of experiments evaluates the execution time of both algorithm on two real datasets.  Further details of the settings and datasets are discussed below.
+
+\subsection{Beijing dataset}
+This dataset was extracted from the Geolife project\footnote{\url{https://www.microsoft.com/en-us/download/details.aspx?id=52367}} \cite{zheng_understanding_2008, zheng_mining_2009, zheng_geolife:_2010}.  It collects GPS trajectories of 182 users in a period of over three years (from April 2007 to August 2012) for an overall total of 17,621 trajectories.  The timestamp field was ignored and duplicate locations removed to simulated an unique and large time interval.  In total, the point dataset contains $\approx$18 million points.
+
+An initial set of experiments takes relatively small samples of the data and runs the algorithms under different values of $\varepsilon$. Experiments were deployed in a single-node machine with a 4-core Intel(R) Core(TM) i5-2400S CPU @ 2.50GHz processor, 8 GB of RAM running Ubuntu 16.04 LTS, Python 3.5 and Simba/Spark 1.6.0.  Figure \ref{fig:beijing} show the results of these experiments.
+
+\begin{figure}
+ \centering
+ \includegraphics[width=0.85\textwidth]{figures/beijing} 
+ \caption{Execution time for Beijing dataset.}
+ \label{fig:beijing}
+\end{figure}
+
+\subsection{Porto dataset}
+This dataset was extracted from the ECML/PKDD 15 Taxi Trajectory Prediction Challenge\footnote{\url{https://www.kaggle.com/c/pkdd-15-predict-taxi-service-trajectory-i/data}} \cite{lam_blue_2015, moreira-matias_predicting_2013}.  It collects a complete year (from 01/07/2013 to 30/06/2014) of trajectories for all the 442 taxis running in the city of Porto, in Portugal. After pre-processing and duplicate removal the collection has $\approx$17.7 million points.
+
+This set of experiments takes data samples of 1, 2, 4, 8 and 16 million of points.  Similarly, it runs the algorithms under different values of $\varepsilon$.  This time, experiments were deployed in a 4-node academic cluster with the following setup: 8-core Intel(R) Xeon(R) CPU E3-1230 V2 @ 3.30GHz per node with 15.5 GB of RAM.  The systems run Centos 6.8, Python 3.5 and Simba/Spark 1.6.0.  Figure \ref{fig:porto} show the results of these experiments.
+
+\begin{figure}
+ \centering
+ \includegraphics[width=0.85\textwidth]{figures/porto} 
+ \caption{Execution time for Porto dataset.}
+ \label{fig:porto}
+\end{figure}
 
 \section{Conclusions and future work}\label{sec:conclusions}
 % I will share the lessons learned during the project and some future ideas to continue with the research.

@@ -107,11 +107,11 @@
 
 \section*{Introduction}
 
-\begin{frame}{Trajectory Datasets}
+\begin{frame}{Trajectory datasets}
   \begin{itemize}
     \item Anything that could move (or could be moved), will be tracked...
     \begin{itemize}
-      \item Smart phones, GPS, RFID, WiFi, Bluetooth, ZigBee, IoT, Satellites, Drones...
+      \item Smart phones, GPS, RFID, WiFi, Bluetooth, ZigBee, IoT, Satellites, Drones, Surveillance cameras...
     \end{itemize}
   \end{itemize}
   \centering
@@ -130,7 +130,7 @@
   \includegraphics[width=\linewidth]{Figures/sharks.jpg}\blfootnote{\tiny \url{http://tinyurl.com/gtqjh4o}}
 \end{frame}
 
-\section{Moving Flock Patterns}
+\section{Moving flock patterns}
 
 \begin{frame}{What is a flock???}
   \begin{definition}[$(\mu,\epsilon,\delta)-flock$]
@@ -158,21 +158,21 @@
 
 \section{Implementation}
 
-\begin{frame}{BFE Implementation}
+\begin{frame}{BFE implementation}
     \begin{itemize}
      \item On-Line Discovery of Flock Patterns in Spatio-Temporal Data \tiny (Vieira et al, SIGSPATIAL'09).
      \item \normalsize Implementation available at \url{https://github.com/poldrosky/FPFlock}.
     \end{itemize}
 \end{frame}
 
-\begin{frame}{PBFE Implementation}
+\begin{frame}{PBFE implementation}
     \begin{itemize}
-     \item Done using Simba 1.6.0.
+     \item Written in Scala using Simba 1.6.0.
      \begin{itemize}
-      \item \texttt{DISTANCE JOIN} and \texttt{CIRCLERANGE} operators were the key!!!
+      \item \texttt{DISTANCE JOIN} and \texttt{CIRCLERANGE} operators were the key operators!!!
       \item Tested by visual inspection and counting number of found disks.
      \end{itemize}
-     \item \large Demo:
+     \item \large Demo (in R language):
      \begin{itemize}
       \item \url{http://tinyurl.com/jl55849}.
       \item Password is `nancy' (behave yourself).
@@ -231,7 +231,7 @@ val disks = pairs.rdd.filter( (x:Row) => x.getInt(0) > x.getInt(3) )
 
 \section{Experiments}
 
-\begin{frame}{RDD vs DF vs SQL Filters}
+\begin{frame}{RDD vs DF vs SQL filters}
   \begin{itemize}
     \item Which have the best performance???
     \begin{itemize}
@@ -242,12 +242,12 @@ val disks = pairs.rdd.filter( (x:Row) => x.getInt(0) > x.getInt(3) )
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Benchmarking on Beijing Dataset}
+\begin{frame}{Benchmarking on Beijing dataset}
   \centering
   \includegraphics[height=0.86\textheight]{Figures/Beijing_PBFE2vsPBFE3vsPBFE4_N10K-100K_E10-200}
 \end{frame}
 
-\begin{frame}{Benchmarking on Beijing Dataset}
+\begin{frame}{Benchmarking on Beijing dataset}
   \centering
   \includegraphics[height=0.86\textheight]{Figures/Beijing_PBFE2vsPBFE3_N10K-100K_E10-200}
 \end{frame}
@@ -264,7 +264,7 @@ val disks = pairs.rdd.filter( (x:Row) => x.getInt(0) > x.getInt(3) )
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Beijing Dataset}
+\begin{frame}{Beijing dataset}
   \centering
   \includegraphics[width=\textwidth]{Figures/geolife.jpg}
 \end{frame}
@@ -278,7 +278,7 @@ val disks = pairs.rdd.filter( (x:Row) => x.getInt(0) > x.getInt(3) )
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Execution time:}
+\begin{frame}{Execution time}
 
   \centering
   \href{http://tinyurl.com/js6us8g}{\includegraphics[height=0.85\textheight]{Figures/Beijing10K-100K_E10-200}}
@@ -305,7 +305,7 @@ val disks = pairs.rdd.filter( (x:Row) => x.getInt(0) > x.getInt(3) )
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Porto Dataset}
+\begin{frame}{Porto dataset}
   \centering
   \includegraphics[height=0.85\textheight]{Figures/porto.png}
 \end{frame}
@@ -334,7 +334,7 @@ val disks = pairs.rdd.filter( (x:Row) => x.getInt(0) > x.getInt(3) )
   \includegraphics[height=0.85\textheight]{Figures/Porto_Speedup}
 \end{frame}
 
-\section{Conclusions and Future work}
+\section{Conclusions and future work}
 
 \begin{frame}{Conclusions}
   \begin{itemize}\pause
@@ -342,7 +342,7 @@ val disks = pairs.rdd.filter( (x:Row) => x.getInt(0) > x.getInt(3) )
    \item The method proves to be scalable and reliable.\pause
    \item Execution time improves up to 3 orders of magnitude compared to the sequential code.\pause
    \item Good behavior of Scaleup and Speedup metrics.\pause
-   \item DISTANCE `SELF' JOIN's depict a better performance using DataFrame or RDD filters (avoid Spark-SQL).\pause
+   \item DISTANCE `SELF' JOINS depict a better performance using DataFrame or RDD filters (avoid Spark-SQL).
   \end{itemize}
 \end{frame}
 
