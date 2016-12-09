@@ -1,11 +1,10 @@
 \documentclass[12pt]{scrartcl}
+\usepackage[hidelinks]{hyperref}
 \usepackage[utf8]{inputenc}
 \usepackage[square]{natbib}
-\usepackage[hidelinks]{hyperref}
 \usepackage{graphicx}
 \usepackage{minted}
 
-%opening
 \title{Towards Parallel Detection of Moving Flock Patterns in Large Spatio-temporal Datasets\\ \normalsize{Final report}}
 \author{Andres Calderon}
 
@@ -18,13 +17,13 @@
 % 
 % The introduction gives a nice motivation and background for the proposed work. Try to make it more application-centric; that is, mention a few real-life applications that make use of the problem being addressed.  The introduction should also give the high-level idea of the solution and how it overcomes the limitations of existing work.  You might want to provide a final paragraph in the introduction that gives the overall report outline.
 
-Spatio-temporal data is ubiquitous nowadays. Thanks to new technologies and location devices (such as Internet of Things, Remote Sensing, Smart phones, GPS, RFID, etc.), the collection of huge amount of spatio-temporal data is now possible. With the appearance of this datasets also appears the need of new techniques which allow the analysis and detection of useful patterns.  
+Nowadays, spatio-temporal data is ubiquitous. Thanks to new technologies and the proliferation of location devices (such as Internet of Things, Remote Sensing, Smart phones, GPS, RFID, etc.), the collection of huge amount of spatio-temporal data is now possible. With the appearance of this datasets also appears the need of new techniques which allow the analysis and detection of useful patterns in large spatio-temporal databases.  
 
 Applications for this kind of information are diverse and interesting, in particular if they come in the way of trajectory datasets \citep{jeung_trajectory_2011, huang_mining_2015}. Case of studies range from transportation system management \citep{di_lorenzo_allaboard:_2016,johansson_efficiency_2015} to Ecology \citep{johnston_abundance_2015, la_sorte_convergence_2016}.  For instance, \cite{turdukulov_visual_2014} explore the finding of complex motion patterns to discover similarities between tropical cyclone paths.  Similarly, \cite{amor_persistence_2016} use eye trajectories to understand which strategies people use during a visual search. Also, \cite{holland_movements_1999} track the behavior of tiger sharks in the coasts of Hawaii in order to understand their migration patters.
 
-Recently, there has been an increasing interest in exploiting more complex movement patterns in spatio-temporal datasets.  Traditional range and nearest neighbor queries do not capture the collective behavior of moving objects.  Moving cluster (\cite{kalnis_discovering_2005}), convoys (\cite{jeung_discovery_2008}) and flock patterns (\cite{benkert_reporting_2008, gudmundsson_computing_2006}) are new movement patterns which unveil how entities move together during a minimum time interval.  
+Recently, there has been an increasing interest in exploiting more complex movement patterns in spatio-temporal datasets.  Traditional range and nearest neighbor queries do not capture the collective behavior of moving objects.  Moving cluster \citep{kalnis_discovering_2005}, convoys \citep{jeung_discovery_2008} and flock patterns \citep{benkert_reporting_2008, gudmundsson_computing_2006} are new movement patterns which unveil how entities move together during a minimum time interval.  
 
-In particular, a moving flock pattern show how objects move close enough during a given period of time.  A better understanding on how entities move in space is of special interest in areas such as sports (\cite{iwase_tracking_2002}),  surveillance and security (\cite{makris_path_2002,piciarelli_trajectory_2005}), urban development (\cite{huang_trajgraph:_2016, long_combining_2015}) and socio-economic geography (\cite{frank_life_2000}).
+In particular, a moving flock pattern show how objects move close enough during a given period of time.  A better understanding on how entities move in space is of special interest in areas such as sports \citep{iwase_tracking_2002},  surveillance and security \citep{makris_path_2002,piciarelli_trajectory_2005}, urban development \citep{huang_trajgraph:_2016, long_combining_2015} and socio-economic geography \citep{frank_life_2000}.
 
 Despite the fact that much more data become available, state-of-the-art techniques to mine complex movement patterns still depict low scalability and poor performance in big spatial data.  The present work aims to find an initial solution to implement a parallel method to discover moving flock patterns in large spatio-temporal datasets.  It is thought that new trends in distributed in-memory framework for spatial operations could help to speed up the detection of this kind of patterns.
 
@@ -35,15 +34,22 @@ The following section will state the related work in the area.  Section \ref{sec
 % 
 % The main goal of the related work section is to position your work in the literature of related work. If all the existing work in this problem is on a single machine, you can clearly say that your work is the first work in a distributed environment. If there are other work that run in a distributed environment, you will have to mention how your problem or solution is different.
 
-Recently increase use of location-aware devices (such as GPS, Smart-phones and RFID tags) has allowed the collection of a vast amount of data with a spatial component linked to them.  Different studies have focused in analyzing and mining this kind of collections \citep{leung_knowledge_2010, miller_geographic_2001}.  In this area, trajectory datasets have emerged as an interesting field where diverse kind of patterns can be identified \citep{zheng_computing_2011, vieira_spatio-temporal_2013}.  For instance, authors have proposed techniques to discover motion spatial patterns such as moving clusters \citep{kalnis_discovering_2005}, convoys \citep{jeung_discovery_2008} and flocks \citep{benkert_reporting_2008, gudmundsson_computing_2006}.  In particular, \cite{vieira_-line_2009} proposed BFE (Basic Flock Evaluation), a novel algorithm to find moving flock patterns in polynomial time over large spatio-temporal datasets.  
+Recently increase use of location-aware devices (such as GPS, Smart phones and RFID tags) has allowed the collection of a vast amount of data with a spatial and temporal component linked to them.  Different studies have focused in analyzing and mining this kind of collections \citep{leung_knowledge_2010, miller_geographic_2001}.  In this area, trajectory datasets have emerged as an interesting field where diverse kind of patterns can be identified \citep{zheng_computing_2011, vieira_spatio-temporal_2013}.  For instance, authors have proposed techniques to discover motion spatial patterns such as moving clusters \citep{kalnis_discovering_2005}, convoys \citep{jeung_discovery_2008} and flocks \citep{benkert_reporting_2008, gudmundsson_computing_2006}.  In particular, \cite{vieira_-line_2009} proposed BFE (Basic Flock Evaluation), a novel algorithm to find moving flock patterns in polynomial time over large spatio-temporal datasets.  
  
-A flock pattern is defined as a group of entities which move together for a defined lapse of time \citep{benkert_reporting_2008}.  Applications to this kind of patterns are rich and diverse.  For example, \citep{calderon_romero_mining_2011} finds moving flock patterns in iceberg trajectories to understand their movement behavior and how they related to changes in ocean's currents. 
+A flock pattern is defined as a group of entities which move together for a defined lapse of time \citep{benkert_reporting_2008} (figure \ref{fig:flock}).  Applications to this kind of patterns are rich and diverse.  For example, \citep{calderon_romero_mining_2011} finds moving flock patterns in iceberg trajectories to understand their movement behavior and how they related to changes in ocean's currents. 
+
+\begin{figure}
+ \centering
+ \includegraphics[width=0.5\textwidth]{./figures/flock}
+ \caption{Moving flock pattern example.}
+ \label{fig:flock}
+\end{figure}
  
-The algorithm proposed by \citep{vieira_-line_2009} presents an initial strategy in order to detect flock patterns.  In that, first they find disks with a predefined diameter where moving entities could be close enough at a given time interval.  This is a costly operation due to the large number of points and intervals to be analyzed ($\mathcal{O}(2n^2)$ per time interval).  The technique uses a grid-based index and a stencil (see figure~\ref{fig:grid}) to speed up the process, but the complexity is still high.
+The BFE algorithm presents an initial strategy in order to detect flock patterns.  In that, first it finds disks with a predefined diameter ($\varepsilon$) where moving entities could be close enough at a given time interval.  This is a costly operation due to the large number of points and intervals to be analyzed ($\mathcal{O}(2n^2)$ per time interval).  The technique uses a grid-based index and a stencil (see figure \ref{fig:grid}) to speed up the process, but the complexity is still high.
 
 \cite{calderon_romero_mining_2011} and \cite{turdukulov_visual_2014} use a frequent pattern mining approach to improve performance during the combination of disks between time intervals.  Similarly, \cite{tanaka_improved_2016} introduce the use of plane sweeping along with binary signatures and inverted indexes to speedup the same process.  However, the above-mentioned methods still keep the same strategy as BFE to find the disks at each interval.  
 
-\citep{arimura_finding_2014} and \citep{geng_enumeration_2014} use depth-first algorithms to analyze the time intervals of each trajectory to report maximal duration flocks.  However, these techniques are not suitable to find patterns in an on-line fashion.
+\cite{arimura_finding_2014} and \cite{geng_enumeration_2014} use depth-first algorithms to analyze the time intervals of each trajectory to report maximal duration flocks.  However, these techniques are not suitable to find patterns in an on-line fashion.
 
 Given the high complexity of the task, it should not be surprising the use of parallelism to increase performance.  \cite{fort_parallel_2014} use extremal and intersection sets to report maximal, longest and largest flocks on the GPU with the limitations of its memory model.  
 
@@ -51,7 +57,7 @@ Indeed, despite the popularity of cluster computing frameworks (in particular wh
 
 \begin{figure}
  \centering
- \includegraphics[width=0.3\textwidth]{./figures/grid.png}
+ \includegraphics[width=0.3\textwidth]{./figures/grid}
  \caption{Grid-based index used in \cite{vieira_-line_2009}.}
  \label{fig:grid}
 \end{figure}
@@ -64,7 +70,7 @@ Indeed, despite the popularity of cluster computing frameworks (in particular wh
 Given that the finding of disks at each time interval is one of the most costly operations towards the detection of moving flock patterns, the main goal of this work is to implement a parallel method to detect that set of disks.  In order to do that, we will use the spatial operations offered by Simba \citep{xie_simba:_2016}, a distributed in-memory spatial analytics engine based on Apache Spark. This section explains the details of the algorithm implemented in Simba and how some spatial predicates introduced by it can leverage the finding of disks.
 
 \subsection{Spatial operations on Simba}
-Simba (Spatial In-Memory Big data Analytics) extends the Spark SQL engine to provide rich spatial operations through both SQL and the DataFrame API.  Besides, it introduces two-layer spatial indexing and cost-based optimizations to support efficient spatial queries in parallel.  Simba is open source and public available at the project homepage\footnote{\url{http://www.cs.utah.edu/~dongx/simba/}}.
+Simba (Spatial In-Memory Big data Analytics) extends the Spark SQL engine to provide rich spatial operations through both SQL and the DataFrame API.  Besides, it introduces two-layer spatial indexing and cost-based optimizations to support efficient spatial queries in parallel.  Simba is open source and public available at the project's webpage\footnote{\url{http://www.cs.utah.edu/~dongx/simba/}}.
 
 In particular, \texttt{DISTANCE JOIN} and \texttt{CIRCLERANGE} operators were used in order to find groups of points lying close enough each other.  The algorithm uses a user-defined distance ($\varepsilon$) to define the diameter of the disk.  Figure \ref{fig:sql} shows the SQL statement used to find pairs of points inside an $\varepsilon$ distance in parallel.
 
@@ -87,11 +93,11 @@ WHERE
 \end{figure}
 
 \subsection{Finding disks for pairs of points}
-Once the set of pairs of points has been found, a map function computes the center of the two possible disks per each pair according to the BFE algorithm.  \cite{vieira_-line_2009} states that:  ``For each such pair there are exactly two disks with radius $\varepsilon/2$ that have those points on their circumference''.  Figure \ref{fig:theorem} illustrates how to find the center of those disks.
+Once the set of pairs of points has been found, a map function computes the center of the two possible disks per each pair according to the BFE algorithm.  \cite{vieira_-line_2009} states that:  ``For each such pair there are exactly two disks with radius $\frac{\varepsilon}{2}$ that have those points on their circumference''.  Figure \ref{fig:theorem} illustrates how to find the center of those disks.
 
 \begin{figure}
  \centering
- \includegraphics{figures/theorem} 
+ \includegraphics[width=0.4\textwidth]{figures/theorem} 
  \caption{Disks for $\{p_1,p_2\},\ d(p_1,p_2) \leq \varepsilon$ \citep{vieira_-line_2009}.}
  \label{fig:theorem}
 \end{figure}
@@ -105,30 +111,30 @@ The implementation of the proposed method was written in Scala 2.10.6 and tested
 % 
 % This part was very generic in your report outline. You need to be more specific on which datasets you will use and the types of experiments you want to run. Mainly, I'm interested to know the questions you aim to answer in the experiments section.
 
-The main idea of the experiments is to assess the performance of the parallel method against a sequential version of the BFE algorithm proposed by \citep{vieira_-line_2009}.  A public available implementation can be accessed at this repository\footnote{\url{https://github.com/poldrosky/FPFlock}}.  The source code was modified to stop after the finding of the disks and report the total number of disks computed.  Same configuration was followed by the parallel implementation.
+The main idea of the experiments is to assess the performance of the parallel method against a sequential version of the BFE algorithm proposed by \cite{vieira_-line_2009}.  A public available implementation written in Python can be accessed at this repository\footnote{\url{https://github.com/poldrosky/FPFlock}}.  The source code was modified to stop after the finding of the disks and report the total number of computed disks.  Same configuration was followed by the parallel implementation.
 
-Next, a set of experiments evaluates the execution time of both algorithm on two real datasets.  Further details of the settings and datasets are discussed below.
+Next, a set of experiments evaluates the execution time of both algorithms on two real datasets.  Further details of the settings and datasets are discussed below.
 
 \subsection{Beijing dataset}
-This dataset was extracted from the Geolife project\footnote{\url{https://www.microsoft.com/en-us/download/details.aspx?id=52367}} \cite{zheng_understanding_2008, zheng_mining_2009, zheng_geolife:_2010}.  It collects GPS trajectories of 182 users in a period of over three years (from April 2007 to August 2012) for an overall total of 17,621 trajectories.  The timestamp field was ignored and duplicate locations removed to simulated an unique and large time interval.  In total, the point dataset contains $\approx$18 million points.
+This dataset was extracted from the Geolife project\footnote{\url{https://www.microsoft.com/en-us/download/details.aspx?id=52367}} \citep{zheng_understanding_2008, zheng_mining_2009, zheng_geolife:_2010}.  It collects GPS trajectories of 182 users in a period of over three years (from April 2007 to August 2012) for an overall total of 17,621 trajectories.  The timestamp field was ignored and duplicate locations were removed to simulate an unique and large time interval.  In total, the point dataset contains $\approx$18 million points.
 
 An initial set of experiments takes relatively small samples of the data and runs the algorithms under different values of $\varepsilon$. Experiments were deployed in a single-node machine with a 4-core Intel(R) Core(TM) i5-2400S CPU @ 2.50GHz processor, 8 GB of RAM running Ubuntu 16.04 LTS, Python 3.5 and Simba/Spark 1.6.0.  Figure \ref{fig:beijing} show the results of these experiments.
 
 \begin{figure}
  \centering
- \includegraphics[width=0.85\textwidth]{figures/beijing} 
+ \includegraphics[width=0.9\textwidth]{figures/beijing} 
  \caption{Execution time for Beijing dataset.}
  \label{fig:beijing}
 \end{figure}
 
 \subsection{Porto dataset}
-This dataset was extracted from the ECML/PKDD 15 Taxi Trajectory Prediction Challenge\footnote{\url{https://www.kaggle.com/c/pkdd-15-predict-taxi-service-trajectory-i/data}} \cite{lam_blue_2015, moreira-matias_predicting_2013}.  It collects a complete year (from 01/07/2013 to 30/06/2014) of trajectories for all the 442 taxis running in the city of Porto, in Portugal. After pre-processing and duplicate removal the collection has $\approx$17.7 million points.
+This dataset was extracted from the ECML/PKDD'15 Taxi Trajectory Prediction Challenge\footnote{\url{https://www.kaggle.com/c/pkdd-15-predict-taxi-service-trajectory-i/data}} \citep{lam_blue_2015, moreira-matias_predicting_2013}.  It collects a complete year (from 01/07/2013 to 30/06/2014) of trajectories for all the 442 taxis running in the city of Porto, in Portugal. After pre-processing and duplicate removal the collection had $\approx$17.7 million points.
 
-This set of experiments takes data samples of 1, 2, 4, 8 and 16 million of points.  Similarly, it runs the algorithms under different values of $\varepsilon$.  This time, experiments were deployed in a 4-node academic cluster with the following setup: 8-core Intel(R) Xeon(R) CPU E3-1230 V2 @ 3.30GHz per node with 15.5 GB of RAM.  The systems run Centos 6.8, Python 3.5 and Simba/Spark 1.6.0.  Figure \ref{fig:porto} show the results of these experiments.
+This set of experiments takes data samples of 1, 2, 4, 8 and 16 million of points.  Similarly, it runs the algorithms under different values of $\varepsilon$.  This time, experiments were deployed in a 4-node academic cluster with the following setup: an 8-core Intel(R) Xeon(R) CPU E3-1230 V2 @ 3.30GHz processor and 15.5 GB of RAM per node.  The systems run Centos 6.8, Python 3.5 and Simba/Spark 1.6.0.  Figure \ref{fig:porto} show the results of these experiments.
 
 \begin{figure}
  \centering
- \includegraphics[width=0.85\textwidth]{figures/porto} 
+ \includegraphics[width=0.9\textwidth]{figures/porto} 
  \caption{Execution time for Porto dataset.}
  \label{fig:porto}
 \end{figure}
@@ -136,9 +142,9 @@ This set of experiments takes data samples of 1, 2, 4, 8 and 16 million of point
 \section{Conclusions and future work}\label{sec:conclusions}
 % I will share the lessons learned during the project and some future ideas to continue with the research.
 
-An implementation of a parallel method to detect disks for the BFE algorithm has been presented.  The proposed method proves to be scalable and reliable. Set of experiments shows that execution time improves up to 3 orders of magnitude compared to the sequential implementation of the BFE algorithm for the same part.
+An implementation of a parallel method to detect disks for the BFE algorithm has been presented.  The proposed method proves to be scalable and reliable. Experiments shows that execution time improves up to 3 orders of magnitude compared to the sequential implementation of the BFE algorithm for the same step.
 
-Parallel implementation for the remaining step of the BFE algorithm are part of the future work. It is expected to work on parallel strategies to prune redundant and incomplete disks together with a parallel strategy to join the sets of valid disks between time intervals.  In addition, data pre-processing and result visualization are still open issues.
+Parallel implementation for the remaining steps of the BFE algorithm are part of the future work. It is expected to work on parallel strategies to prune redundant and incomplete disks together with a parallel strategy to join the sets of valid disks between time intervals.  In addition, data pre-processing and result visualization are still open issues.
 
 \bibliographystyle{plainnat}
 \bibliography{flock}
