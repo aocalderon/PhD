@@ -5,7 +5,7 @@
 \usepackage{graphicx}
 \usepackage{minted}
 
-\title{Towards Parallel Detection of Moving Flock Patterns in Large Spatio-temporal Datasets\\ \normalsize{Final report}}
+\title{Towards Parallel Detection of Moving Flock Patterns in Large Spatio-temporal Datasets}
 \author{Andres Calderon}
 
 \begin{document}
@@ -53,7 +53,7 @@ The BFE algorithm presents an initial strategy in order to detect flock patterns
 
 Given the high complexity of the task, it should not be surprising the use of parallelism to increase performance.  \cite{fort_parallel_2014} use extremal and intersection sets to report maximal, longest and largest flocks on the GPU with the limitations of its memory model.  
 
-Indeed, despite the popularity of cluster computing frameworks (in particular whose supporting spatial capabilities \citep{eldawy_spatialhadoop:_2014, yu_demonstration_2016, pellechia_geomesa:_2015, xie_simba:_2016}) there are not significant advances in this area.  At the best of our knowledge, this work is the first to explore in-memory distributed systems towards the detection of moving flock patterns.
+Indeed, despite the popularity of cluster computing frameworks (in particular whose supporting spatial capabilities \citep{eldawy_spatialhadoop:_2014, yu_demonstration_2016, pellechia_geomesa:_2015-1, xie_simba:_2016-1}) there are not significant advances in this area.  At the best of our knowledge, this work is the first to explore in-memory distributed systems towards the detection of moving flock patterns.
 
 \begin{figure}
  \centering
@@ -67,7 +67,7 @@ Indeed, despite the popularity of cluster computing frameworks (in particular wh
 % 
 % "Finding disks" seems to be very low-level for someone skimming over the report. You might want to give it a simpler title such as "Parallelizing Flock Detection" or something along these lines. It will be also a good idea to give a brief background on Simba in a separate section in case readers are not familiar with it. You only need to mention the parts that are relevant to your work.
 
-Given that the finding of disks at each time interval is one of the most costly operations towards the detection of moving flock patterns, the main goal of this work is to implement a parallel method to detect that set of disks.  In order to do that, we will use the spatial operations offered by Simba \citep{xie_simba:_2016}, a distributed in-memory spatial analytics engine based on Apache Spark. This section explains the details of the algorithm implemented in Simba and how some spatial predicates introduced by it can leverage the finding of disks.
+Given that the finding of disks at each time interval is one of the most costly operations towards the detection of moving flock patterns, the main goal of this work is to implement a parallel method to detect that set of disks.  In order to do that, we will use the spatial operations offered by Simba \citep{xie_simba:_2016-1}, a distributed in-memory spatial analytics engine based on Apache Spark. This section explains the details of the algorithm implemented in Simba and how some spatial predicates introduced by it can leverage the finding of disks.
 
 \subsection{Spatial operations on Simba}
 Simba (Spatial In-Memory Big data Analytics) extends the Spark SQL engine to provide rich spatial operations through both SQL and the DataFrame API.  Besides, it introduces two-layer spatial indexing and cost-based optimizations to support efficient spatial queries in parallel.  Simba is open source and public available at the project's webpage\footnote{\url{http://www.cs.utah.edu/~dongx/simba/}}.
