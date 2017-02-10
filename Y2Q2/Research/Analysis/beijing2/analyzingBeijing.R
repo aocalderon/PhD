@@ -2,7 +2,7 @@ library(ggplot2)
 
 data <- data.frame()
 for(i in seq(0, 14)){
-  filename <- paste0("Beijing_PBFE_N8M-16M_E1-4_C",i,".csv")
+  filename <- paste0("Beijing_PBFE_N8M-14M_E1-4_C",i,".csv")
   temp <- read.csv(filename, header = F)
   temp <- temp[, c(2, 3, 5)]
   temp$Tag <- i
