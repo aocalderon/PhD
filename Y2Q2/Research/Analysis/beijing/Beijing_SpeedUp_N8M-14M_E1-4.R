@@ -24,6 +24,14 @@ for(i in seq(0, 14)){
   data <- rbind(data, temp)
 }
 
+for(i in seq(0, 14)){
+  filename <- paste0("../",DATASET,"3/", DATASET_TAG,"_PBFE_N8M-14M_E1-4_C",i,".csv")
+  temp <- read.csv(filename, header = F)
+  temp <- temp[, c(2, 3, 5)]
+  temp$Tag <- i
+  data <- rbind(data, temp)
+}
+
 names(data) <- c("Epsilon", "N", "Time", "Tag")
 data <- sqldf("SELECT Epsilon, N, AVG(Time) AS Time, Tag FROM data GROUP BY Epsilon, N, Tag")
 data$N <- factor(data$N, levels = c("8M","10M","12M","14M","16M"))
@@ -67,6 +75,7 @@ data3$Speedup <- core1$V5 / data3$Time
 data4$Speedup <- core1$V5 / data4$Time
 
 data <- rbind(data1, data2, data3, data4)
+data <- data[data$N == '12M',]
 
 title = paste("Speedup in", DATASET_TAG,"dataset.")
 g = ggplot(data=data, aes(x=factor(Epsilon), y=Speedup, fill=Nodes)) +
