@@ -102,15 +102,19 @@ file = 'map3.html'
 htmlwidgets::saveWidget(map, file = file, selfcontained = F)
 IRdisplay::display_html(paste("<iframe width=100% height=400 src=' ", file, " ' ","/>"))
 
-v = c(0,1,2,3,4,5,6,7,8,9)
+v1 = "656,659,660"
 
-k = c(7,5,2,9)
+v1 = as.numeric(unlist(strsplit(v1,',')))
 
-prod(is.element(k, v) )
+v1
 
-k = c(7,5,20,9)
+v2 = c(656,657,659,660)
 
-prod(is.element(k, v) )
+v2
+
+prod(is.element(v1, v2))
+
+
 
 m <- as.data.frame(rbind(mdisks1, mdisks2))
 m$id = seq(1,nrow(m))
@@ -122,22 +126,60 @@ registerTempTable(m, "m")
 head(points)
 count(points)
 
-sql = paste0("SELECT m.id AS mid, p.id AS pid FROM m DISTANCE JOIN p ON POINT(p.lng, p.lat) IN CIRCLERANGE (POINT(m.lng, m.lat), ",(epsilon/2)+0.01,")")
+sql = paste0("SELECT m.id AS mid, p.id AS pid FROM m DISTANCE JOIN p ON POINT(p.lng, p.lat) IN CIRCLERANGE (POINT(m.lng, m.lat), ",(epsilon/2)+0.01,") ORDER BY 1 ,2")
 t = sql(sqlContext,sql)
-head(t, 20)
+head(t, 30)
 count(t)
 
 library(sqldf)
 
 t = as.data.frame(t)
-g = sqldf("SELECT mid, group_concat(pid) AS pids FROM t GROUP BY mid")
+g = sqldf("SELECT mid, group_concat(CAST(pid AS INT)) AS pids FROM t GROUP BY mid ORDER BY count(pid)")
 head(g)
 nrow(g)
 
-j = sqldf("SELECT * FROM g AS g1 JOIN g AS g2 WHERE g1.mid < g2.mid")
-head(j)
-nrow(j)
+n = c()
+r = nrow(g)
+for(i in 1:r){
+    disk_i = as.numeric(unlist(strsplit(g[i,2], ',')))
+    flag = 1
+    for(j in (i+1):r){
+        disk_j = as.numeric(unlist(strsplit(g[j,2], ',')))
+        # print(paste0("Disk 1: ", disk_i, " Disk 2: ", disk_j, " Result: ", is.element(disk_i, disk_j)))
+              
+        if(prod(is.element(disk_i, disk_j)) == 1){
+            flag = 0
+            break
+        }
+    }
+    if(flag == 1){
+        n = c(n, i)
+    }
+}
 
 
+g = g[n,]
+
+m = as.data.frame(m)
+maximal = sqldf("SELECT lng, lat, pids FROM g JOIN m ON(id = mid)")
+head(maximal)
+nrow(maximal)
+
+coordinates(maximal) = ~lng+lat
+proj4string(maximal) = mercator
+maximal = spTransform(maximal, wgs84)
+maximal$lng1 = coordinates(maximal)[,1]
+maximal$lat1 = coordinates(maximal)[,2]
+
+map = leaflet() %>% setView(lat = 39.990010, lng = 116.317406, zoom = 15) %>% addTiles() %>% 
+        addCircles(lng=maximal$lng1, lat=maximal$lat1, weight=2, fillOpacity=0.25, color="orange", radius = epsilon/2, popup = maximal$pids) %>%
+        addCircleMarkers(lng=data$lng, lat=data$lat, weight=2, fillOpacity=1,radius = 2) %>%
+        addCircleMarkers(lng=data2$lng, lat=data2$lat, weight=2, fillOpacity=1, color="purple", radius = 2) %>% 
+        addProviderTiles("Esri.WorldImagery", group = "ESRI") %>% 
+        addLayersControl(baseGroup = c("OSM(default)", "ESRI"))
+
+file = 'map4.html'
+htmlwidgets::saveWidget(map, file = file, selfcontained = F)
+IRdisplay::display_html(paste("<iframe width=100% height=400 src=' ", file, " ' ","/>"))
 
 
