@@ -4,7 +4,11 @@ library(leaflet)
 library(sp)
 options(digits=15)
 
-epsilon = 100
+
+the_lat = 39.976057
+the_lng = 116.330243
+the_zoom = 15
+epsilon = 300
 source("pbfe.R")
 
 data = read.csv("sample_small.csv")
@@ -54,11 +58,11 @@ nrow(disks)
 
 p = sort(unique(c(disks$id1,disks$id2)))
 data2 = data[p,]
-map = leaflet() %>% setView(lat = 39.990010, lng = 116.317406, zoom = 15) %>% addTiles() %>% 
+map = leaflet() %>% setView(lat = the_lat, lng = the_lng, zoom = the_zoom) %>% addTiles() %>% 
         addCircles(lng=disks$lng1, lat=disks$lat1, weight=2, fillOpacity=0.25, color="red", radius = epsilon/2) %>%
         addCircles(lng=disks$lng2, lat=disks$lat2, weight=2, fillOpacity=0.25, color="red", radius = epsilon/2) %>%
         addCircleMarkers(lng=data$lng, lat=data$lat, weight=2, fillOpacity=1,radius = 2) %>%
-        addCircleMarkers(lng=data2$lng, lat=data2$lat, weight=2, fillOpacity=1, color="purple", radius = 2) %>% 
+        addCircleMarkers(lng=data2$lng, lat=data2$lat, weight=2, fillOpacity=1, color="purple", radius = 2, popup=paste(data2$ID)) %>% 
         addProviderTiles("Esri.WorldImagery", group = "ESRI") %>% 
         addLayersControl(baseGroup = c("OSM(default)", "ESRI"))
 
@@ -91,7 +95,7 @@ mdisks = spTransform(mdisks, wgs84)
 mdisks$lng1 = coordinates(mdisks)[,1]
 mdisks$lat1 = coordinates(mdisks)[,2]
 
-map = leaflet() %>% setView(lat = 39.990010, lng = 116.317406, zoom = 15) %>% addTiles() %>% 
+map = leaflet() %>% setView(lat = the_lat, lng = the_lng, zoom = the_zoom) %>% addTiles() %>% 
         addCircles(lng=mdisks$lng1, lat=mdisks$lat1, weight=2, fillOpacity=0.25, color="blue", radius = epsilon/2) %>%
         addCircleMarkers(lng=data$lng, lat=data$lat, weight=2, fillOpacity=1,radius = 2) %>%
         addCircleMarkers(lng=data2$lng, lat=data2$lat, weight=2, fillOpacity=1, color="purple", radius = 2) %>% 
@@ -114,7 +118,7 @@ v2
 
 prod(is.element(v1, v2))
 
-
+4:3
 
 m <- as.data.frame(rbind(mdisks1, mdisks2))
 m$id = seq(1,nrow(m))
@@ -126,7 +130,7 @@ registerTempTable(m, "m")
 head(points)
 count(points)
 
-sql = paste0("SELECT m.id AS mid, p.id AS pid FROM m DISTANCE JOIN p ON POINT(p.lng, p.lat) IN CIRCLERANGE (POINT(m.lng, m.lat), ",(epsilon/2)+0.01,") ORDER BY 1 ,2")
+sql = paste0("SELECT m.id AS mid, p.id AS pid FROM m DISTANCE JOIN p ON POINT(p.lng, p.lat) IN CIRCLERANGE (POINT(m.lng, m.lat), ",(epsilon/2)+0.01,") ORDER BY mid, pid")
 t = sql(sqlContext,sql)
 head(t, 30)
 count(t)
@@ -137,6 +141,7 @@ t = as.data.frame(t)
 g = sqldf("SELECT mid, group_concat(CAST(pid AS INT)) AS pids FROM t GROUP BY mid ORDER BY count(pid)")
 head(g)
 nrow(g)
+tail(g)
 
 n = c()
 r = nrow(g)
@@ -156,7 +161,8 @@ for(i in 1:r){
         n = c(n, i)
     }
 }
-
+n = c(n, r)
+n = unique(n)
 
 g = g[n,]
 
@@ -171,7 +177,7 @@ maximal = spTransform(maximal, wgs84)
 maximal$lng1 = coordinates(maximal)[,1]
 maximal$lat1 = coordinates(maximal)[,2]
 
-map = leaflet() %>% setView(lat = 39.990010, lng = 116.317406, zoom = 15) %>% addTiles() %>% 
+map = leaflet() %>% setView(lat = the_lat, lng = the_lng, zoom = the_zoom) %>% addTiles() %>% 
         addCircles(lng=maximal$lng1, lat=maximal$lat1, weight=2, fillOpacity=0.25, color="orange", radius = epsilon/2, popup = maximal$pids) %>%
         addCircleMarkers(lng=data$lng, lat=data$lat, weight=2, fillOpacity=1,radius = 2) %>%
         addCircleMarkers(lng=data2$lng, lat=data2$lat, weight=2, fillOpacity=1, color="purple", radius = 2) %>% 
@@ -179,6 +185,29 @@ map = leaflet() %>% setView(lat = 39.990010, lng = 116.317406, zoom = 15) %>% ad
         addLayersControl(baseGroup = c("OSM(default)", "ESRI"))
 
 file = 'map4.html'
+htmlwidgets::saveWidget(map, file = file, selfcontained = F)
+IRdisplay::display_html(paste("<iframe width=100% height=400 src=' ", file, " ' ","/>"))
+
+map = leaflet() %>% setView(lat = the_lat, lng = the_lng, zoom = the_zoom) %>% addTiles() %>% 
+        addCircleMarkers(lng=data$lng, lat=data$lat, weight=2, fillOpacity=1,radius = 2, group = "Points") %>%
+        
+        addCircles(lng=disks$lng1, lat=disks$lat1, weight=2, fillOpacity=0.10, color="red", radius = epsilon/2, group = "Initial set") %>%
+        addCircles(lng=disks$lng2, lat=disks$lat2, weight=2, fillOpacity=0.10, color="red", radius = epsilon/2, group = "Initial set") %>%
+        addCircleMarkers(lng=data2$lng, lat=data2$lat, weight=2, fillOpacity=1, color="purple", radius=2, group = "Initial set") %>% 
+        
+        addCircles(lng=mdisks$lng1, lat=mdisks$lat1, weight=2, fillOpacity=0.20, color="blue", radius = epsilon/2, group = "Prune less than mu") %>%
+        addCircleMarkers(lng=data2$lng, lat=data2$lat, weight=2, fillOpacity=1, color="purple", radius=2, group = "Prune less than mu") %>% 
+        
+        addCircles(lng=maximal$lng1, lat=maximal$lat1, weight=2, fillOpacity=0.40, color="orange", radius = epsilon/2, popup = maximal$pids, group = "Prune redundant") %>%
+        addCircleMarkers(lng=data2$lng, lat=data2$lat, weight=2, fillOpacity=1, color="purple", radius=2, group = "Prune redundant") %>% 
+        
+        addProviderTiles("Esri.WorldImagery", group = "ESRI") %>% 
+        addLayersControl(baseGroup = c("OSM(default)", "ESRI"),
+                        overlayGroups = c("Initial set", "Prune less than mu", "Prune redundant", "Points"),
+                        options = layersControlOptions(collapsed = FALSE, autoZIndex = FALSE)) 
+
+
+file = 'map5.html'
 htmlwidgets::saveWidget(map, file = file, selfcontained = F)
 IRdisplay::display_html(paste("<iframe width=100% height=400 src=' ", file, " ' ","/>"))
 
