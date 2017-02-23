@@ -1,27 +1,42 @@
+#!/usr/bin/Rscript
+
+library(optparse)
+ 
+option_list = list(
+	make_option(c("-o", "--out"), type="character", default="map" , help="Prefix for output html files", metavar="character"),
+	make_option(c("-x", "--lat"), type="double", default=39.976057, help="Latitude [default:%default]", metavar="double"),
+	make_option(c("-y", "--lng"), type="double", default=116.330243, help="Longitude [default:%default]", metavar="double"),
+	make_option(c("-e", "--epsilon"), type="double", default=100.0, help="Epsilon [default:%default]", metavar="double"),
+	make_option(c("-m", "--mu"), type="integer", default=3, help="Mu [default:%default]", metavar="integer"),
+	make_option(c("-z", "--zoom"), type="integer", default=15, help="Zoom [default:%default]", metavar="integer")
+)
+opt_parser = OptionParser(option_list=option_list)
+opt = parse_args(opt_parser)
 
 library(SparkR)
 library(leaflet)
 library(sp)
 options(digits=15)
 
-
-the_lat = 39.976057
-the_lng = 116.330243
-the_zoom = 15
-epsilon = 300
+the_lat = opt$lat
+the_lng = opt$lng
+the_zoom = opt$zoom
+epsilon = opt$epsilon
+mu = opt$mu
 source("pbfe.R")
+output = paste0(opt$out, "_E",  epsilon, "_M", mu)
 
 data = read.csv("sample_small.csv")
 names(data) = c("ID","lat","lng")
-head(data)
+# head(data)
 
-map = leaflet() %>%
-  addTiles() %>%
-  addCircleMarkers(lng=data$lng, lat=data$lat,weight=2,fillOpacity=1,color="blue",radius=2)
+# map = leaflet() %>%
+#	addTiles() %>%
+#	addCircleMarkers(lng=data$lng, lat=data$lat,weight=2,fillOpacity=1,color="blue",radius=2)
 
-file = 'map1.html'
-htmlwidgets::saveWidget(map, file = file, selfcontained = F)
-IRdisplay::display_html(paste("<iframe width=100% height=400 src=' ", file, " ' ","/>"))
+# file = 'map.html'
+# htmlwidgets::saveWidget(map, file = file, selfcontained = F)
+# IRdisplay::display_html(paste("<iframe width=100% height=400 src=' ", file, " ' ","/>"))
 
 sc <- sparkR.init("local[*]", "SparkR")
 sqlContext <- sparkRSQL.init(sc)
@@ -29,35 +44,44 @@ sqlContext <- sparkRSQL.init(sc)
 dataRDD = SparkR:::textFile(sc,"sample_small.csv")
 dataRDD = SparkR:::map(dataRDD, transformCoords)
 
+print("Transforming coordinates...")
+
 schema <- structType(structField("id", "double"), structField("lng", "double"), structField("lat", "double"))
 points <- createDataFrame(sqlContext, dataRDD, schema = schema)
-cache(points)
+# cache(points)
 
-head(points)
-count(points)
+# head(points)
+# count(points)
 
 registerTempTable(points, "p1")
 registerTempTable(points, "p2")
 
+print("Running distance join...")
+
 sql = paste0("SELECT * FROM p1 DISTANCE JOIN p2 ON POINT(p2.lng, p2.lat) IN CIRCLERANGE(POINT(p1.lng, p1.lat), ",epsilon,") WHERE p2.id < p1.id")
 pairs = sql(sqlContext,sql)
-head(pairs)
-nrow(pairs)
+# head(pairs)
+# nrow(pairs)
 
 centers <- SparkR:::map(pairs, calculateDisk)
 schema <- structType(structField("id1", "double"), structField("id2", "double"), structField("lng1", "double"), structField("lat1", "double"), structField("lng2", "double"), structField("lat2", "double"))
 d <- createDataFrame(sqlContext, centers, schema = schema)
-head(d)
-count(d)
+# head(d)
+# count(d)
+
+print("Transforming centers...")
 
 centers_lnglat <- SparkR:::map(centers, transformCenters)
 disks <- as.data.frame(createDataFrame(sqlContext,centers_lnglat))
 names(disks) = c("id1","id2","lng1","lat1","lng2","lat2")
-head(disks)
-nrow(disks)
+# head(disks)
+# nrow(disks)
 
 p = sort(unique(c(disks$id1,disks$id2)))
 data2 = data[p,]
+
+print("Saving map with initial set...")
+
 map = leaflet() %>% setView(lat = the_lat, lng = the_lng, zoom = the_zoom) %>% addTiles() %>% 
         addCircles(lng=disks$lng1, lat=disks$lat1, weight=2, fillOpacity=0.25, color="red", radius = epsilon/2) %>%
         addCircles(lng=disks$lng2, lat=disks$lat2, weight=2, fillOpacity=0.25, color="red", radius = epsilon/2) %>%
@@ -66,12 +90,14 @@ map = leaflet() %>% setView(lat = the_lat, lng = the_lng, zoom = the_zoom) %>% a
         addProviderTiles("Esri.WorldImagery", group = "ESRI") %>% 
         addLayersControl(baseGroup = c("OSM(default)", "ESRI"))
 
-file = 'map2.html'
+file = paste0(output,'_P1.html')
 htmlwidgets::saveWidget(map, file = file, selfcontained = F)
-IRdisplay::display_html(paste("<iframe width=100% height=400 src=' ", file, " ' ","/>"))
+# IRdisplay::display_html(paste("<iframe width=100% height=400 src=' ", file, " ' ","/>"))
 
 registerTempTable(d, "d")
 registerTempTable(points, "p")
+
+print("Pruning disks with less than mu objects...")
 
 sql = paste0("SELECT d.lng1 AS lng, d.lat1 AS lat, id AS id_member FROM d DISTANCE JOIN p ON POINT(p.lng, p.lat) IN CIRCLERANGE(POINT(d.lng1, d.lat1), ",(epsilon/2)+0.01,")")
 mdisks = sql(sqlContext,sql)
@@ -95,6 +121,8 @@ mdisks = spTransform(mdisks, wgs84)
 mdisks$lng1 = coordinates(mdisks)[,1]
 mdisks$lat1 = coordinates(mdisks)[,2]
 
+print("Saving map after pruning 1...")
+
 map = leaflet() %>% setView(lat = the_lat, lng = the_lng, zoom = the_zoom) %>% addTiles() %>% 
         addCircles(lng=mdisks$lng1, lat=mdisks$lat1, weight=2, fillOpacity=0.25, color="blue", radius = epsilon/2) %>%
         addCircleMarkers(lng=data$lng, lat=data$lat, weight=2, fillOpacity=1,radius = 2) %>%
@@ -102,46 +130,34 @@ map = leaflet() %>% setView(lat = the_lat, lng = the_lng, zoom = the_zoom) %>% a
         addProviderTiles("Esri.WorldImagery", group = "ESRI") %>% 
         addLayersControl(baseGroup = c("OSM(default)", "ESRI"))
 
-file = 'map3.html'
+file = paste0(output,'_P2.html')
 htmlwidgets::saveWidget(map, file = file, selfcontained = F)
-IRdisplay::display_html(paste("<iframe width=100% height=400 src=' ", file, " ' ","/>"))
+# IRdisplay::display_html(paste("<iframe width=100% height=400 src=' ", file, " ' ","/>"))
 
-v1 = "656,659,660"
-
-v1 = as.numeric(unlist(strsplit(v1,',')))
-
-v1
-
-v2 = c(656,657,659,660)
-
-v2
-
-prod(is.element(v1, v2))
-
-4:3
+print("Detecting redundant disks...")
 
 m <- as.data.frame(rbind(mdisks1, mdisks2))
 m$id = seq(1,nrow(m))
 m = createDataFrame(sqlContext, m)
-head(m)
-count(m)
+# head(m)
+# count(m)
 registerTempTable(m, "m")
 
-head(points)
-count(points)
+# head(points)
+# count(points)
 
 sql = paste0("SELECT m.id AS mid, p.id AS pid FROM m DISTANCE JOIN p ON POINT(p.lng, p.lat) IN CIRCLERANGE (POINT(m.lng, m.lat), ",(epsilon/2)+0.01,") ORDER BY mid, pid")
 t = sql(sqlContext,sql)
-head(t, 30)
-count(t)
+# head(t, 30)
+# count(t)
 
 library(sqldf)
 
 t = as.data.frame(t)
 g = sqldf("SELECT mid, group_concat(CAST(pid AS INT)) AS pids FROM t GROUP BY mid ORDER BY count(pid)")
-head(g)
-nrow(g)
-tail(g)
+# head(g)
+# nrow(g)
+# tail(g)
 
 n = c()
 r = nrow(g)
@@ -168,14 +184,16 @@ g = g[n,]
 
 m = as.data.frame(m)
 maximal = sqldf("SELECT lng, lat, pids FROM g JOIN m ON(id = mid)")
-head(maximal)
-nrow(maximal)
+# head(maximal)
+# nrow(maximal)
 
 coordinates(maximal) = ~lng+lat
 proj4string(maximal) = mercator
 maximal = spTransform(maximal, wgs84)
 maximal$lng1 = coordinates(maximal)[,1]
 maximal$lat1 = coordinates(maximal)[,2]
+
+print("Saving map after pruning 2...")
 
 map = leaflet() %>% setView(lat = the_lat, lng = the_lng, zoom = the_zoom) %>% addTiles() %>% 
         addCircles(lng=maximal$lng1, lat=maximal$lat1, weight=2, fillOpacity=0.25, color="orange", radius = epsilon/2, popup = maximal$pids) %>%
@@ -184,9 +202,11 @@ map = leaflet() %>% setView(lat = the_lat, lng = the_lng, zoom = the_zoom) %>% a
         addProviderTiles("Esri.WorldImagery", group = "ESRI") %>% 
         addLayersControl(baseGroup = c("OSM(default)", "ESRI"))
 
-file = 'map4.html'
+file = paste0(output,'_P3.html')
 htmlwidgets::saveWidget(map, file = file, selfcontained = F)
-IRdisplay::display_html(paste("<iframe width=100% height=400 src=' ", file, " ' ","/>"))
+# IRdisplay::display_html(paste("<iframe width=100% height=400 src=' ", file, " ' ","/>"))
+
+print("Saving final map...")
 
 map = leaflet() %>% setView(lat = the_lat, lng = the_lng, zoom = the_zoom) %>% addTiles() %>% 
         addCircleMarkers(lng=data$lng, lat=data$lat, weight=2, fillOpacity=1,radius = 2, group = "Points") %>%
@@ -207,8 +227,8 @@ map = leaflet() %>% setView(lat = the_lat, lng = the_lng, zoom = the_zoom) %>% a
                         options = layersControlOptions(collapsed = FALSE, autoZIndex = FALSE)) 
 
 
-file = 'map5.html'
+file = paste0(output,'_All.html')
 htmlwidgets::saveWidget(map, file = file, selfcontained = F)
-IRdisplay::display_html(paste("<iframe width=100% height=400 src=' ", file, " ' ","/>"))
+# IRdisplay::display_html(paste("<iframe width=100% height=400 src=' ", file, " ' ","/>"))
 
 
