@@ -102,13 +102,13 @@ print("Pruning disks with less than mu objects...")
 sql = paste0("SELECT d.lng1 AS lng, d.lat1 AS lat, id AS id_member FROM d DISTANCE JOIN p ON POINT(p.lng, p.lat) IN CIRCLERANGE(POINT(d.lng1, d.lat1), ",(epsilon/2)+0.01,")")
 mdisks = sql(sqlContext,sql)
 registerTempTable(mdisks, "m")
-sql = "SELECT lng, lat FROM m GROUP BY lng, lat HAVING count(id_member) >= 3"
+sql = paste0("SELECT lng, lat FROM m GROUP BY lng, lat HAVING count(id_member) >= ", mu)
 mdisks1 = sql(sqlContext,sql)
 
 sql = paste0("SELECT d.lng2 AS lng, d.lat2 AS lat, id AS id_member FROM d DISTANCE JOIN p ON POINT(p.lng, p.lat) IN CIRCLERANGE(POINT(d.lng2, d.lat2), ",(epsilon/2)+0.01,")")
 mdisks = sql(sqlContext,sql)
 registerTempTable(mdisks, "m")
-sql = "SELECT lng, lat FROM m GROUP BY lng, lat HAVING count(id_member) >= 3"
+sql = paste0("SELECT lng, lat FROM m GROUP BY lng, lat HAVING count(id_member) >= ", mu)
 mdisks2 = sql(sqlContext,sql)
 
 mdisks = as.data.frame(rbind(mdisks1, mdisks2))
