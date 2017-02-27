@@ -1,6 +1,6 @@
 #!/bin/bash
 EPSILON=$1
-MU=3
+MU=$2
 ZOOM=15
 OUTPUT="test"
 
