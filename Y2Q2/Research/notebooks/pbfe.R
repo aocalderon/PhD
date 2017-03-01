@@ -58,3 +58,5 @@ transform <- function(points){
   
   return(as.numeric(c(points$id,points@coords)))
 }
+
+# Just testing...
