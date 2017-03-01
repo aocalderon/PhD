@@ -4,6 +4,7 @@ library(optparse)
  
 option_list = list(
 	make_option(c("-o", "--out"), type="character", default="map" , help="Prefix for output html files", metavar="character"),
+	make_option(c("-i", "--input"), type="character", default="sample_small.csv" , help="Input file", metavar="character"),
 	make_option(c("-x", "--lat"), type="double", default=39.976057, help="Latitude [default:%default]", metavar="double"),
 	make_option(c("-y", "--lng"), type="double", default=116.330243, help="Longitude [default:%default]", metavar="double"),
 	make_option(c("-e", "--epsilon"), type="double", default=100.0, help="Epsilon [default:%default]", metavar="double"),
@@ -18,6 +19,8 @@ library(leaflet)
 library(sp)
 options(digits=15)
 
+source("input.R")
+
 the_lat = opt$lat
 the_lng = opt$lng
 the_zoom = opt$zoom
@@ -26,7 +29,7 @@ mu = opt$mu
 source("pbfe.R")
 output = paste0(opt$out, "_E",  epsilon, "_M", mu)
 
-data = read.csv("sample_small.csv")
+data = read.csv(opt$input)
 names(data) = c("ID","lat","lng")
 # head(data)
 
@@ -41,7 +44,7 @@ names(data) = c("ID","lat","lng")
 sc <- sparkR.init("local[*]", "SparkR")
 sqlContext <- sparkRSQL.init(sc)
 
-dataRDD = SparkR:::textFile(sc,"sample_small.csv")
+dataRDD = SparkR:::textFile(sc,opt$input)
 dataRDD = SparkR:::map(dataRDD, transformCoords)
 
 print("Transforming coordinates...")
@@ -60,7 +63,7 @@ print("Running distance join...")
 
 sql = paste0("SELECT * FROM p1 DISTANCE JOIN p2 ON POINT(p2.lng, p2.lat) IN CIRCLERANGE(POINT(p1.lng, p1.lat), ",epsilon,") WHERE p2.id < p1.id")
 pairs = sql(sqlContext,sql)
-# head(pairs)
+head(pairs)
 # nrow(pairs)
 
 centers <- SparkR:::map(pairs, calculateDisk)
@@ -231,4 +234,7 @@ file = paste0(output,'_All.html')
 htmlwidgets::saveWidget(map, file = file, selfcontained = F)
 # IRdisplay::display_html(paste("<iframe width=100% height=400 src=' ", file, " ' ","/>"))
 
-
+write.csv(data, "data.csv", row.names = F)
+write.csv(disks, "disks.csv", row.names = F)
+write.csv(mdisks, "mdisks.csv", row.names = F)
+write.csv(maximal, "maximal.csv", row.names = F)
