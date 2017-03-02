@@ -72,3 +72,6 @@ the_map.save('prune.html')
 
 p.to_csv('tpoints.dat', header=False, index=False, columns=['dids'], doublequote=False)
 d.to_csv('tdisks.dat', header=False, index=False, columns=['pids'], doublequote=False)
+
+p.to_csv('p_points.dat', header=False, index=False, columns=['pid', 'dids'], doublequote=False)
+d.to_csv('p_disks.dat', header=False, index=False, columns=['did', 'pids'], doublequote=False)
