@@ -2,26 +2,73 @@
 
 import pandas as pd
 import folium
+from pandasql import sqldf
+pysqldf = lambda q: sqldf(q, globals())
 
 epsilon = 100
+the_zoom = 17
 
-data = pd.read_csv('data.csv')
+points = pd.read_csv('points.csv')
 disks = pd.read_csv('disks.csv')
-#df1 = disks.iloc[:,[2,3]]
-#df1.columns = ['lng', 'lat']
-#df2 = disks.iloc[:,[4,5]]
-#df2.columns = ['lng', 'lat']
-#disks = df1.append(df2, ignore_index=True)
-#disks.to_csv('disks2.csv', index=False)
+links = pd.read_csv('links.csv')
 
-the_map = folium.Map(location=[39.976057, 116.330243], zoom_start=15)
+sql = """
+    SELECT 
+        l.pid AS pid, l.dids AS dids, p.lat AS lat, p.lng AS lng 
+    FROM 
+        (SELECT 
+            pid, GROUP_CONCAT(did, ' ') AS dids 
+        FROM 
+            links 
+        GROUP BY 
+            pid) AS l
+    JOIN
+        points AS p
+    USING
+        (pid);
+"""
+p = pysqldf(sql)
+
+sql = """
+    SELECT 
+        l.did AS did, l.pids AS pids, d.lat AS lat, d.lng AS lng 
+    FROM 
+        (SELECT 
+            did, GROUP_CONCAT(pid, ' ') AS pids 
+        FROM 
+            links 
+        GROUP BY 
+            did) AS l
+    JOIN
+        disks AS d
+    USING
+        (did);
+"""
+d = pysqldf(sql)
+
+the_map = folium.Map(location=[39.97537, 116.33127], zoom_start=the_zoom)
+
 the_disks = folium.FeatureGroup(name="Disks")
-disks.apply(lambda row:folium.CircleMarker(location=[row["lat"], row["lng"]],
-    color='red', fill_color='red', fill_opacity=0.25, radius=epsilon/2).add_to(the_disks), axis=1)
+d.apply(lambda row:folium.CircleMarker(
+    location=[row["lat"], row["lng"]],
+    popup="DID:{0} => [{1}]".format(row["did"],row["pids"]),
+    color='red', 
+    fill_color='red', 
+    fill_opacity=0.05, 
+    radius=epsilon/2
+).add_to(the_disks), axis=1)
+
 the_points = folium.FeatureGroup(name="Points")
-data.apply(lambda row:folium.RegularPolygonMarker(location=[row["lat"], row["lng"]],
-    radius=2).add_to(the_points), axis=1)
+p.apply(lambda row:folium.RegularPolygonMarker(
+    location=[row["lat"], row["lng"]],
+    popup="PID:{0} => [{1}]".format(row["pid"],row["dids"]),
+    radius=2
+).add_to(the_points), axis=1)
+
 the_map.add_child(the_points)
 the_map.add_child(the_disks)
 folium.LayerControl().add_to(the_map)
 the_map.save('prune.html')
+
+p.to_csv('tpoints.dat', header=False, index=False, columns=['dids'], doublequote=False)
+d.to_csv('tdisks.dat', header=False, index=False, columns=['pids'], doublequote=False)
