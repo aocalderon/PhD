@@ -1,0 +1,32 @@
+and@and-dblab:~/Documents/PhD/Code/Y2Q2/Research/notebooks$ head tdisks.dat 
+1 2
+15 16
+11 15
+11 15 16
+1 2
+5 11
+3 5
+3 5 11
+3 5 7 11
+3 5 7 11
+and@and-dblab:~/Documents/PhD/Code/Y2Q2/Research/notebooks$ lcm Mf -l 3 tdisks.dat 1 maximal.dat
+trsact: tdisks.dat ,#transactions 66 ,#items 19 ,size 206 extracted database: #transactions 66 ,#items 18 ,size 206
+ output to: maximal.dat
+separated at 0
+7
+0
+0
+0
+2
+3
+2
+iters=72
+and@and-dblab:~/Documents/PhD/Code/Y2Q2/Research/notebooks$ more maximal.dat 
+5 12 6 10 7 (3)
+3 5 10 6 7 (4)
+11 3 7 5 (3)
+14 12 10 6 (3)
+4 13 8 9 (2)
+16 15 11 (3)
+17 14 12 (3)
+and@and-dblab:~/Documents/PhD/Code/Y2Q2/Research/notebooks$ 
