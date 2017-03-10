@@ -1,8 +1,7 @@
 #!/usr/bin/env Rscript
 
-library(ggplot2)
-library(sqldf)
-library(Hmisc)
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(ggplot2, sqldf, Hmisc)
 
 DATASET = "beijing"
 DATASET_TAG = capitalize(DATASET)
