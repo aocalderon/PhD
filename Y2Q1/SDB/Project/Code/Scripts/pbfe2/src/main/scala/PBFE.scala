@@ -2,6 +2,7 @@ package main
 
 import org.apache.spark.sql.{SQLContext, Point, Row}
 import org.apache.spark.{SparkConf, SparkContext}
+import java.util.Calendar
 
 object PBFE {
   case class PointItem(id: Int, x: Double, y: Double)
@@ -58,7 +59,8 @@ object PBFE {
        .map( (x: Row) => calculateDisks(x) )
     var n = disks.count()
     val time2 = System.currentTimeMillis()
-    println("PBFE," + epsilon + "," + tag + "," + 2*n + "," + (time2 - time1) / 1000.0)
+    
+    println("PBFE2," + epsilon + "," + tag + "," + 2*n + "," + (time2 - time1) / 1000.0 + "," + Calendar.getInstance().getTime())
 
     sc.stop()
   }
