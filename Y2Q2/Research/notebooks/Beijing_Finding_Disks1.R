@@ -1,6 +1,7 @@
 #!/usr/bin/Rscript
 
-library(optparse)
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(optparse, leaflet, rgdal)
  
 option_list = list(
 	make_option(c("-o", "--out"), type="character", default="map" , help="Prefix for output html files", metavar="character"),
