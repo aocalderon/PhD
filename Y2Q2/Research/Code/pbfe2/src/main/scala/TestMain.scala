@@ -14,11 +14,15 @@
  * limitations under the License.
  */
 
+import java.net.URL
+
 import edu.utah.cs.simba.SimbaContext
 import edu.utah.cs.simba.index.RTreeType
 import org.apache.spark.{SparkConf, SparkContext}
 
 import scala.collection.mutable.ListBuffer
+import ca.pfv.spmf.algorithms.frequentpatterns.lcm.{Dataset, AlgoLCM}
+import ca.pfv.spmf.patterns.itemset_array_integers_with_count.Itemsets
 
 /**
   * Created by dongx on 11/14/2016.
@@ -55,6 +59,16 @@ object TestMain {
     val df = leftDF.distanceJoin(rightDF, Array("x", "y"), Array("x", "y"), 10.0)
     println(df.queryExecution)
     df.show()
+
+    val filename = "/opt/Java/IdeaProjects/SPMF/src/ca/pfv/spmf/algorithms/frequentpatterns/lcm/contextPasquier99.txt"
+    val minsup = 0.4
+    val input = java.net.URLDecoder.decode(filename,"UTF-8")
+    val dataset = new Dataset(input)
+    val algo = new AlgoLCM()
+    val itemsets = algo.runAlgorithm(minsup, dataset, null)
+
+    algo.printStats();
+    itemsets.printItemsets(dataset.getTransactions().size());
 
     //    leftDF.range(Array("x", "y"), Array(4.0, 5.0), Array(111.0, 222.0)).show(100)
     //    leftDF.knnJoin(rightDF, Array("x", "y"), Array("x", "y"), 3).show(100)
