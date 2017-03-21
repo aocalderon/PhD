@@ -4,7 +4,7 @@
 		module="pbfe_2.10"
 		revision="1.0"
 		status="integration"
-		publication="20170320140637"
+		publication="20170320180941"
 	>
 		<description>
 		PBFE
@@ -34,10 +34,7 @@
 	<dependencies>
 		<dependency org="org.scala-lang" name="scala-compiler" rev="2.10.6" conf="scala-tool->default,optional(default)"/>
 		<dependency org="org.scala-lang" name="scala-library" rev="2.10.6" conf="scala-tool->default,optional(default);compile->default(compile)"/>
-		<dependency org="org.apache.spark" name="spark-core_2.10" rev="1.6.3" conf="compile->default(compile)"/>
-		<dependency org="org.apache.spark" name="spark-catalyst_2.10" rev="1.6.3" conf="compile->default(compile)"/>
-		<dependency org="org.apache.spark" name="spark-sql_2.10" rev="1.6.3" conf="compile->default(compile)"/>
-		<dependency org="com.vividsolutions" name="jts-core" rev="1.14.0" conf="compile->default(compile)"/>
-		<dependency org="org.scalatest" name="scalatest_2.10" rev="3.0.0" conf="test->default(compile)"/>
+		<dependency org="org.apache.spark" name="spark-core_2.10" rev="1.6.0" conf="compile->default(compile)"/>
+		<dependency org="org.apache.spark" name="spark-sql_2.10" rev="1.6.0" conf="compile->default(compile)"/>
 	</dependencies>
 </ivy-module>
