@@ -79,8 +79,8 @@ object PBFE {
       .groupByKey()
       .map{ m => m._2.mkString(" ") }
 
-    //members.toDF().write.format("com.databricks.spark.csv").save("tdisks")
-
+    members.toDF().write.format("com.databricks.spark.csv").save("tdisks")
+/*
     var nnn = members.count()
     println(nnn)
 
@@ -174,7 +174,7 @@ object PBFE {
     val itemsets = algo.runAlgorithm(minsup, dataset, null.asInstanceOf[String])
     algo.printStats()
     itemsets.printItemsets(dataset.getTransactions.size)
-
+*/
     sc.stop()
   }
 }
