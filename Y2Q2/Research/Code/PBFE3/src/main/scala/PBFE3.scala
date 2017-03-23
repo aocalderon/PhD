@@ -1,4 +1,4 @@
-package main
+package main.scala
 
 import java.util
 import java.util.{Collections, Comparator}
@@ -46,7 +46,7 @@ object PBFE3 {
   def main(args: Array[String]): Unit = {
     val sparkConf = new SparkConf().setAppName("PBFE3").setMaster("local[*]")
     val sc = new SparkContext(sparkConf)
-    sc.setLogLevel("INFO")
+    sc.setLogLevel("ERROR")
     val simbaContext = new SimbaContext(sc)
 
     import simbaContext.implicits._
@@ -62,48 +62,48 @@ object PBFE3 {
 
     var time1 = System.currentTimeMillis()
     val pairs = p1.distanceJoin(p2, Array("x", "y"), Array("x2", "y2"), epsilon)
-//    val disks = pairs.rdd.filter( (x:Row) => x.getInt(0) > x.getInt(3) ).map( (x: Row) => calculateDisks(x) )
-//    val ndisks = disks.count()
-//    val time2 = System.currentTimeMillis()
+    val disks = pairs.rdd.filter( (x:Row) => x.getInt(0) > x.getInt(3) ).map( (x: Row) => calculateDisks(x) )
+    val ndisks = disks.count()
+    val time2 = System.currentTimeMillis()
 
-//    println("PBFE3," + epsilon + "," + tag + "," + 2*ndisks + "," + (time2 - time1) / 1000.0 + "," + util.Calendar.getInstance().getTime)
+    println("PBFE3," + epsilon + "," + tag + "," + 2*ndisks + "," + (time2 - time1) / 1000.0 + "," + util.Calendar.getInstance().getTime)
 
-//    time1 = System.currentTimeMillis()
-//    val centers1 = disks.toDF.select("x1", "y1")
-//    val centers2 = disks.toDF.select("x2", "y2")
-//    val centers = centers1.unionAll(centers2)
-//
-//    val members = centers.distanceJoin(p1, Array("x1", "y1"), Array("x","y"), (epsilon/2) + 0.01)
-//      .select("x1", "y1", "id")
-//      .rdd
-//      .map{ d => (d(0) + "-" + d(1), d(2)) }
-//      .groupByKey()
-//      .map{ m => m._2.mkString(" ") }
-//
-//    val n = members.count()
-//    println(n)
-//
-//    val ts = new util.ArrayList[util.ArrayList[Integer]]()
-//    members.collect().foreach{ x =>
-//      val arrList = new util.ArrayList[Integer]()
-//      x.split(" ").map( y => arrList.add(y.toInt) )
-//      Collections.sort(arrList)
-//      ts.add(arrList)
-//    }
-//
-//    val minsup = 1
-//    val dataset = new Dataset(ts)
-//    val lcm = new AlgoLCM
-//    var itemsets = lcm.runAlgorithm(minsup, dataset)
-//    lcm.printStats
-//    //itemsets.printItemsets
-//    println(itemsets.countItemsets(3))
-//
-//    val fpmax = new AlgoFPMax
-//    itemsets = fpmax.runAlgorithm(ts, 1)
-//    fpmax.printStats
-//    //itemsets.printItemsets
-//    println(itemsets.countItemsets(3))
+        time1 = System.currentTimeMillis()
+        val centers1 = disks.toDF.select("x1", "y1")
+        val centers2 = disks.toDF.select("x2", "y2")
+        val centers = centers1.unionAll(centers2)
+
+        val members = centers.distanceJoin(p1, Array("x1", "y1"), Array("x","y"), (epsilon/2) + 0.01)
+          .select("x1", "y1", "id")
+          .rdd
+          .map{ d => (d(0) + "-" + d(1), d(2)) }
+          .groupByKey()
+          .map{ m => m._2.mkString(" ") }
+
+        val n = members.count()
+        println(n)
+
+        val ts = new util.ArrayList[util.ArrayList[Integer]]()
+        members.collect().foreach{ x =>
+          val arrList = new util.ArrayList[Integer]()
+          x.split(" ").map( y => arrList.add(y.toInt) )
+          Collections.sort(arrList)
+          ts.add(arrList)
+        }
+
+        val minsup = 1
+        val dataset = new Dataset(ts)
+        val lcm = new AlgoLCM
+        var itemsets = lcm.runAlgorithm(minsup, dataset)
+        lcm.printStats
+        //itemsets.printItemsets
+        println(itemsets.countItemsets(3))
+
+        val fpmax = new AlgoFPMax
+        itemsets = fpmax.runAlgorithm(ts, 1)
+        fpmax.printStats
+        //itemsets.printItemsets
+        println(itemsets.countItemsets(3))
 
     sc.stop()
   }
