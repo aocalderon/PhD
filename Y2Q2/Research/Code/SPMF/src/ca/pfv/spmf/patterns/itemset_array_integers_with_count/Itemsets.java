@@ -81,6 +81,18 @@ public class Itemsets{
 			}
 		}
 	}
+
+	public Integer countItemsets(int mu){
+		int count = 0;
+		for (List<Itemset> level : levels) {
+			if(level.size() !=0){
+				if(level.get(0).size() >= mu){
+                    count += level.size();
+                }
+			}
+		}
+		return count;
+	}
 	/* (non-Javadoc)
 	 * @see ca.pfv.spmf.patterns.itemset_array_integers_with_count.AbstractItemsets#addItemset(ca.pfv.spmf.patterns.itemset_array_integers_with_count.Itemset, int)
 	 */

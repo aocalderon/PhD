@@ -42,6 +42,45 @@ public class Dataset {
 
 	private int maxItem = 0;
 
+    public Dataset(ArrayList<ArrayList<Integer>> ts){
+        transactions = new ArrayList<Transaction>();
+
+        for (ArrayList<Integer> t: ts) {
+            Collections.sort(t);
+            getTransactions().add(createTransaction(t));
+        }
+        /// sort transactions by increasing last item (optimization)
+        Collections.sort(transactions, new Comparator<Transaction>() {
+            public int compare(Transaction arg0, Transaction arg1) {
+                return arg0.getItems()[arg0.getItems().length -1] - arg1.getItems()[arg1.getItems().length -1];
+            }
+        });
+        // create the list of items in the database and sort it
+        transactionsItems = new Integer[uniqueItems.size()];
+        int i=0;
+        for(Integer item : uniqueItems) {
+            transactionsItems[i++] = item;
+        }
+        Arrays.sort(transactionsItems);
+    }
+
+    private Transaction createTransaction(ArrayList<Integer> t) {
+        Integer[] itemsSorted = new  Integer[t.size()];
+        int i = 0;
+        for (Integer item: t) {
+            itemsSorted[i++] = item;
+            uniqueItems.add(item);
+        }
+
+        // update max item by checking the last item of the transaction
+        int lastItem = itemsSorted[itemsSorted.length - 1];
+        if(lastItem > maxItem) {
+            maxItem = lastItem;
+        }
+        return new Transaction(itemsSorted);
+    }
+
+
     public Dataset(String datasetPath) throws IOException {
 
         transactions = new ArrayList<Transaction>();
