@@ -1,10 +1,11 @@
 #!/bin/bash
 
-OUTPUT="Beijing_PBFE3_N10K_E10-20"
+MASTER=$1
+OUTPUT="Beijing_PBFE3_N10K-30K_E2-10"
 MSG="Running PBFE3... "
 START=`date`
 echo -e "$MSG $START\n"
-{ time ./runExperimentsBeijing.sh local > ${OUTPUT}.csv; } 2> .time
+{ time ./runExperimentsBeijing.sh $MASTER > ${OUTPUT}.csv; } 2> .time
 TIME=`tail -n 3 .time`
 END=`date`
 echo -e "Done!!! $END\n"
