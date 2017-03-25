@@ -18,8 +18,10 @@ object PBFE3 {
 
   case class Pair(id1: Int, id2: Int, x1: Double, y1: Double, x2: Double, y2: Double)
 
+  var master: String = "local[*]"
   var epsilon: Double = 100.0
   var filename: String = "/opt/Datasets/Beijing/B89.csv"
+  var logs: String = "ERROR"
   var r2: Double = math.pow(epsilon / 2, 2)
   var X = 0.0
   var Y = 0.0
@@ -45,16 +47,21 @@ object PBFE3 {
   }
 
   def main(args: Array[String]): Unit = {
-    val sparkConf = new SparkConf().setAppName("PBFE3").setMaster("local[*]")
+    master = args(0)
+    filename = args(1)
+    epsilon = args(2).toDouble
+    logs = args(3)
+
+    val sparkConf = new SparkConf()
+      .setAppName("PBFE3")
+      .setMaster(master)
     val sc = new SparkContext(sparkConf)
-    sc.setLogLevel("ERROR")
+    sc.setLogLevel(logs)
     val simbaContext = new SimbaContext(sc)
 
     import simbaContext.implicits._
     import simbaContext.SimbaImplicits._
 
-    filename = args(0)
-    epsilon = args(1).toDouble
     val tag = filename.substring(filename.lastIndexOf("/") + 1).split("\\.")(0).substring(1)
 
     val p1 = sc.textFile(filename).map(_.split(",")).map(p => PointItem(p(0).trim.toInt, p(1).trim.toDouble, p(2).trim.toDouble)).toDF
