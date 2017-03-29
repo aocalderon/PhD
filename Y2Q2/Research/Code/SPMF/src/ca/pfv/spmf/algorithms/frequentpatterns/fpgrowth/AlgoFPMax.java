@@ -217,7 +217,7 @@ public class AlgoFPMax {
 		return patterns;
 	}
 
-	public Itemsets runAlgorithm(ArrayList<ArrayList<Integer>> input, int minsup) throws IOException {
+	public Itemsets runAlgorithm(List<List<Integer>> input, int minsup) throws IOException {
 		// record start time
 		startTimestamp = System.currentTimeMillis();
 		// number of itemsets found
@@ -249,7 +249,7 @@ public class AlgoFPMax {
 		// do not have the minimum support.
 		FPTree tree = new FPTree();
 
-		for( ArrayList<Integer> t: input){
+		for( List<Integer> t: input){
 			List<Integer> transaction = new ArrayList<Integer>();
 			for(Integer item: t){
 				if(originalMapSupport.get(item) >= minSupportRelative){
@@ -594,10 +594,10 @@ public class AlgoFPMax {
 		return mapSupport;
 	}
 
-	private  Map<Integer, Integer> scanDatabaseToDetermineFrequencyOfSingleItems(ArrayList<ArrayList<Integer>> input){
+	private  Map<Integer, Integer> scanDatabaseToDetermineFrequencyOfSingleItems(List<List<Integer>> input){
 		Map<Integer, Integer> mapSupport = new HashMap<Integer, Integer>();
 
-		for( ArrayList<Integer> t: input){
+		for( List<Integer> t: input){
 			for(Integer item: t){
 				Integer count = mapSupport.get(item);
 				if(count == null){

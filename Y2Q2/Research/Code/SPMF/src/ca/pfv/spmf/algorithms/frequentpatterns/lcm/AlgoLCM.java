@@ -144,7 +144,6 @@ public class AlgoLCM {
         return closedFrequentItemsets;
     }
 
-<<<<<<< HEAD
 	public Itemsets runAlgorithm(int minimumSupport, Dataset dataset) throws IOException {
 		// record the start time
 		startTimestamp = System.currentTimeMillis();
@@ -152,21 +151,6 @@ public class AlgoLCM {
 		// if the user choose to save to memory
 		writer = null;
 		this.closedFrequentItemsets = new Itemsets("Itemsets");
-=======
-	public Itemsets runAlgorithm(int minimumSupport, Dataset dataset, String outputPath) throws IOException {
-		// record the start time
-		startTimestamp = System.currentTimeMillis();
-
-		// if the user choose to save to file
-		// create object for writing the output file
-		if(outputPath != null) {
-			writer = new BufferedWriter(new FileWriter(outputPath));
-		}else {
-			// if the user choose to save to memory
-			writer = null;
-			this.closedFrequentItemsets = new Itemsets("Itemsets");
-		}
->>>>>>> origin/master
 
 		// reset the number of itemset found
 		frequentCount = 0;
@@ -207,13 +191,10 @@ public class AlgoLCM {
 
 		// record the end time
 		endTimestamp = System.currentTimeMillis();
-<<<<<<< HEAD
-=======
 		//close the output file
 		if(writer != null) {
 			writer.close();
 		}
->>>>>>> origin/master
 
 		MemoryLogger.getInstance().checkMemory();
 
@@ -517,13 +498,7 @@ public class AlgoLCM {
         	}
         }
     }
-<<<<<<< HEAD
-=======
 
-
- 
->>>>>>> origin/master
- 
     /**
      * Print statistics about the latest execution of the algorithm.
      */

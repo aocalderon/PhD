@@ -117,24 +117,24 @@ public class MainTestLCM_saveToMemory {
 		t12.add(Integer.valueOf(9));
 		Collections.sort(t12);
 
-		ArrayList<ArrayList<Integer>> ts = new ArrayList<ArrayList<Integer>>();
-		ts.add(t1);
-		ts.add(t2);
-		ts.add(t3);
-		ts.add(t4);
-		ts.add(t5);
-		ts.add(t6);
-		ts.add(t7);
-		ts.add(t8);
-		ts.add(t9);
-		ts.add(t10);
-		ts.add(t11);
-		ts.add(t12);
-		AlgoFPMax fpMax = new AlgoFPMax();
-		itemsets = fpMax.runAlgorithm(ts, 2);
-		fpMax.printStats();
-
-		itemsets.printItemsets();
+//		List<List<Integer>> ts = new ArrayList<ArrayList<Integer>>();
+//		ts.add(t1);
+//		ts.add(t2);
+//		ts.add(t3);
+//		ts.add(t4);
+//		ts.add(t5);
+//		ts.add(t6);
+//		ts.add(t7);
+//		ts.add(t8);
+//		ts.add(t9);
+//		ts.add(t10);
+//		ts.add(t11);
+//		ts.add(t12);
+//		AlgoFPMax fpMax = new AlgoFPMax();
+//		itemsets = fpMax.runAlgorithm(ts, 2);
+//		fpMax.printStats();
+//
+//		itemsets.printItemsets();
 
 	}
 	
