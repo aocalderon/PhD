@@ -81,7 +81,6 @@ public class Itemsets{
 			}
 		}
 	}
-<<<<<<< HEAD
 
 	public Integer countItemsets(int mu){
 		int count = 0;
@@ -94,8 +93,7 @@ public class Itemsets{
 		}
 		return count;
 	}
-=======
->>>>>>> origin/master
+
 	/* (non-Javadoc)
 	 * @see ca.pfv.spmf.patterns.itemset_array_integers_with_count.AbstractItemsets#addItemset(ca.pfv.spmf.patterns.itemset_array_integers_with_count.Itemset, int)
 	 */

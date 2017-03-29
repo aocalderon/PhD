@@ -1,14 +1,13 @@
 package main.scala
 
-import java.util.{Collections, Calendar, ArrayList}
+import java.util
+import java.util.{ArrayList, Calendar, Collections}
 
 import ca.pfv.spmf.algorithms.frequentpatterns.fpgrowth.AlgoFPMax
+import ca.pfv.spmf.patterns.itemset_array_integers_with_count.Itemsets
 import edu.utah.cs.simba.SimbaContext
-import org.apache.spark.{SparkConf, SparkContext, Partitioner}
-import ca.pfv.spmf.algorithms.frequentpatterns.lcm.{AlgoLCM, Dataset}
+import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.sql.Row
-import org.apache.spark.sql.functions.{max, min}
-import org.apache.spark.rdd
 
 /**
   * Created by and on 3/20/17.
@@ -67,6 +66,7 @@ object PBFE3 {
 
     import simbaContext.implicits._
     import simbaContext.SimbaImplicits._
+    import scala.collection.JavaConversions._
 
     val tag = filename.substring(filename.lastIndexOf("/") + 1).split("\\.")(0).substring(1)
 
@@ -85,31 +85,30 @@ object PBFE3 {
     val centers2 = disks.toDF.select("x2", "y2")
     val centers = centers1.unionAll(centers2)
 
-    val rangeX = centers.select(max("x1")-min("x1")).collect().head.getDouble(0) / NCORES
-    val rangeY = centers.select(max("y1")-min("y1")).collect().head.getDouble(0) / NCORES
-
-
     val members = centers.distanceJoin(p1, Array("x1", "y1"), Array("x", "y"), (epsilon / 2) + 0.01)
       .select("x1", "y1", "id")
       .rdd
       .map { d => (d(0) + ";" + d(1), d(2)) }
       .groupByKey()
       .map { m =>
-        val arr = m._1.split(";").map(_.toDouble)
-        val x = scala.math.ceil(arr(0) / rangeX)
-        val y = scala.math.ceil(arr(1) / rangeY)
-
-        (x * NCORES + y, m._2.mkString(" "))
+        m._2.mkString(" ")
       }
 
     val n = members.count()
 
-    members.mapPartitionsWithIndex{ (index, iterator) => iterator.toList.map(x => (index, 1)).iterator}.reduceByKey(_+_).collect().foreach(println)
-
-    val members2 = members.partitionBy(new GridPartitioner(NCORES * NCORES))
-
-    members2.mapPartitionsWithIndex{ (index, iterator) => iterator.toList.map(x => (index, 1)).iterator}.reduceByKey(_+_).collect().foreach(println)
-
+    members.mapPartitions{ partition =>
+      val ts = new ArrayList[ArrayList[Integer]]()
+      partition.map { x =>
+        val arrList = new ArrayList[Integer]()
+        x.split(" ").map(y => arrList.add(y.toInt))
+        Collections.sort(arrList)
+        ts.add(arrList)
+      }
+      val fpmax = new AlgoFPMax
+      val itemsets = fpmax.runAlgorithm(ts, 1)
+      val levels = itemsets.getLevels
+      levels.flatMap(level => level.map(itemset => itemset.getItems)).iterator
+    }.collect().foreach(println)
 
     /**************************************
       * Begin of tests...
@@ -122,13 +121,10 @@ object PBFE3 {
       *************************************/
 
     /*
-    val ts = new ArrayList[ArrayList[Integer]]()
-    members.collect().foreach { x =>
-      val arrList = new ArrayList[Integer]()
+          val arrList = new ArrayList[Integer]()
       x.split(" ").map(y => arrList.add(y.toInt))
       Collections.sort(arrList)
       ts.add(arrList)
-    }
     */
 
     /*
@@ -151,30 +147,16 @@ object PBFE3 {
     time2 = System.currentTimeMillis()
     val fpMaxTime = (time2 - time1) / 1000.0
     val fpMaxNItemsets = itemsets.countItemsets(3)
+    */
 
     println("PBFE3,"
       + epsilon + ","
       + tag + ","
       + 2 * ndisks + ","
       + diskGenerationTime + ","
-      + lcmTime + ","
-      + fpMaxTime + ","
-      + lcmNItemsets + ","
-      + fpMaxNItemsets + ","
       + Calendar.getInstance().getTime)
-    */
+
 
     sc.stop()
   }
-
-
-  class GridPartitioner(numParts: Int) extends Partitioner {
-    override def numPartitions: Int = numParts
-
-    override def getPartition(key: Any): Int = {
-      val k = key.toString.split("\\.")(0).toInt
-      return scala.math.abs(k % numPartitions)
-    }
-  }
-
 }

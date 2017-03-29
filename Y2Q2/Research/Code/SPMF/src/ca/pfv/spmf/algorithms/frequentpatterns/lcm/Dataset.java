@@ -42,7 +42,6 @@ public class Dataset {
 
 	private int maxItem = 0;
 
-<<<<<<< HEAD
     public Dataset(ArrayList<ArrayList<Integer>> ts){
         transactions = new ArrayList<Transaction>();
 
@@ -81,9 +80,6 @@ public class Dataset {
         return new Transaction(itemsSorted);
     }
 
-
-=======
->>>>>>> origin/master
     public Dataset(String datasetPath) throws IOException {
 
         transactions = new ArrayList<Transaction>();
