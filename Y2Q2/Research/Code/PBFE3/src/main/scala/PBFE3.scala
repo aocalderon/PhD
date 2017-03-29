@@ -4,9 +4,11 @@ import java.util.{Collections, Calendar, ArrayList}
 
 import ca.pfv.spmf.algorithms.frequentpatterns.fpgrowth.AlgoFPMax
 import edu.utah.cs.simba.SimbaContext
-import org.apache.spark.{SparkConf, SparkContext}
+import org.apache.spark.{SparkConf, SparkContext, Partitioner}
 import ca.pfv.spmf.algorithms.frequentpatterns.lcm.{AlgoLCM, Dataset}
 import org.apache.spark.sql.Row
+import org.apache.spark.sql.functions.{max, min}
+import org.apache.spark.rdd
 
 /**
   * Created by and on 3/20/17.
@@ -20,9 +22,12 @@ object PBFE3 {
 
   var master: String = "local[*]"
   var epsilon: Double = 100.0
+  var mu: Integer = 3
   var filename: String = "/opt/Datasets/Beijing/B89.csv"
   var logs: String = "ERROR"
   var r2: Double = math.pow(epsilon / 2, 2)
+  val NCORES = 10
+
   var X = 0.0
   var Y = 0.0
   var D2 = 0.0
@@ -50,7 +55,8 @@ object PBFE3 {
     master = args(0)
     filename = args(1)
     epsilon = args(2).toDouble
-    logs = args(3)
+    mu = args(3).toInt
+    logs = args(4)
 
     val sparkConf = new SparkConf()
       .setAppName("PBFE3")
@@ -79,15 +85,43 @@ object PBFE3 {
     val centers2 = disks.toDF.select("x2", "y2")
     val centers = centers1.unionAll(centers2)
 
+    val rangeX = centers.select(max("x1")-min("x1")).collect().head.getDouble(0) / NCORES
+    val rangeY = centers.select(max("y1")-min("y1")).collect().head.getDouble(0) / NCORES
+
+
     val members = centers.distanceJoin(p1, Array("x1", "y1"), Array("x", "y"), (epsilon / 2) + 0.01)
       .select("x1", "y1", "id")
       .rdd
-      .map { d => (d(0) + "-" + d(1), d(2)) }
+      .map { d => (d(0) + ";" + d(1), d(2)) }
       .groupByKey()
-      .map { m => m._2.mkString(" ") }
+      .map { m =>
+        val arr = m._1.split(";").map(_.toDouble)
+        val x = scala.math.ceil(arr(0) / rangeX)
+        val y = scala.math.ceil(arr(1) / rangeY)
+
+        (x * NCORES + y, m._2.mkString(" "))
+      }
 
     val n = members.count()
 
+    members.mapPartitionsWithIndex{ (index, iterator) => iterator.toList.map(x => (index, 1)).iterator}.reduceByKey(_+_).collect().foreach(println)
+
+    val members2 = members.partitionBy(new GridPartitioner(NCORES * NCORES))
+
+    members2.mapPartitionsWithIndex{ (index, iterator) => iterator.toList.map(x => (index, 1)).iterator}.reduceByKey(_+_).collect().foreach(println)
+
+
+    /**************************************
+      * Begin of tests...
+      *************************************/
+
+
+
+    /**************************************
+      * End of tests...
+      *************************************/
+
+    /*
     val ts = new ArrayList[ArrayList[Integer]]()
     members.collect().foreach { x =>
       val arrList = new ArrayList[Integer]()
@@ -95,7 +129,9 @@ object PBFE3 {
       Collections.sort(arrList)
       ts.add(arrList)
     }
+    */
 
+    /*
     val minsup = 1
     time1 = System.currentTimeMillis()
     val dataset = new Dataset(ts)
@@ -126,7 +162,19 @@ object PBFE3 {
       + lcmNItemsets + ","
       + fpMaxNItemsets + ","
       + Calendar.getInstance().getTime)
+    */
 
     sc.stop()
   }
+
+
+  class GridPartitioner(numParts: Int) extends Partitioner {
+    override def numPartitions: Int = numParts
+
+    override def getPartition(key: Any): Int = {
+      val k = key.toString.split("\\.")(0).toInt
+      return scala.math.abs(k % numPartitions)
+    }
+  }
+
 }
