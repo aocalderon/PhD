@@ -9,6 +9,9 @@ import edu.utah.cs.simba.SimbaContext
 import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.sql.Row
 
+import scala.collection.JavaConverters._
+import scala.collection.mutable.ListBuffer
+
 /**
   * Created by and on 3/20/17.
   */
@@ -91,24 +94,19 @@ object PBFE3 {
       .map { d => (d(0) + ";" + d(1), d(2)) }
       .groupByKey()
       .map { m =>
-        m._2.mkString(" ")
+        m._2.toBuffer
       }
 
     val n = members.count()
 
-    members.mapPartitions{ partition =>
-      val ts = new ArrayList[ArrayList[Integer]]()
-      partition.map { x =>
-        val arrList = new ArrayList[Integer]()
-        x.split(" ").map(y => arrList.add(y.toInt))
-        Collections.sort(arrList)
-        ts.add(arrList)
-      }
+    val temp = members.mapPartitions{ partition =>
+      val b = partition.map{ t => new util.ArrayList(t.map(_.asInstanceOf[Integer])) }.toBuffer
+      val ts = new ArrayList(b)
+
       val fpmax = new AlgoFPMax
       val itemsets = fpmax.runAlgorithm(ts, 1)
-      val levels = itemsets.getLevels
-      levels.flatMap(level => level.map(itemset => itemset.getItems)).iterator
-    }.collect().foreach(println)
+      itemsets.getItemsets(mu).iterator()
+    }.collect()
 
     /**************************************
       * Begin of tests...
@@ -138,16 +136,17 @@ object PBFE3 {
     time2 = System.currentTimeMillis()
     val lcmTime = (time2 - time1) / 1000.0
     val lcmNItemsets = itemsets.countItemsets(3)
+    */
 
     time1 = System.currentTimeMillis()
     val fpmax = new AlgoFPMax
-    itemsets = fpmax.runAlgorithm(ts, 1)
-    //fpmax.printStats
-    //itemsets.printItemsets
+    var itemsets = fpmax.runAlgorithm(new ArrayList(temp.toBuffer) , 1)
+    fpmax.printStats
+    itemsets.printItemsets
     time2 = System.currentTimeMillis()
     val fpMaxTime = (time2 - time1) / 1000.0
     val fpMaxNItemsets = itemsets.countItemsets(3)
-    */
+
 
     println("PBFE3,"
       + epsilon + ","
