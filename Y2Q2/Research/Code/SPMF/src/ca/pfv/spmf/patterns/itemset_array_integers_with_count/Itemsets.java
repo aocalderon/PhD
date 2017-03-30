@@ -18,6 +18,7 @@ package ca.pfv.spmf.patterns.itemset_array_integers_with_count;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -92,6 +93,24 @@ public class Itemsets{
 			}
 		}
 		return count;
+	}
+
+	public ArrayList<ArrayList<Integer>> getItemsets(int mu){
+		ArrayList<ArrayList<Integer>> itemsets = new ArrayList<ArrayList<Integer>>();
+		for (List<Itemset> level : levels) {
+			if(level.size() !=0){
+				if(level.get(0).size() >= mu){
+					for(int i = 0; i < level.size(); i++){
+						int[] array = level.get(i).getItems();
+						ArrayList<Integer> list = new ArrayList<Integer>(array.length);
+						for (int j = 0; j < array.length; j++)
+							list.add(Integer.valueOf(array[j]));
+						itemsets.add(list);
+					}
+				}
+			}
+		}
+		return itemsets;
 	}
 
 	/* (non-Javadoc)
