@@ -141,8 +141,8 @@ object PBFE3 {
     time1 = System.currentTimeMillis()
     val fpmax = new AlgoFPMax
     var itemsets = fpmax.runAlgorithm(new ArrayList(temp.toBuffer) , 1)
-    fpmax.printStats
-    itemsets.printItemsets
+    //fpmax.printStats
+    //itemsets.printItemsets
     time2 = System.currentTimeMillis()
     val fpMaxTime = (time2 - time1) / 1000.0
     val fpMaxNItemsets = itemsets.countItemsets(3)
@@ -153,8 +153,9 @@ object PBFE3 {
       + tag + ","
       + 2 * ndisks + ","
       + diskGenerationTime + ","
+      + fpMaxTime + ","
+      + fpMaxNItemsets + ","
       + Calendar.getInstance().getTime)
-
 
     sc.stop()
   }
