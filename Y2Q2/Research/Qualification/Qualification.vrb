@@ -1,9 +1,18 @@
-\frametitle{Bug report}
-\begin{itemize}
-    \item Found a workaround using the DataFrame API:
-    \begin{minted}[fontsize=\tiny,tabsize=4,breaklines,framesep=10pt,frame=single]{java}
-// Code for Spark DataFrame API (Scala)
-val pairs = p1.distanceJoin(p2, Point(p1("x"), p1("y")), Point(p2("x2"), p2("y2")), epsilon)
-val disks = pairs.rdd.filter( (x:Row) => x.getInt(0) > x.getInt(3) )
-    \end{minted}
-  \end{itemize}
+\frametitle{PBFE implementation}
+\begin{minted}[fontsize=\tiny,tabsize=8,breaklines,framesep=10pt,frame=single, escapeinside=||,mathescape=true]{sql}
+		SELECT
+			*
+		FROM
+			points p1
+		|\color{blue}{DISTANCE JOIN}|
+			points p2
+		ON
+			POINT(p2.x, p2.y) IN |\color{blue}{CIRCLERANGE}|(POINT(p1.x, p1.y), |$\varepsilon$|)
+		WHERE
+			p1.id < p2.id
+	\end{minted}
+	\vspace{1mm}
+ \centering
+ \includegraphics[width=0.3\textwidth]{Figures/theorem}
+
+
