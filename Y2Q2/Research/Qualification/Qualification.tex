@@ -267,11 +267,38 @@
     \begin{itemize}
      \item Written in Scala using Simba 1.6.3.
      \begin{itemize}
-      \item \texttt{DISTANCE JOIN} and \texttt{CIRCLERANGE} operators were the key!!!
       \item Tested by visual inspection and counting number of found disks.
      \end{itemize}
 	\item Code available at \\ \scriptsize \url{https://github.com/aocalderon/PhD/tree/master/Y2Q1/SDB/Project/Code/Scripts/pbfe2}.
     \end{itemize}
+\end{frame}
+
+\begin{frame}{PBFE implementation}
+    \begin{itemize}
+     \item Simba (Xie et al, SIGMOD'16) provides rich spatial operations through both SQL and the DataFrame API.
+     \item Two-layer spatial indexing, cost-based optimization, open source.
+     \item \texttt{DISTANCE JOIN} and \texttt{CIRCLERANGE} operators were the key!!!
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{PBFE implementation}
+	\begin{minted}[fontsize=\tiny,tabsize=8,breaklines,framesep=10pt,frame=single, escapeinside=||,mathescape=true]{sql}
+		SELECT 
+			*
+		FROM 
+			points p1
+		|\color{blue}{DISTANCE JOIN}|
+			points p2 
+		ON 
+			POINT(p2.x, p2.y) IN |\color{blue}{CIRCLERANGE}|(POINT(p1.x, p1.y), |$\varepsilon$|)
+		WHERE 
+			p1.id < p2.id
+	\end{minted}
+	\vspace{1mm}
+ \centering
+ \includegraphics[width=0.3\textwidth]{Figures/theorem} 
+
+
 \end{frame}
 
 \subsection{Experiments}
@@ -447,9 +474,26 @@
 		\item C = $\{ \{ a_1,a_2, ... , a_{100} : 2 \};\{ a_{20},a_{21}, ... , a_{80} : 3 \};\{ a_{40},a_{41}, ... , a_{60} : 4 \} \}$
 		\item M = $\{ \{ a_1,a_2, ... , a_{100} : 2 \} \}$
 	\end{itemize}
-
 \end{frame}
 
+\subsection{Experiments}
+
+\begin{frame}{Setup}
+  \begin{itemize}
+    \item 4-node cluster at DBLab.
+    \item Processors: 8-core Intel(R) Xeon(R) CPU E3-1230 V2 @ 3.30GHz
+    \item RAM: 15.5 GB.
+    \item Centos 6.8, Simba/Spark 1.6.3.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Beijing - Execution time}
+  \centering \includegraphics[height=0.85\textheight]{Figures/Maximal/beijing.pdf}
+\end{frame}
+
+\begin{frame}{Porto - Execution time}
+  \centering \includegraphics[height=0.85\textheight]{Figures/Maximal/porto.pdf}
+\end{frame}
 
 \section{Conclusions and future work}
 
@@ -465,6 +509,7 @@
 \begin{frame}{Future work}
   \begin{itemize}\pause
    \item Work on a parallel strategy to join the sets of valid disks between time intervals.\pause
+   \item Test the approach with other spatio-temporal patterns.\pause
   \end{itemize}
 \end{frame}
 

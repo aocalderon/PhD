@@ -192,7 +192,7 @@ def disksTimestamp(points, timestamp):
             centersDisk = calculateDisks(point, p2)
             for j in centersDisk:
                 centersDiskCompare.append((j.x,j.y))
-            '''
+            
             for j in centersDisk:
                 nearestCenter = treeFrame.query_ball_point([j.x,j.y], (epsilon/2)+precision)
                 members = []
@@ -210,15 +210,15 @@ def disksTimestamp(points, timestamp):
                 else:
                     disks[timestamp] = {}
                     disks[timestamp][pKeyDisk] = Disk(j, timestamp, set(members))
-            '''
+            
     if centersDiskCompare == []:
         return 0,0
                              
     centersDiskCompare = list(set(centersDiskCompare))
     treeCenters = ss.cKDTree(centersDiskCompare)
-    # disksTime = disks[timestamp]
+    disksTime = disks[timestamp]
     
-    return (centersDiskCompare, treeCenters)
+    return (centersDiskCompare, treeCenters, disksTime)
                 
 
 def maximalDisksTimestamp(centersDiskCompare, treeCenters,disksTime, timestamp, diskID):

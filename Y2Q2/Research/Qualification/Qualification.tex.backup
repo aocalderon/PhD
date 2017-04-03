@@ -253,7 +253,8 @@
   \end{itemize}
 \end{frame}
 
-\section{Implementation}
+\section{Finding candidate disks}
+\subsection{Implementation}
 
 \begin{frame}{BFE implementation}
     \begin{itemize}
@@ -266,14 +267,32 @@
     \begin{itemize}
      \item Written in Scala using Simba 1.6.3.
      \begin{itemize}
-      \item \texttt{DISTANCE JOIN} and \texttt{CIRCLERANGE} operators were the key!!!
       \item Tested by visual inspection and counting number of found disks.
      \end{itemize}
 	\item Code available at \\ \scriptsize \url{https://github.com/aocalderon/PhD/tree/master/Y2Q1/SDB/Project/Code/Scripts/pbfe2}.
     \end{itemize}
 \end{frame}
 
-\section{Experiments}
+\begin{frame}{PBFE implementation}
+    \begin{itemize}
+     \item Simba (Xie et al, SIGMOD'16) provides rich spatial operations through both SQL and the DataFrame API.
+     \item Two-layer spatial indexing, cost-based optimization, open source.
+     \item \texttt{DISTANCE JOIN} and \texttt{CIRCLERANGE} operators were the key!!!
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{PBFE implementation}
+
+			\begin{minted}[fontsize=\footnotesize,tabsize=8,breaklines,framesep=10pt,frame=single, escapeinside=||,mathescape=true]{sql}
+				SELECT
+			\end{minted}
+
+	
+
+
+\end{frame}
+
+\subsection{Experiments}
 
 \begin{frame}{Dataset}
   \begin{itemize}
@@ -398,6 +417,8 @@
 
 \section{Finding maximal disks}
 
+\subsection{Implementation}
+
 \begin{frame}{Finding maximal disks}
   \begin{itemize}
    \item The first stage of BFE finds all possible disk locations for each pair of ``close enough'' points... 
@@ -452,20 +473,16 @@
 
 \begin{frame}{Conclusions}
   \begin{itemize}\pause
-   \item An implementation of a parallel method to detect disks for the BFE algorithm has been presented.\pause
+   \item An implementation of a parallel method to detect a maximal set of disks for the BFE algorithm has been presented.\pause
    \item The method proves to be scalable and reliable.\pause
    \item Execution time improves up to 3 orders of magnitude compared to the sequential code.\pause
    \item Good behavior of Scaleup and Speedup metrics.\pause
-   \item DISTANCE `SELF' JOINS depict a better performance using DataFrame or RDD filters (avoid Spark-SQL).
   \end{itemize}
 \end{frame}
 
 \begin{frame}{Future work}
   \begin{itemize}\pause
-   \item Work on a parallel strategy to prune redundant and `under $\mu$' disks.\pause
    \item Work on a parallel strategy to join the sets of valid disks between time intervals.\pause
-   \item Explore more datasets to optimize Speedup and Scaleup values.\pause
-   \item Data pre-processing and result visualization are still open issues.
   \end{itemize}
 \end{frame}
 
