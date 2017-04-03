@@ -272,6 +272,20 @@
     \end{itemize}
 \end{frame}
 
+\begin{frame}{BFE implementation}
+ \centering
+ \includegraphics[width=0.5\textwidth]{Figures/theorem} 
+\end{frame}
+
+\begin{frame}{BFE implementation}
+ \centering
+ \includegraphics[trim={5cm 3cm 5cm 0}, clip, width=\textwidth]{Figures/d01.png} 
+\end{frame}
+\begin{frame}[noframenumbering]{BFE implementation}
+ \centering
+ \includegraphics[trim={5cm 3cm 5cm 0}, clip, width=\textwidth]{Figures/d02.png} 
+\end{frame}
+
 \begin{frame}{PBFE implementation}
     \begin{itemize}
      \item Written in Scala using Simba 1.6.3.
@@ -306,8 +320,6 @@
 	\vspace{1mm}
  \centering
  \includegraphics[width=0.3\textwidth]{Figures/theorem} 
-
-
 \end{frame}
 
 \subsection{Experiments}
@@ -455,7 +467,7 @@
   \centering \includegraphics[width=\textwidth]{Figures/filter/f03.png}
 \end{frame}
 \begin{frame}[noframenumbering]{Finding maximal disks}
-  \centering \includegraphics[width=\textwidth]{Figures/filter/f04.png}
+  \centering \href{http://www.cs.ucr.edu/~acald013/public/maps/gallery/pruning.html}{\includegraphics[width=\textwidth]{Figures/filter/f04.png}}
 \end{frame}
 
 \begin{frame}{Number of disks can be huge...}
@@ -464,14 +476,6 @@
   \end{minipage}\begin{minipage}{.5\textwidth}
     \includegraphics[width=\textwidth]{Figures/ndisks/cologne}
   \end{minipage}
-\end{frame}
-
-\begin{frame}{Finding maximal disks using Maximal Pattern algorithms}
-  \begin{itemize}
-   \item Points enclosed by disks become transactions...
-   \item Apply well-know algorithms (LCM in this case)...
-   \item Filter patterns with length less than $\mu$.
-  \end{itemize}
 \end{frame}
 
 \begin{frame}{A Frequent/Closed/Maximal pattern example...}
@@ -483,6 +487,14 @@
 		\item C = $\{ \{ a_1,a_2, ... , a_{100} : 2 \};\{ a_{20},a_{21}, ... , a_{80} : 3 \};\{ a_{40},a_{41}, ... , a_{60} : 4 \} \}$
 		\item M = $\{ \{ a_1,a_2, ... , a_{100} : 2 \} \}$
 	\end{itemize}
+\end{frame}
+
+\begin{frame}{Finding maximal disks using Maximal Pattern algorithms}
+  \begin{itemize}
+   \item Points enclosed by disks become transactions...
+   \item Apply well-know algorithms (LCM in this case)...
+   \item Filter patterns with length less than $\mu$.
+  \end{itemize}
 \end{frame}
 
 \subsection{Experiments}
