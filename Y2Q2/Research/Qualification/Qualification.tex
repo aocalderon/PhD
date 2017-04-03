@@ -249,8 +249,17 @@
     \begin{itemize}
       \item It is no trivial, disks can be at any location.      
       \item It has a high complexity ($\mathcal{O}(2n^2)$).
+      \item Number of disks can be huge and it can required further filtering.
     \end{itemize}
   \end{itemize}
+\end{frame}
+
+\begin{frame}{Contributions}
+  This work focuses on improvements in the two initial parts of the BFE algorithm:
+  \begin{enumerate}
+   \item Boost the detection of a candidate set of disks through a parallel approach.
+   \item Apply a frequent pattern approach in order to improve the filtering of disks.
+  \end{enumerate}
 \end{frame}
 
 \section{Finding candidate disks}
