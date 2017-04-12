@@ -119,7 +119,7 @@ object PBFE3 {
       *************************************/
 
     /*
-          val arrList = new ArrayList[Integer]()
+      val arrList = new ArrayList[Integer]()
       x.split(" ").map(y => arrList.add(y.toInt))
       Collections.sort(arrList)
       ts.add(arrList)
