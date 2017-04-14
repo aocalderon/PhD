@@ -13,7 +13,7 @@ object PartitionViewer {
   case class PointItem(id: Int, x: Double, y: Double)
 
   var master: String = "local[*]"
-  var filename: String = "/opt/Datasets/Beijing/B89.csv"
+  var filename: String = "/opt/Datasets/Beijing/P10K.csv"
   var logs: String = "ERROR"
 
   def main(args: Array[String]): Unit = {
@@ -46,7 +46,7 @@ object PartitionViewer {
     var time2 = System.currentTimeMillis()
     val partitionTime = (time2 - time1) / 1000.0
     temp.saveAsTextFile("datasets")
-    temp.foreach(println)
+    //temp.foreach(println)
     val mbrs = points.rdd.mapPartitionsWithIndex{ (index, iterator) =>
       var min_x: Double = Double.MaxValue
       var min_y: Double = Double.MaxValue

@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="http://unpkg.com/leaflet@1.0.2/dist/leaflet.css" />
+        <link rel="stylesheet" type="text/css" href="css/qgis2web.css">
+        <link rel="stylesheet" href="css/MarkerCluster.css" />
+        <link rel="stylesheet" href="css/MarkerCluster.Default.css" />
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        </style>
+        <title></title>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="http://unpkg.com/leaflet@1.0.2/dist/leaflet.js"></script>
+        <script src="js/leaflet-heat.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/OSMBuildings-Leaflet.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/leaflet-tilelayer-wmts.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/leaflet.markercluster.js"></script>
+        <script src="data/MBRs0.js"></script>
+        <script src="data/B1KRTree1.js"></script>
+        <script>
+        L.ImageOverlay.include({
+            getBounds: function () {
+                return this._bounds;
+            }
+        });
+        var map = L.map('map', {
+            zoomControl:true, maxZoom:28, minZoom:1
+        }).fitBounds([[38.5890788975,114.871830635],[41.0249767179,119.500983781]]);
+        var hash = new L.Hash(map);
+        map.attributionControl.addAttribution('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a>');
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+        }
+        function geoJson2heat(geojson, weight) {
+          return geojson.features.map(function(feature) {
+            return [
+              feature.geometry.coordinates[1],
+              feature.geometry.coordinates[0],
+              feature.properties[weight]
+            ];
+          });
+        }
+        function pop_MBRs0(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">field_1</th>\
+                        <td>' + (feature.properties['field_1'] !== null ? Autolinker.link(String(feature.properties['field_1'])) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent);
+        }
+
+        function style_MBRs0() {
+            return {
+                pane: 'pane_MBRs0',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fillOpacity: 1,
+                fillColor: 'rgba(138,245,45,1.0)',
+            }
+        }
+        map.createPane('pane_MBRs0');
+        map.getPane('pane_MBRs0').style.zIndex = 400;
+        map.getPane('pane_MBRs0').style['mix-blend-mode'] = 'normal';
+    var layer_MBRs0 = new L.geoJson(json_MBRs0, {
+        attribution: '<a href=""></a>',
+        pane: 'pane_MBRs0',
+        onEachFeature: pop_MBRs0,
+        style: style_MBRs0
+    });
+        bounds_group.addLayer(layer_MBRs0);
+        map.addLayer(layer_MBRs0);
+        function pop_B1KRTree1(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">field_1</th>\
+                        <td>' + (feature.properties['field_1'] !== null ? Autolinker.link(String(feature.properties['field_1'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['field_2'] !== null ? Autolinker.link(String(feature.properties['field_2'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['field_3'] !== null ? Autolinker.link(String(feature.properties['field_3'])) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent);
+        }
+
+        function style_B1KRTree1() {
+            return {
+                pane: 'pane_B1KRTree1',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fillOpacity: 1,
+                fillColor: 'rgba(215,105,225,1.0)',
+            }
+        }
+        map.createPane('pane_B1KRTree1');
+        map.getPane('pane_B1KRTree1').style.zIndex = 401;
+        map.getPane('pane_B1KRTree1').style['mix-blend-mode'] = 'normal';
+        var layer_B1KRTree1 = new L.geoJson(json_B1KRTree1, {
+            attribution: '<a href=""></a>',
+            pane: 'pane_B1KRTree1',
+            onEachFeature: pop_B1KRTree1,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_B1KRTree1(feature))
+            }
+        });
+        bounds_group.addLayer(layer_B1KRTree1);
+        map.addLayer(layer_B1KRTree1);
+        setBounds();
+        </script>
+    </body>
+</html>
