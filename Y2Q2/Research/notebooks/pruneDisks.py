@@ -62,7 +62,8 @@ the_points = folium.FeatureGroup(name="Points")
 p.apply(lambda row:folium.RegularPolygonMarker(
     location=[row["lat"], row["lng"]],
     popup="PID:{0} => [{1}]".format(row["pid"],row["dids"]),
-    radius=2
+    color='purple',
+    radius=3
 ).add_to(the_points), axis=1)
 
 the_map.add_child(the_points)
