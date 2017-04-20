@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>WKT</title>
+    <link rel="stylesheet" href="https://openlayers.org/en/v4.1.0/css/ol.css" type="text/css">
+    <!-- The line below is only needed for old environments like Internet Explorer and Android 4.x -->
+    <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList,URL"></script>
+    <script type="text/javascript" src="http://svn.osgeo.org/metacrs/proj4js/trunk/lib/proj4js.js"></script>
+    <script src="https://openlayers.org/en/v4.1.0/build/ol.js"></script>
+  </head>
+  <body>
+    <div id="map" class="map"></div>
+    <script>
+      var raster = new ol.layer.Tile({
+        source: new ol.source.OSM()
+      });
+
+      var wkt = 'POLYGON ((285876.05421599996 4354571.3186099995, 233184.576561 4354571.3186099995, 233184.576561 4448743.84599, 285876.05421599996 4448743.84599, 285876.05421599996 4354571.3186099995))'
+      var format = new ol.format.WKT();
+
+      var feature = format.readFeature(wkt);
+
+      var vector = new ol.layer.Vector({
+        source: new ol.source.Vector({
+          features: [feature]
+        })
+      });
+
+      var map = new ol.Map({
+        layers: [raster, vector],
+        target: 'map',
+        projection: new ol.Projection("EPSG:4799"),
+        view: new ol.View({
+          center: [285876, 4354571],
+          zoom: 2
+        })
+      });
+    </script>
+  </body>
+</html>
