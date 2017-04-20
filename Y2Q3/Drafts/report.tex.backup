@@ -3,6 +3,8 @@
 \usepackage{geometry}
 \usepackage{booktabs}
 \usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{amsmath}
 \usepackage{hyperref}
 \hypersetup{
 colorlinks=false,
@@ -18,8 +20,75 @@ hidelinks
 \begin{document}
 
 \section*{Improving disk filtering by maximal pattern detection.}
-After the initial phase of BFE algorithm, it is assumed that a valid set of candidates disk has been generated.  It is a simple list with a generated key for each disk and a list with the ID's of the moving objects which the disk encloses. The coordinates of the disk are not needed for filtering purposes but they should be useful if further visualizations are planned.
+After the candidate disks detection, additional filtering should be carried.  BFE algorithm states two filtering process: Firstly, remove any disk which do not group a minimum number of moving object (defined by $\mu$ parameter). Secondly, remove any disk whose element set is a subset of another disk's element set. It means that If from two disks one of them contains all the other's elements, just the former should be kept.  If two disks share the same elements, just one of them should remain.  Figure \ref{fig:steps}  illustrate the steps.
 
-After the candidate disks detection, additional filtering should be carried.  BFE algorithm states two filtering process: Firstly, remove any disk which do not group a minimum number of moving object (defined by $\mu$ parameter). Secondly, remove any disk whose element set is a subset of another disk's element set. It means that If from two disks one of them contains all the other's elements, just the former should be kept.  If two disks share the same elements, just one of them should remain.  
+\begin{figure}
+  \centering
+  \begin{subfigure}[b]{0.475\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../Viz/plot0}
+    \caption[]{{\small Set of points}}    
+    \label{fig:steps_a}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.475\textwidth}  
+    \centering 
+    \includegraphics[width=\textwidth]{../Viz/plot1}
+    \caption[]{{\small Candidate disks}}    
+    \label{fig:steps_b}
+  \end{subfigure}
+  \vskip\baselineskip
+  \begin{subfigure}[b]{0.475\textwidth}   
+    \centering 
+    \includegraphics[width=\textwidth]{../Viz/plot2}
+    \caption[] {{\small Removing less than $\mu$ disks}}    
+    \label{fig:steps_c}
+  \end{subfigure}
+  \quad
+  \begin{subfigure}[b]{0.475\textwidth}   
+    \centering 
+    \includegraphics[width=\textwidth]{../Viz/plot3}
+    \caption[]{{\small Removing redundant disks}}    
+    \label{fig:steps_d}
+  \end{subfigure}
+  \caption{\small Steps during disk filtering.} 
+  \label{fig:steps}
+\end{figure}
 
+At this point, it is assumed that a valid set of candidates disk has been generated.  It is a simple list with a generated key for each disk and a list with the ID's of the moving objects which the disk encloses. The coordinates of the disk are not needed for filtering purposes but they should be useful if further visualizations are planned.
+
+The task to obtain a valid set of disks from the candidate set is not trivial.  A brute force algorithm takes $O(n^2)$ complexity to prune redundant disks which is not scalable for big spatial datasets.  One approach is see the elements inside each disk as a set or transaction.  Once a transactional version of the candidate disks is obtained, it can be analyzed with well-know algorithms for supersets detection.
+
+\subsection*{Maximal and closed frequent patterns}
+
+The detection of supersets in frequent pattern mining has been a widely discussed topic.  Previous works has shown the advantage of maximal and closed frequent patterns as valid representations of the full set of frequent patterns in transactional databases. The main idea is to find the most general pattern from which the remain set of pattern can be generated.
+
+Although the first generation of algorithms was designed to find the complete group of frequent itemsets, in large databases using low values for minimum support threshold this number can be huge. This is because if an itemset is frequent, each of its subsets is frequent as well. Long itemsets will contain large number of shorter frequent subsets. For instance, let a long itemset $I=\{a_1, a_2, ..., a_{100}\}$ with 100 items (It is usually called type 100 or 100-itemset for its number of members). 
+
+It will contain $\binom{100}{1}$ 1-itemsets, $\binom{100}{1}$ 2-itemsets, and so on. The total number of frequent itemsets that it would contain would be:
+
+$$\binom{100}{1} + \binom{100}{1} + ... + \binom{100}{100} = 2^{100} - 1 \approx 1.27 \times 10^{30}$$
+
+To overcome this drawback the concepts of closed frequent pattern and maximum frequent pattern are used. A pattern $\alpha$ is a closed frequent pattern if $\alpha$ is frequent and there exists no other pattern, with the same support, whose contains $\alpha$. On the other hand, a pattern $\alpha$ is a maximal frequent pattern if $\alpha$ is frequent and there exists no other pattern, with any support, whose contains $\alpha$. For example:
+
+\vspace{2mm}
+\begin{tabular}{l l}
+$\alpha = \{ a_1, a_2, a_3, a_4 : 2\}$ & $\alpha$ is maximal \\
+$\beta = \{ a_1, a_2, a_3 : 4\}$ & $\beta$ is closed but not maximal \\
+\end{tabular}
+\vspace{2mm}
+
+
+For example, let's suppose a database $D$ which contains 4 transactions:
+$$ D = \{ \langle a_1,a_2, ... , a_{100} \rangle; \langle a_1,a_2, ... , a_{100} \rangle; \langle a_{20},a_{21}, ... , a_{80} \rangle; \langle a_{40},a_{41}, ... , a_{60} \rangle \} $$
+
+Given a minimum support ($min\_sup)$ equals to 2, the number of possible frequent patters is huge.  As every combination among the items of the database is a frequent pattern (its frequency is above $min\_sup)=2$), the number of possible frequent pattern is:
+
+
+\begin{itemize}
+	\item = 
+	\item C = $\{ \{ a_1,a_2, ... , a_{100} : 2 \};\{ a_{20},a_{21}, ... , a_{80} : 3 \};\{ a_{40},a_{41}, ... , a_{60} : 4 \} \}$
+	\item M = $\{ \{ a_1,a_2, ... , a_{100} : 2 \} \}$
+\end{itemize}
+    
 \end{document}
