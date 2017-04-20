@@ -5,6 +5,7 @@
 \usepackage{graphicx}
 \usepackage{subcaption}
 \usepackage{amsmath}
+\usepackage{amsthm}
 \usepackage{hyperref}
 \hypersetup{
 colorlinks=false,
@@ -99,7 +100,7 @@ This only pattern will serve as a valid representation of all the frequent patte
 
 \begin{figure}   
   \centering 
-  \includegraphics[width=0.95\textwidth]{../Viz/zoom1}
+  \includegraphics[width=0.5\textwidth]{../Viz/zoom}
   \caption[]{{\small Towards a transactional version of the candidate disks}}    
   \label{fig:candidates}
 \end{figure}
@@ -130,4 +131,9 @@ $M =$ 	& $\{ \langle 1, 2, 3, 4 \rangle; $\\
 
 From this shorter list we should prune $\langle 4, 5 \rangle$ because it does not fulfill the $\mu = 3$ parameter. As an advantage on the use of maximal pattern algorithms we could expect a significant improvement in performance since many of this techniques are able to find the set of maximal disk in linear time according with the number of maximal patterns. 
     
+\subsection*{Proof by contradiction}
+\begin{proof}
+Given two disks in the initial set of candidate disks we have to consider two option:  Firstly, let's have a disk $A$ whose elements are $A = \{p_1, p_2, p_3, ..., p_n\}$ and a disk $B$ which have the same elements $B = \{p_1, p_2, p_3, ..., p_n\}$ so $A = B$.  If they are the input of a maximal pattern algorithm it will choose any of them, let say $B$ and $A$ will be consider a redundant disk and it can be safely discarded.  Secondly, let's a disk $A$ whose elements are $A = \{p_1, p_2, p_3, ..., p_n\}$ and a disk $B$ whose elements are $B = \{p_1, p_2, p_3, ..., p_n, p_{n+1}, ..., p_m\}$ so $B \supset A$.  If they are the input of a maximal pattern algorithm it will choose disk $B$ and $A$ will be consider a redundant disk and it can be safely discarded. 
+\end{proof}
+
 \end{document}

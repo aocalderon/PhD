@@ -119,7 +119,7 @@ $D =$ 	& $\{ \langle 1, 2, 3 \rangle; $ 	& {\small \textit{From disk 1}}\\
 \end{tabular}
 \vspace{2mm}
 
-In this way, it is possible to apply any algorithm for maximal pattern detection using $min\_sup=1$.  The result should be:
+In this way, it is possible to apply any algorithm for maximal pattern detection to discard redundant disks by using $min\_sup=1$.  The result should be:
 
 \vspace{2mm}
 \begin{tabular}{r l}
@@ -128,6 +128,6 @@ $M =$ 	& $\{ \langle 1, 2, 3, 4 \rangle; $\\
 \end{tabular}
 \vspace{2mm}
 
-From this shorter list we should prune $\langle 4, 5 \rangle \}$ due to it does not fulfill the $\mu = 3$ parameter. 
+From this shorter list we should prune $\langle 4, 5 \rangle$ because it does not fulfill the $\mu = 3$ parameter. As an advantage on the use of maximal pattern algorithms we could expect a significant improvement in performance since many of this techniques are able to find the set of maximal disk in linear time according with the number of maximal patterns. 
     
 \end{document}
