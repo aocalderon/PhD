@@ -43,6 +43,7 @@ names(data) = c("ID","lat","lng")
 # htmlwidgets::saveWidget(map, file = file, selfcontained = F)
 # IRdisplay::display_html(paste("<iframe width=100% height=400 src=' ", file, " ' ","/>"))
 
+Sys.setenv(SPARK_HOME = "/opt/Simba")
 sc <- sparkR.init("local[*]", "SparkR")
 sqlContext <- sparkRSQL.init(sc)
 
@@ -227,5 +228,7 @@ file = paste0(output,'_All.html')
 htmlwidgets::saveWidget(map, file = file, selfcontained = F)
 # IRdisplay::display_html(paste("<iframe width=100% height=400 src=' ", file, " ' ","/>"))
 
+write.csv(disks, "disks.csv", row.names = F)
+write.csv(maximal, "maximal.csv", row.names = F)
 write.csv(mdisks, "prune.csv", row.names = F)
 write.csv(maximal, "maximal.csv", row.names = F)
