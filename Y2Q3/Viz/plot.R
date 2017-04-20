@@ -12,5 +12,5 @@ points = spTransform(points, mercator)
 
 
 library("ggmap")
-map <- get_map(location = c(lon[1], lat[2], lon[2], lat[1]),
-               maptype = "roadmap", source = "osm", zoom = 11)
+qmap(location = "Beijing")
+qmap(location = "Beijing", source="osm")
