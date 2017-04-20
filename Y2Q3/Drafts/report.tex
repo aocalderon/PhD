@@ -51,7 +51,7 @@ After the candidate disks detection, additional filtering should be carried.  BF
     \caption[]{{\small Removing redundant disks}}    
     \label{fig:steps_d}
   \end{subfigure}
-  \caption{\small Steps during disk filtering.} 
+  \caption{\small Steps during disk filtering ($\mu = 3$).} 
   \label{fig:steps}
 \end{figure}
 
@@ -93,15 +93,41 @@ On the other hand, we just obtain one maximal frequent pattern, in this case:
 
 $$ M = \{ \{ a_1, a_2, ..., a_{100} : 2 \} \} $$
 
-It just pattern will serve as a valid representation of all the frequent patterns as it contains all the possible subsets.
+This only pattern will serve as a valid representation of all the frequent patterns as it contains all the possible subsets.
 
 \subsection*{A transactional version of the candidate disks}
 
 \begin{figure}   
   \centering 
-  \includegraphics[width=0.75\textwidth]{../Viz/zoom1}
+  \includegraphics[width=0.95\textwidth]{../Viz/zoom1}
   \caption[]{{\small Towards a transactional version of the candidate disks}}    
   \label{fig:candidates}
 \end{figure}
+
+The main idea to deal with the candidates disks as a set of transactions is the possibility to apply well-known algorithms for maximal pattern detection in order to filter all the possible subsets.  In figure \ref{fig:candidates} we can see that we can extract the points enclosed by each disks in the form of transaction.  For example:
+
+\vspace{2mm}
+\begin{tabular}{r l r}
+$D =$ 	& $\{ \langle 1, 2, 3 \rangle; $ 	& {\small \textit{From disk 1}}\\
+	& $   \langle 2, 3, 4 \rangle; $ 	& {\small \textit{From disk 2}}\\
+	& $   \langle 1, 2 \rangle; $	 	& {\small \textit{From disk 3}}\\
+	& \multicolumn{1}{c}{\vdots}		& \multicolumn{1}{c}{\vdots} \\
+	& $   \langle 1, 2, 3, 4 \rangle; $ 	& {\small \textit{From disk 10}}\\
+	& $   \langle 2, 3, 4 \rangle; $ 	& {\small \textit{From disk 11}}\\
+	& $   \langle 3, 4 \rangle; $ 		& {\small \textit{From disk 12}}\\
+	& $   \langle 4, 5 \rangle \} $		& {\small \textit{From disk 13}}\\
+\end{tabular}
+\vspace{2mm}
+
+In this way, it is possible to apply any algorithm for maximal pattern detection to discard redundant disks by using $min\_sup=1$.  The result should be:
+
+\vspace{2mm}
+\begin{tabular}{r l}
+$M =$ 	& $\{ \langle 1, 2, 3, 4 \rangle; $\\
+	& $   \langle 4, 5 \rangle \} $	\\
+\end{tabular}
+\vspace{2mm}
+
+From this shorter list we should prune $\langle 4, 5 \rangle$ because it does not fulfill the $\mu = 3$ parameter. As an advantage on the use of maximal pattern algorithms we could expect a significant improvement in performance since many of this techniques are able to find the set of maximal disk in linear time according with the number of maximal patterns. 
     
 \end{document}

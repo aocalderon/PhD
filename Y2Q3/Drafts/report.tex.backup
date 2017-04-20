@@ -51,7 +51,7 @@ After the candidate disks detection, additional filtering should be carried.  BF
     \caption[]{{\small Removing redundant disks}}    
     \label{fig:steps_d}
   \end{subfigure}
-  \caption{\small Steps during disk filtering.} 
+  \caption{\small Steps during disk filtering ($\mu = 3$).} 
   \label{fig:steps}
 \end{figure}
 
@@ -69,26 +69,65 @@ It will contain $\binom{100}{1}$ 1-itemsets, $\binom{100}{1}$ 2-itemsets, and so
 
 $$\binom{100}{1} + \binom{100}{1} + ... + \binom{100}{100} = 2^{100} - 1 \approx 1.27 \times 10^{30}$$
 
-To overcome this drawback the concepts of closed frequent pattern and maximum frequent pattern are used. A pattern $\alpha$ is a closed frequent pattern if $\alpha$ is frequent and there exists no other pattern, with the same support, whose contains $\alpha$. On the other hand, a pattern $\alpha$ is a maximal frequent pattern if $\alpha$ is frequent and there exists no other pattern, with any support, whose contains $\alpha$. For example:
+To overcome this drawback the concepts of \textit{closed frequent pattern} and \textit{maximum frequent pattern} are used. A pattern $\alpha$ is a \textit{closed frequent pattern} if $\alpha$ is frequent and there exists no other pattern, with the same support, whose contains $\alpha$. On the other hand, a pattern $\alpha$ is a \textit{maximal frequent pattern} if $\alpha$ is frequent and there exists no other pattern, with any support, whose contains $\alpha$. For example:
 
 \vspace{2mm}
 \begin{tabular}{l l}
-$\alpha = \{ a_1, a_2, a_3, a_4 : 2\}$ & $\alpha$ is maximal \\
-$\beta = \{ a_1, a_2, a_3 : 4\}$ & $\beta$ is closed but not maximal \\
+$\alpha = \{ a_1, a_2, a_3, a_4 : 2\}$ & $\alpha$ is \textit{maximal} \\
+$\beta = \{ a_1, a_2, a_3 : 4\}$ & $\beta$ is \textit{closed} but not \textit{maximal} \\
 \end{tabular}
 \vspace{2mm}
 
+The set of maximal frequent patterns is important because it contains the set of longest patterns such that any kind of frequent pattern which exceeds the minimum support can be generated.For clarification, these two concepts can be illustrated with an additional example.  Suppose a database $D$ contains 4 transactions:
 
-For example, let's suppose a database $D$ which contains 4 transactions:
-$$ D = \{ \langle a_1,a_2, ... , a_{100} \rangle; \langle a_1,a_2, ... , a_{100} \rangle; \langle a_{20},a_{21}, ... , a_{80} \rangle; \langle a_{40},a_{41}, ... , a_{60} \rangle \} $$
+$$ D = \{ \langle a_1, a_2, ..., a_{100} \rangle; \langle a_1, a_2, ..., a_{100} \rangle; \langle a_{20}, a_{21}, ..., a_{80} \rangle; \langle a_{40}, a_{41}, ..., a_{60} \rangle \} $$
 
-Given a minimum support ($min\_sup)$ equals to 2, the number of possible frequent patters is huge.  As every combination among the items of the database is a frequent pattern (its frequency is above $min\_sup)=2$), the number of possible frequent pattern is:
+Note that the first transaction is repeated twice. The minimum support $min\_sup = 2$. A complete search for all itemsets will generate a vast number of combinations. However,
+the closed frequent itemset approach will find only 3 frequent itemsets:
 
+$$ C = \{ \{ a_1, a_2, ..., a_{100} : 2 \};\{ a_{20},a_{21}, ..., a_{80} : 3 \};\{ a_{40},a_{41}, ..., a_{60} : 4 \} \} $$
 
-\begin{itemize}
-	\item = 
-	\item C = $\{ \{ a_1,a_2, ... , a_{100} : 2 \};\{ a_{20},a_{21}, ... , a_{80} : 3 \};\{ a_{40},a_{41}, ... , a_{60} : 4 \} \}$
-	\item M = $\{ \{ a_1,a_2, ... , a_{100} : 2 \} \}$
-\end{itemize}
+The set of closed frequent itemsets contains complete information to generate the rest frequent itemsets with their corresponding support. It is possible to derive, for example,
+$\{a_{50}, a_{51} : 4\}$ from $\{a_{40}, a_{41} , ..., a_{60} : 4\}$ or $\{a_{90}, a_{91}, a_{92} : 2\}$ from $\{a_1, a_2, ..., a_{100} : 2\}$.
+On the other hand, we just obtain one maximal frequent pattern, in this case:
+
+$$ M = \{ \{ a_1, a_2, ..., a_{100} : 2 \} \} $$
+
+This only pattern will serve as a valid representation of all the frequent patterns as it contains all the possible subsets.
+
+\subsection*{A transactional version of the candidate disks}
+
+\begin{figure}   
+  \centering 
+  \includegraphics[width=0.95\textwidth]{../Viz/zoom1}
+  \caption[]{{\small Towards a transactional version of the candidate disks}}    
+  \label{fig:candidates}
+\end{figure}
+
+The main idea to deal with the candidates disks as a set of transactions is the possibility to apply well-known algorithms for maximal pattern detection in order to filter all the possible subsets.  In figure \ref{fig:candidates} we can see that we can extract the points enclosed by each disks in the form of transaction.  For example:
+
+\vspace{2mm}
+\begin{tabular}{r l r}
+$D =$ 	& $\{ \langle 1, 2, 3 \rangle; $ 	& {\small \textit{From disk 1}}\\
+	& $   \langle 2, 3, 4 \rangle; $ 	& {\small \textit{From disk 2}}\\
+	& $   \langle 1, 2 \rangle; $	 	& {\small \textit{From disk 3}}\\
+	& \multicolumn{1}{c}{\vdots}		& \multicolumn{1}{c}{\vdots} \\
+	& $   \langle 1, 2, 3, 4 \rangle; $ 	& {\small \textit{From disk 10}}\\
+	& $   \langle 2, 3, 4 \rangle; $ 	& {\small \textit{From disk 11}}\\
+	& $   \langle 3, 4 \rangle; $ 		& {\small \textit{From disk 12}}\\
+	& $   \langle 4, 5 \rangle \} $		& {\small \textit{From disk 13}}\\
+\end{tabular}
+\vspace{2mm}
+
+In this way, it is possible to apply any algorithm for maximal pattern detection using $min\_sup=1$.  The result should be:
+
+\vspace{2mm}
+\begin{tabular}{r l}
+$M =$ 	& $\{ \langle 1, 2, 3, 4 \rangle; $\\
+	& $   \langle 4, 5 \rangle \} $	\\
+\end{tabular}
+\vspace{2mm}
+
+From this shorter list we should prune $\langle 4, 5 \rangle \}$ due to it does not fulfill the $\mu = 3$ parameter. 
     
 \end{document}
