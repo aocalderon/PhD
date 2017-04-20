@@ -45,6 +45,9 @@ names(data) = c("ID","lat","lng")
 
 Sys.setenv(SPARK_HOME = "/opt/Simba")
 sc <- sparkR.init("local[*]", "SparkR")
+
+Sys.setenv('SPARKR_SUBMIT_ARGS'='"--packages" "com.databricks:spark-csv_2.10:1.5.0" "sparkr-shell"')
+
 sqlContext <- sparkRSQL.init(sc)
 
 dataRDD = SparkR:::textFile(sc,opt$input)
@@ -75,6 +78,7 @@ d <- createDataFrame(sqlContext, centers, schema = schema)
 # head(d)
 # count(d)
 
+write.df(centers, "centers_4799.csv", "com.databricks.spark.csv")
 print("Transforming centers...")
 
 centers_lnglat <- SparkR:::map(centers, transformCenters)
