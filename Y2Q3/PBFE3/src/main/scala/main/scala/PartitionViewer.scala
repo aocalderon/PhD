@@ -44,6 +44,8 @@ object PartitionViewer {
       var max_x: Double = Double.MinValue
       var max_y: Double = Double.MinValue
 
+      var size: Int = 0
+
       iterator.toList.foreach{row =>
         val x = row.getDouble(1)
         val y = row.getDouble(2)
@@ -59,15 +61,16 @@ object PartitionViewer {
         if(y > max_y){
           max_y = y
         }
+        size += 1
       }
-      List((min_x,min_y,max_x,max_y, s"$index")).iterator
+      List((min_x,min_y,max_x,max_y, s"$index", size)).iterator
     }
 
     val gson = new GeoGSON("4799")
     mbrs.collect().foreach {row =>
-      gson.makeMBR(row._1,row._2,row._3,row._4,row._5)
+      gson.makeMBR(row._1,row._2,row._3,row._4,row._5, row._6)
     }
-    gson.saveGeoJSON("/tmp/RTree.json")
+    gson.saveGeoJSON("RTree.json")
 
     sc.stop()
   }
