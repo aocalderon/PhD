@@ -13,7 +13,7 @@ object PartitionViewer {
   case class PointItem(id: Int, x: Double, y: Double)
 
   var master: String = "local[*]"
-  var filename: String = "/opt/Datasets/Beijing/P10K.csv"
+  var filename: String = "/opt/Datasets/Beijing/B16M.csv"
   var logs: String = "ERROR"
 
   def main(args: Array[String]): Unit = {
@@ -70,7 +70,7 @@ object PartitionViewer {
     mbrs.collect().foreach {row =>
       gson.makeMBR(row._1,row._2,row._3,row._4,row._5, row._6)
     }
-    gson.saveGeoJSON("RTree.json")
+    gson.saveGeoJSON("RTree_B16M.json")
 
     sc.stop()
   }
