@@ -13,7 +13,7 @@ object PartitionViewer {
   case class PointItem(id: Int, x: Double, y: Double)
 
   var master: String = "local[*]"
-  var filename: String = "/opt/Datasets/Beijing/B16M.csv"
+  var filename: String = "/opt/Datasets/Beijing/P10K.csv"
   var logs: String = "ERROR"
 
   def main(args: Array[String]): Unit = {
