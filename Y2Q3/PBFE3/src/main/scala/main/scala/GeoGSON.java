@@ -26,6 +26,7 @@ public class GeoGSON {
         this.fw = null;
         this.gson = new GsonBuilder()
                 .registerTypeAdapterFactory(new GeometryAdapterFactory())
+                .setPrettyPrinting()
                 .create();
         this.geojson = new StringBuilder();
         this.geojson.append("{\"type\": \"FeatureCollection\",\n")
