@@ -12,7 +12,7 @@ object PartitionViewer {
   case class PointItem(id: Int, x: Double, y: Double)
 
   var master: String = "local[*]"
-  var filename: String = "/opt/Datasets/Beijing/P20K.csv"
+  var filename: String = "/opt/Datasets/Beijing/P100K.csv"
   var epsilon: Double = 10.0
   var logs: String = "ERROR"
 
@@ -25,7 +25,7 @@ object PartitionViewer {
       .builder()
       .master(master)
       .appName("PartitionViewer")
-      .config("simba.index.partitions", "64")
+      .config("simba.index.partitions", "512")
       .getOrCreate()
 
     import simbaSession.implicits._
@@ -81,7 +81,7 @@ object PartitionViewer {
         gson2.makeMBR(row._1 + epsilon,row._2 + epsilon,row._3 - epsilon,row._4 - epsilon,row._5, row._6)
       }
     }
-    gson2.saveGeoJSON("out/RTree_P20K_buffer.json")
+    gson2.saveGeoJSON("out/RTree_P100K_buffer.json")
 
     mbrs.map(r => r._6).toDF("n").agg(Map("n" -> "avg")).show()
 
