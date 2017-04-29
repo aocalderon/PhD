@@ -37,9 +37,10 @@ object PartitionViewer {
     val points = sc.textFile(filename,10)
       .map(_.split(","))
       .map(p => PointItem(id = p(0).trim.toInt, x = p(1).trim.toDouble, y = p(2).trim.toDouble))
-      .toDF()
+      .toDS()
     println(points.count())
     points.index(RTreeType, "rt", Array("x", "y"))
+
 
     val mbrs = points.rdd.mapPartitionsWithIndex{ (index, iterator) =>
       var min_x: Double = Double.MaxValue
@@ -50,8 +51,8 @@ object PartitionViewer {
       var size: Int = 0
 
       iterator.toList.foreach{row =>
-        val x = row.getDouble(1)
-        val y = row.getDouble(2)
+        val x = row.x
+        val y = row.y
         if(x < min_x){
           min_x = x
         }
