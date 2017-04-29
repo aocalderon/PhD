@@ -12,7 +12,7 @@ object PartitionViewer {
   case class PointItem(id: Int, x: Double, y: Double)
 
   var master: String = "local[*]"
-  var filename: String = "/opt/Datasets/Beijing/P100K.csv"
+  var filename: String = "/opt/Datasets/Beijing/P10K.csv"
   var epsilon: Double = 10.0
   var logs: String = "ERROR"
 
@@ -25,7 +25,7 @@ object PartitionViewer {
       .builder()
       .master(master)
       .appName("PartitionViewer")
-      .config("simba.index.partitions", "512")
+      .config("simba.index.partitions", "256")
       .getOrCreate()
 
     import simbaSession.implicits._
