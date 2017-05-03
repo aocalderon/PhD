@@ -24,13 +24,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 
 import ca.pfv.spmf.patterns.itemset_array_integers_with_count.Itemset;
@@ -282,6 +276,75 @@ public class AlgoFPMax {
 		// return the result (if saved to memory)
 		return patterns;
 	}
+
+/*
+	public Itemsets runAlgorithm(Iterator input, int minsup) throws IOException {
+		// record start time
+		startTimestamp = System.currentTimeMillis();
+		// number of itemsets found
+		itemsetCount = 0;
+
+		//initialize tool to record memory usage
+		MemoryLogger.getInstance().reset();
+		MemoryLogger.getInstance().checkMemory();
+
+		writer = null;
+		patterns =  new Itemsets("Maximal Patterns");
+
+		// (1) PREPROCESSING: Initial database scan to determine the frequency of each item
+		// The frequency is stored in a map:
+		//    key: item   value: support
+		originalMapSupport = scanDatabaseToDetermineFrequencyOfSingleItems(input);
+
+		// convert the minimum support as percentage to a
+		// relative minimum support
+		this.minSupportRelative = minsup;
+
+
+		// Create the MFI Tree
+		mfiTree = new MFITree();
+
+		// (2) Scan the database again to build the initial FP-Tree
+		// Before inserting a transaction in the FPTree, we sort the items
+		// by descending order of support.  We ignore items that
+		// do not have the minimum support.
+		FPTree tree = new FPTree();
+
+		for( List<Integer> t: input){
+			List<Integer> transaction = new ArrayList<Integer>();
+			for(Integer item: t){
+				if(originalMapSupport.get(item) >= minSupportRelative){
+					transaction.add(item);
+				}
+			}
+			Collections.sort(transaction, comparatorOriginalOrder);
+			tree.addTransaction(transaction);
+		}
+
+		// We create the header table for the tree using the calculated support of single items
+		tree.createHeaderList(originalMapSupport);
+
+		// (5) We start to mine the FP-Tree by calling the recursive method.
+		// Initially, the prefix alpha is empty.
+		// if at least an item is frequent
+		if(tree.headerList.size() > 0) {
+			// initialize the buffer for storing the current itemset
+			itemsetBuffer = new int[BUFFERS_SIZE];
+			// Next we will recursively generate frequent itemsets using the fp-tree
+			fpMax(tree, itemsetBuffer, 0, transactionCount, originalMapSupport);
+		}
+
+		// record the execution end time
+		endTime= System.currentTimeMillis();
+
+		// check the memory usage
+		MemoryLogger.getInstance().checkMemory();
+
+		// return the result (if saved to memory)
+		return patterns;
+	}
+*/
+
 
 	/**
 	 * Mine an FP-Tree having more than one path.
@@ -610,6 +673,24 @@ public class AlgoFPMax {
 		}
 		return mapSupport;
 	}
+
+/*	private  Map<Integer, Integer> scanDatabaseToDetermineFrequencyOfSingleItems(Iterator input){
+		Map<Integer, Integer> mapSupport = new HashMap<Integer, Integer>();
+
+
+		for( List<Integer> t: input){
+			for(Integer item: t){
+				Integer count = mapSupport.get(item);
+				if(count == null){
+					mapSupport.put(item, 1);
+				}else{
+					mapSupport.put(item, ++count);
+				}
+			}
+			transactionCount++;
+		}
+		return mapSupport;
+	}*/
 
 	/**
 	 * Print statistics about the algorithm execution to System.out.

@@ -5,6 +5,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import ca.pfv.spmf.algorithms.frequentpatterns.fpgrowth.AlgoFPMax;
 import ca.pfv.spmf.patterns.itemset_array_integers_with_count.Itemsets;
@@ -117,24 +118,24 @@ public class MainTestLCM_saveToMemory {
 		t12.add(Integer.valueOf(9));
 		Collections.sort(t12);
 
-//		List<List<Integer>> ts = new ArrayList<ArrayList<Integer>>();
-//		ts.add(t1);
-//		ts.add(t2);
-//		ts.add(t3);
-//		ts.add(t4);
-//		ts.add(t5);
-//		ts.add(t6);
-//		ts.add(t7);
-//		ts.add(t8);
-//		ts.add(t9);
-//		ts.add(t10);
-//		ts.add(t11);
-//		ts.add(t12);
-//		AlgoFPMax fpMax = new AlgoFPMax();
-//		itemsets = fpMax.runAlgorithm(ts, 2);
-//		fpMax.printStats();
-//
-//		itemsets.printItemsets();
+		ArrayList<ArrayList<Integer>> ts = new ArrayList<ArrayList<Integer>>();
+		ts.add(t1);
+		ts.add(t2);
+		ts.add(t3);
+		ts.add(t4);
+		ts.add(t5);
+		ts.add(t6);
+		ts.add(t7);
+		ts.add(t8);
+		ts.add(t9);
+		ts.add(t10);
+		ts.add(t11);
+		ts.add(t12);
+		AlgoFPMax fpMax = new AlgoFPMax();
+		itemsets = fpMax.runAlgorithm(ts, 2);
+		fpMax.printStats();
+
+		itemsets.printItemsets();
 
 	}
 	
