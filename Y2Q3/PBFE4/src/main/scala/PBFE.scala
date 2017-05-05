@@ -90,6 +90,8 @@ object PBFE {
     var time2 = System.currentTimeMillis()
     val diskGenerationTime = (time2 - time1) / 1000.0
 
+    //disks.map(())
+
     val centers1 = disks.toDF.select("x1", "y1")
     val centers2 = disks.toDF.select("x2", "y2")
     val centers = centers1.union(centers2)
@@ -99,9 +101,11 @@ object PBFE {
     val membersRDD = centers.distanceJoin(p1, Array("x1", "y1"), Array("x", "y"), (epsilon / 2) + 0.01)
         .select("x1", "y1", "id")
         // TODO: run the group by here...
-        .map { d => ( (d(0).asInstanceOf[Double], d(1).asInstanceOf[Double]) , d(2).asInstanceOf[Integer] ) }
-        .rdd
-    val members = membersRDD.groupByKey()
+        .show()
+
+        //.map { d => ( (d(0).asInstanceOf[Double], d(1).asInstanceOf[Double]) , d(2).asInstanceOf[Integer] ) }
+
+/*    val members = membersRDD.groupByKey()
       .map{ m => ( m._1._1, m._1._2, m._2.toArray[Integer] ) }
       .toDF("x", "y", "IDs")
       .index(RTreeType, "membersRT", Array("x", "y"))
@@ -120,7 +124,7 @@ object PBFE {
     }
 
     temp.foreach(println)
-    temp.count()
+    temp.count()*/
 
     /**************************************
       * Begin of tests...
