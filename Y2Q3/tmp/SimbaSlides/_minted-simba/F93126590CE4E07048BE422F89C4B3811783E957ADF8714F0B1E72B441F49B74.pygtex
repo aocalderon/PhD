@@ -1,0 +1,14 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{SELECT}
+	\PYG{n}{p}\PYG{p}{.}\PYG{n}{id}\PYG{p}{,} \PYG{k}{count}\PYG{p}{(}\PYG{o}{*}\PYG{p}{)} \PYG{k}{AS} \PYG{n}{n}
+\PYG{k}{FROM}
+	\PYG{n}{pois} \PYG{k}{AS} \PYG{n}{p}
+\PYG{n}{DISTANCE} \PYG{k}{JOIN}
+	\PYG{n}{restaurants} \PYG{k}{AS} \PYG{n}{r}
+\PYG{k}{ON}
+	\PYG{n}{POINT}\PYG{p}{(}\PYG{n}{r}\PYG{p}{.}\PYG{n}{lat}\PYG{p}{,} \PYG{n}{r}\PYG{p}{.}\PYG{n}{lng}\PYG{p}{)} \PYG{k}{IN} \PYG{n}{CIRCLERANGE}\PYG{p}{(}\PYG{n}{POINT}\PYG{p}{(}\PYG{n}{p}\PYG{p}{.}\PYG{n}{lat}\PYG{p}{,} \PYG{n}{p}\PYG{p}{.}\PYG{n}{lng}\PYG{p}{),} \PYG{l+m+mi}{200}\PYG{p}{.}\PYG{l+m+mi}{0}\PYG{p}{)}
+\PYG{k}{GROUP} \PYG{k}{BY}
+	\PYG{n}{p}\PYG{p}{.}\PYG{n}{id}
+\PYG{k}{ORDER} \PYG{k}{BY}
+	\PYG{n}{n}
+\end{Verbatim}

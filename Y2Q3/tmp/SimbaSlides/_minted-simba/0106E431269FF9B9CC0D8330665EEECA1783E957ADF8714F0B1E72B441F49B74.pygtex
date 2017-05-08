@@ -1,0 +1,9 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{SELECT}
+	\PYG{o}{*}
+\PYG{k}{FROM}
+	\PYG{n}{points}
+\PYG{k}{WHERE}
+	\PYG{n}{POINT}\PYG{p}{(}\PYG{n}{x}\PYG{p}{,} \PYG{n}{y}\PYG{p}{)} \PYG{k}{IN}
+		\PYG{n}{KNN}\PYG{p}{(}\PYG{n}{POINT}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{,} \PYG{l+m+mi}{3}\PYG{p}{),} \PYG{l+m+mi}{5}\PYG{p}{)}
+\end{Verbatim}
