@@ -1,0 +1,19 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+	\PYG{c+c1}{\PYGZsh{} Apply functions to results of SQL queries.}
+	\PYG{n}{context} \PYG{o}{=} \PYG{n}{HiveContext}\PYG{p}{(}\PYG{n}{sc}\PYG{p}{)}
+	\PYG{n}{results} \PYG{o}{=} \PYG{n}{context}\PYG{o}{.}\PYG{n}{sql}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+\PYG{l+s+s2}{				SELECT}
+\PYG{l+s+s2}{					*}
+\PYG{l+s+s2}{				FROM}
+\PYG{l+s+s2}{					people\PYGZdq{}\PYGZdq{}\PYGZdq{}}\PYG{p}{)}
+	\PYG{n}{names} \PYG{o}{=} \PYG{n}{results}\PYG{o}{.}\PYG{n}{map}\PYG{p}{(}\PYG{k}{lambda} \PYG{n}{p}\PYG{p}{:} \PYG{n}{p}\PYG{o}{.}\PYG{n}{name}\PYG{p}{)}
+	\PYG{c+c1}{\PYGZsh{} Query and join different data sources.}
+	\PYG{n}{context}\PYG{o}{.}\PYG{n}{jsonFile}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}s3n://...\PYGZdq{}}\PYG{p}{)}\PYG{o}{.}\PYG{n}{registerTempTable}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}json\PYGZdq{}}\PYG{p}{)}
+	\PYG{n}{results} \PYG{o}{=} \PYG{n}{context}\PYG{o}{.}\PYG{n}{sql}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+\PYG{l+s+s2}{				SELECT}
+\PYG{l+s+s2}{				      *}
+\PYG{l+s+s2}{				FROM}
+\PYG{l+s+s2}{				      people}
+\PYG{l+s+s2}{				JOIN}
+\PYG{l+s+s2}{				      json ...\PYGZdq{}\PYGZdq{}\PYGZdq{}}\PYG{p}{)}
+\end{Verbatim}

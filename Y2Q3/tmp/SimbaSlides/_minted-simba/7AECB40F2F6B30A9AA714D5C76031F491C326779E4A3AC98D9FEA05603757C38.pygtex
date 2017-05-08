@@ -1,0 +1,10 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGdefault{k}{SELECT}
+	\PYGdefault{o}{*}
+\PYGdefault{k}{FROM}
+	\PYGdefault{n}{queries} \PYGdefault{n}{q}
+\PYGdefault{n}{KNN} \PYGdefault{k}{JOIN}
+	\PYGdefault{n}{pois} \PYGdefault{n}{p}
+\PYGdefault{k}{ON}
+	\PYGdefault{n}{POINT}\PYGdefault{p}{(}\PYGdefault{n}{p}\PYGdefault{p}{.}\PYGdefault{n}{x}\PYGdefault{p}{,} \PYGdefault{n}{p}\PYGdefault{p}{.}\PYGdefault{n}{y}\PYGdefault{p}{)} \PYGdefault{k}{IN} \PYGdefault{n}{KNN}\PYGdefault{p}{(}\PYGdefault{n}{POINT}\PYGdefault{p}{(}\PYGdefault{n}{q}\PYGdefault{p}{.}\PYGdefault{n}{x}\PYGdefault{p}{,} \PYGdefault{n}{q}\PYGdefault{p}{.}\PYGdefault{n}{y}\PYGdefault{p}{),} \PYGdefault{l+m+mi}{3}\PYGdefault{p}{)}
+\end{Verbatim}
