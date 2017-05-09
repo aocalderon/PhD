@@ -104,6 +104,33 @@
     % \lattersubsecttrue
 }
 
+\section*{Spark Overview}
+
+\begin{frame}{Overview}
+  \begin{itemize}
+    \item Apache Spark provides an API centered on a data structure called the resilient distributed dataset (RDD).
+	\item RDD: a read-only multiset of data items distributed over a cluster of machines, that is maintained in a fault-tolerant way.
+  \end{itemize} 
+\end{frame}
+
+\begin{frame}{Overview}
+  \begin{itemize}
+    \item Response to limitations in the MapReduce cluster computing paradigm, which forces a linear dataflow structure ...
+	\item Read from disk $\longrightarrow$ Map across the data $\longrightarrow$ Reduce results $\longrightarrow$ Store to disk..
+	\item Spark's RDDs function as a working set for distributed programs that offers a form of distributed shared memory.[3
+  \end{itemize} 
+\end{frame}
+
+\begin{frame}{Overview}
+	\centering
+	\includegraphics[width=\textwidth]{./Figures/RDD1.png}
+\end{frame}
+
+\begin{frame}{Overview}
+	\centering
+	\includegraphics[height=0.8\textheight]{./Figures/RDD2.png}
+\end{frame}
+
 \section*{Spark Session API}
 
 \begin{frame}{Datasets}
@@ -127,34 +154,24 @@
   \end{itemize} 
 \end{frame}
 
-\begin{frame}[fragile]{Creating SparkSession}
-  \centering
-  \begin{minted}[fontsize=\footnotesize,tabsize=8,breaklines,framesep=10pt,frame=single]{scala}
-val sparkSession = SparkSession.builder.
-                        master("local[*]").
-                        appName("example").
-                        getOrCreate()
-\end{minted}
-\end{frame}
-
-\begin{frame}[fragile]{Read data using Spark Session}
-  \centering
-  \begin{minted}[fontsize=\footnotesize,tabsize=8,breaklines,framesep=10pt,frame=single]{scala}
-import sparkSession.implicits._
-val data = sparkSession.read.text("myfile.txt").as[String]
-\end{minted}
-\end{frame}
-
 \section*{Wordcount in Dataset API}
 \begin{frame}{Introduction to \texttt{Dataset}}
   \begin{itemize}
     \item A \texttt{Dataset} is a \textbf{strongly typed collection of domain-specific objects} that can be transformed in parallel using functional or relational operations.
-    \item Each dataset also has an untyped view called a \texttt{DataFrame}, which is a \texttt{Dataset} of \texttt{Row}.
-    \begin{itemize}
-     \item 
-    \end{itemize}
+    \item Each \texttt{Dataset} also has an untyped view called a \texttt{DataFrame}, which is a \texttt{Dataset} of \texttt{Row}.
   \end{itemize} 
 \end{frame}
 
+\begin{frame}{Introduction to \texttt{Dataset}}
+  \begin{itemize}
+    \item \texttt{RDD} represents an immutable,partitioned collection of elements that can be operated on in parallel
+    \item The major difference is, \texttt{Dataset} is collection of domain specific objects where as \texttt{RDD} is collection of any object.
+  \end{itemize} 
+\end{frame}
+
+\begin{frame}[fragile]{Creating SparkSession}
+  \centering
+  Demo at \url{https://tinyurl.com/demospark}
+\end{frame}
 
 \end{document}

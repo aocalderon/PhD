@@ -1,0 +1,20 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{import} \PYG{n+nn}{org.apache.spark.sql.SQLContext}
+
+\PYG{c+c1}{// URL for your database server.}
+\PYG{k}{val} \PYG{n}{url} \PYG{k}{=} \PYG{l+s}{\PYGZdq{}jdbc:mysql://IP:Port/db?user=username;password=passwd\PYGZdq{}}
+\PYG{c+c1}{// Create a sql context object}
+\PYG{k}{val} \PYG{n}{sqlContext} \PYG{k}{=} \PYG{k}{new} \PYG{n}{org}\PYG{o}{.}\PYG{n}{apache}\PYG{o}{.}\PYG{n}{spark}\PYG{o}{.}\PYG{n}{sql}\PYG{o}{.}\PYG{n+nc}{SQLContext}\PYG{o}{(}\PYG{n}{sc}\PYG{o}{)}
+
+\PYG{k}{val} \PYG{n}{df} \PYG{k}{=} \PYG{n}{sqlContext}
+  \PYG{o}{.}\PYG{n}{read}
+  \PYG{o}{.}\PYG{n}{format}\PYG{o}{(}\PYG{l+s}{\PYGZdq{}jdbc\PYGZdq{}}\PYG{o}{)}
+  \PYG{o}{.}\PYG{n}{option}\PYG{o}{(}\PYG{l+s}{\PYGZdq{}url\PYGZdq{}}\PYG{o}{,} \PYG{n}{url}\PYG{o}{)}
+  \PYG{o}{.}\PYG{n}{option}\PYG{o}{(}\PYG{l+s}{\PYGZdq{}dbtable\PYGZdq{}}\PYG{o}{,} \PYG{l+s}{\PYGZdq{}people\PYGZdq{}}\PYG{o}{)}
+  \PYG{o}{.}\PYG{n}{load}\PYG{o}{()}
+
+\PYG{c+c1}{// Looks the schema of this DataFrame.}
+\PYG{n}{df}\PYG{o}{.}\PYG{n}{printSchema}\PYG{o}{()}
+\PYG{c+c1}{// Counts people by age}
+\PYG{k}{val} \PYG{n}{countsByAge} \PYG{k}{=} \PYG{n}{df}\PYG{o}{.}\PYG{n}{groupBy}\PYG{o}{(}\PYG{l+s}{\PYGZdq{}age\PYGZdq{}}\PYG{o}{).}\PYG{n}{count}\PYG{o}{()}
+\end{Verbatim}

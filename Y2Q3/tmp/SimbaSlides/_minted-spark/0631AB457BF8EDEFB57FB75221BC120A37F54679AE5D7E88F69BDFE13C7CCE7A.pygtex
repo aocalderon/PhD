@@ -1,0 +1,16 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{// create a spark config object}
+\PYG{k}{val} \PYG{n}{conf} \PYG{k}{=} \PYG{k}{new} \PYG{n+nc}{SparkConf}\PYG{o}{().}\PYG{n}{setAppName}\PYG{o}{(}\PYG{l+s}{\PYGZdq{}wiki\PYGZus{}test\PYGZdq{}}\PYG{o}{)}
+\PYG{c+c1}{// Create a spark context}
+\PYG{k}{val} \PYG{n}{sc} \PYG{k}{=} \PYG{k}{new} \PYG{n+nc}{SparkContext}\PYG{o}{(}\PYG{n}{conf}\PYG{o}{)}
+\PYG{c+c1}{// Read files from \PYGZdq{}somedir\PYGZdq{} into an RDD}
+\PYG{c+c1}{// of (filename, content) pairs.}
+\PYG{k}{val} \PYG{n}{data} \PYG{k}{=} \PYG{n}{sc}\PYG{o}{.}\PYG{n}{textFile}\PYG{o}{(}\PYG{l+s}{\PYGZdq{}/path/to/somedir\PYGZdq{}}\PYG{o}{)}
+\PYG{c+c1}{// Split each file into a list of tokens (words).}
+\PYG{k}{val} \PYG{n}{tokens} \PYG{k}{=} \PYG{n}{data}\PYG{o}{.}\PYG{n}{flatMap}\PYG{o}{(}\PYG{k}{\PYGZus{}}\PYG{o}{.}\PYG{n}{split}\PYG{o}{(}\PYG{l+s}{\PYGZdq{} \PYGZdq{}}\PYG{o}{))}
+\PYG{c+c1}{// Add a count of one to each token,}
+\PYG{c+c1}{// then sum the counts per word type.}
+\PYG{k}{val} \PYG{n}{wordFreq} \PYG{k}{=} \PYG{n}{tokens}\PYG{o}{.}\PYG{n}{map}\PYG{o}{((}\PYG{k}{\PYGZus{}}\PYG{o}{,} \PYG{l+m+mi}{1}\PYG{o}{)).}\PYG{n}{reduceByKey}\PYG{o}{(}\PYG{k}{\PYGZus{}} \PYG{o}{+} \PYG{k}{\PYGZus{}}\PYG{o}{)}
+\PYG{c+c1}{// Get the top 10 words. Swap word and count to sort by count.}
+\PYG{n}{wordFreq}\PYG{o}{.}\PYG{n}{sortBy}\PYG{o}{(}\PYG{n}{s} \PYG{k}{=\PYGZgt{}} \PYG{o}{\PYGZhy{}}\PYG{n}{s}\PYG{o}{.}\PYG{n}{\PYGZus{}2}\PYG{o}{).}\PYG{n}{map}\PYG{o}{(}\PYG{n}{x} \PYG{k}{=\PYGZgt{}} \PYG{o}{(}\PYG{n}{x}\PYG{o}{.}\PYG{n}{\PYGZus{}2}\PYG{o}{,} \PYG{n}{x}\PYG{o}{.}\PYG{n}{\PYGZus{}1}\PYG{o}{)).}\PYG{n}{top}\PYG{o}{(}\PYG{l+m+mi}{10}\PYG{o}{)}
+\end{Verbatim}
