@@ -1,4 +1,4 @@
-
+s
 r2 = (epsilon/2)^2
 
 wgs84 = CRS("+init=epsg:4326")
