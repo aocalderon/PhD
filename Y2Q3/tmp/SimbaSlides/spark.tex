@@ -104,7 +104,101 @@
     % \lattersubsecttrue
 }
 
-\section*{Spark Session API}
+\section{Spark Overview}
+
+\begin{frame}{Overview}
+  \begin{itemize}
+    \item Apache Spark provides an API centered on a data structure called the resilient distributed dataset (RDD).
+	\item RDD: a read-only multiset of data items distributed over a cluster of machines, that is maintained in a fault-tolerant way.
+  \end{itemize} 
+\end{frame}
+
+\begin{frame}{Overview}
+  \begin{itemize}
+    \item Response to limitations in the MapReduce cluster computing paradigm, which forces a linear dataflow structure ...
+	\item Read from disk $\longrightarrow$ Map across the data $\longrightarrow$ Reduce results $\longrightarrow$ Store to disk..
+	\item Spark's RDDs function as a working set for distributed programs that offers a form of distributed shared memory.
+  \end{itemize} 
+\end{frame}
+
+\begin{frame}{Overview}
+	\centering
+	\includegraphics[height=0.8\textheight]{./Figures/RDD2.png}
+\end{frame}
+
+\begin{frame}{Overview}
+	\centering
+	\includegraphics[width=\textwidth]{./Figures/RDD1.png}
+\end{frame}
+
+\begin{frame}{Spark APIs}
+  \begin{itemize}
+    \item APIs in different languages:
+    \begin{itemize}
+    	\item Scala
+    	\item Python
+    	\item R
+    	\item Java
+    \end{itemize}
+  \end{itemize} 
+\end{frame}
+
+\begin{frame}[fragile]{Spark APIs}
+  \centering
+  \begin{minted}[fontsize=\footnotesize,tabsize=8,breaklines,framesep=10pt,frame=single]{scala}
+// create a spark config object
+val conf = new SparkConf().setAppName("wiki_test") 
+// Create a spark context
+val sc = new SparkContext(conf) 
+// Read files from "somedir" into an RDD 
+// of (filename, content) pairs.
+val data = sc.textFile("/path/to/somedir")
+// Split each file into a list of tokens (words).
+val tokens = data.flatMap(_.split(" ")) 
+// Add a count of one to each token, 
+// then sum the counts per word type.
+val wordFreq = tokens.map((_, 1)).reduceByKey(_ + _) 
+// Get the top 10 words. Swap word and count to sort by count.
+wordFreq.sortBy(s => -s._2).map(x => (x._2, x._1)).top(10) 
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]{Spark APIs}
+  \centering
+  \begin{minted}[fontsize=\footnotesize,tabsize=8,breaklines,framesep=10pt,frame=single]{scala}
+import org.apache.spark.sql.SQLContext
+
+// URL for your database server.
+val url = "jdbc:mysql://IP:Port/db?user=username;password=passwd" 
+// Create a sql context object
+val sqlContext = new org.apache.spark.sql.SQLContext(sc)
+
+val df = sqlContext
+  .read
+  .format("jdbc")
+  .option("url", url)
+  .option("dbtable", "people")
+  .load()
+
+// Looks the schema of this DataFrame.
+df.printSchema() 
+// Counts people by age
+val countsByAge = df.groupBy("age").count() 
+  \end{minted}
+\end{frame}
+
+\begin{frame}{Spark APIs}
+  \begin{itemize}
+    \item Other Spark's Frameworks:
+    \begin{itemize}
+    	\item Spark Streaming
+    	\item MLlib Machine Learning Library
+    	\item GraphX
+    \end{itemize}
+  \end{itemize} 
+\end{frame}
+
+\section{Spark Session API}
 
 \begin{frame}{Datasets}
   \begin{itemize}
@@ -127,7 +221,7 @@
   \end{itemize} 
 \end{frame}
 
-\section*{Wordcount in Dataset API}
+\section{Wordcount in Dataset API}
 \begin{frame}{Introduction to \texttt{Dataset}}
   \begin{itemize}
     \item A \texttt{Dataset} is a \textbf{strongly typed collection of domain-specific objects} that can be transformed in parallel using functional or relational operations.
