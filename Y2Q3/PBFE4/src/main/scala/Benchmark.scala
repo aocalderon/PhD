@@ -56,7 +56,7 @@ object Benchmark {
       .builder()
       .master(master)
       .appName("Benchmark")
-      .config("simba.index.partitions", "16")
+      .config("simba.index.partitions", "32")
       .getOrCreate()
     simba.sparkContext.setLogLevel(logs)
 
@@ -84,16 +84,19 @@ object Benchmark {
       val pairsRDD = p1.distanceJoin(p2, Array("x1", "y1"), Array("x2", "y2"), epsilon).rdd
       val centers = test1.run(pairsRDD).distinct().toDS()
       centers.index(RTreeType, "centersRT", Array("x", "y"))
-      val c = centers.rdd.mapPartitionsWithIndex{(index, partition) =>
-        val n = partition.size
-        val e = s"${n}".size
-        val start = index * Math.pow(10, e).toLong
-        val cids = (start to start + n)
-
-        (partition.toVector zip cids.toVector).toList.toIterator
+      centers.show(10)
+      val n = centers.rdd.mapPartitions( x => Seq(x.length).toIterator ).max()
+      val e = s"${n}".size
+      val p = Math.pow(10, e).toLong
+      val new_centers = centers.rdd.mapPartitionsWithIndex{(index, centers) =>
+        val start = index * p
+        val cids = (start to start + n).toIterator
+        (centers zip cids).map{ case (center, cid) =>
+          ACenter(cid, center.x, center.y)
+        }.toList.toIterator
       }
 
-      c.foreach(println)
+      new_centers.collect().foreach(println)
       //val n = centers.count()
       //val time2 = System.currentTimeMillis()
       //val time = (time2 - time1) / 1000.0
