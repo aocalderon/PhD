@@ -37,54 +37,17 @@ object Project {
       csv("/opt/GISData/Geolife_Trajectories_1.3/beijing2.csv").
       as[Trajectory]
 
-    trajectories.show(25)
+    println(trajectories.count())
     trajectories.printSchema
 
     val cx = -323750.0
     val cy = 4471800.0
-    val extend = 100000.0
+    val extend = 10000.0
     var clip = trajectories.range(Array("lon", "lat"),
                                   Array(cx - extend, cy - extend),
                                   Array(cx + extend, cy + extend)).toDF().as[Trajectory]
     println(clip.count())
-    clip = clip.distinct()
-    println(clip.count())
-
     clip.index(RTreeType, "clipRT", Array("lon", "lat"))
-
-    val mbrs = clip.rdd.mapPartitionsWithIndex{ (index, iterator) =>
-      var min_x: Double = Double.MaxValue
-      var min_y: Double = Double.MaxValue
-      var max_x: Double = Double.MinValue
-      var max_y: Double = Double.MinValue
-
-      var size: Int = 0
-
-      iterator.foreach{ row =>
-        val x = row.lon
-        val y = row.lat
-        if(x < min_x){
-          min_x = x
-        }
-        if(y < min_y){
-          min_y = y
-        }
-        if(x > max_x){
-          max_x = x
-        }
-        if(y > max_y){
-          max_y = y
-        }
-        size += 1
-      }
-      List((min_x,min_y,max_x,max_y, s"$index", size)).iterator
-    }
-
-    val gson = new GeoGSON("4799")
-    mbrs.collect().foreach {row =>
-      gson.makeMBR(row._1,row._2,row._3,row._4,row._5, row._6)
-    }
-    gson.saveGeoJSON("out/clip_RTree.json")
 
     val minx = cx - extend
     val miny = cy - extend
