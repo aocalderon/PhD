@@ -19,10 +19,10 @@
   <mapcanvas>
     <units>meters</units>
     <extent>
-      <xmin>-326806.78047899092780426</xmin>
-      <ymin>4473621.54953104630112648</ymin>
-      <xmax>-326638.93060680042253807</xmax>
-      <ymax>4473824.37054183706641197</ymax>
+      <xmin>-326896.69894377363380045</xmin>
+      <ymin>4473679.80662989057600498</ymin>
+      <xmax>-326560.99919939262326807</xmax>
+      <ymax>4474085.44865147210657597</ymax>
     </extent>
     <rotation>0</rotation>
     <projections>0</projections>
@@ -67,8 +67,14 @@
   </legend>
   <projectlayers>
     <maplayer simplifyAlgorithm="0" minimumScale="0" maximumScale="1e+08" simplifyDrawingHints="0" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" readOnly="0" geometry="Point" simplifyMaxScale="1" type="vector" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
+      <extent>
+        <xmin>-399487.05699000001186505</xmin>
+        <ymin>4354571.31861000042408705</ymin>
+        <xmax>-235793.46734900001320057</xmax>
+        <ymax>4552370.09484999999403954</ymax>
+      </extent>
       <id>P20K20170427134136558</id>
-      <datasource>/home/and/Documents/PhD/Code/Y2Q3/Datasets/P20K.geojson</datasource>
+      <datasource>../Datasets/P20K.geojson</datasource>
       <keywordList>
         <value></value>
       </keywordList>
@@ -272,6 +278,10 @@
         <property key="labeling/xOffset" value="0"/>
         <property key="labeling/yOffset" value="0"/>
         <property key="labeling/zIndex" value="0"/>
+        <property key="qgis2web/Visible" value="true"/>
+        <property key="qgis2web/popup/field_1" value="no label"/>
+        <property key="qgis2web/popup/field_2" value="no label"/>
+        <property key="qgis2web/popup/field_3" value="no label"/>
         <property key="variableNames"/>
         <property key="variableValues"/>
       </customproperties>
@@ -381,8 +391,14 @@ def my_form_open(dialog, layer, feature):
       <previewExpression></previewExpression>
     </maplayer>
     <maplayer simplifyAlgorithm="0" minimumScale="0" maximumScale="1e+08" simplifyDrawingHints="1" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" readOnly="0" geometry="Polygon" simplifyMaxScale="1" type="vector" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
+      <extent>
+        <xmin>-399487.05699000001186505</xmin>
+        <ymin>4354571.31861000042408705</ymin>
+        <xmax>-235793.46734900001320057</xmax>
+        <ymax>4552370.09484999999403954</ymax>
+      </extent>
       <id>RTree_P100K20170427134322274</id>
-      <datasource>/home/and/Documents/PhD/Code/Y2Q3/PBFE4/out/RTree_P100K.json</datasource>
+      <datasource>../PBFE4/out/RTree_P100K.json</datasource>
       <keywordList>
         <value></value>
       </keywordList>
@@ -573,6 +589,8 @@ def my_form_open(dialog, layer, feature):
         <property key="labeling/xOffset" value="0"/>
         <property key="labeling/yOffset" value="0"/>
         <property key="labeling/zIndex" value="0"/>
+        <property key="qgis2web/Visible" value="true"/>
+        <property key="qgis2web/popup/popup" value="no label"/>
         <property key="variableNames"/>
         <property key="variableValues"/>
       </customproperties>
@@ -676,8 +694,14 @@ def my_form_open(dialog, layer, feature):
       <previewExpression></previewExpression>
     </maplayer>
     <maplayer simplifyAlgorithm="0" minimumScale="0" maximumScale="1e+08" simplifyDrawingHints="1" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" readOnly="0" geometry="Polygon" simplifyMaxScale="1" type="vector" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
+      <extent>
+        <xmin>-399477.05699000001186505</xmin>
+        <ymin>4354581.31861000042408705</ymin>
+        <xmax>-235803.46734900001320057</xmax>
+        <ymax>4552360.09484999999403954</ymax>
+      </extent>
       <id>RTree_P20K_buffer20170427134256572</id>
-      <datasource>/home/and/Documents/PhD/Code/Y2Q3/PBFE4/out/RTree_P20K_buffer.json</datasource>
+      <datasource>../PBFE4/out/RTree_P20K_buffer.json</datasource>
       <keywordList>
         <value></value>
       </keywordList>
@@ -868,6 +892,8 @@ def my_form_open(dialog, layer, feature):
         <property key="labeling/xOffset" value="0"/>
         <property key="labeling/yOffset" value="0"/>
         <property key="labeling/zIndex" value="0"/>
+        <property key="qgis2web/Visible" value="true"/>
+        <property key="qgis2web/popup/popup" value="no label"/>
         <property key="variableNames"/>
         <property key="variableValues"/>
       </customproperties>
@@ -1016,6 +1042,32 @@ def my_form_open(dialog, layer, feature):
         <value>0.000000</value>
       </LayerSnappingToleranceList>
     </Digitizing>
+    <qgis2web>
+      <Maxzoomlevel type="QString">25</Maxzoomlevel>
+      <Showpopupsonhover type="bool">false</Showpopupsonhover>
+      <Basemaps type="QString">OSM</Basemaps>
+      <Exportfolder type="QString">/home/and/Documents/PhD/Code/Y2Q3/Viz</Exportfolder>
+      <mapFormat type="QString">openlayers</mapFormat>
+      <Precision type="QString">maintain</Precision>
+      <Measuretool type="QString">None</Measuretool>
+      <Baselayer type="QStringList">
+        <value>OSM</value>
+      </Baselayer>
+      <Addlayerslist type="QString">Expanded</Addlayerslist>
+      <MatchprojectCRS type="bool">false</MatchprojectCRS>
+      <Highlightonhover type="bool">false</Highlightonhover>
+      <Addaddresssearch type="bool">false</Addaddresssearch>
+      <Minzoomlevel type="QString">5</Minzoomlevel>
+      <Geolocateuser type="bool">false</Geolocateuser>
+      <Exporter type="QString">folder</Exporter>
+      <MinifyGeoJSONfiles type="bool">true</MinifyGeoJSONfiles>
+      <Extent type="QString">Fit to layers extent</Extent>
+      <Restricttoextent type="bool">false</Restricttoextent>
+      <Template type="QString">canvas-size</Template>
+      <Mappinglibrarylocation type="QString">Local</Mappinglibrarylocation>
+      <Searchlayer type="QString"></Searchlayer>
+      <Layersearch type="QString">None</Layersearch>
+    </qgis2web>
     <PositionPrecision>
       <DecimalPlaces type="int">2</DecimalPlaces>
       <Automatic type="bool">true</Automatic>
