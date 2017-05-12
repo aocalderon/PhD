@@ -91,8 +91,8 @@ object Project {
     val maxx = cx + extend
     val maxy = cy + extend
 
-    val x = simba.sparkContext.parallelize(minx to maxx by 10000)
-    val y = simba.sparkContext.parallelize(miny to maxy by 10000)
+    val x = simba.sparkContext.parallelize(minx to maxx by 1000)
+    val y = simba.sparkContext.parallelize(miny to maxy by 1000)
     val grid = x.cartesian(y).map(cell => Grid(cell._1, cell._2)).toDS()
     grid.index(RTreeType, "gridRT", Array("glon", "glat"))
     val results = trajectories.knnJoin(grid, Array("lon", "lat"), Array("glon", "glat"), 1).
