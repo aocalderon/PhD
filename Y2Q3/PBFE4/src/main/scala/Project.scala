@@ -33,8 +33,8 @@ object Project {
     val trajectories = simba.read.
       option("header", "false").
       schema(schema).
-      csv("out/B40Trajs.csv").
-      //csv("/opt/GISData/Geolife_Trajectories_1.3/beijing2.csv").
+      //csv("out/B40Trajs.csv").
+      csv("/opt/GISData/Geolife_Trajectories_1.3/beijing2.csv").
       as[Trajectory]
 
     trajectories.show(25)
