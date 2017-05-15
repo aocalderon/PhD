@@ -30,11 +30,11 @@ object Project {
     import simba.simbaImplicits._
 
     val schema = ScalaReflection.schemaFor[Trajectory].dataType.asInstanceOf[StructType]
-    val trajectories = simba.read.
+    var trajectories = simba.read.
       option("header", "false").
       schema(schema).
       //csv("out/B40Trajs.csv").
-      csv("/opt/GISData/Geolife_Trajectories_1.3/beijing2.csv").
+      csv("/opt/GISData/Geolife_Trajectories_1.3/beijing_46K.csv").
       as[Trajectory]
 
     println(trajectories.count())
@@ -43,22 +43,23 @@ object Project {
     val cx = -323750.0
     val cy = 4471800.0
     val extend = 10000.0
-    var clip = trajectories.range(Array("lon", "lat"),
-                                  Array(cx - extend, cy - extend),
-                                  Array(cx + extend, cy + extend)).toDF().as[Trajectory]
-    println(clip.count())
-    clip.index(RTreeType, "clipRT", Array("lon", "lat"))
-
     val minx = cx - extend
     val miny = cy - extend
     val maxx = cx + extend
     val maxy = cy + extend
 
+    val clip = trajectories.range(Array("lon", "lat"),
+                                  Array(minx, miny),
+                                  Array(maxx, maxy)).
+                            toDF().as[Trajectory]
+    println(clip.count())
+    clip.index(RTreeType, "clipRT", Array("lon", "lat"))
+
     val x = simba.sparkContext.parallelize(minx to maxx by 1000)
     val y = simba.sparkContext.parallelize(miny to maxy by 1000)
     val grid = x.cartesian(y).map(cell => Grid(cell._1, cell._2)).toDS()
     grid.index(RTreeType, "gridRT", Array("glon", "glat"))
-    val results = trajectories.knnJoin(grid, Array("lon", "lat"), Array("glon", "glat"), 1).
+    val results = clip.knnJoin(grid, Array("lon", "lat"), Array("glon", "glat"), 1).
                                 select("tid", "oid", "glon", "glat").
                                 groupBy("glon", "glat").
                                 count().
