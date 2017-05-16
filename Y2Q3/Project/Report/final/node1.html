@@ -1,0 +1,122 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2008 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Introduction</TITLE>
+<META NAME="description" CONTENT="Introduction">
+<META NAME="keywords" CONTENT="final">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2008">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="final.css">
+
+<LINK REL="next" HREF="node2.html">
+<LINK REL="previous" HREF="final.html">
+<LINK REL="up" HREF="final.html">
+<LINK REL="next" HREF="node2.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html39"
+  HREF="node2.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="/usr/share/latex2html/icons/next.png"></A> 
+<A NAME="tex2html37"
+  HREF="final.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="/usr/share/latex2html/icons/up.png"></A> 
+<A NAME="tex2html31"
+  HREF="final.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="/usr/share/latex2html/icons/prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html40"
+  HREF="node2.html">Related work</A>
+<B> Up:</B> <A NAME="tex2html38"
+  HREF="final.html">Towards Parallel Detection of</A>
+<B> Previous:</B> <A NAME="tex2html32"
+  HREF="final.html">Towards Parallel Detection of</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A NAME="SECTION00010000000000000000">
+Introduction</A>
+</H1>
+Nowadays, spatio-temporal data is ubiquitous. Thanks to new technologies and the proliferation of location devices (such as Internet of Things, Remote Sensing, Smart phones, GPS, RFID, etc.), the collection of huge amount of spatio-temporal data is now possible. With the appearance of this datasets also appears the need of new techniques which allow the analysis and detection of useful patterns in large spatio-temporal databases.  
+
+<P>
+Applications for this kind of information are diverse and interesting, in particular if they come in the way of trajectory datasets [<A
+ HREF="node10.html#jeung_trajectory_2011">15</A>,<A
+ HREF="node10.html#huang_mining_2015">11</A>]. Case of studies range from transportation system management [<A
+ HREF="node10.html#di_lorenzo_allaboard:_2016">5</A>,<A
+ HREF="node10.html#johansson_efficiency_2015">17</A>] to Ecology [<A
+ HREF="node10.html#johnston_abundance_2015">18</A>,<A
+ HREF="node10.html#la_sorte_convergence_2016">20</A>].  For instance, [<A
+ HREF="node10.html#turdukulov_visual_2014">29</A>] explore the finding of complex motion patterns to discover similarities between tropical cyclone paths.  Similarly, [<A
+ HREF="node10.html#amor_persistence_2016">1</A>] use eye trajectories to understand which strategies people use during a visual search. Also, [<A
+ HREF="node10.html#holland_movements_1999">10</A>] track the behavior of tiger sharks in the coasts of Hawaii in order to understand their migration patters.
+
+<P>
+Recently, there has been an increasing interest in exploiting more complex movement patterns in spatio-temporal datasets.  Traditional range and nearest neighbor queries do not capture the collective behavior of moving objects.  Moving cluster [<A
+ HREF="node10.html#kalnis_discovering_2005">19</A>], convoys [<A
+ HREF="node10.html#jeung_discovery_2008">16</A>] and flock patterns [<A
+ HREF="node10.html#benkert_reporting_2008">3</A>,<A
+ HREF="node10.html#gudmundsson_computing_2006">9</A>] are new movement patterns which unveil how entities move together during a minimum time interval.  
+
+<P>
+In particular, a moving flock pattern show how objects move close enough during a given period of time.  A better understanding on how entities move in space is of special interest in areas such as sports [<A
+ HREF="node10.html#iwase_tracking_2002">14</A>],  surveillance and security [<A
+ HREF="node10.html#makris_path_2002">24</A>,<A
+ HREF="node10.html#piciarelli_trajectory_2005">27</A>], urban development [<A
+ HREF="node10.html#huang_trajgraph:_2016">12</A>,<A
+ HREF="node10.html#long_combining_2015">23</A>] and socio-economic geography [<A
+ HREF="node10.html#frank_life_2000">7</A>].
+
+<P>
+Despite the fact that much more data become available, state-of-the-art techniques to mine complex movement patterns still depict low scalability and poor performance in big spatial data.  The present work aims to find an initial solution to implement a parallel method to discover moving flock patterns in large spatio-temporal datasets.  It is thought that new trends in distributed in-memory framework for spatial operations could help to speed up the detection of this kind of patterns.
+
+<P>
+The following section will state the related work in the area.  Section <A HREF="node3.html#sec:flock">3</A> will explain the details of the implementation of the proposed solution while section <A HREF="node6.html#sec:experiments">4</A> will present their experimental results. Finally, section <A HREF="node9.html#sec:conclusions">5</A> will discuss some conclusions and future work. 
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html39"
+  HREF="node2.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="/usr/share/latex2html/icons/next.png"></A> 
+<A NAME="tex2html37"
+  HREF="final.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="/usr/share/latex2html/icons/up.png"></A> 
+<A NAME="tex2html31"
+  HREF="final.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="/usr/share/latex2html/icons/prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html40"
+  HREF="node2.html">Related work</A>
+<B> Up:</B> <A NAME="tex2html38"
+  HREF="final.html">Towards Parallel Detection of</A>
+<B> Previous:</B> <A NAME="tex2html32"
+  HREF="final.html">Towards Parallel Detection of</A></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+and
+2017-05-15
+</ADDRESS>
+</BODY>
+</HTML>

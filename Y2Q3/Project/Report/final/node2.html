@@ -1,0 +1,162 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2008 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Related work</TITLE>
+<META NAME="description" CONTENT="Related work">
+<META NAME="keywords" CONTENT="final">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2008">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="final.css">
+
+<LINK REL="next" HREF="node3.html">
+<LINK REL="previous" HREF="node1.html">
+<LINK REL="up" HREF="final.html">
+<LINK REL="next" HREF="node3.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html49"
+  HREF="node3.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="/usr/share/latex2html/icons/next.png"></A> 
+<A NAME="tex2html47"
+  HREF="final.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="/usr/share/latex2html/icons/up.png"></A> 
+<A NAME="tex2html41"
+  HREF="node1.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="/usr/share/latex2html/icons/prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html50"
+  HREF="node3.html">Parallelizing flock detection</A>
+<B> Up:</B> <A NAME="tex2html48"
+  HREF="final.html">Towards Parallel Detection of</A>
+<B> Previous:</B> <A NAME="tex2html42"
+  HREF="node1.html">Introduction</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A NAME="SECTION00020000000000000000">
+Related work</A>
+</H1>
+Recently increase use of location-aware devices (such as GPS, Smart phones and RFID tags) has allowed the collection of a vast amount of data with a spatial and temporal component linked to them.  Different studies have focused in analyzing and mining this kind of collections [<A
+ HREF="node10.html#leung_knowledge_2010">22</A>,<A
+ HREF="node10.html#miller_geographic_2001">25</A>].  In this area, trajectory datasets have emerged as an interesting field where diverse kind of patterns can be identified [<A
+ HREF="node10.html#zheng_computing_2011">37</A>,<A
+ HREF="node10.html#vieira_spatio-temporal_2013">31</A>].  For instance, authors have proposed techniques to discover motion spatial patterns such as moving clusters [<A
+ HREF="node10.html#kalnis_discovering_2005">19</A>], convoys [<A
+ HREF="node10.html#jeung_discovery_2008">16</A>] and flocks [<A
+ HREF="node10.html#benkert_reporting_2008">3</A>,<A
+ HREF="node10.html#gudmundsson_computing_2006">9</A>].  In particular, [<A
+ HREF="node10.html#vieira_-line_2009">30</A>] proposed BFE (Basic Flock Evaluation), a novel algorithm to find moving flock patterns in polynomial time over large spatio-temporal datasets.  
+
+<P>
+A flock pattern is defined as a group of entities which move together for a defined lapse of time [<A
+ HREF="node10.html#benkert_reporting_2008">3</A>] (figure <A HREF="#fig:flock">1</A>).  Applications to this kind of patterns are rich and diverse.  For example, [<A
+ HREF="node10.html#calderon_romero_mining_2011">4</A>] finds moving flock patterns in iceberg trajectories to understand their movement behavior and how they related to changes in ocean's currents. 
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="fig:flock"></A><A NAME="38"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 1:</STRONG>
+Moving flock pattern example.</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+
+</DIV> </TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+The BFE algorithm presents an initial strategy in order to detect flock patterns.  In that, first it finds disks with a predefined diameter (<SPAN CLASS="MATH"><IMG
+ WIDTH="13" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img1.png"
+ ALT="$\varepsilon $"></SPAN>) where moving entities could be close enough at a given time interval.  This is a costly operation due to the large number of points and intervals to be analyzed (<!-- MATH
+ $\mathcal{O}(2n^2)$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="63" HEIGHT="39" ALIGN="MIDDLE" BORDER="0"
+ SRC="img4.png"
+ ALT="$\mathcal{O}(2n^2)$"></SPAN> per time interval).  The technique uses a grid-based index and a stencil (see figure <A HREF="#fig:grid">2</A>) to speed up the process, but the complexity is still high.
+
+<P>
+[<A
+ HREF="node10.html#calderon_romero_mining_2011">4</A>] and [<A
+ HREF="node10.html#turdukulov_visual_2014">29</A>] use a frequent pattern mining approach to improve performance during the combination of disks between time intervals.  Similarly, [<A
+ HREF="node10.html#tanaka_improved_2016">28</A>] introduce the use of plane sweeping along with binary signatures and inverted indexes to speedup the same process.  However, the above-mentioned methods still keep the same strategy as BFE to find the disks at each interval.  
+
+<P>
+[<A
+ HREF="node10.html#arimura_finding_2014">2</A>] and [<A
+ HREF="node10.html#geng_enumeration_2014">8</A>] use depth-first algorithms to analyze the time intervals of each trajectory to report maximal duration flocks.  However, these techniques are not suitable to find patterns in an on-line fashion.
+
+<P>
+Given the high complexity of the task, it should not be surprising the use of parallelism to increase performance.  [] use extremal and intersection sets to report maximal, longest and largest flocks on the GPU with the limitations of its memory model.  
+
+<P>
+Indeed, despite the popularity of cluster computing frameworks (in particular whose supporting spatial capabilities [<A
+ HREF="node10.html#eldawy_spatialhadoop:_2014">6</A>,<A
+ HREF="node10.html#yu_demonstration_2016">33</A>,<A
+ HREF="node10.html#pellechia_geomesa:_2015-1">13</A>,<A
+ HREF="node10.html#xie_simba:_2016-1">32</A>]) there are not significant advances in this area.  At the best of our knowledge, this work is the first to explore in-memory distributed systems towards the detection of moving flock patterns.
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="fig:grid"></A><A NAME="112"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 2:</STRONG>
+Grid-based index used in [<A
+ HREF="node10.html#vieira_-line_2009">30</A>].</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+
+</DIV> </TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html49"
+  HREF="node3.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="/usr/share/latex2html/icons/next.png"></A> 
+<A NAME="tex2html47"
+  HREF="final.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="/usr/share/latex2html/icons/up.png"></A> 
+<A NAME="tex2html41"
+  HREF="node1.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="/usr/share/latex2html/icons/prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html50"
+  HREF="node3.html">Parallelizing flock detection</A>
+<B> Up:</B> <A NAME="tex2html48"
+  HREF="final.html">Towards Parallel Detection of</A>
+<B> Previous:</B> <A NAME="tex2html42"
+  HREF="node1.html">Introduction</A></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+and
+2017-05-15
+</ADDRESS>
+</BODY>
+</HTML>
