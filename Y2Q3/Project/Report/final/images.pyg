@@ -1,0 +1,10 @@
+SELECT
+	*
+FROM
+	points p1
+|\color{blue}{DISTANCE JOIN}|
+	points p2
+ON
+	POINT(p2.x, p2.y) IN |\color{blue}{CIRCLERANGE}|(POINT(p1.x, p1.y), |$\varepsilon$|)
+WHERE
+	p1.id < p2.id
