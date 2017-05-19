@@ -116,7 +116,8 @@ object Benchmark {
           }
         }
         .toDS()
-      center_partition.show(5)
+      val m = center_partition.agg(max("pid"))
+      println(m)
       // Grouping objects enclosed by candidates disks...
       val candidates = centers
         .distanceJoin(p1, Array("x", "y"), Array("x1", "y1"), (epsilon / 2) + DELTA)
@@ -126,20 +127,21 @@ object Benchmark {
         .filter(row => row.getList(1).size() >= MU)
         .join(center_partition, $"id" === $"cid", "left_outer")
         .select("cid", "pid", "IDs")
-        .map(d => Disk(d.getLong(0), d.getInt(1), d.getList[Integer](2).toString))
-        .repartition($"pid")
+        .map(d => Disk(d.getLong(0), d.getInt(1), d.getList(2).toString))
+        .show()  //.repartition(32, $"pid")
       // Filtering redundant candidates
 
-      val n = candidates.count()
-      // Stopping timer...
-      val time2 = System.currentTimeMillis()
-      val time = (time2 - time1) / 1000.0
-      println(s"PFlock,$epsilon,$tag,$n,$time")
-      centers.show(10)
-      centers.rdd.mapPartitionsWithIndex((i, p) => Array(s"$i=${p.length}").toIterator).foreach(println)
-      println("Break")
-      candidates.show(10)
-      candidates.rdd.mapPartitionsWithIndex((i, p) => Array(s"$i=${p.length}").toIterator).foreach(println)
+//      val n = candidates.count()
+//      // Stopping timer...
+//      val time2 = System.currentTimeMillis()
+//      val time = (time2 - time1) / 1000.0
+//      println(s"PFlock,$epsilon,$tag,$n,$time")
+//      centers.show(10)
+//      centers.rdd.mapPartitionsWithIndex((i, p) => Array(s"$i=${p.length}").toIterator).foreach(println)
+//      println("Break")
+//      candidates.show(10)
+//      candidates.rdd.mapPartitionsWithIndex((i, p) => Array(s"$i=${p.length}").toIterator).foreach(println)
+
     }
   }
 }
