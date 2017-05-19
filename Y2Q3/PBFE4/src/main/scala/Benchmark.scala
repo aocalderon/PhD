@@ -2,6 +2,7 @@ package main.scala
 
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.Row
+import org.apache.spark.Partitioner
 import org.apache.spark.sql.simba.SimbaSession
 import org.apache.spark.sql.simba.index.RTreeType
 import org.apache.spark.sql.types.StructType
@@ -17,7 +18,20 @@ object Benchmark {
 
   case class ACenter(id: Long, x: Double, y: Double)
 
-  case class ADisk(cid:Long, IDs: List[Long])
+  case class Center_Partition(cid: Long, pid: Int)
+
+  //case class Disk(cid: Long, pid: Int, IDs: java.util.List[Integer])
+  case class Disk(cid: Long, pid: Int, IDs: String)
+
+  class CustomPartitioner(numParts: Int) extends Partitioner {
+    override def numPartitions: Int = numParts
+
+    override def getPartition(key: Any): Int =
+    {
+      val disk = key.asInstanceOf[Disk]
+      disk.pid
+    }
+  }
 
   def calculateDiskCenterCoordinates(p1: APoint, p2: APoint, r2: Double): ACenter = {
     val X: Double = p1.x - p2.x
@@ -95,7 +109,14 @@ object Benchmark {
         .withColumn("id", monotonically_increasing_id())
         .as[ACenter]
       centers.cache()
-      val center_partition = centers.rdd.mapPartitionsWithIndex((i, p) => p.map(r => Row(r.id, i)).toIterator).toDS()
+      val center_partition = centers.rdd
+        .mapPartitionsWithIndex{(i, p) =>
+          p.map { r =>
+            Center_Partition(r.id, i)
+          }
+        }
+        .toDS()
+      center_partition.show(5)
       // Grouping objects enclosed by candidates disks...
       val candidates = centers
         .distanceJoin(p1, Array("x", "y"), Array("x1", "y1"), (epsilon / 2) + DELTA)
@@ -103,6 +124,10 @@ object Benchmark {
         .agg(collect_list("id1").alias("IDs"))
         // Filtering candidates less than mu...
         .filter(row => row.getList(1).size() >= MU)
+        .join(center_partition, $"id" === $"cid", "left_outer")
+        .select("cid", "pid", "IDs")
+        .map(d => Disk(d.getLong(0), d.getInt(1), d.getList[Integer](2).toString))
+        .repartition($"pid")
       // Filtering redundant candidates
 
       val n = candidates.count()

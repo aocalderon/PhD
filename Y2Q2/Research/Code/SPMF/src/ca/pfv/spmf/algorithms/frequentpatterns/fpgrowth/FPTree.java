@@ -38,7 +38,7 @@ import ca.pfv.spmf.patterns.itemset_array_integers_with_count.Itemset;
  */
 public class FPTree {
 	// List of items in the header table
-	List<Integer> headerList = null;
+	public List<Integer> headerList = null;
 	
 	// List of pairs (item, frequency) of the header table
 	Map<Integer, FPNode> mapItemNodes = new HashMap<Integer, FPNode>();
@@ -156,7 +156,7 @@ public class FPTree {
 	 *  in descending order of support.
 	 * @param mapSupport the frequencies of each item (key: item  value: support)
 	 */
-	void createHeaderList(final Map<Integer, Integer> mapSupport) {
+	public void createHeaderList(final Map<Integer, Integer> mapSupport) {
 		// create an array to store the header list with
 		// all the items stored in the map received as parameter
 		headerList =  new ArrayList<Integer>(mapItemNodes.keySet());
