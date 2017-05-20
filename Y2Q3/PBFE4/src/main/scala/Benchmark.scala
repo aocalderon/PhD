@@ -8,6 +8,7 @@ import org.apache.spark.sql.simba.index.RTreeType
 import org.apache.spark.sql.types.StructType
 import org.apache.spark.sql.catalyst.ScalaReflection
 import org.apache.spark.sql.functions._
+import org.apache.spark.rdd.PairRDDFunctions
 
 /**
   * Created by and on 5/4/17.
@@ -18,18 +19,15 @@ object Benchmark {
 
   case class ACenter(id: Long, x: Double, y: Double)
 
-  case class Center_Partition(cid: Long, pid: Int)
-
   //case class Disk(cid: Long, pid: Int, IDs: java.util.List[Integer])
-  case class Disk(cid: Long, pid: Int, IDs: String)
+  case class Disk(id: Long, IDs: String)
 
   class CustomPartitioner(numParts: Int) extends Partitioner {
     override def numPartitions: Int = numParts
 
-    override def getPartition(key: Any): Int =
-    {
-      val disk = key.asInstanceOf[Disk]
-      disk.pid
+    override def getPartition(key: Any): Int = {
+      val out = key.asInstanceOf[Long] >> 33
+      out.toInt
     }
   }
 
@@ -62,7 +60,6 @@ object Benchmark {
     // Setting some parameters...
     val MASTER: String = "local[*]"
     val LOGS: String = "ERROR"
-    val PARTITIONS: Int = 32
     val MU: Int = 3
     val DSTART: Int = 10
     val DEND: Int = 10
@@ -72,6 +69,7 @@ object Benchmark {
     val ESTEP: Double = 10.0
     val DELTA: Double = 0.01
     val POINT_SCHEMA = ScalaReflection.schemaFor[APoint].dataType.asInstanceOf[StructType]
+    var PARTITIONS: Int = 32
     // Starting a session
     val simba = SimbaSession
       .builder()
@@ -109,15 +107,7 @@ object Benchmark {
         .withColumn("id", monotonically_increasing_id())
         .as[ACenter]
       centers.cache()
-      val center_partition = centers.rdd
-        .mapPartitionsWithIndex{(i, p) =>
-          p.map { r =>
-            Center_Partition(r.id, i)
-          }
-        }
-        .toDS()
-      val m = center_partition.agg(max("pid"))
-      println(m)
+      PARTITIONS = centers.rdd.getNumPartitions
       // Grouping objects enclosed by candidates disks...
       val candidates = centers
         .distanceJoin(p1, Array("x", "y"), Array("x1", "y1"), (epsilon / 2) + DELTA)
@@ -125,10 +115,8 @@ object Benchmark {
         .agg(collect_list("id1").alias("IDs"))
         // Filtering candidates less than mu...
         .filter(row => row.getList(1).size() >= MU)
-        .join(center_partition, $"id" === $"cid", "left_outer")
-        .select("cid", "pid", "IDs")
-        .map(d => Disk(d.getLong(0), d.getInt(1), d.getList(2).toString))
-        .show()  //.repartition(32, $"pid")
+        .map(d => (d.getLong(0), d.getList(1).toString))
+
       // Filtering redundant candidates
 
 //      val n = candidates.count()
@@ -140,7 +128,10 @@ object Benchmark {
 //      centers.rdd.mapPartitionsWithIndex((i, p) => Array(s"$i=${p.length}").toIterator).foreach(println)
 //      println("Break")
 //      candidates.show(10)
-//      candidates.rdd.mapPartitionsWithIndex((i, p) => Array(s"$i=${p.length}").toIterator).foreach(println)
+      val c = new PairRDDFunctions(candidates.rdd)
+      c.partitionBy(new CustomPartitioner(numParts = PARTITIONS))
+        .mapPartitionsWithIndex((i, p) => Array(s"$i=${p.length}").toIterator)
+        .foreach(println)
 
     }
   }
