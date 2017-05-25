@@ -9,18 +9,19 @@ import org.apache.spark.sql.types.StructType
 import org.apache.spark.sql.catalyst.ScalaReflection
 import org.apache.spark.sql.functions._
 import org.apache.spark.rdd.PairRDDFunctions
+import test.AlgoFPMax
 
 /**
   * Created by and on 5/4/17.
   */
 object Benchmark {
 
-  case class APoint(id: Long, x: Double, y: Double)
+  case class APoint(id: Int, x: Double, y: Double)
 
   case class ACenter(id: Long, x: Double, y: Double)
 
   //case class Disk(cid: Long, pid: Int, IDs: java.util.List[Integer])
-  case class Disk(id: Long, IDs: String)
+  case class Disk(id: Int, IDs: String)
 
   class CustomPartitioner(numParts: Int) extends Partitioner {
     override def numPartitions: Int = numParts
@@ -47,10 +48,10 @@ object Benchmark {
   def findDisks(pairsRDD: RDD[Row], epsilon: Double): RDD[ACenter] = {
     val r2: Double = math.pow(epsilon / 2, 2)
     val centers = pairsRDD
-      .filter((row: Row) => row.getLong(0) != row.getLong(3))
+      .filter((row: Row) => row.getInt(0) != row.getInt(3))
       .map { (row: Row) =>
-        val p1 = APoint(row.getLong(0), row.getDouble(1), row.getDouble(2))
-        val p2 = APoint(row.getLong(3), row.getDouble(4), row.getDouble(5))
+        val p1 = APoint(row.getInt(0), row.getDouble(1), row.getDouble(2))
+        val p2 = APoint(row.getInt(3), row.getDouble(4), row.getDouble(5))
         calculateDiskCenterCoordinates(p1, p2, r2)
       }
     centers
@@ -69,7 +70,7 @@ object Benchmark {
     val ESTEP: Double = 10.0
     val DELTA: Double = 0.01
     val POINT_SCHEMA = ScalaReflection.schemaFor[APoint].dataType.asInstanceOf[StructType]
-    var PARTITIONS: Int = 32
+    var PARTITIONS: Int = 8
     // Starting a session
     val simba = SimbaSession
       .builder()
@@ -81,6 +82,7 @@ object Benchmark {
     // Calling implicits
     import simba.simbaImplicits._
     import simba.implicits._
+    import scala.collection.JavaConverters._
     // Looping with different datasets and epsilon values...
     for (dataset <- DSTART to DEND by DSTEP; epsilon <- ESTART to EEND by ESTEP) {
       val filename = s"/opt/Datasets/Beijing/P${dataset}K.csv"
@@ -109,30 +111,34 @@ object Benchmark {
       centers.cache()
       PARTITIONS = centers.rdd.getNumPartitions
       // Grouping objects enclosed by candidates disks...
-      val candidates = centers
+      var candidatesPair = centers
         .distanceJoin(p1, Array("x", "y"), Array("x1", "y1"), (epsilon / 2) + DELTA)
         .groupBy("id")
         .agg(collect_list("id1").alias("IDs"))
         // Filtering candidates less than mu...
         .filter(row => row.getList(1).size() >= MU)
-        .map(d => (d.getLong(0), d.getList(1).toString))
-
+        .rdd
+        .map(d => (d.getLong(0), d.getList[Integer](1)))
       // Filtering redundant candidates
-
-//      val n = candidates.count()
-//      // Stopping timer...
-//      val time2 = System.currentTimeMillis()
-//      val time = (time2 - time1) / 1000.0
-//      println(s"PFlock,$epsilon,$tag,$n,$time")
-//      centers.show(10)
-//      centers.rdd.mapPartitionsWithIndex((i, p) => Array(s"$i=${p.length}").toIterator).foreach(println)
-//      println("Break")
-//      candidates.show(10)
-      val c = new PairRDDFunctions(candidates.rdd)
-      c.partitionBy(new CustomPartitioner(numParts = PARTITIONS))
-        .mapPartitionsWithIndex((i, p) => Array(s"$i=${p.length}").toIterator)
+      val candidates = new PairRDDFunctions(candidatesPair)
+      candidates.partitionBy(new CustomPartitioner(numParts = PARTITIONS))
+        .map(p => p._2)
+        .mapPartitionsWithIndex{(i, p) =>
+          val fpMax = new AlgoFPMax
+          val itemsets = fpMax.runAlgorithm(p.asJava, 1)
+          itemsets.getItemsets(MU).asScala.toIterator
+        }
         .foreach(println)
 
+      //      val n = candidates.count()
+      //      // Stopping timer...
+      //      val time2 = System.currentTimeMillis()
+      //      val time = (time2 - time1) / 1000.0
+      //      println(s"PFlock,$epsilon,$tag,$n,$time")
+      //      centers.show(10)
+      //      centers.rdd.mapPartitionsWithIndex((i, p) => Array(s"$i=${p.length}").toIterator).foreach(println)
+      //      println("Break")
+      //      candidates.show(10)
     }
   }
 }

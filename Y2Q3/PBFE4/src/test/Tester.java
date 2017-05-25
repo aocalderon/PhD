@@ -117,10 +117,10 @@ public class Tester {
 		ts.add(t11);
 		ts.add(t12);
 		AlgoFPMax fpMax = new AlgoFPMax();
-		Itemsets itemsets = fpMax.runAlgorithm(ts, 2);
-		fpMax.printStats();
+		//Itemsets itemsets = fpMax.runAlgorithm(ts, 2);
+		//fpMax.printStats();
 
-		itemsets.printItemsets();
+		//itemsets.printItemsets();
 
 	}
 	
