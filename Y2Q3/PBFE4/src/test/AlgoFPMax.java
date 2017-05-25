@@ -201,7 +201,7 @@
          return patterns;
      }
 
-     public Itemsets runAlgorithm(ArrayList<ArrayList<Integer>> input, int minsup) throws IOException {
+     public Itemsets runAlgorithm(List<List<Integer>> input, int minsup) throws IOException {
          // record start time
          startTimestamp = System.currentTimeMillis();
          // number of itemsets found
@@ -647,7 +647,7 @@
          return mapSupport;
      }
 
-     private  Map<Integer, Integer> scanDatabaseToDetermineFrequencyOfSingleItems(ArrayList<ArrayList<Integer>> input){
+     private  Map<Integer, Integer> scanDatabaseToDetermineFrequencyOfSingleItems(List<List<Integer>> input){
          Map<Integer, Integer> mapSupport = new HashMap<Integer, Integer>();
 
          for( List<Integer> t: input){
