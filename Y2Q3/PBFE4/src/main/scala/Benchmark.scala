@@ -128,9 +128,8 @@ object Benchmark {
           val itemsets = fpMax.runAlgorithm(p.asJava, 1)
           itemsets.getItemsets(MU).asScala.toIterator
         }
-        .foreach(println)
-
-      //      val n = candidates.count()
+      candidates.values.foreach(println)
+      //      val n = candidates.values.count()
       //      // Stopping timer...
       //      val time2 = System.currentTimeMillis()
       //      val time = (time2 - time1) / 1000.0
@@ -140,5 +139,6 @@ object Benchmark {
       //      println("Break")
       //      candidates.show(10)
     }
+    simba.close()
   }
 }
