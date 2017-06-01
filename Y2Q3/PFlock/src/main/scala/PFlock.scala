@@ -9,6 +9,7 @@ import org.apache.spark.sql.simba.SimbaSession
 import org.apache.spark.sql.simba.index.RTreeType
 import org.apache.spark.sql.types.StructType
 import main.scala.SPMF.AlgoFPMax
+import org.rogach.scallop._
 
 /**
   * Created by and on 5/4/17.
@@ -17,32 +18,33 @@ object PFlock {
 
   def main(args: Array[String]): Unit = {
     // Setting some parameters...
-    val MASTER: String = "local[*]"
-    val LOGS: String = "ERROR"
-    val MU: Int = 3
-    val DSTART: Int = 10
-    val DEND: Int = 10
-    val DSTEP: Int = 10
-    val ESTART: Double = 10.0
-    val EEND: Double = 10.0
-    val ESTEP: Double = 10.0
-    val DELTA: Double = 0.01
+    val conf = new Conf(args)
+//    val MU: Int = 3
+//    val DSTART: Int = 10
+//    val DEND: Int = 10
+//    val DSTEP: Int = 10
+//    val ESTART: Double = 10.0
+//    val EEND: Double = 10.0
+//    val ESTEP: Double = 10.0
+//    val DELTA: Double = 0.01
+//    var PARTITIONS: Int = 16
+//    val MASTER: String = "local[*]"
+//    val LOGS: String = "ERROR"
     val POINT_SCHEMA = ScalaReflection.schemaFor[APoint].dataType.asInstanceOf[StructType]
-    var PARTITIONS: Int = 8
     // Starting a session
     val simba = SimbaSession
       .builder()
-      .master(MASTER)
+      .master(conf.MASTER())
       .appName("Benchmark")
-      .config("simba.index.partitions", s"$PARTITIONS")
+      .config("simba.index.partitions", s"${conf.PARTITIONS()}")
       .getOrCreate()
-    simba.sparkContext.setLogLevel(LOGS)
+    simba.sparkContext.setLogLevel(conf.LOGS())
     // Calling implicits
     import simba.implicits._
     import simba.simbaImplicits._
     import scala.collection.JavaConverters._
     // Looping with different datasets and epsilon values...
-    for (dataset <- DSTART to DEND by DSTEP; epsilon <- ESTART to EEND by ESTEP) {
+    for (dataset <- conf.DSTART() to conf.DEND() by conf.DSTEP(); epsilon <- conf.ESTART() to conf.EEND() by conf.ESTEP()) {
       val filename = s"/opt/Datasets/Beijing/P${dataset}K.csv"
       val tag = filename.substring(filename.lastIndexOf("/") + 1).split("\\.")(0).substring(1)
       // Reading the data...
@@ -67,10 +69,11 @@ object PFlock {
         .withColumn("id", monotonically_increasing_id())
         .as[ACenter]
       centers.cache()
-      PARTITIONS = centers.rdd.getNumPartitions
+      val PARTITIONS:Int = centers.rdd.getNumPartitions
+      val MU: Int = conf.MU()
       // Grouping objects enclosed by candidates disks...
       val candidatesPair = centers
-        .distanceJoin(p1, Array("x", "y"), Array("x1", "y1"), (epsilon / 2) + DELTA)
+        .distanceJoin(p1, Array("x", "y"), Array("x1", "y1"), (epsilon / 2) + conf.DELTA())
         .groupBy("id", "x", "y")
         .agg(collect_list("id1").alias("IDs"))
         // Filtering candidates less than mu...
@@ -79,21 +82,28 @@ object PFlock {
         .map(d => (d.getLong(0), (d.getDouble(1), d.getDouble(2), d.getList[Integer](3))))
       // Filtering redundant candidates
       val candidates = new PairRDDFunctions(candidatesPair)
-      candidates.partitionBy(new CustomPartitioner(numParts = PARTITIONS))
+      val c = candidates.partitionBy(new CustomPartitioner(numParts = PARTITIONS))
         .mapPartitions{ partition =>
           val pList = partition.toList
           val bbox = getBoundingBox(pList)
-          val mbr = s"POLYGON((${bbox.minx} ${bbox.miny}, ${bbox.maxx} ${bbox.miny}, ${bbox.maxx} ${bbox.maxy}, ${bbox.minx} ${bbox.maxy}, ${bbox.minx} ${bbox.miny}))"
+          // val mbr = s"POLYGON((${bbox.minx} ${bbox.miny}, ${bbox.maxx} ${bbox.miny}, ${bbox.maxx} ${bbox.maxy}, ${bbox.minx} ${bbox.maxy}, ${bbox.minx} ${bbox.miny}))"
           val disks = pList.map(disk => (disk._2, isInBuffer(disk._2, bbox, epsilon)))
           val localList = disks.filter(_._2).map(_._1._3)
           val globalList = disks.filter(!_._2).map(_._1._3)
           //val fpMax = new AlgoFPMax
           //val itemsets = fpMax.runAlgorithm(partition.map(_._2).map(_._3).asJava, 1)
           //itemsets.getItemsets(MU).asScala.toIterator
-          List(mbr).iterator
+          List(Row(localList.length, globalList.length)).toIterator
         }
-        .foreach(println)
-      val n = candidates.values.count()
+      val stats = c.map{row =>
+        val local = row.getInt(0)
+        val global = row.getInt(1)
+        val all = local + global * 1.0
+        (local, global, local/all, global/all)
+      }.toDS()
+      //stats.show()
+      stats.agg(sum("_1"), sum("_2")).show()
+      val n = c.count()
       // Stopping timer...
       val time2 = System.currentTimeMillis()
       val time = (time2 - time1) / 1000.0
@@ -172,5 +182,21 @@ object PFlock {
       val out = key.asInstanceOf[Long] >> 33
       out.toInt
     }
+  }
+
+  class Conf(arguments: Seq[String]) extends ScallopConf(arguments) {
+    val MU: ScallopOption[Int] = opt[Int](default = Some(3))
+    val DSTART: ScallopOption[Int] = opt[Int](default = Some(10))
+    val DEND: ScallopOption[Int] = opt[Int](default = Some(10))
+    val DSTEP: ScallopOption[Int] = opt[Int](default = Some(10))
+    val ESTART: ScallopOption[Double] = opt[Double](default = Some(10.0))
+    val EEND: ScallopOption[Double] = opt[Double](default = Some(10.0))
+    val ESTEP: ScallopOption[Double] = opt[Double](default = Some(10.0))
+    val DELTA: ScallopOption[Double] = opt[Double](default = Some(0.01))
+    var PARTITIONS: ScallopOption[Int] = opt[Int](default = Some(16))
+    val MASTER: ScallopOption[String] = opt[String](default = Some("local[*]"))
+    val LOGS: ScallopOption[String] = opt[String](default = Some("ERROR"))
+
+    verify()
   }
 }
