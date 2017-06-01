@@ -71,25 +71,33 @@ object PFlock {
       // Grouping objects enclosed by candidates disks...
       val candidatesPair = centers
         .distanceJoin(p1, Array("x", "y"), Array("x1", "y1"), (epsilon / 2) + DELTA)
-        .groupBy("id")
+        .groupBy("id", "x", "y")
         .agg(collect_list("id1").alias("IDs"))
         // Filtering candidates less than mu...
-        .filter(row => row.getList(1).size() >= MU)
+        .filter(row => row.getList(3).size() >= MU)
         .rdd
-        .map(d => (d.getLong(0), d.getList[Integer](1)))
+        .map(d => (d.getLong(0), (d.getDouble(1), d.getDouble(2), d.getList[Integer](3))))
       // Filtering redundant candidates
       val candidates = new PairRDDFunctions(candidatesPair)
       candidates.partitionBy(new CustomPartitioner(numParts = PARTITIONS))
-        .map(p => p._2)
-        .mapPartitions { p =>
-          val fpMax = new AlgoFPMax
-          val itemsets = fpMax.runAlgorithm(p.asJava, 1)
-          itemsets.getItemsets(MU).asScala.toIterator
+        .mapPartitions{ partition =>
+          val pList = partition.toList
+          val bbox = getBoundingBox(pList)
+          val mbr = s"POLYGON((${bbox.minx} ${bbox.miny}, ${bbox.maxx} ${bbox.miny}, ${bbox.maxx} ${bbox.maxy}, ${bbox.minx} ${bbox.maxy}, ${bbox.minx} ${bbox.miny}))"
+          val disks = pList.map(disk => (disk._2, isInBuffer(disk._2, bbox, epsilon)))
+          val localList = disks.filter(_._2).map(_._1._3)
+          val globalList = disks.filter(!_._2).map(_._1._3)
+          //val fpMax = new AlgoFPMax
+          //val itemsets = fpMax.runAlgorithm(partition.map(_._2).map(_._3).asJava, 1)
+          //itemsets.getItemsets(MU).asScala.toIterator
+          List(mbr).iterator
         }
+        .foreach(println)
       val n = candidates.values.count()
       // Stopping timer...
       val time2 = System.currentTimeMillis()
       val time = (time2 - time1) / 1000.0
+      // Print summary...
       println(s"PFlock,$epsilon,$tag,$n,$time")
     }
     simba.close()
@@ -120,12 +128,42 @@ object PFlock {
     ACenter(0, h1, k1)
   }
 
+  def isInBuffer(tuple: Tuple3[Double, Double, Any], bbox: BBox, epsilon: Double): Boolean ={
+    val x = tuple._1
+    val y = tuple._2
+    x < bbox.maxx - epsilon &&
+      x > bbox.minx + epsilon &&
+        y < bbox.maxy - epsilon &&
+          y > bbox.miny + epsilon
+  }
+
+  def getBoundingBox(p: List[(Long, (Double, Double, Any))]): BBox = {
+    var minx: Double = Double.MaxValue
+    var miny: Double = Double.MaxValue
+    var maxx: Double = Double.MinValue
+    var maxy: Double = Double.MinValue
+    p.foreach{r =>
+      if(r._2._1 < minx){
+        minx = r._2._1
+      }
+      if (r._2._1 > maxx){
+        maxx = r._2._1
+      }
+      if(r._2._2 < miny){
+        miny = r._2._2
+      }
+      if(r._2._2 > maxy){
+        maxy = r._2._2
+      }
+    }
+    BBox(minx, miny, maxx, maxy)
+  }
+
   case class APoint(id: Int, x: Double, y: Double)
 
   case class ACenter(id: Long, x: Double, y: Double)
 
-  //case class Disk(cid: Long, pid: Int, IDs: java.util.List[Integer])
-  case class Disk(id: Int, IDs: String)
+  case class BBox(minx: Double, miny: Double, maxx: Double, maxy: Double)
 
   class CustomPartitioner(numParts: Int) extends Partitioner {
     override def numPartitions: Int = numParts
