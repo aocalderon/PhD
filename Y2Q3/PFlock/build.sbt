@@ -10,5 +10,7 @@ libraryDependencies += "org.apache.spark" % "spark-sql_2.11" % "2.1.0"
 
 libraryDependencies += "com.vividsolutions" % "jts-core" % "1.14.0"
 
+libraryDependencies += "org.rogach" %% "scallop" % "2.1.3"
+
 mainClass in (Compile, run) := Some("main.scala.PFlock")
 mainClass in (Compile, packageBin) := Some("main.scala.PFlock")
