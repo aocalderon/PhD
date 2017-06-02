@@ -25,7 +25,7 @@ object PFlock {
     val simba = SimbaSession
       .builder()
       .master(conf.master())
-      .appName("Benchmark")
+      .appName("PFlock")
       .config("simba.index.partitions", s"${conf.partitions()}")
       .getOrCreate()
     simba.sparkContext.setLogLevel(conf.logs())
@@ -37,7 +37,7 @@ object PFlock {
     // Looping with different datasets and epsilon values...
     for (dataset <- conf.dstart() to conf.dend() by conf.dstep();
          epsilon <- conf.estart() to conf.eend() by conf.estep()) {
-      val filename = s"${conf.prefix()}${dataset}${conf.suffix()}"
+      val filename = s"${conf.prefix()}${dataset}${conf.suffix()}.csv"
       val tag = filename.substring(filename.lastIndexOf("/") + 1).split("\\.")(0).substring(1)
       // Reading data...
       val points = simba.read
@@ -103,14 +103,15 @@ object PFlock {
       val time2 = System.currentTimeMillis()
       val time = (time2 - time1) / 1000.0
       // Print summary...
-      val record = s"PFlock,$epsilon,$tag,$n,$time,${stats(0)},${org.joda.time.DateTime.now.toLocalTime}\n"
+      val record = s"PFlock,$epsilon,$tag,$n,$time,${stats(0)._1},${stats(0)._2},${org.joda.time.DateTime.now.toLocalTime}\n"
       output = output :+ record
       print(record)
       // Dropping indices
       p1.dropIndexByName("p1RT")
       p2.dropIndexByName("p2RT")
     }
-    val writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(conf.output())))
+    val filename = s"${conf.output()}_N${conf.dstart()}${conf.suffix()}-${conf.dend()}${conf.suffix()}_E${conf.estart()}-${conf.eend()}_${System.currentTimeMillis()}.csv"
+    val writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename)))
     output.foreach(writer.write)
     writer.close()
     simba.close()
@@ -193,15 +194,15 @@ object PFlock {
     val dend: ScallopOption[Int] = opt[Int](default = Some(10))
     val dstep: ScallopOption[Int] = opt[Int](default = Some(10))
     val estart: ScallopOption[Double] = opt[Double](default = Some(10.0))
-    val eend: ScallopOption[Double] = opt[Double](default = Some(14.0))
-    val estep: ScallopOption[Double] = opt[Double](default = Some(2.0))
+    val eend: ScallopOption[Double] = opt[Double](default = Some(10.0))
+    val estep: ScallopOption[Double] = opt[Double](default = Some(10.0))
     val delta: ScallopOption[Double] = opt[Double](default = Some(0.01))
     var partitions: ScallopOption[Int] = opt[Int](default = Some(16))
     val master: ScallopOption[String] = opt[String](default = Some("local[*]"))
     val logs: ScallopOption[String] = opt[String](default = Some("ERROR"))
-    val output: ScallopOption[String] = opt[String](default = Some("output.csv"))
+    val output: ScallopOption[String] = opt[String](default = Some("output"))
     val prefix: ScallopOption[String] = opt[String](default = Some("/opt/Datasets/Beijing/P"))
-    val suffix: ScallopOption[String] = opt[String](default = Some("K.csv"))
+    val suffix: ScallopOption[String] = opt[String](default = Some("K"))
 
     verify()
   }
