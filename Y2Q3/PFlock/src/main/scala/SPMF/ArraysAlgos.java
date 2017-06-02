@@ -1,4 +1,4 @@
-package main.scala.SPMF;
+package SPMF;
 
 import java.util.Arrays;
 import java.util.Comparator;

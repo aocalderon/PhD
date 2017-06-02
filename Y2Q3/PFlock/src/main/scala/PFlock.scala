@@ -1,4 +1,4 @@
-package main.scala
+import java.io.{BufferedWriter, FileOutputStream, OutputStreamWriter}
 
 import org.apache.spark.Partitioner
 import org.apache.spark.rdd.{PairRDDFunctions, RDD}
@@ -8,7 +8,7 @@ import org.apache.spark.sql.functions._
 import org.apache.spark.sql.simba.SimbaSession
 import org.apache.spark.sql.simba.index.RTreeType
 import org.apache.spark.sql.types.StructType
-import main.scala.SPMF.AlgoFPMax
+//import SPMF.AlgoFPMax
 import org.rogach.scallop._
 
 /**
@@ -34,17 +34,19 @@ object PFlock {
     // Starting a session
     val simba = SimbaSession
       .builder()
-      .master(conf.MASTER())
+      .master(conf.master())
       .appName("Benchmark")
-      .config("simba.index.partitions", s"${conf.PARTITIONS()}")
+      .config("simba.index.partitions", s"${conf.partitions()}")
       .getOrCreate()
-    simba.sparkContext.setLogLevel(conf.LOGS())
+    simba.sparkContext.setLogLevel(conf.logs())
     // Calling implicits
     import simba.implicits._
     import simba.simbaImplicits._
-    import scala.collection.JavaConverters._
+    //import scala.collection.JavaConverters._
+    var output = List.empty[String]
     // Looping with different datasets and epsilon values...
-    for (dataset <- conf.DSTART() to conf.DEND() by conf.DSTEP(); epsilon <- conf.ESTART() to conf.EEND() by conf.ESTEP()) {
+    for (dataset <- conf.dstart() to conf.dend() by conf.dstep();
+         epsilon <- conf.estart() to conf.eend() by conf.estep()) {
       val filename = s"/opt/Datasets/Beijing/P${dataset}K.csv"
       val tag = filename.substring(filename.lastIndexOf("/") + 1).split("\\.")(0).substring(1)
       // Reading the data...
@@ -69,11 +71,11 @@ object PFlock {
         .withColumn("id", monotonically_increasing_id())
         .as[ACenter]
       centers.cache()
-      val PARTITIONS:Int = centers.rdd.getNumPartitions
-      val MU: Int = conf.MU()
+      val PARTITIONS: Int = centers.rdd.getNumPartitions
+      val MU: Int = conf.mu()
       // Grouping objects enclosed by candidates disks...
       val candidatesPair = centers
-        .distanceJoin(p1, Array("x", "y"), Array("x1", "y1"), (epsilon / 2) + conf.DELTA())
+        .distanceJoin(p1, Array("x", "y"), Array("x1", "y1"), (epsilon / 2) + conf.delta())
         .groupBy("id", "x", "y")
         .agg(collect_list("id1").alias("IDs"))
         // Filtering candidates less than mu...
@@ -95,21 +97,32 @@ object PFlock {
           //itemsets.getItemsets(MU).asScala.toIterator
           List(Row(localList.length, globalList.length)).toIterator
         }
-      val stats = c.map{row =>
-        val local = row.getInt(0)
-        val global = row.getInt(1)
-        val all = local + global * 1.0
-        (local, global, local/all, global/all)
-      }.toDS()
-      //stats.show()
-      stats.agg(sum("_1"), sum("_2")).show()
+      val stats = c.map(row => (row.getInt(0), row.getInt(1)))
+        .toDS()
+        .agg(sum("_1").alias("sumLocal"), sum("_2").alias("sumGlobal"))
+        .map{row =>
+          val local = row.getAs[Long]("sumLocal")
+          val global = row.getAs[Long]("sumGlobal")
+          val all = local + global * 1.0
+          val pLocal = BigDecimal(local/all).setScale(3, BigDecimal.RoundingMode.HALF_UP).toDouble
+          val pGlobal = BigDecimal(global/all).setScale(3, BigDecimal.RoundingMode.HALF_UP).toDouble
+          (pLocal,pGlobal)
+        }.collect()
       val n = c.count()
       // Stopping timer...
       val time2 = System.currentTimeMillis()
       val time = (time2 - time1) / 1000.0
       // Print summary...
-      println(s"PFlock,$epsilon,$tag,$n,$time")
+      val record = s"PFlock,$epsilon,$tag,$n,$time,${stats(0)}\n"
+      output = output :+ record
+      print(record)
+      // Dropping indices
+      p1.dropIndexByName("p1RT")
+      p2.dropIndexByName("p2RT")
     }
+    val writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(conf.output())))
+    output.foreach(writer.write)
+    writer.close()
     simba.close()
   }
 
@@ -138,7 +151,7 @@ object PFlock {
     ACenter(0, h1, k1)
   }
 
-  def isInBuffer(tuple: Tuple3[Double, Double, Any], bbox: BBox, epsilon: Double): Boolean ={
+  def isInBuffer(tuple: (Double, Double, Any), bbox: BBox, epsilon: Double): Boolean ={
     val x = tuple._1
     val y = tuple._2
     x < bbox.maxx - epsilon &&
@@ -185,17 +198,18 @@ object PFlock {
   }
 
   class Conf(arguments: Seq[String]) extends ScallopConf(arguments) {
-    val MU: ScallopOption[Int] = opt[Int](default = Some(3))
-    val DSTART: ScallopOption[Int] = opt[Int](default = Some(10))
-    val DEND: ScallopOption[Int] = opt[Int](default = Some(10))
-    val DSTEP: ScallopOption[Int] = opt[Int](default = Some(10))
-    val ESTART: ScallopOption[Double] = opt[Double](default = Some(10.0))
-    val EEND: ScallopOption[Double] = opt[Double](default = Some(10.0))
-    val ESTEP: ScallopOption[Double] = opt[Double](default = Some(10.0))
-    val DELTA: ScallopOption[Double] = opt[Double](default = Some(0.01))
-    var PARTITIONS: ScallopOption[Int] = opt[Int](default = Some(16))
-    val MASTER: ScallopOption[String] = opt[String](default = Some("local[*]"))
-    val LOGS: ScallopOption[String] = opt[String](default = Some("ERROR"))
+    val mu: ScallopOption[Int] = opt[Int](default = Some(3))
+    val dstart: ScallopOption[Int] = opt[Int](default = Some(10))
+    val dend: ScallopOption[Int] = opt[Int](default = Some(10))
+    val dstep: ScallopOption[Int] = opt[Int](default = Some(10))
+    val estart: ScallopOption[Double] = opt[Double](default = Some(10.0))
+    val eend: ScallopOption[Double] = opt[Double](default = Some(14.0))
+    val estep: ScallopOption[Double] = opt[Double](default = Some(2.0))
+    val delta: ScallopOption[Double] = opt[Double](default = Some(0.01))
+    var partitions: ScallopOption[Int] = opt[Int](default = Some(16))
+    val master: ScallopOption[String] = opt[String](default = Some("local[*]"))
+    val logs: ScallopOption[String] = opt[String](default = Some("ERROR"))
+    val output: ScallopOption[String] = opt[String](default = Some("output.csv"))
 
     verify()
   }
