@@ -1,4 +1,5 @@
-package main.scala.SPMF;/* This file is copyright (c) 2008-2015 Philippe Fournier-Viger
+package SPMF;
+/* This file is copyright (c) 2008-2015 Philippe Fournier-Viger
 * 
 * This file is part of the SPMF DATA MINING SOFTWARE
 * (http://www.philippe-fournier-viger.com/spmf).
