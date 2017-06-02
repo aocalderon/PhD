@@ -37,7 +37,7 @@ object PFlock {
     // Looping with different datasets and epsilon values...
     for (dataset <- conf.dstart() to conf.dend() by conf.dstep();
          epsilon <- conf.estart() to conf.eend() by conf.estep()) {
-      val filename = s"/opt/Datasets/Beijing/P${dataset}K.csv"
+      val filename = s"${conf.prefix()}${dataset}${conf.suffix()}"
       val tag = filename.substring(filename.lastIndexOf("/") + 1).split("\\.")(0).substring(1)
       // Reading data...
       val points = simba.read
@@ -200,6 +200,8 @@ object PFlock {
     val master: ScallopOption[String] = opt[String](default = Some("local[*]"))
     val logs: ScallopOption[String] = opt[String](default = Some("ERROR"))
     val output: ScallopOption[String] = opt[String](default = Some("output.csv"))
+    val prefix: ScallopOption[String] = opt[String](default = Some("/opt/Datasets/Beijing/P"))
+    val suffix: ScallopOption[String] = opt[String](default = Some("K.csv"))
 
     verify()
   }
