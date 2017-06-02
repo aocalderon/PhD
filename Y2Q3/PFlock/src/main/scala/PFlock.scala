@@ -17,21 +17,11 @@ import org.rogach.scallop._
 object PFlock {
 
   def main(args: Array[String]): Unit = {
-    // Setting some parameters...
+    // Reading arguments from command line...
     val conf = new Conf(args)
-//    val MU: Int = 3
-//    val DSTART: Int = 10
-//    val DEND: Int = 10
-//    val DSTEP: Int = 10
-//    val ESTART: Double = 10.0
-//    val EEND: Double = 10.0
-//    val ESTEP: Double = 10.0
-//    val DELTA: Double = 0.01
-//    var PARTITIONS: Int = 16
-//    val MASTER: String = "local[*]"
-//    val LOGS: String = "ERROR"
+    // Setting parameters...
     val POINT_SCHEMA = ScalaReflection.schemaFor[APoint].dataType.asInstanceOf[StructType]
-    // Starting a session
+    // Starting a session...
     val simba = SimbaSession
       .builder()
       .master(conf.master())
@@ -39,7 +29,7 @@ object PFlock {
       .config("simba.index.partitions", s"${conf.partitions()}")
       .getOrCreate()
     simba.sparkContext.setLogLevel(conf.logs())
-    // Calling implicits
+    // Calling implicits...
     import simba.implicits._
     import simba.simbaImplicits._
     //import scala.collection.JavaConverters._
@@ -49,7 +39,7 @@ object PFlock {
          epsilon <- conf.estart() to conf.eend() by conf.estep()) {
       val filename = s"/opt/Datasets/Beijing/P${dataset}K.csv"
       val tag = filename.substring(filename.lastIndexOf("/") + 1).split("\\.")(0).substring(1)
-      // Reading the data...
+      // Reading data...
       val points = simba.read
         .option("header", "true")
         .schema(POINT_SCHEMA)
@@ -113,7 +103,7 @@ object PFlock {
       val time2 = System.currentTimeMillis()
       val time = (time2 - time1) / 1000.0
       // Print summary...
-      val record = s"PFlock,$epsilon,$tag,$n,$time,${stats(0)}\n"
+      val record = s"PFlock,$epsilon,$tag,$n,$time,${stats(0)},${org.joda.time.DateTime.now.toLocalTime}\n"
       output = output :+ record
       print(record)
       // Dropping indices
