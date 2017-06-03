@@ -37,7 +37,7 @@ object PFlock {
     // Looping with different datasets and epsilon values...
     for (dataset <- conf.dstart() to conf.dend() by conf.dstep();
          epsilon <- conf.estart() to conf.eend() by conf.estep()) {
-      val filename = s"${conf.prefix()}${dataset}${conf.suffix()}.csv"
+      val filename = s"${conf.prefix()}$dataset${conf.suffix()}.csv"
       val tag = filename.substring(filename.lastIndexOf("/") + 1).split("\\.")(0).substring(1)
       // Reading data...
       val points = simba.read
@@ -96,14 +96,14 @@ object PFlock {
           val all = local + global * 1.0
           val pLocal = BigDecimal(local/all).setScale(3, BigDecimal.RoundingMode.HALF_UP).toDouble
           val pGlobal = BigDecimal(global/all).setScale(3, BigDecimal.RoundingMode.HALF_UP).toDouble
-          (pLocal,pGlobal)
+          (all,pLocal,pGlobal)
         }.collect()
       val n = c.count()
       // Stopping timer...
       val time2 = System.currentTimeMillis()
       val time = (time2 - time1) / 1000.0
       // Print summary...
-      val record = s"PFlock,$epsilon,$tag,$n,$time,${stats(0)._1},${stats(0)._2},${org.joda.time.DateTime.now.toLocalTime}\n"
+      val record = s"PFlock,$epsilon,$tag,$n,$time,${stats(0)._1},${stats(0)._2},${stats(0)._3},${org.joda.time.DateTime.now.toLocalTime}\n"
       output = output :+ record
       print(record)
       // Dropping indices
