@@ -110,13 +110,10 @@ object PFlock {
       p1.dropIndexByName("p1RT")
       p2.dropIndexByName("p2RT")
     }
-    val filename = s"${conf.output()}_N${conf.dstart()}${conf.suffix()}-${conf.dend()}${conf.suffix()}_E${conf.estart()}-${conf.eend()}_${System.currentTimeMillis()}.csv"
+    val filename = s"${conf.output()}_N${conf.dstart()}${conf.suffix()}-${conf.dend()}${conf.suffix()}_E${conf.estart()}-${conf.eend()}_${conf.tag()}.csv"
     val writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename)))
     output.foreach(writer.write)
     writer.close()
-    if(conf.process()){
-      processFile(filename)
-    }
     simba.close()
   }
 
@@ -214,7 +211,7 @@ object PFlock {
     val output: ScallopOption[String] = opt[String](default = Some("output"))
     val prefix: ScallopOption[String] = opt[String](default = Some("/opt/Datasets/Beijing/P"))
     val suffix: ScallopOption[String] = opt[String](default = Some("K"))
-    val process: ScallopOption[Boolean] = opt[Boolean](default = Some(false))
+    val tag: ScallopOption[String] = opt[String](default = Some(""))
 
     verify()
   }
