@@ -15,8 +15,8 @@ g = ggplot(data=data, aes(x=factor(Dataset), y=Time, group=Implementation, colou
   geom_line(aes(linetype=Implementation)) +
   geom_point(size=2) +
   labs(title=title,y="Time (sec)") + 
-  ## scale_x_discrete("Number of points", breaks = paste0(seq(20,100,20),"K")) +
-  scale_x_discrete("Number of points") +
+  scale_x_discrete("Number of points", breaks = paste0(seq(20,100,20),"K")) +
+  ## scale_x_discrete("Number of points") +
   theme(axis.text.x=element_text(size=8, angle=90),axis.text.y=element_text(size=8)) +
   facet_wrap(~Epsilon) +
   scale_colour_discrete() +
