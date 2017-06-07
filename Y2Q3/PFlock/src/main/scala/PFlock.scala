@@ -114,7 +114,18 @@ object PFlock {
     val writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename)))
     output.foreach(writer.write)
     writer.close()
+    if(conf.process()){
+      processFile(filename)
+    }
     simba.close()
+  }
+
+  def processFile(filename: String): Unit = {
+    import sys.process._
+    var scp = s"scp -i ~/.ssh/id_rsa $filename acald013@bolt.cs.ucr.edu:/home/csgrads/acald013/public_html/public/Results"
+    scp.!
+    val ssh = s"ssh -i ~/.ssh/id_rsa -t acald013@bolt.cs.ucr.edu 'plotBenchmarks $filename'"
+    ssh.!
   }
 
   def findDisks(pairsRDD: RDD[Row], epsilon: Double): RDD[ACenter] = {
@@ -203,6 +214,7 @@ object PFlock {
     val output: ScallopOption[String] = opt[String](default = Some("output"))
     val prefix: ScallopOption[String] = opt[String](default = Some("/opt/Datasets/Beijing/P"))
     val suffix: ScallopOption[String] = opt[String](default = Some("K"))
+    val process: ScallopOption[Boolean] = opt[Boolean](default = Some(false))
 
     verify()
   }
