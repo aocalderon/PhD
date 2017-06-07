@@ -23,6 +23,6 @@ g = ggplot(data=data, aes(x=factor(Dataset), y=Time, group=Implementation, colou
   scale_shape_discrete() +
   scale_linetype_discrete()
 filename = paste0(strsplit(filename, '\\.')[[1]][1:length(strsplit(filename, '\\.')[[1]]) - 1], collapse = '.')
-pdf(paste0("~/Documents/PhD/Code/Y2Q3/Scripts/",filename, ".pdf"), width = 10.5, height = 7.5)
+pdf(paste0("~/Documents/PhD/Code/Y2Q3/Plots/",filename, ".pdf"), width = 10.5, height = 7.5)
 plot(g)
 dev.off()
