@@ -4,7 +4,7 @@
 		module="pflock$sources_2.10"
 		revision="1.0"
 		status="integration"
-		publication="20170605170339"
+		publication="20170606144616"
 	/>
 	<configurations>
 		<conf name="default" visibility="public" description=""/>
@@ -30,13 +30,13 @@
 		<dependency org="org.scala-sbt" name="relation" rev="0.13.15" transitive="false" conf="default->compile,default(compile)">
 			<artifact name="relation" type="src" ext="jar" conf="sources" e:classifier="sources"/>
 		</dependency>
-		<dependency org="org.scalamacros" name="quasiquotes_2.10" rev="2.0.1" transitive="false" conf="default->master(*),compile,runtime(*),runtime,compile(*),master">
+		<dependency org="org.scalamacros" name="quasiquotes_2.10" rev="2.0.1" transitive="false" conf="default->compile,runtime(*),master(compile),runtime,compile(*),master">
 			<artifact name="quasiquotes_2.10" type="src" ext="jar" conf="sources" e:classifier="sources"/>
 		</dependency>
 		<dependency org="org.scala-sbt" name="serialization_2.10" rev="0.1.2" transitive="false" conf="default->default,compile,runtime,default(compile),master">
 			<artifact name="serialization_2.10" type="src" ext="jar" conf="sources" e:classifier="sources"/>
 		</dependency>
-		<dependency org="org.scala-lang.modules" name="scala-pickling_2.10" rev="0.10.1" transitive="false" conf="default->master(*),compile,runtime(*),runtime,compile(*),master">
+		<dependency org="org.scala-lang.modules" name="scala-pickling_2.10" rev="0.10.1" transitive="false" conf="default->compile,runtime(*),master(compile),runtime,compile(*),master">
 			<artifact name="scala-pickling_2.10" type="src" ext="jar" conf="sources" e:classifier="sources"/>
 		</dependency>
 		<dependency org="org.scala-sbt" name="test-agent" rev="0.13.15" transitive="false" conf="default->compile,default(compile)">
@@ -54,7 +54,10 @@
 		<dependency org="org.scala-sbt" name="compiler-integration" rev="0.13.15" transitive="false" conf="default->compile,default(compile)">
 			<artifact name="compiler-integration" type="src" ext="jar" conf="sources" e:classifier="sources"/>
 		</dependency>
-		<dependency org="org.scala-lang" name="scala-reflect" rev="2.10.6" transitive="false" conf="default->default,compile,runtime(*),master(compile),runtime,default(compile),compile(*),master,master(*)" info.apiURL="http://www.scala-lang.org/api/2.10.6/">
+		<dependency org="org.scalaz" name="scalaz-effect_2.10" rev="7.1.0" transitive="false" conf="default->default,compile,runtime,default(compile),master">
+			<artifact name="scalaz-effect_2.10" type="src" ext="jar" conf="sources" e:classifier="sources"/>
+		</dependency>
+		<dependency org="org.scala-lang" name="scala-reflect" rev="2.10.6" transitive="false" conf="default->default,compile,runtime(*),master(compile),runtime,default(compile),compile(*),master" info.apiURL="http://www.scala-lang.org/api/2.10.6/">
 			<artifact name="scala-reflect" type="src" ext="jar" conf="sources" e:classifier="sources"/>
 		</dependency>
 		<dependency org="org.scala-sbt" name="actions" rev="0.13.15" transitive="false" conf="default->compile,default(compile)">
@@ -69,6 +72,9 @@
 		<dependency org="org.scala-sbt" name="compiler-interface" rev="0.13.15" transitive="false" conf="default->compile,default(compile)">
 			<artifact name="compiler-interface" type="src" ext="jar" conf="sources" e:classifier="sources"/>
 		</dependency>
+		<dependency org="org.scalaz" name="scalaz-core_2.10" rev="7.1.0" transitive="false" conf="default->default,compile,runtime(*),master(compile),runtime,default(compile),compile(*),master">
+			<artifact name="scalaz-core_2.10" type="src" ext="jar" conf="sources" e:classifier="sources"/>
+		</dependency>
 		<dependency org="org.scala-sbt" name="cache" rev="0.13.15" transitive="false" conf="default->compile,default(compile)">
 			<artifact name="cache" type="src" ext="jar" conf="sources" e:classifier="sources"/>
 		</dependency>
@@ -78,7 +84,7 @@
 		<dependency org="org.scala-sbt" name="launcher-interface" rev="1.0.1" transitive="false" conf="default->default,compile,runtime,default(compile),master">
 			<artifact name="launcher-interface" type="src" ext="jar" conf="sources" e:classifier="sources"/>
 		</dependency>
-		<dependency org="org.json4s" name="json4s-core_2.10" rev="3.2.10" transitive="false" conf="default->master(*),compile,runtime(*),runtime,compile(*),master">
+		<dependency org="org.json4s" name="json4s-core_2.10" rev="3.2.10" transitive="false" conf="default->compile,runtime(*),master(compile),runtime,compile(*),master">
 			<artifact name="json4s-core_2.10" type="src" ext="jar" conf="sources" e:classifier="sources"/>
 		</dependency>
 		<dependency org="org.scala-sbt" name="cross" rev="0.13.15" transitive="false" conf="default->compile,default(compile)">
@@ -96,7 +102,7 @@
 		<dependency org="org.scala-sbt" name="collections" rev="0.13.15" transitive="false" conf="default->compile,default(compile)">
 			<artifact name="collections" type="src" ext="jar" conf="sources" e:classifier="sources"/>
 		</dependency>
-		<dependency org="org.spire-math" name="jawn-parser_2.10" rev="0.6.0" transitive="false" conf="default->master(*),compile,runtime(*),runtime,compile(*),master">
+		<dependency org="org.spire-math" name="jawn-parser_2.10" rev="0.6.0" transitive="false" conf="default->compile,runtime(*),master(compile),runtime,compile(*),master">
 			<artifact name="jawn-parser_2.10" type="src" ext="jar" conf="sources" e:classifier="sources"/>
 		</dependency>
 		<dependency org="org.scala-sbt" name="io" rev="0.13.15" transitive="false" conf="default->compile,default(compile)">
@@ -105,10 +111,10 @@
 		<dependency org="org.scala-sbt" name="interface" rev="0.13.15" transitive="false" conf="default->compile,default(compile)" component="xsbti">
 			<artifact name="interface" type="src" ext="jar" conf="sources" e:classifier="sources"/>
 		</dependency>
-		<dependency org="org.json4s" name="json4s-ast_2.10" rev="3.2.10" transitive="false" conf="default->master(*),compile,runtime(*),runtime,compile(*),master">
+		<dependency org="org.json4s" name="json4s-ast_2.10" rev="3.2.10" transitive="false" conf="default->compile,runtime(*),master(compile),runtime,compile(*),master">
 			<artifact name="json4s-ast_2.10" type="src" ext="jar" conf="sources" e:classifier="sources"/>
 		</dependency>
-		<dependency org="org.scala-lang" name="scala-library" rev="2.10.6" transitive="false" conf="default->default,compile,runtime(*),master(compile),runtime,default(compile),compile(*),master,master(*)" info.apiURL="http://www.scala-lang.org/api/2.10.6/">
+		<dependency org="org.scala-lang" name="scala-library" rev="2.10.6" transitive="false" conf="default->default,compile,runtime(*),master(compile),runtime,default(compile),compile(*),master" info.apiURL="http://www.scala-lang.org/api/2.10.6/">
 			<artifact name="scala-library" type="src" ext="jar" conf="sources" e:classifier="sources"/>
 		</dependency>
 		<dependency org="org.scala-sbt" name="template-resolver" rev="0.1" transitive="false" conf="default->default,compile,runtime,default(compile),master">
@@ -117,13 +123,13 @@
 		<dependency org="org.scala-tools.sbinary" name="sbinary_2.10" rev="0.4.2" transitive="false" conf="default->compile,default(compile)">
 			<artifact name="sbinary_2.10" type="src" ext="jar" conf="sources" e:classifier="sources"/>
 		</dependency>
-		<dependency org="org.spire-math" name="json4s-support_2.10" rev="0.6.0" transitive="false" conf="default->master(*),compile,runtime(*),runtime,compile(*),master">
+		<dependency org="org.spire-math" name="json4s-support_2.10" rev="0.6.0" transitive="false" conf="default->compile,runtime(*),master(compile),runtime,compile(*),master">
 			<artifact name="json4s-support_2.10" type="src" ext="jar" conf="sources" e:classifier="sources"/>
 		</dependency>
 		<dependency org="org.scala-sbt" name="tracking" rev="0.13.15" transitive="false" conf="default->compile,default(compile)">
 			<artifact name="tracking" type="src" ext="jar" conf="sources" e:classifier="sources"/>
 		</dependency>
-		<dependency org="com.thoughtworks.paranamer" name="paranamer" rev="2.6" transitive="false" conf="default->master(*),compile,runtime(*),runtime,compile(*),master">
+		<dependency org="com.thoughtworks.paranamer" name="paranamer" rev="2.6" transitive="false" conf="default->compile,runtime(*),master(compile),runtime,compile(*),master">
 			<artifact name="paranamer" type="src" ext="jar" conf="sources" e:classifier="sources"/>
 		</dependency>
 		<dependency org="org.scala-sbt" name="completion" rev="0.13.15" transitive="false" conf="default->compile,default(compile)">
@@ -147,7 +153,7 @@
 		<dependency org="com.jcraft" name="jsch" rev="0.1.50" transitive="false" conf="default->default,compile,runtime,default(compile),master">
 			<artifact name="jsch" type="src" ext="jar" conf="sources" e:classifier="sources"/>
 		</dependency>
-		<dependency org="org.scala-lang" name="scala-compiler" rev="2.10.6" transitive="false" conf="default->default,compile,runtime,default(compile),master,master(*),runtime(*),compile(*)">
+		<dependency org="org.scala-lang" name="scala-compiler" rev="2.10.6" transitive="false" conf="default->default,compile,runtime,default(compile),master,runtime(*),master(compile),compile(*)">
 			<artifact name="scala-compiler" type="src" ext="jar" conf="sources" e:classifier="sources"/>
 		</dependency>
 		<dependency org="jline" name="jline" rev="2.14.3" transitive="false" conf="default->default,compile,runtime,default(compile),master">
