@@ -1,7 +1,7 @@
 #!/bin/bash
 
 TS=`date +%s`
-PARTITIONS=32
+PARTITIONS=10
 DSTART=10
 DEND=100
 SUFFIX="K"
