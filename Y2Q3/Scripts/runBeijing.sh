@@ -5,8 +5,8 @@ PARTITIONS=32
 DSTART=60
 DEND=100
 SUFFIX="K"
-ESTART=5.0
-EEND=30.0
+ESTART=30.0
+EEND=50.0
 OUTPUT="Beijing"
 spark-submit ~/PhD/Y2Q3/PFlock/target/scala-2.11/pflock_2.11-1.0.jar \
 	--prefix /home/acald013/Datasets/Beijing/P \
