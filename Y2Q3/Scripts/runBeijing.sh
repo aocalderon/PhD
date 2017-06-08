@@ -14,6 +14,7 @@ spark-submit ~/PhD/Y2Q3/PFlock/target/scala-2.11/pflock_2.11-1.0.jar \
 	--dstart $DSTART --dend $DEND --dstep 10 \
 	--partitions $PARTITIONS \
 	--tag $TS \
+	--master spark://169.235.27.134:7077 \
 	--output $OUTPUT
 TS2=`date +%s`
 DELAY=printf %.2f $(echo "($TS2-$TS1)/60" | bc -l)
