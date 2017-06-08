@@ -5,28 +5,29 @@ pacman::p_load(ggplot2, data.table)
 args = commandArgs(trailingOnly = TRUE)
 
 filename ="Beijing_N10K-100K_E5.0-50.0"
-core1 = read.csv("Results/Beijing_N10K-100K_E5.0-50.0_NODE1.csv")
+core1 = read.csv("Results/Beijing_N10K-100K_E5.0-50.0_LOCAL.csv", header = F)
 core1 = core1[, c(2, 3, 5, 1)]
 names(core1) = c("Epsilon", "Dataset", "Time", "Nodes")
 
-data1 = read.csv("Results/Beijing_N10K-100K_E5.0-50.0_NODE1.csv")
+data1 = read.csv("Results/Beijing_N10K-100K_E5.0-50.0_NODE1.csv", header = F)
 data1 = data1[, c(2, 3, 5, 1)]
 names(data1) = c("Epsilon", "Dataset", "Time", "Nodes")
 data1$Nodes = "1"
 data1$Scaleup = core1$Time / data1$Time
-data2 = read.csv("Results/Beijing_N10K-100K_E5.0-50.0_NODE2.csv")
+data2 = read.csv("Results/Beijing_N10K-100K_E5.0-50.0_NODE2.csv", header = F)
 data2 = data2[, c(2, 3, 5, 1)]
 names(data2) = c("Epsilon", "Dataset", "Time", "Nodes")
 data2$Nodes = "2"
 data2$Scaleup = core1$Time / data2$Time
-data3 = read.csv("Results/Beijing_N10K-100K_E5.0-50.0_NODE3.csv")
+data3 = read.csv("Results/Beijing_N10K-100K_E5.0-50.0_NODE3.csv", header = F)
 data3 = data3[, c(2, 3, 5, 1)]
 names(data3) = c("Epsilon", "Dataset", "Time", "Nodes")
 data3$Nodes = "3"
 data3$Scaleup = core1$Time / data3$Time
 
 data = rbind(data1, data2, data3)
-data$Dataset <- factor(data$Dataset, levels = paste0(seq(10, 100, 10), "K"))
+data$Dataset = factor(data$Dataset, levels = paste0(seq(10, 100, 10), "K"))
+data = data[data$Epsilon > 5 & data$Epsilon < 50, ]
 temp_title = paste("(radius of disk in mts) in Beijing dataset.")
 title = substitute(paste("Execution time by ", epsilon) ~ temp_title, list(temp_title = temp_title))
 g = ggplot(data = data, aes(x = factor(Dataset), y = Scaleup, group = Nodes, colour = Nodes, shape = Nodes)) + 
