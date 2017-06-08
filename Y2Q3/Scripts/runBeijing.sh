@@ -3,7 +3,7 @@
 TS=`date +%s`
 PARTITIONS=10
 DSTART=10
-DEND=100
+DEND=10
 SUFFIX="K"
 ESTART=5.0
 EEND=50.0
@@ -14,7 +14,7 @@ spark-submit ~/PhD/Y2Q3/PFlock/target/scala-2.11/pflock_2.11-1.0.jar \
 	--dstart $DSTART --dend $DEND --dstep 10 \
 	--partitions $PARTITIONS \
 	--tag $TS \
-	--master local[1]\
+	--master local[*]\
 	#--master spark://169.235.27.134:7077 \
 	--output $OUTPUT
 TS2=`date +%s`
