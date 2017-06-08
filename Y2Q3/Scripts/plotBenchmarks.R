@@ -23,3 +23,8 @@ filename = paste0(strsplit(filename, "\\.")[[1]][1:length(strsplit(filename, "\\
 pdf(paste0("~/Documents/PhD/Code/Y2Q3/Plots/", filename, ".pdf"), width = 10.5, height = 7.5)
 plot(g)
 dev.off()
+setwd("~/Documents/PhD/Code")
+system("git add .", wait=TRUE)
+system(paste0("git commit -m 'Uploading ", filename, "...'"), wait=TRUE)
+system("git pull", wait=TRUE)
+system("git push", wait=TRUE)
