@@ -27,6 +27,7 @@ object PFlock {
       .master(conf.master())
       .appName("PFlock")
       .config("simba.index.partitions", s"${conf.partitions()}")
+      .config("spark.cores.max", s"${conf.cores()}")
       .getOrCreate()
     simba.sparkContext.setLogLevel(conf.logs())
     // Calling implicits...
@@ -205,7 +206,8 @@ object PFlock {
     val eend: ScallopOption[Double] = opt[Double](default = Some(10.0))
     val estep: ScallopOption[Double] = opt[Double](default = Some(10.0))
     val delta: ScallopOption[Double] = opt[Double](default = Some(0.01))
-    var partitions: ScallopOption[Int] = opt[Int](default = Some(16))
+    val partitions: ScallopOption[Int] = opt[Int](default = Some(16))
+    val cores: ScallopOption[Int] = opt[Int](default = Some(4))
     val master: ScallopOption[String] = opt[String](default = Some("local[*]"))
     val logs: ScallopOption[String] = opt[String](default = Some("ERROR"))
     val output: ScallopOption[String] = opt[String](default = Some("output"))
