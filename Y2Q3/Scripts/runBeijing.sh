@@ -4,11 +4,12 @@ CORES=$1
 TS=`date +%s`
 PARTITIONS=10
 DSTART=10
-DEND=10
+DEND=20
 SUFFIX="K"
 ESTART=5.0
 EEND=45.0
 OUTPUT="Beijing"
+echo "Running in $CORES cores..."
 spark-submit ~/PhD/Y2Q3/PFlock/target/scala-2.11/pflock_2.11-1.0.jar \
 	--prefix /home/acald013/Datasets/Beijing/P \
 	--estart $ESTART --eend $EEND --estep 5 \
