@@ -15,7 +15,7 @@ spark-submit ~/PhD/Y2Q3/PFlock/target/scala-2.11/pflock_2.11-1.0.jar \
 --master spark://169.235.27.134:7077 \
 #--master local[*]\
 --cores $CORES \
---partitions $PARTITIONS \
+#--partitions $PARTITIONS \
 --tag $TS \
 --estart $ESTART \
 --eend $EEND \
