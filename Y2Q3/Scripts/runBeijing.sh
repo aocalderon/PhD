@@ -15,6 +15,9 @@ spark-submit ~/PhD/Y2Q3/PFlock/target/scala-2.11/pflock_2.11-1.0.jar \
 --master spark://169.235.27.134:7077 \
 --cores $CORES \
 --tag $TS \
+--estart $ESTART \
+--eend $EEND \
+--estep 5 \
 --output $OUTPUT
 #spark-submit ~/PhD/Y2Q3/PFlock/target/scala-2.11/pflock_2.11-1.0.jar \
 #	--prefix /home/acald013/Datasets/Beijing/P \
