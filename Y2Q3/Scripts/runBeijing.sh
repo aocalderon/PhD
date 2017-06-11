@@ -2,9 +2,9 @@
 
 CORES=$1
 TS=`date +%s`
-PARTITIONS=8
+PARTITIONS=10
 DSTART=10
-DEND=30
+DEND=100
 SUFFIX="K"
 ESTART=5.0
 EEND=45.0
@@ -12,7 +12,7 @@ OUTPUT="Beijing"
 echo "Running in $CORES cores..."
 spark-submit ~/PhD/Y2Q3/PFlock/target/scala-2.11/pflock_2.11-1.0.jar \
 --prefix /home/acald013/Datasets/Beijing/P \
---master local[1] \
+--master spark://169.235.27.134:7077 \
 --cores $CORES \
 --partitions $PARTITIONS \
 --tag $TS \
@@ -32,7 +32,7 @@ scp -i ~/.ssh/id_rsa $FILENAME acald013@bolt.cs.ucr.edu:/home/csgrads/acald013/p
 ssh -i ~/.ssh/id_rsa -t acald013@bolt.cs.ucr.edu "plotBenchmarks $FILENAME"
 cd ~/PhD/
 git add --all
-git commit -m "Adding plots..."
+git commit -m "Adding plots for $FILENAME ..."
 git pull
 git push
 cd ~/
