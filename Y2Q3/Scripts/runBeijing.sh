@@ -12,13 +12,13 @@ OUTPUT="Beijing"
 echo "Running in $CORES cores..."
 spark-submit ~/PhD/Y2Q3/PFlock/target/scala-2.11/pflock_2.11-1.0.jar \
 	--prefix /home/acald013/Datasets/Beijing/P \
+	--cores 24 \
 	--estart $ESTART --eend $EEND --estep 5 \
 	--dstart $DSTART --dend $DEND --dstep 10 \
 	--partitions $PARTITIONS \
 	--tag $TS \
 	#--master local[*]\
 	--master spark://169.235.27.134:7077 \
-	--cores $CORES \
 	--output $OUTPUT
 TS2=`date +%s`
 DELAY=printf %.2f $(echo "($TS2-$TS1)/60" | bc -l)
