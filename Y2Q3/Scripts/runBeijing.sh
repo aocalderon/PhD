@@ -13,9 +13,8 @@ echo "Running in $CORES cores..."
 spark-submit ~/PhD/Y2Q3/PFlock/target/scala-2.11/pflock_2.11-1.0.jar \
 --prefix /home/acald013/Datasets/Beijing/P \
 --master spark://169.235.27.134:7077 \
-#--master local[*]\
 --cores $CORES \
-#--partitions $PARTITIONS \
+--partitions $PARTITIONS \
 --tag $TS \
 --estart $ESTART \
 --eend $EEND \
@@ -24,6 +23,7 @@ spark-submit ~/PhD/Y2Q3/PFlock/target/scala-2.11/pflock_2.11-1.0.jar \
 --dend $DEND \
 --dstep 10 \
 --output $OUTPUT
+#--master local[*]\
 TS2=`date +%s`
 DELAY=printf %.2f $(echo "($TS2-$TS1)/60" | bc -l)
 echo "Done at ... ${DELAY}s"
