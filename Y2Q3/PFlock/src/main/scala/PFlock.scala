@@ -104,26 +104,18 @@ object PFlock {
       val time2 = System.currentTimeMillis()
       val time = (time2 - time1) / 1000.0
       // Print summary...
-      val record = s"PFlock,$epsilon,$tag,$n,$time,${stats(0)._1},${stats(0)._2},${stats(0)._3},${org.joda.time.DateTime.now.toLocalTime}\n"
+      val record = s"PFlock,$epsilon,$tag,$n,$time,${conf.cores()},${stats(0)._1},${stats(0)._2},${stats(0)._3},${org.joda.time.DateTime.now.toLocalTime}\n"
       output = output :+ record
       print(record)
       // Dropping indices
       p1.dropIndexByName("p1RT")
       p2.dropIndexByName("p2RT")
     }
-    val filename = s"${conf.output()}_N${conf.dstart()}${conf.suffix()}-${conf.dend()}${conf.suffix()}_E${conf.estart()}-${conf.eend()}_${conf.tag()}.csv"
+    val filename = s"${conf.output()}_N${conf.dstart()}${conf.suffix()}-${conf.dend()}${conf.suffix()}_E${conf.estart()}-${conf.eend()}_C${conf.cores()}_${conf.tag()}.csv"
     val writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename)))
     output.foreach(writer.write)
     writer.close()
     simba.close()
-  }
-
-  def processFile(filename: String): Unit = {
-    import sys.process._
-    var scp = s"scp -i ~/.ssh/id_rsa $filename acald013@bolt.cs.ucr.edu:/home/csgrads/acald013/public_html/public/Results"
-    scp.!
-    val ssh = s"ssh -i ~/.ssh/id_rsa -t acald013@bolt.cs.ucr.edu 'plotBenchmarks $filename'"
-    ssh.!
   }
 
   def findDisks(pairsRDD: RDD[Row], epsilon: Double): RDD[ACenter] = {
