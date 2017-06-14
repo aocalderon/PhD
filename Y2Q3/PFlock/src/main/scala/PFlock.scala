@@ -19,16 +19,22 @@ object PFlock {
   def main(args: Array[String]): Unit = {
     // Reading arguments from command line...
     val conf = new Conf(args)
+    // Tuning master and number of cores...
+    var MASTER = conf.master()
+    if(conf.cores() == 1){
+      MASTER = "local[1]"
+    }
     // Setting parameters...
     val POINT_SCHEMA = ScalaReflection.schemaFor[APoint].dataType.asInstanceOf[StructType]
     // Starting a session...
     val simba = SimbaSession
       .builder()
-      .master(conf.master())
+      .master(MASTER)
       .appName("PFlock")
       .config("simba.index.partitions", s"${conf.partitions()}")
       .config("spark.cores.max", s"${conf.cores()}")
       .getOrCreate()
+    println(s"Running ${simba.sparkContext.applicationId}...")
     simba.sparkContext.setLogLevel(conf.logs())
     // Calling implicits...
     import simba.implicits._
@@ -195,8 +201,8 @@ object PFlock {
     val dend: ScallopOption[Int] = opt[Int](default = Some(10))
     val dstep: ScallopOption[Int] = opt[Int](default = Some(10))
     val estart: ScallopOption[Double] = opt[Double](default = Some(10.0))
-    val eend: ScallopOption[Double] = opt[Double](default = Some(10.0))
-    val estep: ScallopOption[Double] = opt[Double](default = Some(10.0))
+    val eend: ScallopOption[Double] = opt[Double](default = Some(14.0))
+    val estep: ScallopOption[Double] = opt[Double](default = Some(2.0))
     val delta: ScallopOption[Double] = opt[Double](default = Some(0.01))
     val partitions: ScallopOption[Int] = opt[Int](default = Some(16))
     val cores: ScallopOption[Int] = opt[Int](default = Some(4))
