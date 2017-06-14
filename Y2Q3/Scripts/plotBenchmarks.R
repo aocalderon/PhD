@@ -6,6 +6,7 @@ args = commandArgs(trailingOnly = TRUE)
 
 filename = args[1]
 data <- fread(paste0("http://www.cs.ucr.edu/~acald013/public/Results/", filename))
+write.table(data, paste0("~/Documents/PhD/Code/Y2Q3/Scripts/Results/",filename), row.names = F, col.names = F, sep = ',')
 data = data[, c(2, 3, 5, 1)]
 
 names(data) = c("Epsilon", "Dataset", "Time", "Implementation")
@@ -23,7 +24,6 @@ filename = paste0(strsplit(filename, "\\.")[[1]][1:length(strsplit(filename, "\\
 pdf(paste0("~/Documents/PhD/Code/Y2Q3/Plots/", filename, ".pdf"), width = 10.5, height = 7.5)
 plot(g)
 dev.off()
-write.table(data, file=paste0("~/Documents/PhD/Code/Y2Q3/Scripts/Results/",filename,".csv"), col.names=F, row.names=F)
 setwd("~/Documents/PhD/Code")
 system("git add .", wait=TRUE)
 system(paste0("git commit -m 'Uploading ", filename, "...'"), wait=TRUE)
