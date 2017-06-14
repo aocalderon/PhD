@@ -30,40 +30,42 @@ object Project {
     import simba.simbaImplicits._
 
     val schema = ScalaReflection.schemaFor[POI].dataType.asInstanceOf[StructType]
-    var trajectories = simba.read.
+    var pois = simba.read.
       option("header", "true").
       schema(schema).
       //csv("out/B40Trajs.csv").
       csv("/opt/GISData/POIs.csv").
       as[POI]
 
-    println(trajectories.count())
-    trajectories.printSchema
+    pois.filter("poi_lon IS NULL").collect().foreach(println)
 
-//    val cx = -323750.0
-//    val cy = 4471800.0
-//    val extend = 10000.0
-//    val minx = cx - extend
-//    val miny = cy - extend
-//    val maxx = cx + extend
-//    val maxy = cy + extend
+    println(pois.count())
+    pois.printSchema
+
+    val cx = -323750.0
+    val cy = 4471800.0
+    val extend = 10000.0
+    val minx = cx - extend
+    val miny = cy - extend
+    val maxx = cx + extend
+    val maxy = cy + extend
 
 //    val clip = trajectories.range(Array("lon", "lat"),
 //                                  Array(minx, miny),
 //                                  Array(maxx, maxy)).
 //                            toDF().as[Trajectory]
-    val clip = trajectories.range(Array("poi_lon", "poi_lat"),
-      Array(-332729.310,4456050.000),
-      Array(-316725.862,4469518.966)).
-      toDF().as[POI]
-
-    println(clip.count())
-    clip.write.csv("/tmp/clip")
+//    val clip = trajectories.range(Array("poi_lon", "poi_lat"),
+//      Array(-332729.310,4456050.000),
+//      Array(-316725.862,4469518.966)).
+//      toDF().as[POI]
+//
+//    println(clip.count())
+//    clip.write.csv("/tmp/clip")
 //    clip.index(RTreeType, "clipRT", Array("lon", "lat"))
 //
-//    val x = simba.sparkContext.parallelize(minx to maxx by 1000)
-//    val y = simba.sparkContext.parallelize(miny to maxy by 1000)
-//    val grid = x.cartesian(y).map(cell => Grid(cell._1, cell._2)).toDS()
+    val x = simba.sparkContext.parallelize(minx to maxx by 1000)
+    val y = simba.sparkContext.parallelize(miny to maxy by 1000)
+    val grid = x.cartesian(y).map(cell => Grid(cell._1, cell._2)).toDS()
 //    grid.index(RTreeType, "gridRT", Array("glon", "glat"))
 //    val results = clip.knnJoin(grid, Array("lon", "lat"), Array("glon", "glat"), 1).
 //                                select("tid", "oid", "glon", "glat").
