@@ -63,9 +63,9 @@ object Project {
 //    clip.write.csv("/tmp/clip")
 //    clip.index(RTreeType, "clipRT", Array("lon", "lat"))
 //
-    val x = simba.sparkContext.parallelize(minx to maxx by 1000)
-    val y = simba.sparkContext.parallelize(miny to maxy by 1000)
-    val grid = x.cartesian(y).map(cell => Grid(cell._1, cell._2)).toDS()
+//    val x = simba.sparkContext.parallelize(minx to maxx by 1000)
+//    val y = simba.sparkContext.parallelize(miny to maxy by 1000)
+//    val grid = x.cartesian(y).map(cell => Grid(cell._1, cell._2)).toDS()
 //    grid.index(RTreeType, "gridRT", Array("glon", "glat"))
 //    val results = clip.knnJoin(grid, Array("lon", "lat"), Array("glon", "glat"), 1).
 //                                select("tid", "oid", "glon", "glat").
