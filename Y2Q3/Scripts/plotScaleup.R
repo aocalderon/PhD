@@ -6,26 +6,28 @@ pacman::p_load(ggplot2, data.table, foreach, sqldf)
 PHD_HOME = Sys.getenv(c("PHD_HOME"))
 PATH = "/Y2Q3/Scripts/Results/"
 filename ="Beijing_N10K-100K_E5.0-45.0"
+
 files = system(paste0("ls ",PHD_HOME,PATH,filename,"_C1_*.csv"), intern = T)
 core1 = data.frame()
 foreach(f = files) %do% {
   core1 = rbind(core1, read.csv(f, header = F))
 }
-core1 = core1[, c(2, 3, 5, 6)]
-names(core1) = c("Epsilon", "Dataset", "Time", "Cores")
+core1 = core1[, c(2, 3, 5)]
+names(core1) = c("Epsilon", "Dataset", "Time1")
+core1 = sqldf("SELECT Epsilon, Dataset, AVG(Time1) AS Time1 FROM core1 GROUP BY 1, 2")
 
 files = system(paste0("ls ",PHD_HOME,PATH,filename,"_C*.csv"), intern = T)
 data = data.frame()
 foreach(f = files) %do% {
   data = rbind(data, read.csv(f, header = F))
 }
-data = data[, c(2, 3, 5, 6)]
-names(data) = c("Epsilon", "Dataset", "Time", "Cores")
+data = data[, c(2, 3, 6, 5)]
+names(data) = c("Epsilon", "Dataset", "Cores", "Time")
 
 data = sqldf("SELECT Epsilon, Dataset, Cores, AVG(Time) AS Time FROM data GROUP BY 1, 2, 3")
+data = sqldf("SELECT Epsilon, Dataset, Cores, Time1/Time AS Scaleup FROM data NATURAL JOIN core1")
 data$Dataset = factor(data$Dataset, levels = paste0(seq(10, 100, 10), "K"))
 data$Cores = factor(data$Cores)
-data$Scaleup = core1$Time / data$Time
 
 data = data[data$Epsilon > 5 & data$Epsilon < 50, ]
 
