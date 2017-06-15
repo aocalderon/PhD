@@ -44,17 +44,17 @@ g = ggplot(data = data, aes(x = factor(Dataset), y = Scaleup, group = Cores, col
     scale_colour_discrete() + 
     scale_shape_discrete() + 
     scale_linetype_discrete()
-#pdf(paste0(PHD_HOME,PATH, filename, "_Scaleup1.pdf"), width = 10.5, height = 7.5)
+pdf(paste0(PHD_HOME,PATH,filename,"_Scaleup1.pdf"), width = 10.5, height = 7.5)
 plot(g)
-#dev.off()
+dev.off()
 
 title = paste("Scaleup in", filename,"dataset.")
 g = ggplot(data=data, aes(x=factor(Epsilon), y=Scaleup, fill=Cores)) +
   geom_bar(stat="identity", position=position_dodge(width = 0.75),width = 0.75) +
   labs(title=title, x=expression(paste(epsilon,"(mts)")))
-#pdf(paste0(PHD_HOME,PATH, filename,"_Scaleup2.pdf"), width = 10.5, height = 7.5)
+pdf(paste0(PHD_HOME,PATH,filename,"_Scaleup2.pdf"), width = 10.5, height = 7.5)
 plot(g)
-#dev.off()
+dev.off()
 
 setwd(PHD_HOME)
 system("git add .", wait=TRUE)
