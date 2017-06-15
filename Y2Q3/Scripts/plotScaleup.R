@@ -30,6 +30,7 @@ data$Dataset = factor(data$Dataset, levels = paste0(seq(10, 100, 10), "K"))
 data$Cores = factor(data$Cores)
 
 data = data[data$Epsilon > 5 & data$Epsilon < 50, ]
+data = data[data$Cores != 1, ]
 
 temp_title = paste("(radius of disk in mts) in Beijing dataset.")
 title = substitute(paste("Execution time by ", epsilon) ~ temp_title, list(temp_title = temp_title))
