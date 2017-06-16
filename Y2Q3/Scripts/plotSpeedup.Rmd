@@ -1,8 +1,10 @@
 ---
 title: "Speedup Analysis"
 author: "Andres Calderon"
-date: "6/15/2017"
-output: html_document
+date: '`r Sys.Date()`'
+output:
+  html_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -38,7 +40,7 @@ data = data[data$Epsilon > 5 & data$Epsilon < 50, ]
 data = data[data$Cores != 1, ]
 ```
 
-Speedup for `r filename`.
+#### Speedup for `r filename`.
 
 ```{r speedup1, echo=FALSE, fig.width=10.5, fig.height=7.5, fig.align='center'}
 temp_title = paste("(radius of disk in mts) in Beijing dataset.")
