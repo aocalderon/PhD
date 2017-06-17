@@ -329,3 +329,182 @@ First, rewinding head to replay your work on top of it...
 Applying: Uploading Beijing_N10K-100K_E5.0-45.0_C18_1497659560...
 To git@github.com:aocalderon/PhD.git
    324a467..5cd06e0  master -> master
+[master 2d0ff39] Adding plots for Beijing_N10K-100K_E5.0-45.0_C18_1497659560.csv ...
+ 2 files changed, 270 insertions(+)
+ create mode 100644 Beijing_N10K-100K_E5.0-45.0_C18_1497659560.csv
+From github.com:aocalderon/PhD
+   324a467..5cd06e0  master     -> origin/master
+Merge made by the 'recursive' strategy.
+ .../Beijing_N10K-100K_E5.0-45.0_C18_1497659560.pdf | Bin 0 -> 7461 bytes
+ .../Beijing_N10K-100K_E5.0-45.0_C18_1497659560.csv |  90 +++++++++++++++++++++
+ 2 files changed, 90 insertions(+)
+ create mode 100644 Y2Q3/Plots/Beijing_N10K-100K_E5.0-45.0_C18_1497659560.pdf
+ create mode 100644 Y2Q3/Scripts/Results/Beijing_N10K-100K_E5.0-45.0_C18_1497659560.csv
+warning: push.default is unset; its implicit value is changing in
+Git 2.0 from 'matching' to 'simple'. To squelch this message
+and maintain the current behavior after the default changes, use:
+
+  git config --global push.default matching
+
+To squelch this message and adopt the new behavior now, use:
+
+  git config --global push.default simple
+
+See 'git help config' and search for 'push.default' for further information.
+(the 'simple' mode was introduced in Git 1.7.11. Use the similar mode
+'current' instead of 'simple' if you sometimes use older versions of Git)
+
+To git@github.com:aocalderon/PhD.git
+   5cd06e0..7f0efb6  master -> master
+Running in 12 cores...
+Using Spark's default log4j profile: org/apache/spark/log4j-defaults.properties
+17/06/16 18:21:47 INFO SparkContext: Running Spark version 2.1.0
+17/06/16 18:21:47 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+17/06/16 18:21:48 INFO SecurityManager: Changing view acls to: acald013
+17/06/16 18:21:48 INFO SecurityManager: Changing modify acls to: acald013
+17/06/16 18:21:48 INFO SecurityManager: Changing view acls groups to: 
+17/06/16 18:21:48 INFO SecurityManager: Changing modify acls groups to: 
+17/06/16 18:21:48 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(acald013); groups with view permissions: Set(); users  with modify permissions: Set(acald013); groups with modify permissions: Set()
+17/06/16 18:21:48 INFO Utils: Successfully started service 'sparkDriver' on port 33144.
+17/06/16 18:21:48 INFO SparkEnv: Registering MapOutputTracker
+17/06/16 18:21:48 INFO SparkEnv: Registering BlockManagerMaster
+17/06/16 18:21:48 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+17/06/16 18:21:48 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
+17/06/16 18:21:48 INFO DiskBlockManager: Created local directory at /tmp/blockmgr-839cef3b-8e2e-402a-beda-3f3066b2b068
+17/06/16 18:21:48 INFO MemoryStore: MemoryStore started with capacity 6.2 GB
+17/06/16 18:21:48 INFO SparkEnv: Registering OutputCommitCoordinator
+17/06/16 18:21:48 INFO Utils: Successfully started service 'SparkUI' on port 4040.
+17/06/16 18:21:48 INFO SparkUI: Bound SparkUI to 0.0.0.0, and started at http://169.235.27.134:4040
+17/06/16 18:21:48 INFO SparkContext: Added JAR file:/home/acald013/PhD/Y2Q3/PFlock/target/scala-2.11/pflock_2.11-1.0.jar at spark://169.235.27.134:33144/jars/pflock_2.11-1.0.jar with timestamp 1497662508534
+17/06/16 18:21:48 INFO StandaloneAppClient$ClientEndpoint: Connecting to master spark://169.235.27.134:7077...
+17/06/16 18:21:48 INFO TransportClientFactory: Successfully created connection to /169.235.27.134:7077 after 25 ms (0 ms spent in bootstraps)
+17/06/16 18:21:48 INFO StandaloneSchedulerBackend: Connected to Spark cluster with app ID app-20170616182148-0046
+17/06/16 18:21:48 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20170616182148-0046/0 on worker-20170610201834-169.235.27.138-38815 (169.235.27.138:38815) with 4 cores
+17/06/16 18:21:48 INFO StandaloneSchedulerBackend: Granted executor ID app-20170616182148-0046/0 on hostPort 169.235.27.138:38815 with 4 cores, 12.0 GB RAM
+17/06/16 18:21:48 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20170616182148-0046/1 on worker-20170610201835-169.235.27.137-38363 (169.235.27.137:38363) with 4 cores
+17/06/16 18:21:48 INFO StandaloneSchedulerBackend: Granted executor ID app-20170616182148-0046/1 on hostPort 169.235.27.137:38363 with 4 cores, 12.0 GB RAM
+17/06/16 18:21:48 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20170616182148-0046/2 on worker-20170610201834-169.235.27.135-33488 (169.235.27.135:33488) with 4 cores
+17/06/16 18:21:48 INFO StandaloneSchedulerBackend: Granted executor ID app-20170616182148-0046/2 on hostPort 169.235.27.135:33488 with 4 cores, 12.0 GB RAM
+17/06/16 18:21:48 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 40024.
+17/06/16 18:21:48 INFO NettyBlockTransferService: Server created on 169.235.27.134:40024
+17/06/16 18:21:48 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
+17/06/16 18:21:48 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 169.235.27.134, 40024, None)
+17/06/16 18:21:48 INFO BlockManagerMasterEndpoint: Registering block manager 169.235.27.134:40024 with 6.2 GB RAM, BlockManagerId(driver, 169.235.27.134, 40024, None)
+17/06/16 18:21:48 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 169.235.27.134, 40024, None)
+17/06/16 18:21:48 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 169.235.27.134, 40024, None)
+17/06/16 18:21:48 INFO StandaloneSchedulerBackend: SchedulerBackend is ready for scheduling beginning after reached minRegisteredResourcesRatio: 0.0
+17/06/16 18:21:48 INFO SharedState: Warehouse path is 'file:/home/acald013/PhD/spark-warehouse/'.
+Running app-20170616182148-0046...
+PFlock,5.0,10K,12,30.543,12,152.0,0.118,0.882,18:22:20.052
+PFlock,10.0,10K,12,11.128,12,1193.0,0.472,0.528,18:22:31.253
+PFlock,15.0,10K,12,10.472,12,3442.0,0.527,0.473,18:22:41.752
+PFlock,20.0,10K,12,9.932,12,6600.0,0.559,0.441,18:22:51.718
+PFlock,25.0,10K,12,11.206,12,10701.0,0.592,0.408,18:23:02.950
+PFlock,30.0,10K,12,11.423,12,15274.0,0.601,0.399,18:23:14.404
+PFlock,35.0,10K,12,12.526,12,20231.0,0.61,0.39,18:23:26.957
+PFlock,40.0,10K,12,12.751,12,25452.0,0.615,0.385,18:23:39.736
+PFlock,45.0,10K,12,14.384,12,30875.0,0.585,0.415,18:23:54.148
+PFlock,5.0,20K,12,11.186,12,686.0,0.617,0.383,18:24:05.361
+PFlock,10.0,20K,12,11.43,12,5508.0,0.68,0.32,18:24:16.812
+PFlock,15.0,20K,12,21.418,12,14568.0,0.676,0.324,18:24:38.258
+PFlock,20.0,20K,12,13.321,12,26673.0,0.678,0.322,18:24:51.610
+PFlock,25.0,20K,12,13.337,12,41724.0,0.67,0.33,18:25:04.972
+PFlock,30.0,20K,12,14.883,12,58260.0,0.672,0.328,18:25:19.878
+PFlock,35.0,20K,12,16.639,12,75870.0,0.667,0.333,18:25:36.545
+PFlock,40.0,20K,12,15.736,12,94798.0,0.676,0.324,18:25:52.308
+PFlock,45.0,20K,12,17.434,12,113942.0,0.664,0.336,18:26:09.779
+PFlock,5.0,30K,12,10.033,12,2191.0,0.723,0.277,18:26:19.838
+PFlock,10.0,30K,12,12.773,12,14851.0,0.731,0.269,18:26:32.632
+PFlock,15.0,30K,12,15.049,12,37964.0,0.703,0.297,18:26:47.709
+PFlock,20.0,30K,12,16.769,12,68675.0,0.695,0.305,18:27:04.500
+PFlock,25.0,30K,12,17.1,12,105445.0,0.693,0.307,18:27:21.624
+PFlock,30.0,30K,12,19.275,12,145110.0,0.688,0.312,18:27:40.923
+PFlock,35.0,30K,12,23.11,12,187716.0,0.681,0.319,18:28:04.058
+PFlock,40.0,30K,12,23.929,12,232470.0,0.683,0.317,18:28:28.011
+PFlock,45.0,30K,12,25.482,12,277737.0,0.679,0.321,18:28:53.517
+PFlock,5.0,40K,12,11.969,12,4774.0,0.741,0.259,18:29:05.510
+PFlock,10.0,40K,12,15.72,12,29265.0,0.729,0.271,18:29:21.248
+PFlock,15.0,40K,12,18.983,12,72160.0,0.714,0.286,18:29:40.252
+PFlock,20.0,40K,12,19.743,12,128472.0,0.701,0.299,18:30:00.010
+PFlock,25.0,40K,12,22.665,12,194986.0,0.696,0.304,18:30:22.703
+PFlock,30.0,40K,12,26.962,12,267120.0,0.698,0.302,18:30:49.694
+PFlock,35.0,40K,12,32.726,12,343612.0,0.688,0.312,18:31:22.444
+PFlock,40.0,40K,12,29.904,12,423162.0,0.682,0.318,18:31:52.371
+PFlock,45.0,40K,12,35.665,12,503907.0,0.68,0.32,18:32:28.060
+PFlock,5.0,50K,12,13.485,12,8024.0,0.814,0.186,18:32:41.571
+PFlock,10.0,50K,12,15.77,12,47442.0,0.751,0.249,18:32:57.364
+PFlock,15.0,50K,12,19.156,12,115526.0,0.731,0.269,18:33:16.543
+PFlock,20.0,50K,12,23.293,12,203495.0,0.71,0.29,18:33:39.858
+PFlock,25.0,50K,12,31.166,12,305922.0,0.7,0.3,18:34:11.051
+PFlock,30.0,50K,12,34.342,12,417496.0,0.694,0.306,18:34:45.417
+PFlock,35.0,50K,12,36.439,12,535199.0,0.688,0.312,18:35:21.880
+PFlock,40.0,50K,12,44.196,12,657407.0,0.691,0.309,18:36:06.099
+PFlock,45.0,50K,12,45.46,12,781414.0,0.682,0.318,18:36:51.583
+PFlock,5.0,60K,12,15.386,12,12002.0,0.839,0.161,18:37:06.993
+PFlock,10.0,60K,12,18.932,12,69062.0,0.794,0.206,18:37:25.946
+PFlock,15.0,60K,12,24.132,12,166458.0,0.768,0.232,18:37:50.101
+PFlock,20.0,60K,12,28.045,12,291379.0,0.741,0.259,18:38:18.168
+PFlock,25.0,60K,12,33.863,12,436586.0,0.719,0.281,18:38:52.055
+PFlock,30.0,60K,12,39.324,12,594363.0,0.71,0.29,18:39:31.403
+PFlock,35.0,60K,12,47.355,12,760183.0,0.697,0.303,18:40:18.782
+PFlock,40.0,60K,12,56.867,12,932875.0,0.687,0.313,18:41:15.673
+PFlock,45.0,60K,12,65.41,12,1109001.0,0.687,0.313,18:42:21.107
+PFlock,5.0,70K,12,20.174,12,17176.0,0.859,0.141,18:42:41.307
+PFlock,10.0,70K,12,21.163,12,96248.0,0.821,0.179,18:43:02.491
+PFlock,15.0,70K,12,27.828,12,230131.0,0.787,0.213,18:43:30.343
+PFlock,20.0,70K,12,32.871,12,400442.0,0.758,0.242,18:44:03.237
+PFlock,25.0,70K,12,40.507,12,597008.0,0.736,0.264,18:44:43.769
+PFlock,30.0,70K,12,48.325,12,811694.0,0.723,0.277,18:45:32.119
+PFlock,35.0,70K,12,57.999,12,1037715.0,0.709,0.291,18:46:30.142
+PFlock,40.0,70K,12,74.271,12,1272014.0,0.694,0.306,18:47:44.438
+PFlock,45.0,70K,12,84.719,12,1511565.0,0.685,0.315,18:49:09.182
+PFlock,5.0,80K,12,19.056,12,23012.0,0.854,0.146,18:49:28.264
+PFlock,10.0,80K,12,27.637,12,126851.0,0.811,0.189,18:49:55.925
+PFlock,15.0,80K,12,30.359,12,300562.0,0.779,0.221,18:50:26.308
+PFlock,20.0,80K,12,42.747,12,520748.0,0.749,0.251,18:51:09.080
+PFlock,25.0,80K,12,49.772,12,774545.0,0.728,0.272,18:51:58.877
+PFlock,30.0,80K,12,63.511,12,1051131.0,0.717,0.283,18:53:02.421
+PFlock,35.0,80K,12,74.263,12,1344013.0,0.711,0.289,18:54:16.707
+PFlock,40.0,80K,12,91.043,12,1647462.0,0.702,0.298,18:55:47.773
+PFlock,45.0,80K,12,92.778,12,1957834.0,0.701,0.299,18:57:20.576
+PFlock,5.0,90K,12,24.574,12,30995.0,0.833,0.167,18:57:45.174
+PFlock,10.0,90K,12,26.016,12,166035.0,0.792,0.208,18:58:11.214
+PFlock,15.0,90K,12,34.896,12,388400.0,0.769,0.231,18:58:46.135
+PFlock,20.0,90K,12,50.21,12,669308.0,0.74,0.26,18:59:36.369
+PFlock,25.0,90K,12,55.944,12,991292.0,0.724,0.276,19:00:32.337
+PFlock,30.0,90K,12,76.22,12,1341637.0,0.713,0.287,19:01:48.580
+PFlock,35.0,90K,12,84.526,12,1711642.0,0.705,0.295,19:03:13.130
+PFlock,40.0,90K,12,116.522,12,2095387.0,0.699,0.301,19:05:09.676
+PFlock,45.0,90K,12,132.004,12,2489055.0,0.698,0.302,19:07:21.704
+PFlock,5.0,100K,12,23.652,12,39721.0,0.838,0.162,19:07:45.381
+PFlock,10.0,100K,12,30.009,12,208645.0,0.792,0.208,19:08:15.413
+PFlock,15.0,100K,12,40.26,12,485024.0,0.771,0.229,19:08:55.696
+PFlock,20.0,100K,12,52.454,12,832661.0,0.743,0.257,19:09:48.175
+PFlock,25.0,100K,12,68.492,12,1229793.0,0.724,0.276,19:10:56.691
+PFlock,30.0,100K,12,86.209,12,1662884.0,0.712,0.288,19:12:22.925
+PFlock,35.0,100K,12,106.925,12,2121751.0,0.702,0.298,19:14:09.874
+PFlock,40.0,100K,12,134.845,12,2596718.0,0.697,0.303,19:16:24.748
+PFlock,45.0,100K,12,184.705,12,3084283.0,0.699,0.301,19:19:29.478
+/home/acald013/PhD/Y2Q3/Scripts/runBeijing.sh: line 28: bc: command not found
+/home/acald013/PhD/Y2Q3/Scripts/runBeijing.sh: line 28: fg: no job control
+Done at ... s
+Pseudo-terminal will not be allocated because stdin is not a terminal.
+Pseudo-terminal will not be allocated because stdin is not a terminal.
+Loading required package: pacman
+trying URL 'http://www.cs.ucr.edu/~acald013/public/Results/Beijing_N10K-100K_E5.0-45.0_C12_1497662505.csv'
+Content type 'text/csv' length 5617 bytes
+==================================================
+downloaded 5617 bytes
+
+null device 
+          1 
+[master 3244006] Uploading Beijing_N10K-100K_E5.0-45.0_C12_1497662505...
+ 2 files changed, 90 insertions(+)
+ create mode 100644 Y2Q3/Plots/Beijing_N10K-100K_E5.0-45.0_C12_1497662505.pdf
+ create mode 100644 Y2Q3/Scripts/Results/Beijing_N10K-100K_E5.0-45.0_C12_1497662505.csv
+From github.com:aocalderon/PhD
+   5cd06e0..7f0efb6  master     -> origin/master
+First, rewinding head to replay your work on top of it...
+Applying: Uploading Beijing_N10K-100K_E5.0-45.0_C12_1497662505...
+To git@github.com:aocalderon/PhD.git
+   7f0efb6..b1c8002  master -> master
