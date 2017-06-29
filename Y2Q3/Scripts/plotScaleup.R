@@ -6,6 +6,7 @@ pacman::p_load(ggplot2, data.table, foreach, sqldf)
 PHD_HOME = Sys.getenv(c("PHD_HOME"))
 PATH = "/Y2Q3/Scripts/Results/"
 filename ="Beijing_N10K-100K_E5.0-45.0"
+dataset = strsplit(filename, '_')[[1]][1]
 
 files = system(paste0("ls ",PHD_HOME,PATH,filename,"_C1_*.csv"), intern = T)
 core1 = data.frame()
@@ -32,8 +33,8 @@ data$Cores = factor(data$Cores)
 data = data[data$Epsilon > 5 & data$Epsilon < 50, ]
 data = data[data$Cores != 1, ]
 
-temp_title = paste("(radius of disk in mts) in Beijing dataset.")
-title = substitute(paste("Execution time by ", epsilon) ~ temp_title, list(temp_title = temp_title))
+temp_title = paste0("(radius of disk in mts) in ", dataset, " dataset.")
+title = substitute(paste("Scaleup by ", epsilon) ~ temp_title, list(temp_title = temp_title))
 g = ggplot(data = data, aes(x = factor(Dataset), y = Scaleup, group = Cores, colour = Cores, shape = Cores)) + 
     geom_line(aes(linetype = Cores)) + 
     geom_point(size = 2) + 
@@ -44,15 +45,15 @@ g = ggplot(data = data, aes(x = factor(Dataset), y = Scaleup, group = Cores, col
     scale_colour_discrete() + 
     scale_shape_discrete() + 
     scale_linetype_discrete()
-pdf(paste0(PHD_HOME,PATH,filename,"_Scaleup1.pdf"), width = 10.5, height = 7.5)
+pdf(paste0(PHD_HOME,PATH,filename,"_Scaleup.pdf"), width = 10.5, height = 7.5)
 plot(g)
 dev.off()
 
-title = paste("Scaleup in", filename,"dataset.")
+title = paste("Speedup in", dataset,"dataset.")
 g = ggplot(data=data, aes(x=factor(Epsilon), y=Scaleup, fill=Cores)) +
   geom_bar(stat="identity", position=position_dodge(width = 0.75),width = 0.75) +
   labs(title=title, x=expression(paste(epsilon,"(mts)")))
-pdf(paste0(PHD_HOME,PATH,filename,"_Scaleup2.pdf"), width = 10.5, height = 7.5)
+pdf(paste0(PHD_HOME,PATH,filename,"_Speedup.pdf"), width = 10.5, height = 7.5)
 plot(g)
 dev.off()
 

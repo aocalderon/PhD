@@ -75,7 +75,7 @@ data3$Speedup <- core1$V5 / data3$Time
 data4$Speedup <- core1$V5 / data4$Time
 
 data <- rbind(data1, data2, data3, data4)
-data <- data[data$N == '16M',]
+data <- data[data$N == '10M',]
 
 title = paste("Speedup in", DATASET_TAG,"dataset.")
 g = ggplot(data=data, aes(x=factor(Epsilon), y=Speedup, fill=Nodes)) +
