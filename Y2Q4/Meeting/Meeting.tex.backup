@@ -72,7 +72,6 @@
 \begin{document}
 
 \title[Qualification]{Towards Parallel Detection of Movement Patterns in Large Spatio-temporal Datasets}
-\subtitle{Oral Qualification}
 \author{Andres Calderon}
 %\institute{University of California, Riverside}
 
@@ -296,11 +295,6 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Execution time}
-  \centering
-  \href{http://www.cs.ucr.edu/~acald013/public/Porto_PBFE_N1M-16M_E2-10_animation.gif}{\includegraphics[width=0.88\textwidth]{Figures/Porto_PBFE_N1M-16M_E2-10}}
-\end{frame}
-
 \begin{frame}{Scaleup}
   \centering
   \includegraphics[height=0.85\textheight]{Figures/Ups/Porto_Scaleup}
@@ -334,11 +328,6 @@
     \item RAM: 15.5 GB.
     \item Centos 6.8, Simba/Spark 1.6.3.
   \end{itemize}
-\end{frame}
-
-\begin{frame}{Execution time}
-  \centering
-  \includegraphics[width=0.88\textwidth]{Figures/Cologne_N8M-16M_E1-5}
 \end{frame}
 
 \begin{frame}{Scaleup}
@@ -414,31 +403,28 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Beijing - Execution time}
-  \centering \includegraphics[height=0.85\textheight]{Figures/Maximal/beijing.pdf}
+\begin{frame}{Beijing - Scaleup}
+  \centering \includegraphics[height=0.85\textheight]{Figures/Maximal/Beijing_Scaleup.pdf}
 \end{frame}
 
-\begin{frame}{Porto - Execution time}
-  \centering \includegraphics[height=0.85\textheight]{Figures/Maximal/porto.pdf}
+\begin{frame}{Beijing - Speedup}
+  \centering \includegraphics[height=0.85\textheight]{Figures/Maximal/Beijing_Speedup.pdf}
 \end{frame}
 
 \section{Conclusions and future work}
 
 \begin{frame}{Conclusions}
   \begin{itemize}\pause
-   \item An implementation of a parallel method to detect a maximal set of disks for the BFE algorithm has been presented.\pause
-   \item The finding of a candidate set of disk proves to be scalable and reliable.\pause
-   \item Execution time improves up to 3 orders of magnitude compared to the sequential code.\pause
-   \item Good behavior of Scaleup and Speedup metrics.\pause
-   \item Promising performance for the detection of maximal set of disks.\pause
+   \item An implementation of a parallel method to detect a maximal set of disks for the BFE algorithm has been presented.
+   \item The finding of a candidate set of disk proves to be scalable and reliable.
+   \item Good performance of a novel approach for detection of maximal set of disks.
   \end{itemize}
 \end{frame}
 
 \begin{frame}{Future work}
   \begin{itemize}\pause
-   \item Work on a parallel strategy to join the sets of valid disks between time intervals.\pause
-   \item Explore other partition strategies for finding maximal set of disks as alternative to the local-global approach.\pause
-   \item Test the approach with other spatio-temporal patterns.\pause
+   \item Work on a parallel strategy to join the sets of valid disks between time intervals.
+   \item Test the approach with other spatio-temporal patterns.
   \end{itemize}
 \end{frame}
 

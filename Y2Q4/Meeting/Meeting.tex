@@ -72,7 +72,6 @@
 \begin{document}
 
 \title[Qualification]{Towards Parallel Detection of Movement Patterns in Large Spatio-temporal Datasets}
-\subtitle{Oral Qualification}
 \author{Andres Calderon}
 %\institute{University of California, Riverside}
 
@@ -198,7 +197,7 @@
  \includegraphics[trim={5cm 3cm 5cm 0}, clip, width=\textwidth]{Figures/d02.png} 
 \end{frame}
 
-\begin{frame}{PFlock implementation}
+\begin{frame}{PBFE implementation}
     \begin{itemize}
      \item Written in Scala using Simba 1.6.3.
      \begin{itemize}
@@ -208,7 +207,7 @@
     \end{itemize}
 \end{frame}
 
-\begin{frame}{PFlock implementation}
+\begin{frame}{PBFE implementation}
     \begin{itemize}
      \item Simba (Xie et al, SIGMOD'16) provides rich spatial operations through both SQL and the DataFrame API.
      \item Two-layer spatial indexing, cost-based optimization, open source.
@@ -393,14 +392,21 @@
   \end{itemize}
 \end{frame}
 
+\begin{frame}{PFlock implementation}
+    \begin{itemize}
+      \item Re-written in Scala using Simba library over Spark 2.1.0.
+      \item Code available at \\ \scriptsize \url{https://github.com/aocalderon/PhD/tree/master/Y2Q3/PFlock}.
+    \end{itemize}
+\end{frame}
+
 \subsection{Experiments}
 
 \begin{frame}{Setup}
   \begin{itemize}
-    \item 4-node cluster at DBLab.
+    \item 3-node cluster at DBLab.
     \item Processors: 8-core Intel(R) Xeon(R) CPU E3-1230 V2 @ 3.30GHz
     \item RAM: 15.5 GB.
-    \item Centos 6.8, Simba/Spark 1.6.3.
+    \item Centos 6.8, Simba/Spark 2.1.0.
   \end{itemize}
 \end{frame}
 
