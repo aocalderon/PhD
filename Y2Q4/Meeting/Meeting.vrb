@@ -1,0 +1,16 @@
+\frametitle{PBFE implementation}
+\begin{minted}[fontsize=\tiny,tabsize=8,breaklines,framesep=10pt,frame=single, escapeinside=||,mathescape=true]{sql}
+		SELECT
+			*
+		FROM
+			points p1
+		|\color{blue}{DISTANCE JOIN}|
+			points p2
+		ON
+			POINT(p2.x, p2.y) IN |\color{blue}{CIRCLERANGE}|(POINT(p1.x, p1.y), |$\varepsilon$|)
+		WHERE
+			p1.id < p2.id
+	\end{minted}
+	\vspace{1mm}
+ \centering
+ \includegraphics[width=0.3\textwidth]{Figures/theorem}
