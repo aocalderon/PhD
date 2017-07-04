@@ -189,3 +189,116 @@ Pseudo-terminal will not be allocated because stdin is not a terminal.
 Permission denied, please try again.
 Permission denied, please try again.
 Permission denied (publickey,gssapi-keyex,gssapi-with-mic,password).
+[master 6a9ea95] Adding plots for Beijing_N10K-100K_E5.0-10.0_C24_1499155394.csv ...
+ 121 files changed, 10888 insertions(+), 4280 deletions(-)
+ delete mode 100644 Y2Q3/PFlock/output_N10K-10K_E10.0-10.0_C4_.csv
+ delete mode 100644 Y2Q3/PFlock/output_N10K-10K_E10.0-14.0_C4_.csv
+ rewrite Y2Q3/PFlock/project/target/resolution-cache/default/pflock-build/scala_2.10/sbt_0.13/0.1-SNAPSHOT/resolved.xml.properties (86%)
+ copy Y2Q3/PFlock/project/target/resolution-cache/reports/{default-pflock-build-provided.xml => default-pflock-build-compile-internal.xml} (73%)
+ rewrite Y2Q3/PFlock/project/target/resolution-cache/reports/default-pflock-build-compile.xml (96%)
+ rewrite Y2Q3/PFlock/project/target/resolution-cache/reports/default-pflock-build-runtime-internal.xml (96%)
+ rewrite Y2Q3/PFlock/project/target/resolution-cache/reports/default-pflock-build-runtime.xml (96%)
+ copy Y2Q3/PFlock/project/target/resolution-cache/reports/{default-pflock-build-provided.xml => default-pflock-build-test-internal.xml} (73%)
+ rewrite Y2Q3/PFlock/project/target/resolution-cache/reports/default-pflock-build-test.xml (96%)
+ rewrite Y2Q3/PFlock/project/target/streams/$global/update/$global/streams/update_cache_2.10/inputs (97%)
+ rewrite Y2Q3/PFlock/project/target/streams/$global/update/$global/streams/update_cache_2.10/output (87%)
+ rewrite Y2Q3/PFlock/project/target/streams/compile/dependencyClasspath/$global/streams/export (100%)
+ rewrite Y2Q3/PFlock/project/target/streams/compile/externalDependencyClasspath/$global/streams/export (100%)
+ rewrite Y2Q3/PFlock/project/target/streams/compile/managedClasspath/$global/streams/export (100%)
+ rewrite Y2Q3/PFlock/project/target/streams/runtime/dependencyClasspath/$global/streams/export (100%)
+ rewrite Y2Q3/PFlock/project/target/streams/runtime/externalDependencyClasspath/$global/streams/export (100%)
+ rewrite Y2Q3/PFlock/project/target/streams/runtime/fullClasspath/$global/streams/export (100%)
+ rewrite Y2Q3/PFlock/project/target/streams/runtime/managedClasspath/$global/streams/export (100%)
+ create mode 100644 Y2Q3/Scripts/Beijing_N10K-100K_E5.0-10.0_C24_1499155394.csv
+ create mode 100644 Y2Q3/Scripts/Beijing_N10K-50K_E5.0-10.0_C24_1499155015.csv
+ create mode 100644 Y2Q3/Simba-master/.gitattributes
+ create mode 100644 Y2Q3/Simba-master/.gitignore
+ create mode 100644 Y2Q3/Simba-master/LICENSE
+ create mode 100644 Y2Q3/Simba-master/README.md
+ create mode 100644 Y2Q3/Simba-master/build.sbt
+ create mode 100644 Y2Q3/Simba-master/project/build.properties
+ create mode 100644 Y2Q3/Simba-master/project/plugins.sbt
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/DataSet.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/IndexManager.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/ShapeSerializer.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/ShapeType.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/SimbaConf.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/SimbaOptimizer.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/SimbaSession.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/SimbaSessionState.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/examples/BasicSpatialOps.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/examples/IndexExample.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/examples/SpatialClassInference.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/execution/FilterExec.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/execution/QueryExecution.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/execution/SimbaPlan.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/execution/join/BDJSpark.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/execution/join/BDJSparkR.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/execution/join/BKJSpark.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/execution/join/BKJSparkR.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/execution/join/CDJSpark.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/execution/join/CKJSpark.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/execution/join/DJSpark.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/execution/join/RDJSpark.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/execution/join/RKJSpark.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/execution/join/VKJSpark.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/execution/join/ZKJSpark.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/expression/InCircleRange.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/expression/InKNN.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/expression/InRange.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/expression/PointWrapper.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/expression/logicalPredicates.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/index/HashMapIndex.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/index/HashMapIndexedRelation.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/index/Index.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/index/IndexedRelation.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/index/IndexedRelationScan.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/index/Interval.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/index/QuadTree.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/index/QuadTreeIndexedRelation.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/index/RTree.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/index/RTreeIndexedRelation.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/index/Treap.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/index/TreapIndexedRelation.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/index/TreeMapIndex.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/index/TreeMapIndexedRelation.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/index/package.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/package.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/partitioner/HashPartitioner.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/partitioner/KDTreePartitioner.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/partitioner/MapDPartitioner.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/partitioner/QuadTreePartitioner.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/partitioner/RangeDPartitioner.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/partitioner/RangePartitioner.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/partitioner/STRPartitioner.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/partitioner/VoronoiPartitioner.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/plans/SpatialJoin.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/plans/spatialJoinTypes.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/spatial/Circle.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/spatial/Dist.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/spatial/LineSegment.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/spatial/MBR.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/spatial/Point.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/spatial/Polygon.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/spatial/Shape.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/spatial/ZValue.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/util/KryoShapeSerializer.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/util/LiteralUtil.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/util/NumberUtil.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/util/PredicateUtil.scala
+ create mode 100644 Y2Q3/Simba-master/src/main/scala/org/apache/spark/sql/simba/util/ShapeUtils.scala
+ create mode 100644 Y2Q3/Simba-master/src/test/scala/org/apache/spark/sql/simba/index/IntervalSuite.scala
+ create mode 100644 Y2Q3/Simba-master/src/test/scala/org/apache/spark/sql/simba/index/RTreeSuite.scala
+ create mode 100644 Y2Q3/Simba-master/src/test/scala/org/apache/spark/sql/simba/index/TreapSuite.scala
+ create mode 100644 Y2Q3/Simba-master/src/test/scala/org/apache/spark/sql/simba/spatial/CircleSuite.scala
+ create mode 100644 Y2Q3/Simba-master/src/test/scala/org/apache/spark/sql/simba/spatial/DistSuite.scala
+ create mode 100644 Y2Q3/Simba-master/src/test/scala/org/apache/spark/sql/simba/spatial/LineSegmentSuite.scala
+ create mode 100644 Y2Q3/Simba-master/src/test/scala/org/apache/spark/sql/simba/spatial/MBRSuite.scala
+ create mode 100644 Y2Q3/Simba-master/src/test/scala/org/apache/spark/sql/simba/spatial/PointSuite.scala
+ create mode 100644 Y2Q3/Simba-master/src/test/scala/org/apache/spark/sql/simba/spatial/PolygonSuite.scala
+ create mode 100644 Y2Q3/Simba-master/src/test/scala/org/apache/spark/sql/simba/spatial/ShapeSuite.scala
+ create mode 100644 Y2Q3/Simba-master/src/test/scala/org/apache/spark/sql/simba/spatial/ZValueSuite.scala
+Already up-to-date.
+remote: Resolving deltas:   0% (0/61)   [Kremote: Resolving deltas:   1% (1/61)   [Kremote: Resolving deltas:   3% (2/61)   [Kremote: Resolving deltas:   4% (3/61)   [Kremote: Resolving deltas:   8% (5/61)   [Kremote: Resolving deltas:   9% (6/61)   [Kremote: Resolving deltas:  21% (13/61)   [Kremote: Resolving deltas:  24% (15/61)   [Kremote: Resolving deltas:  26% (16/61)   [Kremote: Resolving deltas:  27% (17/61)   [Kremote: Resolving deltas:  32% (20/61)   [Kremote: Resolving deltas:  40% (25/61)   [Kremote: Resolving deltas:  47% (29/61)   [Kremote: Resolving deltas:  50% (31/61)   [Kremote: Resolving deltas:  54% (33/61)   [Kremote: Resolving deltas:  60% (37/61)   [Kremote: Resolving deltas:  62% (38/61)   [Kremote: Resolving deltas:  63% (39/61)   [Kremote: Resolving deltas:  65% (40/61)   [Kremote: Resolving deltas:  67% (41/61)   [Kremote: Resolving deltas:  72% (44/61)   [Kremote: Resolving deltas:  77% (47/61)   [Kremote: Resolving deltas:  78% (48/61)   [Kremote: Resolving deltas:  81% (50/61)   [Kremote: Resolving deltas:  85% (52/61)   [Kremote: Resolving deltas:  86% (53/61)   [Kremote: Resolving deltas:  88% (54/61)   [Kremote: Resolving deltas:  90% (55/61)   [Kremote: Resolving deltas:  91% (56/61)   [Kremote: Resolving deltas:  93% (57/61)   [Kremote: Resolving deltas:  95% (58/61)   [Kremote: Resolving deltas:  96% (59/61)   [Kremote: Resolving deltas:  98% (60/61)   [Kremote: Resolving deltas: 100% (61/61)   [Kremote: Resolving deltas: 100% (61/61), completed with 18 local objects.[K
+To git@github.com:aocalderon/PhD.git
+   58a7cde..6a9ea95  master -> master
