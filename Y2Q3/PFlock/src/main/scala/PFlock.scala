@@ -8,8 +8,11 @@ import org.apache.spark.sql.functions._
 import org.apache.spark.sql.simba.SimbaSession
 import org.apache.spark.sql.simba.index.RTreeType
 import org.apache.spark.sql.types.StructType
-//import SPMF.AlgoFPMax
+
+import scala.collection.JavaConverters._
+import SPMF.AlgoFPMax
 import org.rogach.scallop._
+
 
 /**
   * Created by and on 5/4/17.
@@ -34,7 +37,9 @@ object PFlock {
       .config("simba.index.partitions", s"${conf.partitions()}")
       .config("spark.cores.max", s"${conf.cores()}")
       .getOrCreate()
-    println(s"Running ${simba.sparkContext.applicationId}...")
+    println(s"Running ${simba.sparkContext.applicationId} on ${conf.cores()} cores...")
+    println("Tag  \tEpsilon\tDataset\tN\tTime\tCores\tTimestamp")
+
     simba.sparkContext.setLogLevel(conf.logs())
     // Calling implicits...
     import simba.implicits._
@@ -87,32 +92,33 @@ object PFlock {
           val bbox = getBoundingBox(pList)
           // val mbr = s"POLYGON((${bbox.minx} ${bbox.miny}, ${bbox.maxx} ${bbox.miny}, ${bbox.maxx} ${bbox.maxy}, ${bbox.minx} ${bbox.maxy}, ${bbox.minx} ${bbox.miny}))"
           val disks = pList.map(disk => (disk._2, isInBuffer(disk._2, bbox, epsilon)))
-          val localList = disks.filter(_._2).map(_._1._3)
-          val globalList = disks.filter(!_._2).map(_._1._3)
-          //val fpMax = new AlgoFPMax
-          //val itemsets = fpMax.runAlgorithm(partition.map(_._2).map(_._3).asJava, 1)
-          //itemsets.getItemsets(MU).asScala.toIterator
-          List(Row(localList.length, globalList.length)).toIterator
+          val localList = disks.filter(_._2).map(_._1._3).asJava
+          //val globalList = disks.filter(!_._2).map(_._1._3)
+          val fpMax = new AlgoFPMax
+          val itemsets = fpMax.runAlgorithm(localList, 1)
+          itemsets.getItemsets(MU).asScala.toIterator
+          //List(Row(localList.length, globalList.length)).toIterator
         }
-      val stats = c.map(row => (row.getInt(0), row.getInt(1)))
-        .toDS()
-        .agg(sum("_1").alias("sumLocal"), sum("_2").alias("sumGlobal"))
-        .map{row =>
-          val local = row.getAs[Long]("sumLocal")
-          val global = row.getAs[Long]("sumGlobal")
-          val all = local + global * 1.0
-          val pLocal = BigDecimal(local/all).setScale(3, BigDecimal.RoundingMode.HALF_UP).toDouble
-          val pGlobal = BigDecimal(global/all).setScale(3, BigDecimal.RoundingMode.HALF_UP).toDouble
-          (all,pLocal,pGlobal)
-        }.collect()
+      //      val stats = c.map(row => (row.getInt(0), row.getInt(1)))
+      //        .toDS()
+      //        .agg(sum("_1").alias("sumLocal"), sum("_2").alias("sumGlobal"))
+      //        .map{row =>
+      //          val local = row.getAs[Long]("sumLocal")
+      //          val global = row.getAs[Long]("sumGlobal")
+      //          val all = local + global * 1.0
+      //          val pLocal = BigDecimal(local/all).setScale(3, BigDecimal.RoundingMode.HALF_UP).toDouble
+      //          val pGlobal = BigDecimal(global/all).setScale(3, BigDecimal.RoundingMode.HALF_UP).toDouble
+      //          (all,pLocal,pGlobal)
+      //        }.collect()
       val n = c.count()
       // Stopping timer...
       val time2 = System.currentTimeMillis()
       val time = (time2 - time1) / 1000.0
       // Print summary...
-      val record = s"PFlock,$epsilon,$tag,$n,$time,${conf.cores()},${stats(0)._1},${stats(0)._2},${stats(0)._3},${org.joda.time.DateTime.now.toLocalTime}\n"
+      //val record = s"PFlock,$epsilon,$tag,$n,$time,${conf.cores()},${stats(0)._1},${stats(0)._2},${stats(0)._3},${org.joda.time.DateTime.now.toLocalTime}\n"
+      val record = s"PFlock,$epsilon,$tag,$n,$time,${conf.cores()},${org.joda.time.DateTime.now.toLocalTime}\n"
       output = output :+ record
-      print(record)
+      print(record.replaceAll(",", "\t"))
       // Dropping indices
       p1.dropIndexByName("p1RT")
       p2.dropIndexByName("p2RT")
@@ -154,8 +160,8 @@ object PFlock {
     val y = tuple._2
     x < bbox.maxx - epsilon &&
       x > bbox.minx + epsilon &&
-        y < bbox.maxy - epsilon &&
-          y > bbox.miny + epsilon
+      y < bbox.maxy - epsilon &&
+      y > bbox.miny + epsilon
   }
 
   def getBoundingBox(p: List[(Long, (Double, Double, Any))]): BBox = {
@@ -201,7 +207,7 @@ object PFlock {
     val dend: ScallopOption[Int] = opt[Int](default = Some(10))
     val dstep: ScallopOption[Int] = opt[Int](default = Some(10))
     val estart: ScallopOption[Double] = opt[Double](default = Some(10.0))
-    val eend: ScallopOption[Double] = opt[Double](default = Some(14.0))
+    val eend: ScallopOption[Double] = opt[Double](default = Some(10.0))
     val estep: ScallopOption[Double] = opt[Double](default = Some(2.0))
     val delta: ScallopOption[Double] = opt[Double](default = Some(0.01))
     val partitions: ScallopOption[Int] = opt[Int](default = Some(16))
