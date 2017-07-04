@@ -32,7 +32,7 @@ scp -i ~/.ssh/id_rsa $FILENAME acald013@bolt.cs.ucr.edu:/home/csgrads/acald013/p
 ssh -i ~/.ssh/id_rsa -t acald013@bolt.cs.ucr.edu "plotBenchmarks $FILENAME"
 cd ~/PhD/
 git add --all
-git commit -m "Adding plots for $FILENAME ..."
+git commit -m "Adding plots for $FILENAME on $TS2 ..."
 git pull
 git push
 cd ~/
