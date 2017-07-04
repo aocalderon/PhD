@@ -3,7 +3,7 @@
 CORES=$1
 TS=`date +%s`
 PARTITIONS=10
-DSTART=10
+DSTART=80
 DEND=100
 SUFFIX="K"
 ESTART=5.0
@@ -31,8 +31,9 @@ FILENAME="${OUTPUT}_N${DSTART}${SUFFIX}-${DEND}${SUFFIX}_E${ESTART}-${EEND}_C${C
 scp -i ~/.ssh/id_rsa $FILENAME acald013@bolt.cs.ucr.edu:/home/csgrads/acald013/public_html/public/Results 
 ssh -i ~/.ssh/id_rsa -t acald013@bolt.cs.ucr.edu "plotBenchmarks $FILENAME"
 cd ~/PhD/
+DATE=`date`
 git add --all
-git commit -m "Adding plots for $FILENAME on $TS2 ..."
+git commit -m "Adding plots for $FILENAME on $DATE ..."
 git pull
 git push
 cd ~/
