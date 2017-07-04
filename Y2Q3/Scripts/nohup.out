@@ -72,3 +72,120 @@ downloaded 2140 bytes
 
 null device 
           1 
+Running in 24 cores...
+Using Spark's default log4j profile: org/apache/spark/log4j-defaults.properties
+17/07/04 01:03:18 INFO SparkContext: Running Spark version 2.1.0
+17/07/04 01:03:18 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+17/07/04 01:03:19 INFO SecurityManager: Changing view acls to: acald013
+17/07/04 01:03:19 INFO SecurityManager: Changing modify acls to: acald013
+17/07/04 01:03:19 INFO SecurityManager: Changing view acls groups to: 
+17/07/04 01:03:19 INFO SecurityManager: Changing modify acls groups to: 
+17/07/04 01:03:19 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(acald013); groups with view permissions: Set(); users  with modify permissions: Set(acald013); groups with modify permissions: Set()
+17/07/04 01:03:19 INFO Utils: Successfully started service 'sparkDriver' on port 34392.
+17/07/04 01:03:19 INFO SparkEnv: Registering MapOutputTracker
+17/07/04 01:03:19 INFO SparkEnv: Registering BlockManagerMaster
+17/07/04 01:03:19 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+17/07/04 01:03:19 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
+17/07/04 01:03:19 INFO DiskBlockManager: Created local directory at /tmp/blockmgr-482ead8f-e8e2-41f8-afa0-dc1f7552ca1e
+17/07/04 01:03:19 INFO MemoryStore: MemoryStore started with capacity 6.2 GB
+17/07/04 01:03:19 INFO SparkEnv: Registering OutputCommitCoordinator
+17/07/04 01:03:20 INFO Utils: Successfully started service 'SparkUI' on port 4040.
+17/07/04 01:03:20 INFO SparkUI: Bound SparkUI to 0.0.0.0, and started at http://169.235.27.138:4040
+17/07/04 01:03:20 INFO SparkContext: Added JAR file:/home/acald013/PhD/Y2Q3/PFlock/target/scala-2.11/pflock_2.11-1.0.jar at spark://169.235.27.138:34392/jars/pflock_2.11-1.0.jar with timestamp 1499155400275
+17/07/04 01:03:20 INFO StandaloneAppClient$ClientEndpoint: Connecting to master spark://169.235.27.138:7077...
+17/07/04 01:03:20 INFO TransportClientFactory: Successfully created connection to /169.235.27.138:7077 after 46 ms (0 ms spent in bootstraps)
+17/07/04 01:03:20 INFO StandaloneSchedulerBackend: Connected to Spark cluster with app ID app-20170704010320-0003
+17/07/04 01:03:20 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20170704010320-0003/0 on worker-20170703222728-169.235.27.138-38441 (169.235.27.138:38441) with 6 cores
+17/07/04 01:03:20 INFO StandaloneSchedulerBackend: Granted executor ID app-20170704010320-0003/0 on hostPort 169.235.27.138:38441 with 6 cores, 12.0 GB RAM
+17/07/04 01:03:20 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20170704010320-0003/1 on worker-20170703222731-169.235.27.134-33110 (169.235.27.134:33110) with 6 cores
+17/07/04 01:03:20 INFO StandaloneSchedulerBackend: Granted executor ID app-20170704010320-0003/1 on hostPort 169.235.27.134:33110 with 6 cores, 12.0 GB RAM
+17/07/04 01:03:20 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20170704010320-0003/2 on worker-20170703222730-169.235.27.137-45261 (169.235.27.137:45261) with 6 cores
+17/07/04 01:03:20 INFO StandaloneSchedulerBackend: Granted executor ID app-20170704010320-0003/2 on hostPort 169.235.27.137:45261 with 6 cores, 12.0 GB RAM
+17/07/04 01:03:20 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20170704010320-0003/3 on worker-20170703222752-169.235.27.135-39651 (169.235.27.135:39651) with 6 cores
+17/07/04 01:03:20 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 42677.
+17/07/04 01:03:20 INFO StandaloneSchedulerBackend: Granted executor ID app-20170704010320-0003/3 on hostPort 169.235.27.135:39651 with 6 cores, 12.0 GB RAM
+17/07/04 01:03:20 INFO NettyBlockTransferService: Server created on 169.235.27.138:42677
+17/07/04 01:03:20 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
+17/07/04 01:03:20 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 169.235.27.138, 42677, None)
+17/07/04 01:03:20 INFO BlockManagerMasterEndpoint: Registering block manager 169.235.27.138:42677 with 6.2 GB RAM, BlockManagerId(driver, 169.235.27.138, 42677, None)
+17/07/04 01:03:20 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20170704010320-0003/0 is now RUNNING
+17/07/04 01:03:20 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20170704010320-0003/1 is now RUNNING
+17/07/04 01:03:20 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20170704010320-0003/2 is now RUNNING
+17/07/04 01:03:20 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 169.235.27.138, 42677, None)
+17/07/04 01:03:20 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 169.235.27.138, 42677, None)
+17/07/04 01:03:20 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20170704010320-0003/3 is now RUNNING
+17/07/04 01:03:20 INFO StandaloneSchedulerBackend: SchedulerBackend is ready for scheduling beginning after reached minRegisteredResourcesRatio: 0.0
+17/07/04 01:03:21 INFO SharedState: Warehouse path is 'file:/home/acald013/PhD/Y2Q3/Scripts/spark-warehouse/'.
+Running app-20170704010320-0003 on 24 cores...
+Tag  	Epsilon	Dataset	N	Time	Cores	Timestamp
+PFlock	5.0	10K	5	22.008	24	01:03:44.550
+PFlock	6.0	10K	8	9.308	24	01:03:54.028
+PFlock	7.0	10K	30	8.954	24	01:04:03.037
+PFlock	8.0	10K	66	7.281	24	01:04:10.364
+PFlock	9.0	10K	94	7.576	24	01:04:17.983
+PFlock	10.0	10K	131	6.781	24	01:04:24.802
+PFlock	5.0	20K	103	7.693	24	01:04:32.531
+PFlock	6.0	20K	185	8.026	24	01:04:40.594
+PFlock	7.0	20K	318	7.35	24	01:04:47.979
+PFlock	8.0	20K	432	8.195	24	01:04:56.208
+PFlock	9.0	20K	562	8.588	24	01:05:04.830
+PFlock	10.0	20K	697	7.594	24	01:05:12.457
+PFlock	5.0	30K	355	9.585	24	01:05:22.074
+PFlock	6.0	30K	594	9.819	24	01:05:31.926
+PFlock	7.0	30K	851	9.036	24	01:05:40.994
+PFlock	8.0	30K	1130	8.853	24	01:05:49.881
+PFlock	9.0	30K	1459	9.515	24	01:05:59.426
+PFlock	10.0	30K	1833	10.26	24	01:06:09.717
+PFlock	5.0	40K	710	13.332	24	01:06:23.079
+PFlock	6.0	40K	1147	10.631	24	01:06:33.738
+PFlock	7.0	40K	1613	9.458	24	01:06:43.225
+PFlock	8.0	40K	2146	10.917	24	01:06:54.171
+PFlock	9.0	40K	2716	11.809	24	01:07:06.008
+PFlock	10.0	40K	3325	12.386	24	01:07:18.422
+PFlock	5.0	50K	1239	9.532	24	01:07:27.980
+PFlock	6.0	50K	1879	11.46	24	01:07:39.468
+PFlock	7.0	50K	2661	13.251	24	01:07:52.747
+PFlock	8.0	50K	3463	11.264	24	01:08:04.037
+PFlock	9.0	50K	4328	13.645	24	01:08:17.710
+PFlock	10.0	50K	5248	13.31	24	01:08:31.047
+PFlock	5.0	60K	1894	13.037	24	01:08:44.110
+PFlock	6.0	60K	2854	12.216	24	01:08:56.353
+PFlock	7.0	60K	3941	12.47	24	01:09:08.849
+PFlock	8.0	60K	5077	13.73	24	01:09:22.606
+PFlock	9.0	60K	6275	15.535	24	01:09:38.167
+PFlock	10.0	60K	7586	14.845	24	01:09:53.038
+PFlock	5.0	70K	2702	15.49	24	01:10:08.554
+PFlock	6.0	70K	4031	14.133	24	01:10:22.713
+PFlock	7.0	70K	5521	15.039	24	01:10:37.779
+PFlock	8.0	70K	7091	15.556	24	01:10:53.362
+PFlock	9.0	70K	8674	20.715	24	01:11:14.103
+PFlock	10.0	70K	10475	17.791	24	01:11:31.919
+PFlock	5.0	80K	3499	14.648	24	01:11:46.593
+PFlock	6.0	80K	5250	17.66	24	01:12:04.279
+PFlock	7.0	80K	7159	17.249	24	01:12:21.554
+PFlock	8.0	80K	9116	18.62	24	01:12:40.200
+PFlock	9.0	80K	11197	18.784	24	01:12:59.010
+PFlock	10.0	80K	13421	32.393	24	01:13:31.428
+PFlock	5.0	90K	4475	19.094	24	01:13:50.548
+PFlock	6.0	90K	6629	15.632	24	01:14:06.206
+PFlock	7.0	90K	8992	18.57	24	01:14:24.803
+PFlock	8.0	90K	11499	20.746	24	01:14:45.575
+PFlock	9.0	90K	13966	23.215	24	01:15:08.816
+PFlock	10.0	90K	16726	42.865	24	01:15:52.005
+PFlock	5.0	100K	5637	15.595	24	01:16:07.626
+PFlock	6.0	100K	8296	19.073	24	01:16:26.725
+PFlock	7.0	100K	11163	21.534	24	01:16:48.286
+PFlock	8.0	100K	13998	22.158	24	01:17:10.469
+PFlock	9.0	100K	17043	37.576	24	01:17:48.071
+PFlock	10.0	100K	20352	152.306	24	01:20:20.402
+(standard_in) 1: syntax error
+./runBeijing.sh: line 28: fg: no job control
+Done at ... s
+Permission denied, please try again.
+Permission denied, please try again.
+Permission denied (publickey,gssapi-keyex,gssapi-with-mic,password).
+lost connection
+Pseudo-terminal will not be allocated because stdin is not a terminal.
+Permission denied, please try again.
+Permission denied, please try again.
+Permission denied (publickey,gssapi-keyex,gssapi-with-mic,password).
