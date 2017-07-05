@@ -3,10 +3,10 @@
 CORES=$1
 TS=`date +%s`
 PARTITIONS=32
-DSTART=50
+DSTART=100
 DEND=100
 SUFFIX="K"
-ESTART=8.0
+ESTART=10.0
 EEND=10.0
 OUTPUT="Beijing"
 echo "Running in $CORES cores..."
