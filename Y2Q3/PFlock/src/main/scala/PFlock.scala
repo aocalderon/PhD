@@ -37,7 +37,7 @@ object PFlock {
       .config("simba.index.partitions", s"${conf.partitions()}")
       .config("spark.cores.max", s"${conf.cores()}")
       .config("spark.eventLog.enabled","true")
-      .config("spark.eventLog.dir", "file:///home/acald013/PhD/Y2Q4/Logs")
+      .config("spark.eventLog.dir", s"file://${conf.dirlogs()}")
       .getOrCreate()
     println(s"Running ${simba.sparkContext.applicationId} on ${conf.cores()} cores...")
     println("Tag  \tEpsilon\tDataset\tN\tTime\tCores\tTimestamp")
@@ -219,6 +219,7 @@ object PFlock {
     val output: ScallopOption[String] = opt[String](default = Some("output"))
     val prefix: ScallopOption[String] = opt[String](default = Some("/opt/Datasets/Beijing/P"))
     val suffix: ScallopOption[String] = opt[String](default = Some("K"))
+    val dirlogs: ScallopOption[String] = opt[String](default = Some("/home/acald013/PhD/Y2Q4/Logs"))
     val tag: ScallopOption[String] = opt[String](default = Some(""))
 
     verify()
