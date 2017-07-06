@@ -2,15 +2,15 @@
 
 CORES=$1
 TS=`date +%s`
-PARTITIONS=32
-DSTART=100
-DEND=100
+PARTITIONS=10
+DSTART=10
+DEND=10
 SUFFIX="K"
 ESTART=10.0
 EEND=10.0
 OUTPUT="Beijing"
 echo "Running in $CORES cores..."
-spark-submit ~/PhD/Y2Q3/PFlock/target/scala-2.11/pflock_2.11-1.0.jar \
+spark-submit --files=$SPARK_HOME/conf/metrics.properties ~/PhD/Y2Q3/PFlock/target/scala-2.11/pflock_2.11-1.0.jar \
 --prefix /home/acald013/Datasets/Beijing/P \
 --master spark://169.235.27.138:7077 \
 --cores $CORES \
@@ -18,10 +18,11 @@ spark-submit ~/PhD/Y2Q3/PFlock/target/scala-2.11/pflock_2.11-1.0.jar \
 --tag $TS \
 --estart $ESTART \
 --eend $EEND \
---estep 1 \
+--estep 5 \
 --dstart $DSTART \
 --dend $DEND \
 --dstep 10 \
+--dirlogs ~/Logs
 --output $OUTPUT
 #--master spark://169.235.27.134:7077 local[*]\
 TS2=`date +%s`
@@ -37,3 +38,4 @@ git commit -m "Adding plots for $FILENAME on $DATE ..."
 git pull
 git push
 cd ~/
+echo "Done!!!"
