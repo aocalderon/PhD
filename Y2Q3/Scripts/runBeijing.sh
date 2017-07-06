@@ -22,7 +22,7 @@ spark-submit --files=$SPARK_HOME/conf/metrics.properties ~/PhD/Y2Q3/PFlock/targe
 --dstart $DSTART \
 --dend $DEND \
 --dstep 10 \
---dirlogs ~/Logs
+--dirlogs ~/Logs \
 --output $OUTPUT
 #--master spark://169.235.27.134:7077 local[*]\
 TS2=`date +%s`
