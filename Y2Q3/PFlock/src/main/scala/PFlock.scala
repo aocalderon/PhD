@@ -40,7 +40,7 @@ object PFlock {
       .config("spark.eventLog.dir", s"file://${conf.dirlogs()}")
       .getOrCreate()
     println(s"Running ${simba.sparkContext.applicationId} on ${conf.cores()} cores...")
-    println("Tag  \tEpsilon\tDataset\tN\tTime\tCores\tTimestamp")
+    println("Tag  \tEpsilon\tDataset\tN\tTimeD\tTimeM\tCores\tTimestamp")
 
     simba.sparkContext.setLogLevel(conf.logs())
     // Calling implicits...
@@ -60,7 +60,7 @@ object PFlock {
         .csv(filename)
         .as[APoint]
       // Starting timer...
-      val time1 = System.currentTimeMillis()
+      var time1 = System.currentTimeMillis()
       // Indexing points...
       val p1 = points.toDF("id1", "x1", "y1")
       p1.index(RTreeType, "p1RT", Array("x1", "y1"))
@@ -86,6 +86,9 @@ object PFlock {
         .filter(row => row.getList(3).size() >= MU)
         .rdd
         .map(d => (d.getLong(0), (d.getDouble(1), d.getDouble(2), d.getList[Integer](3))))
+      var time2 = System.currentTimeMillis()
+      val timeD = (time2 - time1) / 1000.0
+      time1 = System.currentTimeMillis()
       // Filtering redundant candidates
       val candidates = new PairRDDFunctions(candidatesPair)
       val c = candidates.partitionBy(new CustomPartitioner(numParts = PARTITIONS))
@@ -114,11 +117,11 @@ object PFlock {
       //        }.collect()
       val n = c.count()
       // Stopping timer...
-      val time2 = System.currentTimeMillis()
-      val time = (time2 - time1) / 1000.0
+      time2 = System.currentTimeMillis()
+      val timeM = (time2 - time1) / 1000.0
       // Print summary...
       //val record = s"PFlock,$epsilon,$tag,$n,$time,${conf.cores()},${stats(0)._1},${stats(0)._2},${stats(0)._3},${org.joda.time.DateTime.now.toLocalTime}\n"
-      val record = s"PFlock,$epsilon,$tag,$n,$time,${conf.cores()},${org.joda.time.DateTime.now.toLocalTime}\n"
+      val record = s"PFlock,$epsilon,$tag,$n,$timeD,$timeM,${conf.cores()},${org.joda.time.DateTime.now.toLocalTime}\n"
       output = output :+ record
       print(record.replaceAll(",", "\t"))
       // Dropping indices
