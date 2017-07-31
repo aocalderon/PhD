@@ -31,56 +31,116 @@
 <div id="visualization"></div>
 <div id="loading">loading...</div>
 
+<p></p>
+<div id="hoveredItem"></div>
+<div id="log"></div>
+
 <script type="text/javascript">
-  // load data via an ajax request. When the data is in, load the timeline
-  $.ajax({
-    url: 'sample.json',
-    success: function (data) {
-      // hide the "loading..." message
-      document.getElementById('loading').style.display = 'none';
+var timeline;
+var items;
+var sample;
+// load data via an ajax request. When the data is in, load the timeline
+$.ajax({
+	url: 'data.json',
+	success: function (data) {
+		// hide the "loading..." message
+		document.getElementById('loading').style.display = 'none';
 
-      // DOM element where the Timeline will be attached
-      var container = document.getElementById('visualization');
+		// DOM element where the Timeline will be attached
+		var container = document.getElementById('visualization');
       
-    var groups = new vis.DataSet([
-		{id: 0, content: 'dblab-rack11', value: 1},
-		{id: 1, content: 'dblab-rack12', value: 2},
-		{id: 2, content: 'dblab-rack14', value: 3},
-		{id: 3, content: 'dblab-rack15', value: 4},
-		{id: 4, content: 'Stages', value: 5},
-		{id: 5, content: 'Jobs', value: 6}
-	]);
+		var groups = new vis.DataSet([
+			{id: 0, content: 'dblab-rack11', value: 1},
+			{id: 1, content: 'dblab-rack12', value: 2},
+			{id: 2, content: 'dblab-rack14', value: 3},
+			{id: 3, content: 'dblab-rack15', value: 4},
+			{id: 4, content: 'Stages', value: 5},
+			{id: 5, content: 'Jobs', value: 6}
+		]);
 
-      // Create a DataSet (allows two way data-binding)
-      var items = new vis.DataSet(data);
-
-      // Configuration for the Timeline
-      var options = {
+		// Create a DataSet (allows two way data-binding)
+		items = new vis.DataSet(data);
+		var min_date = new Date(items.min('start').start)
+		var max_date = new Date(items.max('end').end)
+		console.log(min_date + ' ' + max_date)
+		// Configuration for the Timeline
+		var options = {
 			//order: 	function (a, b) {return a.id - b.id;},
 			//groupOrder: function (a, b) {return a.value - b.value;},
+			editable: true,
 			stack: true,
-			maxHeight: '600px',
-			min: "2017-07-13 08:42:08.892",
-			max: "2017-07-13 08:43:01.265",
+			maxHeight: '400px',
+			min: min_date,
+			max: max_date,
 			zoomMin: 100,
 			zoomMax: 1000 * 10
-		  };
+		};
 
-      // Create a Timeline
-      var timeline = new vis.Timeline(container, items, options);
-      timeline.setGroups(groups);
-      timeline.setWindow("2017-07-13 08:42:08.892","2017-07-13 08:43:08.892");
-    },
-    error: function (err) {
-      console.log('Error', err);
-      if (err.status === 0) {
-        alert('Failed to load data/basic.json.\nPlease run this example on a server.');
-      }
-      else {
-        alert('Failed to load data/basic.json.');
-      }
-    }
-  });
+		// Create a Timeline
+		sample = items.get({
+			filter: function (item) {
+				return (new Date(item.start) >= new Date(min_date) && 
+						new Date(item.start) <= new Date(min_date.getTime() + 10000));
+			}
+		});
+		timeline = new vis.Timeline(container, sample, options);
+		timeline.setGroups(groups);
+		timeline.setWindow(min_date,new Date(min_date.getTime() + 10000));
+		timeline.on('rangechange', function (properties) {
+			logEvent('rangechange', properties);
+		});
+
+		timeline.on('rangechanged', function (properties) {
+			logEvent('rangechanged', properties);
+		});        
+	},
+	error: function (err) {
+		console.log('Error', err);
+		if (err.status === 0) {
+			alert('Failed to load data/basic.json.\nPlease run this example on a server.');
+		}
+		else {
+			alert('Failed to load data/basic.json.');
+		}
+	}
+});
+
+function stringifyObject (object) {
+	if (!object) return;
+	var replacer = function(key, value) {
+		if (value && value.tagName) {
+			return "DOM Element";
+		} else {
+			return value;
+		}
+	}
+	return JSON.stringify(object, replacer)
+}
+    
+function logEvent(event, properties) {
+	var log = document.getElementById('log');
+	var msg = document.createElement('div');
+	msg.innerHTML = '['+ properties.start.toISOString() + ',' + properties.end.toISOString() + ']';
+	log.firstChild ? log.insertBefore(msg, log.firstChild) : log.appendChild(msg);
+	sample = items.get({
+		filter: function (item) {
+			var item_start = new Date(item.start);
+			var item_end = new Date(item.end);
+			var win_diff = properties.end.getTime()-properties.start.getTime();
+			var ite_diff = item_end.getTime() - item_start.getTime();
+			return (item_start > properties.start && 
+					item_start < properties.end &&
+					ite_diff > win_diff * 0.01) ||
+					(item_start <= properties.start && item_end >= properties.end);
+					
+					
+		}
+	});
+	timeline.setItems(sample)
+	//timeline.redraw()
+	msg.innerHTML += ' Sample Size = ' + sample.length;
+	msg.innerHTML += ' Item diff = ' +	(properties.end.getTime()-properties.start.getTime()) * 0.01;
+}
 </script>
 </body>
 </html>
