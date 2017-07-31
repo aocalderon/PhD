@@ -1,0 +1,86 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>Timeline</title>
+
+  <style>
+    body, html {
+      font-family: arial, sans-serif;
+      font-size: 8pt;
+    }
+
+    #visualization {
+      box-sizing: border-box;
+      width: 100%;
+      height: 400px;
+    }
+    
+
+
+  </style>
+  
+  <!-- Load jquery for ajax support -->
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.20.1/vis.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.20.1/vis.min.css" rel="stylesheet" type="text/css" />
+  
+</head>
+
+<body>
+<div id="visualization"></div>
+<div id="loading">loading...</div>
+
+<script type="text/javascript">
+  // load data via an ajax request. When the data is in, load the timeline
+  $.ajax({
+    url: 'data.json',
+    success: function (data) {
+      // hide the "loading..." message
+      document.getElementById('loading').style.display = 'none';
+
+      // DOM element where the Timeline will be attached
+      var container = document.getElementById('visualization');
+      
+    var groups = new vis.DataSet([
+		{id: 0, content: 'dblab-rack11', value: 1},
+		{id: 1, content: 'dblab-rack12', value: 2},
+		{id: 2, content: 'dblab-rack14', value: 3},
+		{id: 3, content: 'dblab-rack15', value: 4},
+		{id: 4, content: 'Stages', value: 5},
+		{id: 5, content: 'Jobs', value: 6}
+	]);
+
+      // Create a DataSet (allows two way data-binding)
+      var items = new vis.DataSet(data);
+
+      // Configuration for the Timeline
+      var options = {
+			//order: 	function (a, b) {return a.id - b.id;},
+			//groupOrder: function (a, b) {return a.value - b.value;},
+			stack: true,
+			maxHeight: '600px',
+			min: "2017-07-13 08:42:08.892",
+			max: "2017-07-13 08:43:01.265",
+			zoomMin: 100,
+			zoomMax: 1000 * 10
+		  };
+
+      // Create a Timeline
+      var timeline = new vis.Timeline(container, items, options);
+      timeline.setGroups(groups);
+      timeline.setWindow("2017-07-13 08:42:08.892","2017-07-13 08:43:08.892");
+    },
+    error: function (err) {
+      console.log('Error', err);
+      if (err.status === 0) {
+        alert('Failed to load data/basic.json.\nPlease run this example on a server.');
+      }
+      else {
+        alert('Failed to load data/basic.json.');
+      }
+    }
+  });
+</script>
+</body>
+</html>
