@@ -21,7 +21,7 @@ object PFlock {
 
   def main(args: Array[String]): Unit = {
     var times = List.empty[String] 
-    times = times :+ s"""[{"content":"Starting app...","start":"${org.joda.time.DateTime.now.toLocalDate} ${org.joda.time.DateTime.now.toLocalTime}"},\n"""
+    times = times :+ s"""{"content":"Starting app...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
     // Reading arguments from command line...
     val conf = new Conf(args)
     // Tuning master and number of cores...
@@ -43,7 +43,7 @@ object PFlock {
       .getOrCreate()
     println(s"Running ${simba.sparkContext.applicationId} on ${conf.cores()} cores...")
     println("Tag  \tEpsilon\tDataset\tN\tTimeD\tTimeM\tCores\tTimestamp")
-    times = times :+ s"""{"content":"Setting paramaters...","start":"${org.joda.time.DateTime.now.toLocalDate} ${org.joda.time.DateTime.now.toLocalTime}"},\n"""
+    times = times :+ s"""{"content":"Setting paramaters...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
 
     simba.sparkContext.setLogLevel(conf.logs())
     // Calling implicits...
@@ -63,26 +63,26 @@ object PFlock {
         .csv(filename)
         .as[APoint]
       // Starting timer...
-      times = times :+ s"""{"content":"Reading data...","start":"${org.joda.time.DateTime.now.toLocalDate} ${org.joda.time.DateTime.now.toLocalTime}"},\n"""
+      times = times :+ s"""{"content":"Reading data...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
       var time1 = System.currentTimeMillis()
       // Indexing points...
       val p1 = points.toDF("id1", "x1", "y1")
       p1.index(RTreeType, "p1RT", Array("x1", "y1"))
       val p2 = points.toDF("id2", "x2", "y2")
       p2.index(RTreeType, "p2RT", Array("x2", "y2"))
-      times = times :+ s"""{"content":"Indexing points...","start":"${org.joda.time.DateTime.now.toLocalDate} ${org.joda.time.DateTime.now.toLocalTime}"},\n"""
+      times = times :+ s"""{"content":"Indexing points...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
       // Self-joining to find pairs of points close enough (< epsilon)...
       val pairsRDD = p1.distanceJoin(p2, Array("x1", "y1"), Array("x2", "y2"), epsilon).rdd
-      times = times :+ s"""{"content":"Finding pairs (Self-join)...","start":"${org.joda.time.DateTime.now.toLocalDate} ${org.joda.time.DateTime.now.toLocalTime}"},\n"""
+      times = times :+ s"""{"content":"Finding pairs (Self-join)...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
       // Calculating disk's centers coordinates...
       val centers = findDisks(pairsRDD, epsilon).distinct()
         .toDS()
         .index(RTreeType, "centersRT", Array("x", "y"))
         .withColumn("id", monotonically_increasing_id())
         .as[ACenter]
-      times = times :+ s"""{"content":"Computing disks...","start":"${org.joda.time.DateTime.now.toLocalDate} ${org.joda.time.DateTime.now.toLocalTime}"},\n"""
+      times = times :+ s"""{"content":"Computing disks...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
       centers.cache()
-      times = times :+ s"""{"content":"Caching...","start":"${org.joda.time.DateTime.now.toLocalDate} ${org.joda.time.DateTime.now.toLocalTime}"},\n"""
+      times = times :+ s"""{"content":"Caching...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
       val PARTITIONS: Int = centers.rdd.getNumPartitions
       val MU: Int = conf.mu()
       // Grouping objects enclosed by candidates disks...
@@ -90,12 +90,12 @@ object PFlock {
         .distanceJoin(p1, Array("x", "y"), Array("x1", "y1"), (epsilon / 2) + conf.delta())
         .groupBy("id", "x", "y")
         .agg(collect_list("id1").alias("IDs"))
-      times = times :+ s"""{"content":"Maping disks and points...","start":"${org.joda.time.DateTime.now.toLocalDate} ${org.joda.time.DateTime.now.toLocalTime}"},\n"""
+      times = times :+ s"""{"content":"Maping disks and points...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
       // Filtering candidates less than mu...
       val candidatesPair =  disksAndPoints.filter(row => row.getList(3).size() >= MU)
         .rdd
         .map(d => (d.getLong(0), (d.getDouble(1), d.getDouble(2), d.getList[Integer](3))))
-      times = times :+ s"""{"content":"Filtering less-than-mu disks...","start":"${org.joda.time.DateTime.now.toLocalDate} ${org.joda.time.DateTime.now.toLocalTime}"},\n"""
+      times = times :+ s"""{"content":"Filtering less-than-mu disks...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
       var time2 = System.currentTimeMillis()
       val timeD = (time2 - time1) / 1000.0
       time1 = System.currentTimeMillis()
@@ -112,9 +112,9 @@ object PFlock {
           //itemsets.getItemsets(MU).asScala.toIterator
           disks.toIterator
         }
-      times = times :+ s"""{"content":"Filtering redundants (Not full implemented)...","start":"${org.joda.time.DateTime.now.toLocalDate} ${org.joda.time.DateTime.now.toLocalTime}"},\n"""
+      times = times :+ s"""{"content":"Filtering redundants (Not full implemented)...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
       val n = c.count()
-      times = times :+ s"""{"content":"Final counting...","start":"${org.joda.time.DateTime.now.toLocalDate} ${org.joda.time.DateTime.now.toLocalTime}"},\n"""
+      times = times :+ s"""{"content":"Final counting...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
       // Stopping timer...
       time2 = System.currentTimeMillis()
       val timeM = (time2 - time1) / 1000.0
@@ -127,14 +127,14 @@ object PFlock {
       // Dropping indices
       p1.dropIndexByName("p1RT")
       p2.dropIndexByName("p2RT")
-      times = times :+ s"""{"content":"Dropping indices...","start":"${org.joda.time.DateTime.now.toLocalDate} ${org.joda.time.DateTime.now.toLocalTime}"},\n"""
+      times = times :+ s"""{"content":"Dropping indices...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
     }
     val filename = s"${conf.output()}_N${conf.dstart()}${conf.suffix()}-${conf.dend()}${conf.suffix()}_E${conf.estart()}-${conf.eend()}_C${conf.cores()}_${conf.tag()}.csv"
     val writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename)))
     output.foreach(writer.write)
     writer.close()
     simba.close()
-    times = times :+ s"""{"content":"Closing app...","start":"${org.joda.time.DateTime.now.toLocalDate} ${org.joda.time.DateTime.now.toLocalTime}"}]"""
+    times = times :+ s"""{"content":"Closing app...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"}"""
     val jsonname = s"${conf.dirlogs()}/${simba.sparkContext.applicationId}.json"
     val json = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(jsonname)))
     times.foreach(json.write)
