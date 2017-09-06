@@ -3,15 +3,15 @@
 CORES=$1
 TS=`date +%s`
 PARTITIONS=16
-DSTART=160
-DEND=160
+DSTART=50
+DEND=150
 SUFFIX="K"
 ESTART=10.0
 EEND=100.0
 OUTPUT="Berlin"
 echo "Running in $CORES cores..."
 spark-submit --files=$SPARK_HOME/conf/metrics.properties ~/PhD/Y2Q4/PFlock/target/scala-2.11/pflock_2.11-1.0.jar \
---prefix /home/acald013/Datasets/Berlin/B \
+--prefix /home/acald013/Datasets/Berlin/Scaleup/B \
 --master spark://169.235.27.134:7077 \
 --cores $CORES \
 --partitions $PARTITIONS \
@@ -21,7 +21,7 @@ spark-submit --files=$SPARK_HOME/conf/metrics.properties ~/PhD/Y2Q4/PFlock/targe
 --estep 10 \
 --dstart $DSTART \
 --dend $DEND \
---dstep 20 \
+--dstep 50 \
 --dirlogs ~/Spark/Logs \
 --output $OUTPUT
 #--master spark://169.235.27.134:7077 local[*]\
