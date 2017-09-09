@@ -35,11 +35,11 @@ data = data[, c(2, 3, 5, 6, 7)]
 names(data) = c("Epsilon", "Dataset", "TimeA", "TimeB", "Cores")
 data$Time = data$TimeA + data$TimeB
 data = sqldf("SELECT Epsilon, Dataset, Cores, AVG(Time) AS Time FROM data GROUP BY 1, 2, 3")
-data = sqldf("SELECT Epsilon, Dataset, Cores, Time1/Time AS Speedup FROM data NATURAL JOIN core1")
+#data = sqldf("SELECT Epsilon, Dataset, Cores, Time1/Time AS Speedup FROM data NATURAL JOIN core1")
 data$Cores = factor(data$Cores)
 
 data = data[data$Epsilon > 10, ]
-data = data[data$Cores != 1, ]
+#data = data[data$Cores != 1, ]
 ```
 
 #### Speedup for Berlin dataset.
@@ -49,9 +49,9 @@ We used the dataset built with SUMO using the Berlin network.  The size of the d
 ```{r SpeedupPlot, echo=FALSE, fig.width=10.5, fig.height=7.5, fig.align='center'}
 temp_title = paste("(radius of disk in mts) in Berlin dataset.")
 title = substitute(paste("Speedup by ", epsilon) ~ temp_title, list(temp_title = temp_title))
-g = ggplot(data=data, aes(x=factor(Epsilon), y=Speedup, fill=Cores)) +
+g = ggplot(data=data, aes(x=factor(Epsilon), y=Time, fill=Cores)) +
   geom_bar(stat="identity", position=position_dodge(width = 0.75),width = 0.75) +
-  labs(title=title, x=expression(paste(epsilon,"(mts)")))
+  labs(title=title, y="Time(s)", x=expression(paste(epsilon,"(mts)")))
 plot(g)
 ```
 
