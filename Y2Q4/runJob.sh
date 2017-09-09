@@ -1,3 +1,19 @@
-Scripts/runBerlin.sh 15
-Scripts/runBerlin.sh 15
-Scripts/runBerlin.sh 15
+Scripts/runBerlin.sh 2
+Scripts/runBerlin.sh 2
+Scripts/runBerlin.sh 2
+Scripts/runBerlin.sh 3
+Scripts/runBerlin.sh 3
+Scripts/runBerlin.sh 3
+Scripts/runBerlin.sh 4
+Scripts/runBerlin.sh 4
+Scripts/runBerlin.sh 4
+Scripts/runBerlin.sh 5
+Scripts/runBerlin.sh 5
+Scripts/runBerlin.sh 5
+Scripts/runBerlin.sh 6
+Scripts/runBerlin.sh 6
+Scripts/runBerlin.sh 6
+Scripts/runBerlin.sh 7
+Scripts/runBerlin.sh 7
+Scripts/runBerlin.sh 7
+
