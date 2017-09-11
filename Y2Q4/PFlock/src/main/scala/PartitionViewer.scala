@@ -11,7 +11,7 @@ object PartitionViewer {
   case class PointItem(id: Int, x: Double, y: Double)
 
   var master: String = "local[*]"
-  var filename: String = "/opt/Datasets/Beijing/B10K.csv"
+  var filename: String = "/opt/Datasets/Berlin/B160K.csv"
   var epsilon: Double = 10.0
   var logs: String = "ERROR"
 

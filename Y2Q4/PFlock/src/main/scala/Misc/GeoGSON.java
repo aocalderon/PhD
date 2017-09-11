@@ -76,7 +76,7 @@ public class GeoGSON {
         }
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         Double lon1 = 10.0;
         Double lat1 = 10.0;
         Double lon2 = 20.0;
@@ -85,7 +85,7 @@ public class GeoGSON {
 
         GeoGSON gson = new GeoGSON("4799");
         gson.makeMBR(lon1, lat1, lon2, lat2, id, 5);
-        gson.saveGeoJSON("out/RTree.json");
+        gson.saveGeoJSON("output/RTree.json");
     }
 }
 
