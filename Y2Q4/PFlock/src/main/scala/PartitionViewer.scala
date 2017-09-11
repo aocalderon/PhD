@@ -10,12 +10,16 @@ object PartitionViewer {
 
   case class PointItem(id: Int, x: Double, y: Double)
 
-  var master: String = "local[*]"
-  var filename: String = "/opt/Datasets/Berlin/B160K.csv"
-  var epsilon: Double = 10.0
-  var logs: String = "ERROR"
+  val master: String = "local[*]"
+  val logs: String = "ERROR"
 
   def main(args: Array[String]): Unit = {
+    val EPSG: String = "3068"
+    val dataset: String = "Berlin"
+    val filename: String = "/home/and/Documents/PhD/Code/Y2Q4/BerlinSample/B160K_3068.csv"
+    val path: String = "output/"
+    val epsilon: Double = 10.0
+    val partitions: String = "4096"
 //    master = args(0)
 //    filename = args(1)
 //    logs = args(2)
@@ -24,7 +28,7 @@ object PartitionViewer {
       .builder()
       .master(master)
       .appName("PartitionViewer")
-      .config("simba.index.partitions", "256")
+      .config("simba.index.partitions", partitions)
       .getOrCreate()
 
     import simbaSession.implicits._
@@ -69,19 +73,19 @@ object PartitionViewer {
       List((min_x,min_y,max_x,max_y, s"$index", size)).iterator
     }
 
-    val gson = new GeoGSON("4799")
+    val gson = new GeoGSON(EPSG)
     mbrs.collect().foreach {row =>
       gson.makeMBR(row._1,row._2,row._3,row._4,row._5, row._6)
     }
-    gson.saveGeoJSON("output/RTree.geojson")
+    gson.saveGeoJSON(path + "RTree_" + dataset + "_" + EPSG + "_P" + partitions + ".geojson")
 
-    val gson2 = new GeoGSON("4799")
+    val gson2 = new GeoGSON(EPSG)
     mbrs.collect().foreach {row =>
       if(row._3 - row._1 > epsilon && row._4 - row._2 > epsilon){
         gson2.makeMBR(row._1 + epsilon,row._2 + epsilon,row._3 - epsilon,row._4 - epsilon,row._5, row._6)
       }
     }
-    gson2.saveGeoJSON("output/RTree_buffer.geojson")
+    gson2.saveGeoJSON(path + "RTree_" + dataset + "_" + EPSG + "_P" + partitions + "_E" + epsilon + ".geojson")
 
     mbrs.map(r => r._6).toDF("n").agg(Map("n" -> "avg")).show()
 
