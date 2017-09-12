@@ -17,10 +17,10 @@ import org.rogach.scallop._
 /**
   * Created by and on 5/4/17.
   */
-object PFlock {
+object PFlock_v01 {
 
   def main(args: Array[String]): Unit = {
-    var times = List.empty[String] 
+    var times = List.empty[String]
     times = times :+ s"""{"content":"Starting app...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
     // Reading arguments from command line...
     val conf = new Conf(args)
@@ -58,7 +58,7 @@ object PFlock {
       val tag = filename.substring(filename.lastIndexOf("/") + 1).split("\\.")(0).substring(1)
       // Reading data...
       val points = simba.read
-        .option("header", "false")
+        .option("header", "true")
         .schema(POINT_SCHEMA)
         .csv(filename)
         .as[APoint]
@@ -75,8 +75,7 @@ object PFlock {
       val pairsRDD = p1.distanceJoin(p2, Array("x1", "y1"), Array("x2", "y2"), epsilon).rdd
       times = times :+ s"""{"content":"Finding pairs (Self-join)...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
       // Calculating disk's centers coordinates...
-      val centers = findDisks(pairsRDD, epsilon)
-        .distinct()
+      val centers = findDisks(pairsRDD, epsilon).distinct()
         .toDS()
         .index(RTreeType, "centersRT", Array("x", "y"))
         .withColumn("id", monotonically_increasing_id())
@@ -102,7 +101,6 @@ object PFlock {
       time1 = System.currentTimeMillis()
       // Filtering redundant candidates
       val candidates = new PairRDDFunctions(candidatesPair)
-      val n = candidates.count()
       val c = candidates.partitionBy(new CustomPartitioner(numParts = PARTITIONS))
         .mapPartitions{ partition =>
           val pList = partition.toList
@@ -114,16 +112,17 @@ object PFlock {
           itemsets.getItemsets(MU).asScala.toIterator
         }
       times = times :+ s"""{"content":"Filtering redundants...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
+      val n = c.count()
       times = times :+ s"""{"content":"Final counting...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
       // Stopping timer...
       time2 = System.currentTimeMillis()
       val timeM = (time2 - time1) / 1000.0
-      
+
       // Print summary...
       val record = s"PFlock,$epsilon,$tag,$n,$timeD,$timeM,${conf.cores()},${org.joda.time.DateTime.now.toLocalTime}\n"
       output = output :+ record
       print(record.replaceAll(",", "\t"))
-      
+
       // Dropping indices
       p1.dropIndexByName("p1RT")
       p2.dropIndexByName("p2RT")
@@ -156,9 +155,9 @@ object PFlock {
   def calculateDiskCenterCoordinates(p1: APoint, p2: APoint, r2: Double): ACenter = {
     val X: Double = p1.x - p2.x
     val Y: Double = p1.y - p2.y
-    var D2: Double = math.pow(X, 2) + math.pow(Y, 2)
+    val D2: Double = math.pow(X, 2) + math.pow(Y, 2)
     if (D2 == 0)
-      D2 = 0.01
+      throw new UnsupportedOperationException("Identical points...")
     val root: Double = math.sqrt(math.abs(4.0 * (r2 / D2) - 1.0))
     val h1: Double = ((X + Y * root) / 2) + p2.x
     val k1: Double = ((Y - X * root) / 2) + p2.y
@@ -234,3 +233,4 @@ object PFlock {
     verify()
   }
 }
+
