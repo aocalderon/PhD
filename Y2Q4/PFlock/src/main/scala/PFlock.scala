@@ -42,7 +42,8 @@ object PFlock {
       .config("spark.eventLog.dir", s"file://${conf.dirlogs()}")
       .getOrCreate()
     println(s"Running ${simba.sparkContext.applicationId} on ${conf.cores()} cores...")
-    println("Tag  \tEpsilon\tDataset\tN\tTimeD\tTimeM\tCores\tTimestamp")
+    println("%10.10s %10.10s %10.10s %10.10s %10.10s %10.10s %10.10s %10.10s %10.10s %15.15s"
+      .format("Tag","Epsilon","Dataset","TimeD","TimeM","TotalTime","NCandidates","NMaximal","Cores","Timestamp"))
     times = times :+ s"""{"content":"Setting paramaters...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
 
     simba.sparkContext.setLogLevel(conf.logs())
@@ -64,7 +65,7 @@ object PFlock {
         .as[APoint]
       // Starting timer...
       times = times :+ s"""{"content":"Reading data...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
-      var time1 = System.currentTimeMillis()
+      var time1: Long = System.currentTimeMillis()
       // Indexing points...
       val p1 = points.toDF("id1", "x1", "y1")
       p1.index(RTreeType, "p1RT", Array("x1", "y1"))
@@ -98,8 +99,8 @@ object PFlock {
         .rdd
         .map(d => (d.getLong(0), (d.getDouble(1), d.getDouble(2), d.getList[Integer](3))))
       times = times :+ s"""{"content":"Filtering less-than-mu disks...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
-      var time2 = System.currentTimeMillis()
-      val timeD = (time2 - time1) / 1000.0
+      var time2: Long = System.currentTimeMillis()
+      val timeD: Double = (time2 - time1) / 1000.0
       time1 = System.currentTimeMillis()
       // Filtering redundant candidates
       val candidates = new PairRDDFunctions(candidatesPair)
@@ -117,14 +118,15 @@ object PFlock {
       times = times :+ s"""{"content":"Final counting...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
       // Stopping timer...
       time2 = System.currentTimeMillis()
-      val timeM = (time2 - time1) / 1000.0
-      val time = timeD + timeM
       val nmaximal = c.count()
+      val timeM: Double = (time2 - time1) / 1000.0
+      val time: Double = BigDecimal(timeD + timeM).setScale(3, BigDecimal.RoundingMode.HALF_DOWN).toDouble
       // Print summary...
       val record = s"PFlock,$epsilon,$tag,$timeD,$timeM,$time,$ncandidates,$nmaximal,${conf.cores()},${org.joda.time.DateTime.now.toLocalTime}\n"
       output = output :+ record
-      print(record.replaceAll(",", "\t"))
-      
+      print("%10.10s %10.1f %10.10s %10.3f %10.3f %10.3f %10d %10d %10d %15.15s\n"
+        .format("PFlock", epsilon,tag,timeD,timeM,time,ncandidates,nmaximal,conf.cores(),org.joda.time.DateTime.now.toLocalTime))
+
       // Dropping indices
       p1.dropIndexByName("p1RT")
       p2.dropIndexByName("p2RT")
@@ -215,11 +217,11 @@ object PFlock {
 
   class Conf(arguments: Seq[String]) extends ScallopConf(arguments) {
     val mu: ScallopOption[Int] = opt[Int](default = Some(3))
-    val dstart: ScallopOption[Int] = opt[Int](default = Some(5))
-    val dend: ScallopOption[Int] = opt[Int](default = Some(5))
+    val dstart: ScallopOption[Int] = opt[Int](default = Some(1))
+    val dend: ScallopOption[Int] = opt[Int](default = Some(1))
     val dstep: ScallopOption[Int] = opt[Int](default = Some(10))
     val estart: ScallopOption[Double] = opt[Double](default = Some(10.0))
-    val eend: ScallopOption[Double] = opt[Double](default = Some(30.0))
+    val eend: ScallopOption[Double] = opt[Double](default = Some(10.0))
     val estep: ScallopOption[Double] = opt[Double](default = Some(10.0))
     val delta: ScallopOption[Double] = opt[Double](default = Some(0.01))
     val partitions: ScallopOption[Int] = opt[Int](default = Some(32))
