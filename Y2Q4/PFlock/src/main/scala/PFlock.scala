@@ -106,19 +106,16 @@ object PFlock {
       val candidates = new PairRDDFunctions(candidatesPair)
       val c = candidates.partitionBy(new CustomPartitioner(numParts = PARTITIONS))
         .mapPartitions{ partition =>
-          val pList = partition.toList
-          val bbox = getBoundingBox(pList)
-          val disks = pList.map(disk => (disk._2, isInBuffer(disk._2, bbox, epsilon)))
-          val localList = disks.filter(_._2).map(_._1._3).asJava
+          val transactions = partition.toList.map(disk => disk._2._3).asJava
           val fpMax = new AlgoFPMax
-          val itemsets = fpMax.runAlgorithm(localList, 1)
+          val itemsets = fpMax.runAlgorithm(transactions, 1)
           itemsets.getItemsets(MU).asScala.toIterator
         }
       times = times :+ s"""{"content":"Filtering redundants...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
       times = times :+ s"""{"content":"Final counting...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
       // Stopping timer...
-      time2 = System.currentTimeMillis()
       val nmaximal = c.count()
+      time2 = System.currentTimeMillis()
       val timeM: Double = (time2 - time1) / 1000.0
       val time: Double = BigDecimal(timeD + timeM).setScale(3, BigDecimal.RoundingMode.HALF_DOWN).toDouble
       // Print summary...
@@ -217,8 +214,8 @@ object PFlock {
 
   class Conf(arguments: Seq[String]) extends ScallopConf(arguments) {
     val mu: ScallopOption[Int] = opt[Int](default = Some(3))
-    val dstart: ScallopOption[Int] = opt[Int](default = Some(1))
-    val dend: ScallopOption[Int] = opt[Int](default = Some(1))
+    val dstart: ScallopOption[Int] = opt[Int](default = Some(10))
+    val dend: ScallopOption[Int] = opt[Int](default = Some(10))
     val dstep: ScallopOption[Int] = opt[Int](default = Some(10))
     val estart: ScallopOption[Double] = opt[Double](default = Some(10.0))
     val eend: ScallopOption[Double] = opt[Double](default = Some(10.0))
@@ -229,7 +226,7 @@ object PFlock {
     val master: ScallopOption[String] = opt[String](default = Some("local[*]"))
     val logs: ScallopOption[String] = opt[String](default = Some("ERROR"))
     val output: ScallopOption[String] = opt[String](default = Some("output"))
-    val prefix: ScallopOption[String] = opt[String](default = Some("/opt/Datasets/Beijing/B"))
+    val prefix: ScallopOption[String] = opt[String](default = Some("/opt/Datasets/Berlin/B"))
     val suffix: ScallopOption[String] = opt[String](default = Some("K"))
     val dirlogs: ScallopOption[String] = opt[String](default = Some("/opt/Spark/Logs"))
     val tag: ScallopOption[String] = opt[String](default = Some(""))
