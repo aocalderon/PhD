@@ -41,9 +41,9 @@ object PFlock {
       .config("spark.eventLog.enabled","true")
       .config("spark.eventLog.dir", s"file://${conf.dirlogs()}")
       .getOrCreate()
-    println(s"Running ${simba.sparkContext.applicationId} on ${conf.cores()} cores...")
-    println("%10.10s %10.10s %10.10s %10.10s %10.10s %10.10s %10.10s %10.10s %10.10s %15.15s"
-      .format("Tag","Epsilon","Dataset","TimeD","TimeM","TotalTime","NCandidates","NMaximal","Cores","Timestamp"))
+    println(s"Running ${simba.sparkContext.applicationId} on ${conf.cores()} cores and ${conf.partitions()} partitions...")
+    println("%10.10s %10.10s %10.10s %10.10s %10.10s %10.10s %10.10s %10.10s %10.10s %10.10s %15.15s"
+      .format("Tag","Epsilon","Dataset","TimeD","TimeM","TotalTime","NCandidates","NMaximal","Cores", "Partitions","Timestamp"))
     times = times :+ s"""{"content":"Setting paramaters...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
 
     simba.sparkContext.setLogLevel(conf.logs())
@@ -122,10 +122,10 @@ object PFlock {
       val timeM: Double = (time2 - time1) / 1000.0
       val time: Double = BigDecimal(timeD + timeM).setScale(3, BigDecimal.RoundingMode.HALF_DOWN).toDouble
       // Print summary...
-      val record = s"PFlock,$epsilon,$tag,$timeD,$timeM,$time,$ncandidates,$nmaximal,${conf.cores()},${org.joda.time.DateTime.now.toLocalTime}\n"
+      val record = s"PFlock,$epsilon,$tag,$timeD,$timeM,$time,$ncandidates,$nmaximal,${conf.cores()},$PARTITIONS,${org.joda.time.DateTime.now.toLocalTime}\n"
       output = output :+ record
-      print("%10.10s %10.1f %10.10s %10.3f %10.3f %10.3f %10d %10d %10d %15.15s\n"
-        .format("PFlock", epsilon,tag,timeD,timeM,time,ncandidates,nmaximal,conf.cores(),org.joda.time.DateTime.now.toLocalTime))
+      print("%10.10s %10.1f %10.10s %10.3f %10.3f %10.3f %10d %10d %10d %10d %15.15s\n"
+        .format("PFlock",epsilon,tag,timeD,timeM,time,ncandidates,nmaximal,conf.cores(),PARTITIONS,org.joda.time.DateTime.now.toLocalTime))
 
       // Dropping indices
       p1.dropIndexByName("p1RT")
