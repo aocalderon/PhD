@@ -93,6 +93,7 @@ object PFlock {
         .agg(collect_list("id1").alias("IDs"))
       times = times :+ s"""{"content":"Maping disks and points...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
       // Filtering candidates less than mu...
+      val ncandidates = disksAndPoints.count()
       val candidatesPair =  disksAndPoints.filter(row => row.getList(3).size() >= MU)
         .rdd
         .map(d => (d.getLong(0), (d.getDouble(1), d.getDouble(2), d.getList[Integer](3))))
@@ -102,7 +103,6 @@ object PFlock {
       time1 = System.currentTimeMillis()
       // Filtering redundant candidates
       val candidates = new PairRDDFunctions(candidatesPair)
-      val n = candidates.count()
       val c = candidates.partitionBy(new CustomPartitioner(numParts = PARTITIONS))
         .mapPartitions{ partition =>
           val pList = partition.toList
@@ -118,9 +118,10 @@ object PFlock {
       // Stopping timer...
       time2 = System.currentTimeMillis()
       val timeM = (time2 - time1) / 1000.0
-      
+      val time = timeD + timeM
+      val nmaximal = c.count()
       // Print summary...
-      val record = s"PFlock,$epsilon,$tag,$n,$timeD,$timeM,${conf.cores()},${org.joda.time.DateTime.now.toLocalTime}\n"
+      val record = s"PFlock,$epsilon,$tag,$timeD,$timeM,$time,$ncandidates,$nmaximal,${conf.cores()},${org.joda.time.DateTime.now.toLocalTime}\n"
       output = output :+ record
       print(record.replaceAll(",", "\t"))
       
