@@ -6,7 +6,7 @@ PARTITIONS=$2
 DSTART=160
 DEND=160
 SUFFIX="K"
-ESTART=10.0
+ESTART=50.0
 EEND=100.0
 OUTPUT="Berlin"
 echo "Running in $CORES cores and $PARTITIONS partitions..."
