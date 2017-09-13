@@ -38,8 +38,8 @@ object PFlock {
       .appName("PFlock")
       .config("simba.index.partitions", s"${conf.partitions()}")
       .config("spark.cores.max", s"${conf.cores()}")
-      .config("spark.eventLog.enabled","true")
-      .config("spark.eventLog.dir", s"file://${conf.dirlogs()}")
+      //.config("spark.eventLog.enabled","true")
+      //.config("spark.eventLog.dir", s"file://${conf.dirlogs()}")
       .getOrCreate()
     println(s"Running ${simba.sparkContext.applicationId} on ${conf.cores()} cores and ${conf.partitions()} partitions...")
     println("%10.10s %10.10s %10.10s %10.10s %10.10s %10.10s %10.10s %10.10s %10.10s %10.10s %15.15s"
@@ -104,17 +104,20 @@ object PFlock {
       time1 = System.currentTimeMillis()
       // Filtering redundant candidates
       val candidates = new PairRDDFunctions(candidatesPair)
-      val c = candidates.partitionBy(new CustomPartitioner(numParts = PARTITIONS))
+      val maximal = candidates.partitionBy(new CustomPartitioner(numParts = PARTITIONS))
         .mapPartitions{ partition =>
-          val transactions = partition.toList.map(disk => disk._2._3).asJava
-          val fpMax = new AlgoFPMax
-          val itemsets = fpMax.runAlgorithm(transactions, 1)
-          itemsets.getItemsets(MU).asScala.toIterator
+          //val transactions = partition.toList.map(disk => disk._2._3).asJava
+          //val fpMax = new AlgoFPMax
+          //val itemsets = fpMax.runAlgorithm(transactions, 1)
+          //itemsets.getItemsets(MU).asScala.toIterator
+          val pList = partition.toList
+          val bbox = getBoundingBox(pList)
+          pList.map(disk => (disk._1,disk._2, bbox)).toIterator
         }
       times = times :+ s"""{"content":"Filtering redundants...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
       times = times :+ s"""{"content":"Final counting...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
       // Stopping timer...
-      val nmaximal = c.count()
+      val nmaximal = maximal.count()
       time2 = System.currentTimeMillis()
       val timeM: Double = (time2 - time1) / 1000.0
       val time: Double = BigDecimal(timeD + timeM).setScale(3, BigDecimal.RoundingMode.HALF_DOWN).toDouble
@@ -128,6 +131,27 @@ object PFlock {
       p1.dropIndexByName("p1RT")
       p2.dropIndexByName("p2RT")
       times = times :+ s"""{"content":"Dropping indices...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
+
+      val mbrs_file = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("/tmp/mbrs.csv")))
+      maximal.map { record =>
+          toWKT(record._3)
+        }
+        .toDF("MBR")
+        .groupBy("MBR")
+        .count()
+        .map { mbr =>
+          "\"%s\", %d\n".format(mbr.getAs[String]("MBR"), mbr.getAs[Int]("count"))
+        }
+        .collect()
+        .foreach(mbrs_file.write)
+      mbrs_file.close()
+      val centers_file = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("/tmp/centers.csv")))
+      maximal.collect()
+        .map { record =>
+          "%d, \"%s\", %d, \"%s\"\n".format(record._1, toWKT(record._2._1, record._2._2), record._2._3.size(), record._2._3.toString.replace("[", "").replace("]", ""))
+        }
+        .foreach(centers_file.write)
+      centers_file.close()
     }
     val filename = s"${conf.output()}_N${conf.dstart()}${conf.suffix()}-${conf.dend()}${conf.suffix()}_E${conf.estart()}-${conf.eend()}_C${conf.cores()}_${conf.tag()}.csv"
     val writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename)))
@@ -197,6 +221,17 @@ object PFlock {
     BBox(minx, miny, maxx, maxy)
   }
 
+  def toWKT(bbox: BBox): String = "POLYGON (( %f %f, %f %f, %f %f, %f %f, %f %f ))"
+    .format(
+      bbox.minx, bbox.maxy,
+      bbox.maxx, bbox.maxy,
+      bbox.maxx, bbox.miny,
+      bbox.minx, bbox.miny,
+      bbox.minx, bbox.maxy
+    )
+
+  def toWKT(x: Double, y: Double): String = "POINT (%f %f)".format(x, y)
+
   case class APoint(id: Int, x: Double, y: Double)
 
   case class ACenter(id: Long, x: Double, y: Double)
@@ -221,13 +256,13 @@ object PFlock {
     val eend: ScallopOption[Double] = opt[Double](default = Some(10.0))
     val estep: ScallopOption[Double] = opt[Double](default = Some(10.0))
     val delta: ScallopOption[Double] = opt[Double](default = Some(0.01))
-    val partitions: ScallopOption[Int] = opt[Int](default = Some(32))
+    val partitions: ScallopOption[Int] = opt[Int](default = Some(512))
     val cores: ScallopOption[Int] = opt[Int](default = Some(4))
     val master: ScallopOption[String] = opt[String](default = Some("local[*]"))
     val logs: ScallopOption[String] = opt[String](default = Some("ERROR"))
     val output: ScallopOption[String] = opt[String](default = Some("output"))
     val prefix: ScallopOption[String] = opt[String](default = Some("/opt/Datasets/Berlin/B"))
-    val suffix: ScallopOption[String] = opt[String](default = Some("K"))
+    val suffix: ScallopOption[String] = opt[String](default = Some("K_3068"))
     val dirlogs: ScallopOption[String] = opt[String](default = Some("/opt/Spark/Logs"))
     val tag: ScallopOption[String] = opt[String](default = Some(""))
 
