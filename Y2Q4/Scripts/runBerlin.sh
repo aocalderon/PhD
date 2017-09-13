@@ -6,13 +6,13 @@ PARTITIONS=$2
 DSTART=160
 DEND=160
 SUFFIX="K"
-ESTART=50.0
+ESTART=10.0
 EEND=100.0
 OUTPUT="Berlin"
 echo "Running in $CORES cores and $PARTITIONS partitions..."
 spark-submit --files=$SPARK_HOME/conf/metrics.properties ~/PhD/Y2Q4/PFlock/target/scala-2.11/pflock_2.11-1.0.jar \
 --prefix /home/acald013/Datasets/Berlin/B \
---master spark://169.235.27.134:7077 \
+--master spark://169.235.27.138:7077 \
 --cores $CORES \
 --partitions $PARTITIONS \
 --tag $TS \
@@ -24,7 +24,7 @@ spark-submit --files=$SPARK_HOME/conf/metrics.properties ~/PhD/Y2Q4/PFlock/targe
 --dstep 50 \
 --dirlogs ~/Spark/Logs \
 --output $OUTPUT
-#--master spark://169.235.27.134:7077 local[*]\
+#--master spark://169.235.27.134:7077 local[*] dblab-rack11=169.235.27.134 dblab-rack15=169.235.27.138
 #TS2=`date +%s`
 #DELAY=printf %.2f $(echo "($TS2-$TS1)/60" | bc -l)
 #echo "Done at ... ${DELAY}s"
