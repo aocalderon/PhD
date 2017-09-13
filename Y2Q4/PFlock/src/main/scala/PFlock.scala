@@ -132,7 +132,7 @@ object PFlock {
       p2.dropIndexByName("p2RT")
       times = times :+ s"""{"content":"Dropping indices...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
 
-      val mbrs_file = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("/tmp/mbrs.csv")))
+      val mbrs_file = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(s"/tmp/mbrs_${epsilon}_${PARTITIONS}.csv")))
       maximal.map { record =>
           toWKT(record._3)
         }
@@ -145,7 +145,7 @@ object PFlock {
         .collect()
         .foreach(mbrs_file.write)
       mbrs_file.close()
-      val centers_file = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("/tmp/centers.csv")))
+      val centers_file = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(s"/tmp/centers_${epsilon}_${PARTITIONS}.csv")))
       maximal.collect()
         .map { record =>
           "%d, \"%s\", %d, \"%s\"\n".format(record._1, toWKT(record._2._1, record._2._2), record._2._3.size(), record._2._3.toString.replace("[", "").replace("]", ""))
