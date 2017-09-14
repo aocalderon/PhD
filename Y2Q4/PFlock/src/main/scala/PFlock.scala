@@ -83,28 +83,26 @@ object PFlock {
         .withColumn("id", monotonically_increasing_id())
         .as[ACenter]
       times = times :+ s"""{"content":"Computing disks...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
-      centers.cache()
-      times = times :+ s"""{"content":"Caching...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
       val PARTITIONS: Int = centers.rdd.getNumPartitions
       val MU: Int = conf.mu()
       // Grouping objects enclosed by candidates disks...
-      val disksAndPoints = centers
+      val candidates = centers
         .distanceJoin(p1, Array("x", "y"), Array("x1", "y1"), (epsilon / 2) + conf.delta())
         .groupBy("id", "x", "y")
         .agg(collect_list("id1").alias("IDs"))
       times = times :+ s"""{"content":"Maping disks and points...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
       // Filtering candidates less than mu...
-      val ncandidates = disksAndPoints.count()
-      val candidatesPair =  disksAndPoints.filter(row => row.getList(3).size() >= MU)
-        .rdd
-        .map(d => (d.getLong(0), (d.getDouble(1), d.getDouble(2), d.getList[Integer](3))))
-      times = times :+ s"""{"content":"Filtering less-than-mu disks...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
+      val ncandidates = candidates.count()
       var time2: Long = System.currentTimeMillis()
       val timeD: Double = (time2 - time1) / 1000.0
       time1 = System.currentTimeMillis()
+      val filteredCandidates =  candidates.filter(row => row.getList(3).size() >= MU)
+        .map(d => (d.getLong(0), d.getDouble(1), d.getDouble(2), d.getList[Integer](3).toString))
+      times = times :+ s"""{"content":"Filtering less-than-mu disks...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
       // Filtering redundant candidates
-      val candidates = new PairRDDFunctions(candidatesPair)
-      val maximal = candidates.partitionBy(new CustomPartitioner(numParts = PARTITIONS))
+      //val candidates = new PairRDDFunctions(candidatesPair)
+      val maximal = filteredCandidates
+        .index(RTreeType, "candidatesRT", Array("_2", "_3"))
         .mapPartitions{ partition =>
           //val transactions = partition.toList.map(disk => disk._2._3).asJava
           //val fpMax = new AlgoFPMax
@@ -112,7 +110,7 @@ object PFlock {
           //itemsets.getItemsets(MU).asScala.toIterator
           val pList = partition.toList
           val bbox = getBoundingBox(pList)
-          pList.map(disk => (disk._1,disk._2, bbox)).toIterator
+          pList.map(disk => (disk._1, disk._2, disk._3, disk._4, bbox)).toIterator
         }
       times = times :+ s"""{"content":"Filtering redundants...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
       times = times :+ s"""{"content":"Final counting...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
@@ -130,11 +128,13 @@ object PFlock {
       // Dropping indices
       p1.dropIndexByName("p1RT")
       p2.dropIndexByName("p2RT")
+      centers.dropIndexByName("centersRT")
+      maximal.dropIndexByName("centersRT")
       times = times :+ s"""{"content":"Dropping indices...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
 
-      val mbrs_file = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(s"/tmp/mbrs_${epsilon}_${PARTITIONS}.csv")))
+      val mbrs_file = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(s"/tmp/mbrs_${epsilon}_$PARTITIONS.csv")))
       maximal.map { record =>
-          toWKT(record._3)
+          toWKT(record._5)
         }
         .toDF("MBR")
         .groupBy("MBR")
@@ -192,23 +192,23 @@ object PFlock {
       y > bbox.miny + epsilon
   }
 
-  def getBoundingBox(p: List[(Long, (Double, Double, Any))]): BBox = {
+  def getBoundingBox(p: List[(Long, Double, Double, Any)]): BBox = {
     var minx: Double = Double.MaxValue
     var miny: Double = Double.MaxValue
     var maxx: Double = Double.MinValue
     var maxy: Double = Double.MinValue
     p.foreach{r =>
-      if(r._2._1 < minx){
-        minx = r._2._1
+      if(r._2 < minx){
+        minx = r._2
       }
-      if (r._2._1 > maxx){
-        maxx = r._2._1
+      if (r._2 > maxx){
+        maxx = r._2
       }
-      if(r._2._2 < miny){
-        miny = r._2._2
+      if(r._3 < miny){
+        miny = r._3
       }
-      if(r._2._2 > maxy){
-        maxy = r._2._2
+      if(r._3 > maxy){
+        maxy = r._3
       }
     }
     BBox(minx, miny, maxx, maxy)
@@ -241,7 +241,7 @@ object PFlock {
   }
 
   class Conf(arguments: Seq[String]) extends ScallopConf(arguments) {
-    val mu: ScallopOption[Int] = opt[Int](default = Some(3))
+    val mu: ScallopOption[Int] = opt[Int](default = Some(10))
     val dstart: ScallopOption[Int] = opt[Int](default = Some(10))
     val dend: ScallopOption[Int] = opt[Int](default = Some(10))
     val dstep: ScallopOption[Int] = opt[Int](default = Some(10))
