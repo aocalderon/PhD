@@ -145,13 +145,6 @@ object PFlock {
         .collect()
         .foreach(mbrs_file.write)
       mbrs_file.close()
-      val centers_file = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(s"/tmp/centers_${epsilon}_${PARTITIONS}.csv")))
-      maximal.collect()
-        .map { record =>
-          "%d, \"%s\", %d, \"%s\"\n".format(record._1, toWKT(record._2._1, record._2._2), record._2._3.size(), record._2._3.toString.replace("[", "").replace("]", ""))
-        }
-        .foreach(centers_file.write)
-      centers_file.close()
     }
     val filename = s"${conf.output()}_N${conf.dstart()}${conf.suffix()}-${conf.dend()}${conf.suffix()}_E${conf.estart()}-${conf.eend()}_C${conf.cores()}_${conf.tag()}.csv"
     val writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename)))
