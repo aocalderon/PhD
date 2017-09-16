@@ -87,20 +87,20 @@ object PFlock {
         .distanceJoin(p1, Array("x", "y"), Array("x1", "y1"), (epsilon / 2) + conf.delta())
         .groupBy("id", "x", "y")
         .agg(collect_list("id1").alias("IDs"))
-      // Filtering candidates less than mu...
-      times = times :+ s"""{"content":"Filtering less-than-mu disks...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
       val ncandidates = candidates.count()
       var time2: Long = System.currentTimeMillis()
       val timeD: Double = (time2 - time1) / 1000.0
+      // Filtering candidates less than mu...
       time1 = System.currentTimeMillis()
+      times = times :+ s"""{"content":"Filtering less-than-mu disks...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
       val filteredCandidates =  candidates.filter(row => row.getList(3).size() >= MU)
         .map(d => (d.getLong(0), d.getDouble(1), d.getDouble(2), d.getList[Integer](3).toString))
-      // Filtering redundant candidates
-      times = times :+ s"""{"content":"Filtering redundants...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
-      val maximal = filteredCandidates
         .index(RTreeType, "candidatesRT", Array("_2", "_3"))
-      val result = maximal.rdd
-        .mapPartitionsWithIndex { (index, partition) =>
+      // Filtering redundant candidates
+      times = times :+ s"""{"content":"Getting maximals inside...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
+      val maximalInside = filteredCandidates
+        .rdd
+        .mapPartitions { partition =>
           val transactions = partition
             .map { disk =>
               disk._4
@@ -118,8 +118,36 @@ object PFlock {
           val itemsets = fpMax.runAlgorithm(transactions, 1)
           itemsets.getItemsets(MU).asScala.toIterator
         }
-      times = times :+ s"""{"content":"Final counting...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
-      val nmaximal = result.count()
+      maximalInside.count()
+      times = times :+ s"""{"content":"Getting maximals in frame...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
+      val maximalFrame = filteredCandidates
+        .rdd
+        .mapPartitions { partition =>
+          val pList = partition.toList
+          val bbox = getBoundingBox(pList)
+          val transactions = pList
+            .map(disk => (disk._1, disk._2, disk._3, disk._4, !isInside(disk._2, disk._3, bbox, epsilon)))
+            .filter(_._5)
+            .map { disk =>
+              disk._4
+                .replace("[","")
+                .replace("]","")
+                .split(",")
+                .map{ id =>
+                  new Integer(id.trim)
+                }
+                .sorted
+                .toList
+                .asJava
+            }.asJava
+          val fpMax = new AlgoFPMax
+          val itemsets = fpMax.runAlgorithm(transactions, 1)
+          itemsets.getItemsets(MU).asScala.toIterator
+        }
+      maximalFrame.count()
+      times = times :+ s"""{"content":"Prunning duplicates...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
+      val maximal = maximalInside.union(maximalFrame).distinct()
+      val nmaximal = maximal.count()
       // Stopping timer...
       time2 = System.currentTimeMillis()
       val timeM: Double = (time2 - time1) / 1000.0
@@ -135,21 +163,7 @@ object PFlock {
       p1.dropIndexByName("p1RT")
       p2.dropIndexByName("p2RT")
       centers.dropIndexByName("centersRT")
-      maximal.dropIndexByName("candidatesRT")
-
-      /*val mbrs_file = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(s"/tmp/mbrs_${epsilon}_$PARTITIONS.csv")))
-      result.map { record =>
-          toWKT(record._5)
-        }
-        .toDF("MBR")
-        .groupBy("MBR")
-        .count()
-        .map { mbr =>
-          "\"%s\", %d\n".format(mbr.getAs[String]("MBR"), mbr.getAs[Int]("count"))
-        }
-        .collect()
-        .foreach(mbrs_file.write)
-      mbrs_file.close()*/
+      filteredCandidates.dropIndexByName("candidatesRT")
     }
     val filename = s"${conf.output()}_N${conf.dstart()}${conf.suffix()}-${conf.dend()}${conf.suffix()}_E${conf.estart()}-${conf.eend()}_C${conf.cores()}_M${conf.mu()}_P${conf.partitions()}_${conf.tag()}.csv"
     val writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename)))
@@ -188,13 +202,11 @@ object PFlock {
     ACenter(0, h1, k1)
   }
 
-  def isInBuffer(tuple: (Double, Double, Any), bbox: BBox, epsilon: Double): Boolean ={
-    val x = tuple._1
-    val y = tuple._2
-    x < bbox.maxx - epsilon &&
-      x > bbox.minx + epsilon &&
-      y < bbox.maxy - epsilon &&
-      y > bbox.miny + epsilon
+  def isInside(x: Double, y: Double, bbox: BBox, epsilon: Double): Boolean ={
+    x < (bbox.maxx - epsilon) &&
+      x > (bbox.minx + epsilon) &&
+      y < (bbox.maxy - epsilon) &&
+      y > (bbox.miny + epsilon)
   }
 
   def getBoundingBox(p: List[(Long, Double, Double, Any)]): BBox = {
@@ -254,7 +266,7 @@ object PFlock {
     val eend: ScallopOption[Double] = opt[Double](default = Some(10.0))
     val estep: ScallopOption[Double] = opt[Double](default = Some(10.0))
     val delta: ScallopOption[Double] = opt[Double](default = Some(0.01))
-    val partitions: ScallopOption[Int] = opt[Int](default = Some(8))
+    val partitions: ScallopOption[Int] = opt[Int](default = Some(32))
     val cores: ScallopOption[Int] = opt[Int](default = Some(4))
     val master: ScallopOption[String] = opt[String](default = Some("local[*]"))
     val logs: ScallopOption[String] = opt[String](default = Some("ERROR"))

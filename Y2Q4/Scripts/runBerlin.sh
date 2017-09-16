@@ -3,16 +3,16 @@
 CORES=$1
 PARTITIONS=$2
 MU=$3
-DSTART=160
-DEND=160
+DSTART=80
+DEND=80
 SUFFIX="K"
-ESTART=100.0
+ESTART=50.0
 EEND=100.0
 OUTPUT="Berlin"
 TS=`date +%s`
-echo "Running in $CORES cores and $PARTITIONS partitions..."
+echo "Running in $CORES cores and $PARTITIONS partitions.  Setting mu = $MU ..."
 spark-submit ~/PhD/Y2Q4/PFlock/target/scala-2.11/pflock_2.11-1.0.jar \
---prefix /home/acald013/Datasets/Berlin/B \
+--prefix /home/acald013/Datasets/Berlin/EPSG3068/B \
 --suffix $SUFFIX \
 --master spark://169.235.27.138:7077 \
 --mu $MU \
@@ -24,7 +24,7 @@ spark-submit ~/PhD/Y2Q4/PFlock/target/scala-2.11/pflock_2.11-1.0.jar \
 --estep 10 \
 --dstart $DSTART \
 --dend $DEND \
---dstep 50 \
+--dstep 20 \
 --dirlogs ~/Spark/Logs \
 --output $OUTPUT
 # --master spark://169.235.27.134:7077 local[*] dblab-rack11=169.235.27.134 dblab-rack15=169.235.27.138
