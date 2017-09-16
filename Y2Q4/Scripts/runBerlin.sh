@@ -1,18 +1,21 @@
 #!/bin/bash
 
 CORES=$1
-TS=`date +%s`
 PARTITIONS=$2
-DSTART=160
-DEND=160
+MU=$3
+DSTART=80
+DEND=80
 SUFFIX="K"
 ESTART=50.0
 EEND=100.0
 OUTPUT="Berlin"
-echo "Running in $CORES cores and $PARTITIONS partitions..."
-spark-submit --files=$SPARK_HOME/conf/metrics.properties ~/PhD/Y2Q4/PFlock/target/scala-2.11/pflock_2.11-1.0.jar \
---prefix /home/acald013/Datasets/Berlin/B \
---master spark://169.235.27.134:7077 \
+TS=`date +%s`
+echo "Running in $CORES cores and $PARTITIONS partitions.  Setting mu = $MU ..."
+spark-submit ~/PhD/Y2Q4/PFlock/target/scala-2.11/pflock_2.11-1.0.jar \
+--prefix /home/acald013/Datasets/Berlin/EPSG3068/B \
+--suffix $SUFFIX \
+--master spark://169.235.27.138:7077 \
+--mu $MU \
 --cores $CORES \
 --partitions $PARTITIONS \
 --tag $TS \
@@ -21,10 +24,11 @@ spark-submit --files=$SPARK_HOME/conf/metrics.properties ~/PhD/Y2Q4/PFlock/targe
 --estep 10 \
 --dstart $DSTART \
 --dend $DEND \
---dstep 50 \
+--dstep 20 \
 --dirlogs ~/Spark/Logs \
 --output $OUTPUT
-#--master spark://169.235.27.134:7077 local[*]\
+# --master spark://169.235.27.134:7077 local[*] dblab-rack11=169.235.27.134 dblab-rack15=169.235.27.138
+# --files=$SPARK_HOME/conf/metrics.properties
 #TS2=`date +%s`
 #DELAY=printf %.2f $(echo "($TS2-$TS1)/60" | bc -l)
 #echo "Done at ... ${DELAY}s"

@@ -18,15 +18,14 @@
  */
 
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.net.URL;
 import java.util.*;
 import java.util.Map.Entry;
 
+import ca.pfv.spmf.algorithms.frequentpatterns.lcm.AlgoLCMFreq;
+import ca.pfv.spmf.algorithms.frequentpatterns.lcm.Dataset;
+import ca.pfv.spmf.algorithms.frequentpatterns.lcm.MainTestLCMFreq_saveToMemory;
 import ca.pfv.spmf.patterns.itemset_array_integers_with_count.Itemset;
 import ca.pfv.spmf.patterns.itemset_array_integers_with_count.Itemsets;
 import ca.pfv.spmf.tools.MemoryLogger;
@@ -711,5 +710,42 @@ public class AlgoFPMax {
 	 */
 	public int getDatabaseSize() {
 		return transactionCount;
+	}
+
+	public static void main(String [] arg) throws IOException{
+        int transactionCount = 0;
+		String input = fileToPath("contextPasquier99.txt");
+        BufferedReader reader = new BufferedReader(new FileReader(input));
+        String line;
+        // for each line (transaction) until the end of file
+        List<List<Integer>> transactions = new ArrayList<>();
+        while( ((line = reader.readLine())!= null)){
+            // split the line into items
+            String[] lineSplited = line.split(" ");
+            // for each item
+            List<Integer> transaction = new ArrayList<>();
+            for(String itemString : lineSplited){
+                // increase the support count of the item
+                Integer item = Integer.parseInt(itemString);
+                transaction.add(item);
+            }
+            // increase the transaction count
+            transactions.add(transaction);
+            transactionCount++;
+        }
+		int minsup = 2;
+		Dataset ts = new Dataset(input);
+
+		// Applying the algorithm
+		AlgoFPMax fpMax = new AlgoFPMax();
+		itemsets = fpMax.runAlgorithm(transactions, minsup);
+		fpMax.printStats();
+
+		itemsets.printItemsets();
+	}
+
+	public static String fileToPath(String filename) throws UnsupportedEncodingException {
+		URL url = MainTestLCMFreq_saveToMemory.class.getResource(filename);
+		return java.net.URLDecoder.decode(url.getPath(),"UTF-8");
 	}
 }

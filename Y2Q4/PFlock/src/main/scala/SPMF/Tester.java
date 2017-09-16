@@ -1,24 +1,29 @@
 package SPMF;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
-/* This file is copyright (c) 2012-2014 Alan Souza
-* 
-* This file is part of the SPMF DATA MINING SOFTWARE
-* (http://www.philippe-fournier-viger.com/spmf).
-* 
-* SPMF is free software: you can redistribute it and/or modify it under the
-* terms of the GNU General Public License as published by the Free Software
-* Foundation, either version 3 of the License, or (at your option) any later
-* version.
-* SPMF is distributed in the hope that it will be useful, but WITHOUT ANY
-* WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
-* A PARTICULAR PURPOSE. See the GNU General Public License for more details.
-* You should have received a copy of the GNU General Public License along with
-* SPMF. If not, see <http://www.gnu.org/licenses/>.
-*/
+        /* This file is copyright (c) 2012-2014 Alan Souza
+         *
+         * This file is part of the SPMF DATA MINING SOFTWARE
+         * (http://www.philippe-fournier-viger.com/spmf).
+         *
+         * SPMF is free software: you can redistribute it and/or modify it under the
+         * terms of the GNU General Public License as published by the Free Software
+         * Foundation, either version 3 of the License, or (at your option) any later
+         * version.
+         * SPMF is distributed in the hope that it will be useful, but WITHOUT ANY
+         * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+         * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+         * You should have received a copy of the GNU General Public License along with
+         * SPMF. If not, see <http://www.gnu.org/licenses/>.
+         */
 
 /**
  * Example of how to use LCM algorithm from the source code.
@@ -75,27 +80,27 @@ public class Tester {
         t7.add(8);
         t7.add(9);
         Collections.sort(t7);
-        ArrayList<Integer> t8 = new ArrayList<>();
+        List<Integer> t8 = new ArrayList<>();
         t8.add(6);
         t8.add(1);
         t8.add(2);
         Collections.sort(t8);
-        ArrayList<Integer> t9 = new ArrayList<>();
+        List<Integer> t9 = new ArrayList<>();
         t9.add(4);
         t9.add(5);
         t9.add(6);
         Collections.sort(t9);
-        ArrayList<Integer> t10 = new ArrayList<>();
+        List<Integer> t10 = new ArrayList<>();
         t10.add(8);
         t10.add(2);
         t10.add(5);
         Collections.sort(t10);
-        ArrayList<Integer> t11 = new ArrayList<>();
+        List<Integer> t11 = new ArrayList<>();
         t11.add(9);
         t11.add(2);
         t11.add(1);
         Collections.sort(t11);
-        ArrayList<Integer> t12 = new ArrayList<>();
+        List<Integer> t12 = new ArrayList<>();
         t12.add(1);
         t12.add(2);
         t12.add(4);
@@ -103,7 +108,7 @@ public class Tester {
         t12.add(9);
         Collections.sort(t12);
 
-        ArrayList<ArrayList<Integer>> ts = new ArrayList<>();
+        List<List<Integer>> ts = new ArrayList<>();
         ts.add(t1);
         ts.add(t2);
         ts.add(t3);
@@ -117,15 +122,45 @@ public class Tester {
         ts.add(t11);
         ts.add(t12);
         AlgoFPMax fpMax = new AlgoFPMax();
-        //SPMF.Itemsets itemsets = fpMax.runAlgorithm(ts, 2);
-        //fpMax.printStats();
+        SPMF.Itemsets itemsets = fpMax.runAlgorithm(ts, 1);
+        fpMax.printStats();
 
-        //itemsets.printItemsets();
+        itemsets.printItemsets();
 
+        int transactionCount = 0;
+        String input = fileToPath("input.txt");
+        BufferedReader reader = new BufferedReader(new FileReader(input));
+        String line;
+        // for each line (transaction) until the end of file
+        List<List<Integer>> transactions = new ArrayList<>();
+        while (((line = reader.readLine()) != null)) {
+            // split the line into items
+            String[] lineSplited = line.split(",");
+            // for each item
+            List<Integer> transaction = new ArrayList<>();
+            for (String itemString : lineSplited) {
+                // increase the support count of the item
+                Integer item = Integer.parseInt(itemString);
+                transaction.add(item);
+            }
+            // increase the transaction count
+            transactions.add(transaction);
+            transactionCount++;
+        }
+        int minsup = 1;
+
+        // Applying the algorithm
+        AlgoFPMax fpMax2 = new AlgoFPMax();
+        itemsets = fpMax2.runAlgorithm(transactions, minsup);
+        ArrayList<ArrayList<Integer>> maximal = itemsets.getItemsets(3);
+        fpMax2.printStats();
+
+        itemsets.printItemsets();
+        System.out.println(maximal.size());
     }
 
-//	public static String fileToPath(String filename) throws UnsupportedEncodingException{
-//		URL url = SPMF.Tester.class.getResource(filename);
-//		 return java.net.URLDecoder.decode(url.getPath(),"UTF-8");
-//	}
+    public static String fileToPath(String filename) throws UnsupportedEncodingException{
+        URL url = Tester.class.getResource(filename);
+        return java.net.URLDecoder.decode(url.getPath(),"UTF-8");
+    }
 }

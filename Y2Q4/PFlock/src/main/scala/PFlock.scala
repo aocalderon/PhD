@@ -1,18 +1,16 @@
 import java.io.{BufferedWriter, FileOutputStream, OutputStreamWriter}
 
+import SPMF.AlgoFPMax
 import org.apache.spark.Partitioner
-import org.apache.spark.rdd.{PairRDDFunctions, RDD}
+import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.Row
 import org.apache.spark.sql.catalyst.ScalaReflection
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.simba.SimbaSession
 import org.apache.spark.sql.simba.index.RTreeType
 import org.apache.spark.sql.types.StructType
-
-import scala.collection.JavaConverters._
-import SPMF.AlgoFPMax
 import org.rogach.scallop._
-
+import scala.collection.JavaConverters._
 
 /**
   * Created by and on 5/4/17.
@@ -32,89 +30,125 @@ object PFlock {
     // Setting parameters...
     val POINT_SCHEMA = ScalaReflection.schemaFor[APoint].dataType.asInstanceOf[StructType]
     // Starting a session...
+    times = times :+ s"""{"content":"Setting paramaters...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
     val simba = SimbaSession
       .builder()
       .master(MASTER)
       .appName("PFlock")
       .config("simba.index.partitions", s"${conf.partitions()}")
       .config("spark.cores.max", s"${conf.cores()}")
-      .config("spark.eventLog.enabled","true")
-      .config("spark.eventLog.dir", s"file://${conf.dirlogs()}")
+      //.config("spark.eventLog.enabled","true")
+      //.config("spark.eventLog.dir", s"file://${conf.dirlogs()}")
       .getOrCreate()
-    println(s"Running ${simba.sparkContext.applicationId} on ${conf.cores()} cores and ${conf.partitions()} partitions...")
-    println("%10.10s %10.10s %10.10s %10.10s %10.10s %10.10s %10.10s %10.10s %10.10s %10.10s %15.15s"
-      .format("Tag","Epsilon","Dataset","TimeD","TimeM","TotalTime","NCandidates","NMaximal","Cores", "Partitions","Timestamp"))
-    times = times :+ s"""{"content":"Setting paramaters...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
-
     simba.sparkContext.setLogLevel(conf.logs())
     // Calling implicits...
     import simba.implicits._
     import simba.simbaImplicits._
-    //import scala.collection.JavaConverters._
     var output = List.empty[String]
+    println(s"Running ${simba.sparkContext.applicationId} on ${conf.cores()} cores and ${conf.partitions()} partitions...")
+    println("%10.10s %10.10s %10.10s %10.10s %10.10s %10.10s %10.10s %10.10s %10.10s %10.10s %15.15s"
+      .format("Tag","Epsilon","Dataset","TimeD","TimeM","TotalTime","NCandidates","NMaximal","Cores", "Partitions","Timestamp"))
     // Looping with different datasets and epsilon values...
     for (dataset <- conf.dstart() to conf.dend() by conf.dstep();
          epsilon <- conf.estart() to conf.eend() by conf.estep()) {
       val filename = s"${conf.prefix()}$dataset${conf.suffix()}.csv"
       val tag = filename.substring(filename.lastIndexOf("/") + 1).split("\\.")(0).substring(1)
       // Reading data...
+      times = times :+ s"""{"content":"Reading data...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
       val points = simba.read
         .option("header", "false")
         .schema(POINT_SCHEMA)
         .csv(filename)
         .as[APoint]
       // Starting timer...
-      times = times :+ s"""{"content":"Reading data...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
+      times = times :+ s"""{"content":"Indexing points...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
       var time1: Long = System.currentTimeMillis()
       // Indexing points...
       val p1 = points.toDF("id1", "x1", "y1")
       p1.index(RTreeType, "p1RT", Array("x1", "y1"))
       val p2 = points.toDF("id2", "x2", "y2")
       p2.index(RTreeType, "p2RT", Array("x2", "y2"))
-      times = times :+ s"""{"content":"Indexing points...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
       // Self-joining to find pairs of points close enough (< epsilon)...
-      val pairsRDD = p1.distanceJoin(p2, Array("x1", "y1"), Array("x2", "y2"), epsilon).rdd
       times = times :+ s"""{"content":"Finding pairs (Self-join)...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
+      val pairsRDD = p1.distanceJoin(p2, Array("x1", "y1"), Array("x2", "y2"), epsilon).rdd
       // Calculating disk's centers coordinates...
+      times = times :+ s"""{"content":"Computing disks...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
       val centers = findDisks(pairsRDD, epsilon)
         .distinct()
         .toDS()
         .index(RTreeType, "centersRT", Array("x", "y"))
         .withColumn("id", monotonically_increasing_id())
         .as[ACenter]
-      times = times :+ s"""{"content":"Computing disks...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
-      centers.cache()
-      times = times :+ s"""{"content":"Caching...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
       val PARTITIONS: Int = centers.rdd.getNumPartitions
       val MU: Int = conf.mu()
       // Grouping objects enclosed by candidates disks...
-      val disksAndPoints = centers
+      times = times :+ s"""{"content":"Mapping disks and points...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
+      val candidates = centers
         .distanceJoin(p1, Array("x", "y"), Array("x1", "y1"), (epsilon / 2) + conf.delta())
         .groupBy("id", "x", "y")
         .agg(collect_list("id1").alias("IDs"))
-      times = times :+ s"""{"content":"Maping disks and points...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
-      // Filtering candidates less than mu...
-      val ncandidates = disksAndPoints.count()
-      val candidatesPair =  disksAndPoints.filter(row => row.getList(3).size() >= MU)
-        .rdd
-        .map(d => (d.getLong(0), (d.getDouble(1), d.getDouble(2), d.getList[Integer](3))))
-      times = times :+ s"""{"content":"Filtering less-than-mu disks...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
+      val ncandidates = candidates.count()
       var time2: Long = System.currentTimeMillis()
       val timeD: Double = (time2 - time1) / 1000.0
+      // Filtering candidates less than mu...
       time1 = System.currentTimeMillis()
+      times = times :+ s"""{"content":"Filtering less-than-mu disks...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
+      val filteredCandidates =  candidates.filter(row => row.getList(3).size() >= MU)
+        .map(d => (d.getLong(0), d.getDouble(1), d.getDouble(2), d.getList[Integer](3).toString))
+        .index(RTreeType, "candidatesRT", Array("_2", "_3"))
       // Filtering redundant candidates
-      val candidates = new PairRDDFunctions(candidatesPair)
-      val c = candidates.partitionBy(new CustomPartitioner(numParts = PARTITIONS))
-        .mapPartitions{ partition =>
-          val transactions = partition.toList.map(disk => disk._2._3).asJava
+      times = times :+ s"""{"content":"Getting maximals inside...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
+      val maximalInside = filteredCandidates
+        .rdd
+        .mapPartitions { partition =>
+          val transactions = partition
+            .map { disk =>
+              disk._4
+                .replace("[","")
+                .replace("]","")
+                .split(",")
+                .map{ id =>
+                  new Integer(id.trim)
+                }
+                .sorted
+                .toList
+                .asJava
+            }.toList.asJava
           val fpMax = new AlgoFPMax
           val itemsets = fpMax.runAlgorithm(transactions, 1)
           itemsets.getItemsets(MU).asScala.toIterator
         }
-      times = times :+ s"""{"content":"Filtering redundants...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
-      times = times :+ s"""{"content":"Final counting...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
+      maximalInside.count()
+      times = times :+ s"""{"content":"Getting maximals in frame...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
+      val maximalFrame = filteredCandidates
+        .rdd
+        .mapPartitions { partition =>
+          val pList = partition.toList
+          val bbox = getBoundingBox(pList)
+          val transactions = pList
+            .map(disk => (disk._1, disk._2, disk._3, disk._4, !isInside(disk._2, disk._3, bbox, epsilon)))
+            .filter(_._5)
+            .map { disk =>
+              disk._4
+                .replace("[","")
+                .replace("]","")
+                .split(",")
+                .map{ id =>
+                  new Integer(id.trim)
+                }
+                .sorted
+                .toList
+                .asJava
+            }.asJava
+          val fpMax = new AlgoFPMax
+          val itemsets = fpMax.runAlgorithm(transactions, 1)
+          itemsets.getItemsets(MU).asScala.toIterator
+        }
+      maximalFrame.count()
+      times = times :+ s"""{"content":"Prunning duplicates...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
+      val maximal = maximalInside.union(maximalFrame).distinct()
+      val nmaximal = maximal.count()
       // Stopping timer...
-      val nmaximal = c.count()
       time2 = System.currentTimeMillis()
       val timeM: Double = (time2 - time1) / 1000.0
       val time: Double = BigDecimal(timeD + timeM).setScale(3, BigDecimal.RoundingMode.HALF_DOWN).toDouble
@@ -125,20 +159,22 @@ object PFlock {
         .format("PFlock",epsilon,tag,timeD,timeM,time,ncandidates,nmaximal,conf.cores(),PARTITIONS,org.joda.time.DateTime.now.toLocalTime))
 
       // Dropping indices
+      times = times :+ s"""{"content":"Dropping indices...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
       p1.dropIndexByName("p1RT")
       p2.dropIndexByName("p2RT")
-      times = times :+ s"""{"content":"Dropping indices...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
+      centers.dropIndexByName("centersRT")
+      filteredCandidates.dropIndexByName("candidatesRT")
     }
-    val filename = s"${conf.output()}_N${conf.dstart()}${conf.suffix()}-${conf.dend()}${conf.suffix()}_E${conf.estart()}-${conf.eend()}_C${conf.cores()}_${conf.tag()}.csv"
+    val filename = s"${conf.output()}_N${conf.dstart()}${conf.suffix()}-${conf.dend()}${conf.suffix()}_E${conf.estart()}-${conf.eend()}_C${conf.cores()}_M${conf.mu()}_P${conf.partitions()}_${conf.tag()}.csv"
     val writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename)))
     output.foreach(writer.write)
     writer.close()
-    simba.close()
-    times = times :+ s"""{"content":"Closing app...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"}"""
     val jsonname = s"${conf.dirlogs()}/${simba.sparkContext.applicationId}.json"
     val json = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(jsonname)))
     times.foreach(json.write)
     json.close()
+    times = times :+ s"""{"content":"Closing app...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"}"""
+    simba.close()
   }
 
   def findDisks(pairsRDD: RDD[Row], epsilon: Double): RDD[ACenter] = {
@@ -166,36 +202,45 @@ object PFlock {
     ACenter(0, h1, k1)
   }
 
-  def isInBuffer(tuple: (Double, Double, Any), bbox: BBox, epsilon: Double): Boolean ={
-    val x = tuple._1
-    val y = tuple._2
-    x < bbox.maxx - epsilon &&
-      x > bbox.minx + epsilon &&
-      y < bbox.maxy - epsilon &&
-      y > bbox.miny + epsilon
+  def isInside(x: Double, y: Double, bbox: BBox, epsilon: Double): Boolean ={
+    x < (bbox.maxx - epsilon) &&
+      x > (bbox.minx + epsilon) &&
+      y < (bbox.maxy - epsilon) &&
+      y > (bbox.miny + epsilon)
   }
 
-  def getBoundingBox(p: List[(Long, (Double, Double, Any))]): BBox = {
+  def getBoundingBox(p: List[(Long, Double, Double, Any)]): BBox = {
     var minx: Double = Double.MaxValue
     var miny: Double = Double.MaxValue
     var maxx: Double = Double.MinValue
     var maxy: Double = Double.MinValue
     p.foreach{r =>
-      if(r._2._1 < minx){
-        minx = r._2._1
+      if(r._2 < minx){
+        minx = r._2
       }
-      if (r._2._1 > maxx){
-        maxx = r._2._1
+      if (r._2 > maxx){
+        maxx = r._2
       }
-      if(r._2._2 < miny){
-        miny = r._2._2
+      if(r._3 < miny){
+        miny = r._3
       }
-      if(r._2._2 > maxy){
-        maxy = r._2._2
+      if(r._3 > maxy){
+        maxy = r._3
       }
     }
     BBox(minx, miny, maxx, maxy)
   }
+
+  def toWKT(bbox: BBox): String = "POLYGON (( %f %f, %f %f, %f %f, %f %f, %f %f ))"
+    .format(
+      bbox.minx, bbox.maxy,
+      bbox.maxx, bbox.maxy,
+      bbox.maxx, bbox.miny,
+      bbox.minx, bbox.miny,
+      bbox.minx, bbox.maxy
+    )
+
+  def toWKT(x: Double, y: Double): String = "POINT (%f %f)".format(x, y)
 
   case class APoint(id: Int, x: Double, y: Double)
 
@@ -213,7 +258,7 @@ object PFlock {
   }
 
   class Conf(arguments: Seq[String]) extends ScallopConf(arguments) {
-    val mu: ScallopOption[Int] = opt[Int](default = Some(3))
+    val mu: ScallopOption[Int] = opt[Int](default = Some(5))
     val dstart: ScallopOption[Int] = opt[Int](default = Some(10))
     val dend: ScallopOption[Int] = opt[Int](default = Some(10))
     val dstep: ScallopOption[Int] = opt[Int](default = Some(10))
@@ -227,7 +272,7 @@ object PFlock {
     val logs: ScallopOption[String] = opt[String](default = Some("ERROR"))
     val output: ScallopOption[String] = opt[String](default = Some("output"))
     val prefix: ScallopOption[String] = opt[String](default = Some("/opt/Datasets/Berlin/B"))
-    val suffix: ScallopOption[String] = opt[String](default = Some("K"))
+    val suffix: ScallopOption[String] = opt[String](default = Some("K_3068"))
     val dirlogs: ScallopOption[String] = opt[String](default = Some("/opt/Spark/Logs"))
     val tag: ScallopOption[String] = opt[String](default = Some(""))
 
