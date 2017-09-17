@@ -1,0 +1,105 @@
+---
+title: "Speedup and Scaleup Analysis"
+author: "Andres Calderon"
+date: '`r Sys.Date()`'
+output:
+  html_document: default
+  pdf_document: default
+---
+
+[//]: # ( Speedup )
+
+#### Speedup for Berlin dataset.
+
+We used the dataset built with SUMO using the Berlin network.  The size of the dataset is around 80K trajectories.  For speedup, a single timeslot was used with 80000 points.  Four nodes were available, 7 cores each.
+
+```{r SpeedupSetup, include=FALSE}
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(ggplot2, data.table, foreach, sqldf)
+
+PHD_HOME = Sys.getenv(c("PHD_HOME"))
+PATH = "Y2Q4/Scripts/Speedup/"
+filename ="Berlin_N80K-80K_E50.0-100.0"
+files = system(paste0("ls ",PHD_HOME,PATH,filename,"_C*.csv"), intern = T)
+data = data.frame()
+foreach(f = files) %do% {
+  data = rbind(data, read.csv(f, header = F))
+}
+data = data[, c(2, 3, 6, 9)]
+names(data) = c("Epsilon", "Dataset", "Time", "Cores")
+data = sqldf("SELECT Epsilon, Dataset, Cores, AVG(Time) AS Time FROM data GROUP BY 1, 2, 3")
+data$Cores = factor(data$Cores)
+
+data = data[data$Epsilon > 50, ]
+```
+
+```{r SpeedupPlot, echo=FALSE, fig.width=10.5, fig.height=7.5, fig.align='center'}
+temp_title = paste("(radius of disk in mts) in Berlin dataset.")
+title = substitute(paste("Speedup by ", epsilon) ~ temp_title, list(temp_title = temp_title))
+g = ggplot(data=data, aes(x=factor(Epsilon), y=Time, fill=Cores)) +
+  geom_bar(stat="identity", position=position_dodge(width = 0.75),width = 0.75) +
+  labs(title=title, y="Time(s)", x=expression(paste(epsilon,"(mts)")))
+plot(g)
+```
+
+#### Speedup on a Single Node.
+
+```{r SpeedupSingleNodeSetup, include=FALSE}
+PATH = "Y2Q4/Scripts/SpeedupSingleNode/"
+filename ="Berlin_N80K-80K_E50.0-100.0"
+files = system(paste0("ls ",PHD_HOME,PATH,filename,"_C*.csv"), intern = T)
+data = data.frame()
+for(i in 1:length(files)){
+  data = rbind(data, read.csv(files[i], header = F))
+}
+data = data[, c(2, 3, 6, 9)]
+names(data) = c("Epsilon", "Dataset", "Time", "Cores")
+data = sqldf("SELECT Epsilon, Dataset, Cores, AVG(Time) AS Time FROM data GROUP BY 1, 2, 3")
+data$Cores = factor(data$Cores)
+
+data = data[data$Epsilon > 50, ]
+```
+
+```{r SpeedupSingleNodePlot, echo=FALSE, fig.width=10.5, fig.height=7.5, fig.align='center'}
+temp_title = paste("(radius of disk in mts) in Berlin dataset.")
+title = substitute(paste("Speedup by ", epsilon) ~ temp_title, list(temp_title = temp_title))
+g = ggplot(data=data, aes(x=factor(Epsilon), y=Time, fill=Cores)) +
+  geom_bar(stat="identity", position=position_dodge(width = 0.75),width = 0.75) +
+  labs(title=title, y="Time(s)", x=expression(paste(epsilon,"(mts)")))
+plot(g)
+```
+
+[//]: # ( Scaleup )
+
+#### Scaleup for Berlin dataset.
+Similar dataset was used to run scaleup analysis.  The 80K points were divided on four samples.  First one collected 1/4 of the data, second one 1/2, third one collected 3/4 and finally the last one kept the full content. The small sample was run using just one node (seven cores). The next sample used 2 nodes (14 cores).  Similarly, the third sample run over 3 nodes (21 cores) and, finally, the full dataset run over the four available nodes. 
+
+```{r ScaleupSetup, include=FALSE}
+PATH = "Y2Q4/Results/Scaleup2/"
+filename ="Berlin_N50K-150K_E10.0-100.0"
+
+files = system(paste0("ls ",PHD_HOME,PATH,filename,"_C*.csv"), intern = T)
+data = data.frame()
+foreach(f = files) %do% {
+  data = rbind(data, read.csv(f, header = F))
+}
+data = data[, c(2, 3, 5, 6, 7)]
+names(data) = c("Epsilon", "Dataset", "TimeA", "TimeB", "Cores")
+data$Time = data$TimeA + data$TimeB
+data = sqldf("SELECT Epsilon, Dataset, Cores, AVG(Time) AS Time FROM data GROUP BY 1, 2, 3")
+data05 = sqldf("SELECT Epsilon, Dataset, Cores, Time FROM data WHERE Dataset LIKE '50K' AND Cores = 5")
+data10 = sqldf("SELECT Epsilon, Dataset, Cores, Time FROM data WHERE Dataset LIKE '100K' AND Cores = 10")
+data15 = sqldf("SELECT Epsilon, Dataset, Cores, Time FROM data WHERE Dataset LIKE '150K' AND Cores = 15")
+data = rbind(data05, data10, data15)
+data$Cores = factor(data$Cores)
+data = data[data$Epsilon > 10, ]
+```
+
+```{r ScaleupPlot, echo=FALSE, fig.width=10.5, fig.height=7.5, fig.align='center'}
+temp_title = paste("(radius of disk in mts) in Berlin dataset.")
+title = substitute(paste("Scaleup by ", epsilon) ~ temp_title, list(temp_title = temp_title))
+g = ggplot(data=data, aes(x=factor(Epsilon), y=Time, fill=Cores)) +
+  geom_bar(stat="identity", position=position_dodge(width = 0.75),width = 0.75) +
+  labs(title=title, x=expression(paste(epsilon,"(mts)")))
+plot(g)
+```
