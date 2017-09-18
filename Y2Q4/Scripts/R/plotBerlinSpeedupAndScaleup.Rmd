@@ -75,8 +75,8 @@ plot(g)
 Similar dataset was used to run scaleup analysis.  The 80K points were divided on four samples.  First one collected 1/4 of the data, second one 1/2, third one collected 3/4 and finally the last one kept the full content. The small sample was run using just one node (seven cores). The next sample used 2 nodes (14 cores).  Similarly, the third sample run over 3 nodes (21 cores) and, finally, the full dataset run over the four available nodes. 
 
 ```{r ScaleupSetup, include=FALSE}
-PATH = "Y2Q4/Scripts/Scaleup/temp/"
-filename ="Berlin_N40K-80K_E50.0-100.0"
+PATH = "Y2Q4/Scripts/Scaleup/"
+filename ="Berlin_N20K-80K_E50.0-100.0"
 
 files = system(paste0("ls ",PHD_HOME,PATH,filename,"_C*.csv"), intern = T)
 data = data.frame()
@@ -85,10 +85,11 @@ foreach(f = files) %do% {
 }
 data = data[, c(2, 3, 6, 9)]
 names(data) = c("Epsilon", "Dataset", "Time", "Cores")
+data20 = sqldf("SELECT Epsilon, Dataset, Cores, Time FROM data WHERE Dataset LIKE '20K' AND Cores = 7")
 data40 = sqldf("SELECT Epsilon, Dataset, Cores, Time FROM data WHERE Dataset LIKE '40K' AND Cores = 14")
 data60 = sqldf("SELECT Epsilon, Dataset, Cores, Time FROM data WHERE Dataset LIKE '60K' AND Cores = 21")
 data80 = sqldf("SELECT Epsilon, Dataset, Cores, Time FROM data WHERE Dataset LIKE '80K' AND Cores = 28")
-data = rbind(data40, data60, data80)
+data = rbind(data20, data40, data60, data80)
 data = sqldf("SELECT Epsilon, Dataset, Cores, AVG(Time) AS Time FROM data GROUP BY 1, 2, 3")
 data$Cores = factor(data$Cores)
 data = data[data$Epsilon > 50, ]
