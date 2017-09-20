@@ -14,7 +14,7 @@ echo "Running in $CORES cores and $PARTITIONS partitions.  Setting mu = $MU ..."
 spark-submit ~/PhD/Y2Q4/PFlock/target/scala-2.11/pflock_2.11-1.0.jar \
 --prefix /home/acald013/Datasets/Berlin/EPSG3068/B \
 --suffix $SUFFIX \
---master spark://169.235.27.138:7077 \
+--master local[$CORES] \
 --mu $MU \
 --cores $CORES \
 --partitions $PARTITIONS \
