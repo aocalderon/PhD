@@ -1,635 +1,306 @@
-acald013@dblab-rack15: stopping org.apache.spark.deploy.worker.Worker
-stopping org.apache.spark.deploy.master.Master
+acald013@dblab-rack15: no org.apache.spark.deploy.worker.Worker to stop
+no org.apache.spark.deploy.master.Master to stop
 starting org.apache.spark.deploy.master.Master, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.master.Master-1-dblab-rack15.out
-acald013@dblab-rack15: starting org.apache.spark.deploy.worker.Worker, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.worker.Worker-1-dblab-rack15.out
-Running in 7 cores and 1024 partitions.  Setting mu = 40 ...
-Using Spark's default log4j profile: org/apache/spark/log4j-defaults.properties
-17/09/17 18:32:54 INFO SparkContext: Running Spark version 2.1.0
-17/09/17 18:32:55 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
-17/09/17 18:32:55 INFO SecurityManager: Changing view acls to: acald013
-17/09/17 18:32:55 INFO SecurityManager: Changing modify acls to: acald013
-17/09/17 18:32:55 INFO SecurityManager: Changing view acls groups to: 
-17/09/17 18:32:55 INFO SecurityManager: Changing modify acls groups to: 
-17/09/17 18:32:55 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(acald013); groups with view permissions: Set(); users  with modify permissions: Set(acald013); groups with modify permissions: Set()
-17/09/17 18:32:55 INFO Utils: Successfully started service 'sparkDriver' on port 33850.
-17/09/17 18:32:55 INFO SparkEnv: Registering MapOutputTracker
-17/09/17 18:32:55 INFO SparkEnv: Registering BlockManagerMaster
-17/09/17 18:32:55 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
-17/09/17 18:32:55 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
-17/09/17 18:32:55 INFO DiskBlockManager: Created local directory at /tmp/blockmgr-9840d50f-65f2-417c-afdd-961e50d98ea8
-17/09/17 18:32:56 INFO MemoryStore: MemoryStore started with capacity 6.2 GB
-17/09/17 18:32:56 INFO SparkEnv: Registering OutputCommitCoordinator
-17/09/17 18:32:56 INFO Utils: Successfully started service 'SparkUI' on port 4040.
-17/09/17 18:32:56 INFO SparkUI: Bound SparkUI to 0.0.0.0, and started at http://169.235.27.138:4040
-17/09/17 18:32:56 INFO SparkContext: Added JAR file:/home/acald013/PhD/Y2Q4/PFlock/target/scala-2.11/pflock_2.11-1.0.jar at spark://169.235.27.138:33850/jars/pflock_2.11-1.0.jar with timestamp 1505698376588
-17/09/17 18:32:56 INFO StandaloneAppClient$ClientEndpoint: Connecting to master spark://169.235.27.138:7077...
-17/09/17 18:32:56 INFO TransportClientFactory: Successfully created connection to /169.235.27.138:7077 after 47 ms (0 ms spent in bootstraps)
-17/09/17 18:32:56 INFO StandaloneSchedulerBackend: Connected to Spark cluster with app ID app-20170917183256-0000
-17/09/17 18:32:57 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 36310.
-17/09/17 18:32:57 INFO NettyBlockTransferService: Server created on 169.235.27.138:36310
-17/09/17 18:32:57 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
-17/09/17 18:32:57 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 169.235.27.138, 36310, None)
-17/09/17 18:32:57 INFO BlockManagerMasterEndpoint: Registering block manager 169.235.27.138:36310 with 6.2 GB RAM, BlockManagerId(driver, 169.235.27.138, 36310, None)
-17/09/17 18:32:57 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 169.235.27.138, 36310, None)
-17/09/17 18:32:57 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 169.235.27.138, 36310, None)
-17/09/17 18:32:57 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20170917183256-0000/0 on worker-20170917183250-169.235.27.138-37221 (169.235.27.138:37221) with 7 cores
-17/09/17 18:32:57 INFO StandaloneSchedulerBackend: Granted executor ID app-20170917183256-0000/0 on hostPort 169.235.27.138:37221 with 7 cores, 12.0 GB RAM
-17/09/17 18:32:57 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20170917183256-0000/0 is now RUNNING
-17/09/17 18:32:57 INFO EventLoggingListener: Logging events to file:///home/acald013/Logs/app-20170917183256-0000
-17/09/17 18:32:57 INFO StandaloneSchedulerBackend: SchedulerBackend is ready for scheduling beginning after reached minRegisteredResourcesRatio: 0.0
-17/09/17 18:32:57 INFO SharedState: Warehouse path is 'file:/home/acald013/PhD/Y2Q4/Scripts/Scaleup/spark-warehouse/'.
-Running app-20170917183256-0000 on 7 cores and 1024 partitions...
-       Tag    Epsilon    Dataset      TimeD      TimeM  TotalTime NCandidate   NMaximal      Cores Partitions       Timestamp
-    PFlock       50.0        20K     88.778     43.591    132.369      88619        172          7       1024    18:35:11.397
-    PFlock       60.0        20K     82.057     43.543    125.600      99323        187          7       1024    18:37:17.166
-    PFlock       70.0        20K     80.608     45.630    126.238     111013        225          7       1024    18:39:23.498
-    PFlock       80.0        20K     80.320     48.332    128.652     122981        248          7       1024    18:41:32.235
-    PFlock       90.0        20K     85.130     55.850    140.980     136227        382          7       1024    18:43:53.302
-    PFlock      100.0        20K     81.131     62.227    143.358     150543        617          7       1024    18:46:16.750
-Done!!!
-Running in 7 cores and 1024 partitions.  Setting mu = 40 ...
-Using Spark's default log4j profile: org/apache/spark/log4j-defaults.properties
-17/09/17 18:46:21 INFO SparkContext: Running Spark version 2.1.0
-17/09/17 18:46:22 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
-17/09/17 18:46:22 INFO SecurityManager: Changing view acls to: acald013
-17/09/17 18:46:22 INFO SecurityManager: Changing modify acls to: acald013
-17/09/17 18:46:22 INFO SecurityManager: Changing view acls groups to: 
-17/09/17 18:46:22 INFO SecurityManager: Changing modify acls groups to: 
-17/09/17 18:46:22 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(acald013); groups with view permissions: Set(); users  with modify permissions: Set(acald013); groups with modify permissions: Set()
-17/09/17 18:46:23 INFO Utils: Successfully started service 'sparkDriver' on port 42112.
-17/09/17 18:46:23 INFO SparkEnv: Registering MapOutputTracker
-17/09/17 18:46:23 INFO SparkEnv: Registering BlockManagerMaster
-17/09/17 18:46:23 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
-17/09/17 18:46:23 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
-17/09/17 18:46:23 INFO DiskBlockManager: Created local directory at /tmp/blockmgr-b78539f7-8c36-4e2b-a2d2-a828d2498eef
-17/09/17 18:46:23 INFO MemoryStore: MemoryStore started with capacity 6.2 GB
-17/09/17 18:46:23 INFO SparkEnv: Registering OutputCommitCoordinator
-17/09/17 18:46:24 INFO Utils: Successfully started service 'SparkUI' on port 4040.
-17/09/17 18:46:24 INFO SparkUI: Bound SparkUI to 0.0.0.0, and started at http://169.235.27.138:4040
-17/09/17 18:46:24 INFO SparkContext: Added JAR file:/home/acald013/PhD/Y2Q4/PFlock/target/scala-2.11/pflock_2.11-1.0.jar at spark://169.235.27.138:42112/jars/pflock_2.11-1.0.jar with timestamp 1505699184181
-17/09/17 18:46:24 INFO StandaloneAppClient$ClientEndpoint: Connecting to master spark://169.235.27.138:7077...
-17/09/17 18:46:24 INFO TransportClientFactory: Successfully created connection to /169.235.27.138:7077 after 47 ms (0 ms spent in bootstraps)
-17/09/17 18:46:24 INFO StandaloneSchedulerBackend: Connected to Spark cluster with app ID app-20170917184624-0001
-17/09/17 18:46:24 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20170917184624-0001/0 on worker-20170917183250-169.235.27.138-37221 (169.235.27.138:37221) with 7 cores
-17/09/17 18:46:24 INFO StandaloneSchedulerBackend: Granted executor ID app-20170917184624-0001/0 on hostPort 169.235.27.138:37221 with 7 cores, 12.0 GB RAM
-17/09/17 18:46:24 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 39565.
-17/09/17 18:46:24 INFO NettyBlockTransferService: Server created on 169.235.27.138:39565
-17/09/17 18:46:24 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
-17/09/17 18:46:24 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 169.235.27.138, 39565, None)
-17/09/17 18:46:24 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20170917184624-0001/0 is now RUNNING
-17/09/17 18:46:24 INFO BlockManagerMasterEndpoint: Registering block manager 169.235.27.138:39565 with 6.2 GB RAM, BlockManagerId(driver, 169.235.27.138, 39565, None)
-17/09/17 18:46:24 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 169.235.27.138, 39565, None)
-17/09/17 18:46:24 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 169.235.27.138, 39565, None)
-17/09/17 18:46:25 INFO EventLoggingListener: Logging events to file:///home/acald013/Logs/app-20170917184624-0001
-17/09/17 18:46:25 INFO StandaloneSchedulerBackend: SchedulerBackend is ready for scheduling beginning after reached minRegisteredResourcesRatio: 0.0
-17/09/17 18:46:25 INFO SharedState: Warehouse path is 'file:/home/acald013/PhD/Y2Q4/Scripts/Scaleup/spark-warehouse/'.
-Running app-20170917184624-0001 on 7 cores and 1024 partitions...
-       Tag    Epsilon    Dataset      TimeD      TimeM  TotalTime NCandidate   NMaximal      Cores Partitions       Timestamp
-    PFlock       50.0        20K     91.384     42.340    133.724      88619        172          7       1024    18:48:40.299
-    PFlock       60.0        20K     74.466     42.319    116.785      99323        187          7       1024    18:50:37.251
-    PFlock       70.0        20K     84.624     44.781    129.405     111013        225          7       1024    18:52:46.751
-    PFlock       80.0        20K     77.110     47.280    124.390     122981        248          7       1024    18:54:51.228
-    PFlock       90.0        20K     80.221     52.818    133.039     136227        382          7       1024    18:57:04.363
-    PFlock      100.0        20K     79.309     61.848    141.157     150543        617          7       1024    18:59:25.609
-Done!!!
-Running in 7 cores and 1024 partitions.  Setting mu = 40 ...
-Using Spark's default log4j profile: org/apache/spark/log4j-defaults.properties
-17/09/17 18:59:31 INFO SparkContext: Running Spark version 2.1.0
-17/09/17 18:59:31 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
-17/09/17 18:59:31 INFO SecurityManager: Changing view acls to: acald013
-17/09/17 18:59:31 INFO SecurityManager: Changing modify acls to: acald013
-17/09/17 18:59:31 INFO SecurityManager: Changing view acls groups to: 
-17/09/17 18:59:31 INFO SecurityManager: Changing modify acls groups to: 
-17/09/17 18:59:31 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(acald013); groups with view permissions: Set(); users  with modify permissions: Set(acald013); groups with modify permissions: Set()
-17/09/17 18:59:32 INFO Utils: Successfully started service 'sparkDriver' on port 46191.
-17/09/17 18:59:32 INFO SparkEnv: Registering MapOutputTracker
-17/09/17 18:59:32 INFO SparkEnv: Registering BlockManagerMaster
-17/09/17 18:59:32 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
-17/09/17 18:59:32 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
-17/09/17 18:59:32 INFO DiskBlockManager: Created local directory at /tmp/blockmgr-f70d06b3-3809-4393-8cd8-a69c9e743844
-17/09/17 18:59:32 INFO MemoryStore: MemoryStore started with capacity 6.2 GB
-17/09/17 18:59:32 INFO SparkEnv: Registering OutputCommitCoordinator
-17/09/17 18:59:32 INFO Utils: Successfully started service 'SparkUI' on port 4040.
-17/09/17 18:59:32 INFO SparkUI: Bound SparkUI to 0.0.0.0, and started at http://169.235.27.138:4040
-17/09/17 18:59:32 INFO SparkContext: Added JAR file:/home/acald013/PhD/Y2Q4/PFlock/target/scala-2.11/pflock_2.11-1.0.jar at spark://169.235.27.138:46191/jars/pflock_2.11-1.0.jar with timestamp 1505699972984
-17/09/17 18:59:33 INFO StandaloneAppClient$ClientEndpoint: Connecting to master spark://169.235.27.138:7077...
-17/09/17 18:59:33 INFO TransportClientFactory: Successfully created connection to /169.235.27.138:7077 after 45 ms (0 ms spent in bootstraps)
-17/09/17 18:59:33 INFO StandaloneSchedulerBackend: Connected to Spark cluster with app ID app-20170917185933-0002
-17/09/17 18:59:33 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20170917185933-0002/0 on worker-20170917183250-169.235.27.138-37221 (169.235.27.138:37221) with 7 cores
-17/09/17 18:59:33 INFO StandaloneSchedulerBackend: Granted executor ID app-20170917185933-0002/0 on hostPort 169.235.27.138:37221 with 7 cores, 12.0 GB RAM
-17/09/17 18:59:33 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 43458.
-17/09/17 18:59:33 INFO NettyBlockTransferService: Server created on 169.235.27.138:43458
-17/09/17 18:59:33 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
-17/09/17 18:59:33 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 169.235.27.138, 43458, None)
-17/09/17 18:59:33 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20170917185933-0002/0 is now RUNNING
-17/09/17 18:59:33 INFO BlockManagerMasterEndpoint: Registering block manager 169.235.27.138:43458 with 6.2 GB RAM, BlockManagerId(driver, 169.235.27.138, 43458, None)
-17/09/17 18:59:33 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 169.235.27.138, 43458, None)
-17/09/17 18:59:33 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 169.235.27.138, 43458, None)
-17/09/17 18:59:34 INFO EventLoggingListener: Logging events to file:///home/acald013/Logs/app-20170917185933-0002
-17/09/17 18:59:34 INFO StandaloneSchedulerBackend: SchedulerBackend is ready for scheduling beginning after reached minRegisteredResourcesRatio: 0.0
-17/09/17 18:59:34 INFO SharedState: Warehouse path is 'file:/home/acald013/PhD/Y2Q4/Scripts/Scaleup/spark-warehouse/'.
-Running app-20170917185933-0002 on 7 cores and 1024 partitions...
-       Tag    Epsilon    Dataset      TimeD      TimeM  TotalTime NCandidate   NMaximal      Cores Partitions       Timestamp
-    PFlock       50.0        20K     90.956     43.578    134.534      88619        172          7       1024    19:01:50.003
-    PFlock       60.0        20K     74.290     43.074    117.364      99323        187          7       1024    19:03:47.529
-    PFlock       70.0        20K     82.370     46.802    129.172     111013        225          7       1024    19:05:56.796
-    PFlock       80.0        20K     79.861     48.428    128.289     122981        248          7       1024    19:08:05.177
-    PFlock       90.0        20K     82.319     53.043    135.362     136227        382          7       1024    19:10:20.627
-    PFlock      100.0        20K     81.608     62.429    144.037     150543        617          7       1024    19:12:44.753
-Done!!!
-acald013@dblab-rack15: stopping org.apache.spark.deploy.worker.Worker
-stopping org.apache.spark.deploy.master.Master
-starting org.apache.spark.deploy.master.Master, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.master.Master-1-dblab-rack15.out
-acald013@dblab-rack14: starting org.apache.spark.deploy.worker.Worker, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.worker.Worker-1-dblab-rack14.cs.ucr.edu.out
-acald013@dblab-rack15: starting org.apache.spark.deploy.worker.Worker, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.worker.Worker-1-dblab-rack15.out
-Running in 14 cores and 1024 partitions.  Setting mu = 40 ...
-Using Spark's default log4j profile: org/apache/spark/log4j-defaults.properties
-17/09/17 19:12:55 INFO SparkContext: Running Spark version 2.1.0
-17/09/17 19:12:55 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
-17/09/17 19:12:56 INFO SecurityManager: Changing view acls to: acald013
-17/09/17 19:12:56 INFO SecurityManager: Changing modify acls to: acald013
-17/09/17 19:12:56 INFO SecurityManager: Changing view acls groups to: 
-17/09/17 19:12:56 INFO SecurityManager: Changing modify acls groups to: 
-17/09/17 19:12:56 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(acald013); groups with view permissions: Set(); users  with modify permissions: Set(acald013); groups with modify permissions: Set()
-17/09/17 19:12:56 INFO Utils: Successfully started service 'sparkDriver' on port 45385.
-17/09/17 19:12:56 INFO SparkEnv: Registering MapOutputTracker
-17/09/17 19:12:56 INFO SparkEnv: Registering BlockManagerMaster
-17/09/17 19:12:56 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
-17/09/17 19:12:56 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
-17/09/17 19:12:56 INFO DiskBlockManager: Created local directory at /tmp/blockmgr-410a3309-aa69-4b81-91ee-ce3e4be0a9eb
-17/09/17 19:12:56 INFO MemoryStore: MemoryStore started with capacity 6.2 GB
-17/09/17 19:12:56 INFO SparkEnv: Registering OutputCommitCoordinator
-17/09/17 19:12:57 INFO Utils: Successfully started service 'SparkUI' on port 4040.
-17/09/17 19:12:57 INFO SparkUI: Bound SparkUI to 0.0.0.0, and started at http://169.235.27.138:4040
-17/09/17 19:12:57 INFO SparkContext: Added JAR file:/home/acald013/PhD/Y2Q4/PFlock/target/scala-2.11/pflock_2.11-1.0.jar at spark://169.235.27.138:45385/jars/pflock_2.11-1.0.jar with timestamp 1505700777265
-17/09/17 19:12:57 INFO StandaloneAppClient$ClientEndpoint: Connecting to master spark://169.235.27.138:7077...
-17/09/17 19:12:57 INFO TransportClientFactory: Successfully created connection to /169.235.27.138:7077 after 46 ms (0 ms spent in bootstraps)
-17/09/17 19:12:57 INFO StandaloneSchedulerBackend: Connected to Spark cluster with app ID app-20170917191257-0000
-17/09/17 19:12:57 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 40126.
-17/09/17 19:12:57 INFO NettyBlockTransferService: Server created on 169.235.27.138:40126
-17/09/17 19:12:57 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
-17/09/17 19:12:57 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 169.235.27.138, 40126, None)
-17/09/17 19:12:57 INFO BlockManagerMasterEndpoint: Registering block manager 169.235.27.138:40126 with 6.2 GB RAM, BlockManagerId(driver, 169.235.27.138, 40126, None)
-17/09/17 19:12:57 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 169.235.27.138, 40126, None)
-17/09/17 19:12:57 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 169.235.27.138, 40126, None)
-17/09/17 19:12:57 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20170917191257-0000/0 on worker-20170917191251-169.235.27.138-43872 (169.235.27.138:43872) with 7 cores
-17/09/17 19:12:57 INFO StandaloneSchedulerBackend: Granted executor ID app-20170917191257-0000/0 on hostPort 169.235.27.138:43872 with 7 cores, 12.0 GB RAM
-17/09/17 19:12:57 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20170917191257-0000/1 on worker-20170917191249-169.235.27.137-39466 (169.235.27.137:39466) with 7 cores
-17/09/17 19:12:57 INFO StandaloneSchedulerBackend: Granted executor ID app-20170917191257-0000/1 on hostPort 169.235.27.137:39466 with 7 cores, 12.0 GB RAM
-17/09/17 19:12:57 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20170917191257-0000/1 is now RUNNING
-17/09/17 19:12:57 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20170917191257-0000/0 is now RUNNING
-17/09/17 19:12:58 INFO EventLoggingListener: Logging events to file:///home/acald013/Logs/app-20170917191257-0000
-17/09/17 19:12:58 INFO StandaloneSchedulerBackend: SchedulerBackend is ready for scheduling beginning after reached minRegisteredResourcesRatio: 0.0
-17/09/17 19:12:58 INFO SharedState: Warehouse path is 'file:/home/acald013/PhD/Y2Q4/Scripts/Scaleup/spark-warehouse/'.
-Running app-20170917191257-0000 on 14 cores and 1024 partitions...
-       Tag    Epsilon    Dataset      TimeD      TimeM  TotalTime NCandidate   NMaximal      Cores Partitions       Timestamp
-17/09/17 19:13:22 ERROR LiveListenerBus: Dropping SparkListenerEvent because no remaining room in event queue. This likely means one of the SparkListeners is too slow and cannot keep up with the rate at which tasks are being started by the scheduler.
-    PFlock       50.0        40K     66.716     34.231    100.947     260494        952         14       1024    19:14:40.675
-    PFlock       60.0        40K     64.039     36.599    100.638     299480       1239         14       1024    19:16:21.474
-    PFlock       70.0        40K     55.123     35.660     90.783     340518       1287         14       1024    19:17:52.357
-    PFlock       80.0        40K     55.896     40.713     96.609     383160       1273         14       1024    19:19:29.057
-    PFlock       90.0        40K     58.466     39.849     98.315     429422       1328         14       1024    19:21:07.462
-    PFlock      100.0        40K     60.669     41.803    102.472     481096       1500         14       1024    19:22:50.028
-Done!!!
-Running in 14 cores and 1024 partitions.  Setting mu = 40 ...
-Using Spark's default log4j profile: org/apache/spark/log4j-defaults.properties
-17/09/17 19:22:55 INFO SparkContext: Running Spark version 2.1.0
-17/09/17 19:22:55 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
-17/09/17 19:22:55 INFO SecurityManager: Changing view acls to: acald013
-17/09/17 19:22:55 INFO SecurityManager: Changing modify acls to: acald013
-17/09/17 19:22:55 INFO SecurityManager: Changing view acls groups to: 
-17/09/17 19:22:55 INFO SecurityManager: Changing modify acls groups to: 
-17/09/17 19:22:55 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(acald013); groups with view permissions: Set(); users  with modify permissions: Set(acald013); groups with modify permissions: Set()
-17/09/17 19:22:56 INFO Utils: Successfully started service 'sparkDriver' on port 39600.
-17/09/17 19:22:56 INFO SparkEnv: Registering MapOutputTracker
-17/09/17 19:22:56 INFO SparkEnv: Registering BlockManagerMaster
-17/09/17 19:22:56 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
-17/09/17 19:22:56 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
-17/09/17 19:22:56 INFO DiskBlockManager: Created local directory at /tmp/blockmgr-c61e650a-f6c0-43ef-aa63-48407bc992ab
-17/09/17 19:22:56 INFO MemoryStore: MemoryStore started with capacity 6.2 GB
-17/09/17 19:22:56 INFO SparkEnv: Registering OutputCommitCoordinator
-17/09/17 19:22:56 INFO Utils: Successfully started service 'SparkUI' on port 4040.
-17/09/17 19:22:56 INFO SparkUI: Bound SparkUI to 0.0.0.0, and started at http://169.235.27.138:4040
-17/09/17 19:22:56 INFO SparkContext: Added JAR file:/home/acald013/PhD/Y2Q4/PFlock/target/scala-2.11/pflock_2.11-1.0.jar at spark://169.235.27.138:39600/jars/pflock_2.11-1.0.jar with timestamp 1505701376909
-17/09/17 19:22:57 INFO StandaloneAppClient$ClientEndpoint: Connecting to master spark://169.235.27.138:7077...
-17/09/17 19:22:57 INFO TransportClientFactory: Successfully created connection to /169.235.27.138:7077 after 50 ms (0 ms spent in bootstraps)
-17/09/17 19:22:57 INFO StandaloneSchedulerBackend: Connected to Spark cluster with app ID app-20170917192257-0001
-17/09/17 19:22:57 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20170917192257-0001/0 on worker-20170917191251-169.235.27.138-43872 (169.235.27.138:43872) with 7 cores
-17/09/17 19:22:57 INFO StandaloneSchedulerBackend: Granted executor ID app-20170917192257-0001/0 on hostPort 169.235.27.138:43872 with 7 cores, 12.0 GB RAM
-17/09/17 19:22:57 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20170917192257-0001/1 on worker-20170917191249-169.235.27.137-39466 (169.235.27.137:39466) with 7 cores
-17/09/17 19:22:57 INFO StandaloneSchedulerBackend: Granted executor ID app-20170917192257-0001/1 on hostPort 169.235.27.137:39466 with 7 cores, 12.0 GB RAM
-17/09/17 19:22:57 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 41440.
-17/09/17 19:22:57 INFO NettyBlockTransferService: Server created on 169.235.27.138:41440
-17/09/17 19:22:57 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
-17/09/17 19:22:57 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 169.235.27.138, 41440, None)
-17/09/17 19:22:57 INFO BlockManagerMasterEndpoint: Registering block manager 169.235.27.138:41440 with 6.2 GB RAM, BlockManagerId(driver, 169.235.27.138, 41440, None)
-17/09/17 19:22:57 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20170917192257-0001/0 is now RUNNING
-17/09/17 19:22:57 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20170917192257-0001/1 is now RUNNING
-17/09/17 19:22:57 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 169.235.27.138, 41440, None)
-17/09/17 19:22:57 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 169.235.27.138, 41440, None)
-17/09/17 19:22:58 INFO EventLoggingListener: Logging events to file:///home/acald013/Logs/app-20170917192257-0001
-17/09/17 19:22:58 INFO StandaloneSchedulerBackend: SchedulerBackend is ready for scheduling beginning after reached minRegisteredResourcesRatio: 0.0
-17/09/17 19:22:58 INFO SharedState: Warehouse path is 'file:/home/acald013/PhD/Y2Q4/Scripts/Scaleup/spark-warehouse/'.
-Running app-20170917192257-0001 on 14 cores and 1024 partitions...
-       Tag    Epsilon    Dataset      TimeD      TimeM  TotalTime NCandidate   NMaximal      Cores Partitions       Timestamp
-17/09/17 19:23:21 ERROR LiveListenerBus: Dropping SparkListenerEvent because no remaining room in event queue. This likely means one of the SparkListeners is too slow and cannot keep up with the rate at which tasks are being started by the scheduler.
-    PFlock       50.0        40K     65.450     34.645    100.095     260494        952         14       1024    19:24:39.511
-    PFlock       60.0        40K     57.890     42.688    100.578     299480       1239         14       1024    19:26:20.257
-    PFlock       70.0        40K     54.916     38.418     93.334     340518       1287         14       1024    19:27:53.688
-    PFlock       80.0        40K     57.260     40.671     97.931     383160       1273         14       1024    19:29:31.710
-    PFlock       90.0        40K     58.313     49.445    107.758     429422       1328         14       1024    19:31:19.560
-    PFlock      100.0        40K     62.952     43.781    106.733     481096       1500         14       1024    19:33:06.386
-Done!!!
-Running in 14 cores and 1024 partitions.  Setting mu = 40 ...
-Using Spark's default log4j profile: org/apache/spark/log4j-defaults.properties
-17/09/17 19:33:11 INFO SparkContext: Running Spark version 2.1.0
-17/09/17 19:33:11 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
-17/09/17 19:33:12 INFO SecurityManager: Changing view acls to: acald013
-17/09/17 19:33:12 INFO SecurityManager: Changing modify acls to: acald013
-17/09/17 19:33:12 INFO SecurityManager: Changing view acls groups to: 
-17/09/17 19:33:12 INFO SecurityManager: Changing modify acls groups to: 
-17/09/17 19:33:12 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(acald013); groups with view permissions: Set(); users  with modify permissions: Set(acald013); groups with modify permissions: Set()
-17/09/17 19:33:12 INFO Utils: Successfully started service 'sparkDriver' on port 37756.
-17/09/17 19:33:12 INFO SparkEnv: Registering MapOutputTracker
-17/09/17 19:33:12 INFO SparkEnv: Registering BlockManagerMaster
-17/09/17 19:33:12 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
-17/09/17 19:33:12 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
-17/09/17 19:33:12 INFO DiskBlockManager: Created local directory at /tmp/blockmgr-5e16c243-3b4e-4ecd-9ffe-3975bc5d57e2
-17/09/17 19:33:12 INFO MemoryStore: MemoryStore started with capacity 6.2 GB
-17/09/17 19:33:12 INFO SparkEnv: Registering OutputCommitCoordinator
-17/09/17 19:33:13 INFO Utils: Successfully started service 'SparkUI' on port 4040.
-17/09/17 19:33:13 INFO SparkUI: Bound SparkUI to 0.0.0.0, and started at http://169.235.27.138:4040
-17/09/17 19:33:13 INFO SparkContext: Added JAR file:/home/acald013/PhD/Y2Q4/PFlock/target/scala-2.11/pflock_2.11-1.0.jar at spark://169.235.27.138:37756/jars/pflock_2.11-1.0.jar with timestamp 1505701993175
-17/09/17 19:33:13 INFO StandaloneAppClient$ClientEndpoint: Connecting to master spark://169.235.27.138:7077...
-17/09/17 19:33:13 INFO TransportClientFactory: Successfully created connection to /169.235.27.138:7077 after 49 ms (0 ms spent in bootstraps)
-17/09/17 19:33:13 INFO StandaloneSchedulerBackend: Connected to Spark cluster with app ID app-20170917193313-0002
-17/09/17 19:33:13 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20170917193313-0002/0 on worker-20170917191251-169.235.27.138-43872 (169.235.27.138:43872) with 7 cores
-17/09/17 19:33:13 INFO StandaloneSchedulerBackend: Granted executor ID app-20170917193313-0002/0 on hostPort 169.235.27.138:43872 with 7 cores, 12.0 GB RAM
-17/09/17 19:33:13 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20170917193313-0002/1 on worker-20170917191249-169.235.27.137-39466 (169.235.27.137:39466) with 7 cores
-17/09/17 19:33:13 INFO StandaloneSchedulerBackend: Granted executor ID app-20170917193313-0002/1 on hostPort 169.235.27.137:39466 with 7 cores, 12.0 GB RAM
-17/09/17 19:33:13 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 39914.
-17/09/17 19:33:13 INFO NettyBlockTransferService: Server created on 169.235.27.138:39914
-17/09/17 19:33:13 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
-17/09/17 19:33:13 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 169.235.27.138, 39914, None)
-17/09/17 19:33:13 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20170917193313-0002/0 is now RUNNING
-17/09/17 19:33:13 INFO BlockManagerMasterEndpoint: Registering block manager 169.235.27.138:39914 with 6.2 GB RAM, BlockManagerId(driver, 169.235.27.138, 39914, None)
-17/09/17 19:33:13 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20170917193313-0002/1 is now RUNNING
-17/09/17 19:33:13 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 169.235.27.138, 39914, None)
-17/09/17 19:33:13 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 169.235.27.138, 39914, None)
-17/09/17 19:33:14 INFO EventLoggingListener: Logging events to file:///home/acald013/Logs/app-20170917193313-0002
-17/09/17 19:33:14 INFO StandaloneSchedulerBackend: SchedulerBackend is ready for scheduling beginning after reached minRegisteredResourcesRatio: 0.0
-17/09/17 19:33:14 INFO SharedState: Warehouse path is 'file:/home/acald013/PhD/Y2Q4/Scripts/Scaleup/spark-warehouse/'.
-Running app-20170917193313-0002 on 14 cores and 1024 partitions...
-       Tag    Epsilon    Dataset      TimeD      TimeM  TotalTime NCandidate   NMaximal      Cores Partitions       Timestamp
-17/09/17 19:33:38 ERROR LiveListenerBus: Dropping SparkListenerEvent because no remaining room in event queue. This likely means one of the SparkListeners is too slow and cannot keep up with the rate at which tasks are being started by the scheduler.
-    PFlock       50.0        40K     65.987     35.198    101.185     260494        952         14       1024    19:34:56.812
-    PFlock       60.0        40K     55.058     44.529     99.587     299480       1239         14       1024    19:36:36.562
-    PFlock       70.0        40K     54.880     36.803     91.683     340518       1287         14       1024    19:38:08.348
-    PFlock       80.0        40K     57.095     38.762     95.857     383160       1273         14       1024    19:39:44.300
-    PFlock       90.0        40K     59.521     43.355    102.876     429422       1328         14       1024    19:41:27.262
-    PFlock      100.0        40K     64.855     43.052    107.907     481096       1500         14       1024    19:43:15.265
-Done!!!
-acald013@dblab-rack14: stopping org.apache.spark.deploy.worker.Worker
-acald013@dblab-rack15: stopping org.apache.spark.deploy.worker.Worker
-stopping org.apache.spark.deploy.master.Master
-starting org.apache.spark.deploy.master.Master, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.master.Master-1-dblab-rack15.out
-acald013@dblab-rack12: starting org.apache.spark.deploy.worker.Worker, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.worker.Worker-1-dblab-rack12.out
-acald013@dblab-rack14: starting org.apache.spark.deploy.worker.Worker, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.worker.Worker-1-dblab-rack14.cs.ucr.edu.out
-acald013@dblab-rack15: starting org.apache.spark.deploy.worker.Worker, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.worker.Worker-1-dblab-rack15.out
-Running in 21 cores and 1024 partitions.  Setting mu = 40 ...
-Using Spark's default log4j profile: org/apache/spark/log4j-defaults.properties
-17/09/17 19:43:26 INFO SparkContext: Running Spark version 2.1.0
-17/09/17 19:43:26 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
-17/09/17 19:43:26 INFO SecurityManager: Changing view acls to: acald013
-17/09/17 19:43:26 INFO SecurityManager: Changing modify acls to: acald013
-17/09/17 19:43:26 INFO SecurityManager: Changing view acls groups to: 
-17/09/17 19:43:26 INFO SecurityManager: Changing modify acls groups to: 
-17/09/17 19:43:26 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(acald013); groups with view permissions: Set(); users  with modify permissions: Set(acald013); groups with modify permissions: Set()
-17/09/17 19:43:27 INFO Utils: Successfully started service 'sparkDriver' on port 43120.
-17/09/17 19:43:27 INFO SparkEnv: Registering MapOutputTracker
-17/09/17 19:43:27 INFO SparkEnv: Registering BlockManagerMaster
-17/09/17 19:43:27 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
-17/09/17 19:43:27 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
-17/09/17 19:43:27 INFO DiskBlockManager: Created local directory at /tmp/blockmgr-e5cf0d66-62bf-440d-9525-dac89fc948f6
-17/09/17 19:43:27 INFO MemoryStore: MemoryStore started with capacity 6.2 GB
-17/09/17 19:43:27 INFO SparkEnv: Registering OutputCommitCoordinator
-17/09/17 19:43:27 INFO Utils: Successfully started service 'SparkUI' on port 4040.
-17/09/17 19:43:27 INFO SparkUI: Bound SparkUI to 0.0.0.0, and started at http://169.235.27.138:4040
-17/09/17 19:43:28 INFO SparkContext: Added JAR file:/home/acald013/PhD/Y2Q4/PFlock/target/scala-2.11/pflock_2.11-1.0.jar at spark://169.235.27.138:43120/jars/pflock_2.11-1.0.jar with timestamp 1505702608007
-17/09/17 19:43:28 INFO StandaloneAppClient$ClientEndpoint: Connecting to master spark://169.235.27.138:7077...
-17/09/17 19:43:28 INFO TransportClientFactory: Successfully created connection to /169.235.27.138:7077 after 49 ms (0 ms spent in bootstraps)
-17/09/17 19:43:28 INFO StandaloneSchedulerBackend: Connected to Spark cluster with app ID app-20170917194328-0000
-17/09/17 19:43:28 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 34545.
-17/09/17 19:43:28 INFO NettyBlockTransferService: Server created on 169.235.27.138:34545
-17/09/17 19:43:28 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
-17/09/17 19:43:28 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 169.235.27.138, 34545, None)
-17/09/17 19:43:28 INFO BlockManagerMasterEndpoint: Registering block manager 169.235.27.138:34545 with 6.2 GB RAM, BlockManagerId(driver, 169.235.27.138, 34545, None)
-17/09/17 19:43:28 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 169.235.27.138, 34545, None)
-17/09/17 19:43:28 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 169.235.27.138, 34545, None)
-17/09/17 19:43:28 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20170917194328-0000/0 on worker-20170917194321-169.235.27.138-35049 (169.235.27.138:35049) with 7 cores
-17/09/17 19:43:28 INFO StandaloneSchedulerBackend: Granted executor ID app-20170917194328-0000/0 on hostPort 169.235.27.138:35049 with 7 cores, 12.0 GB RAM
-17/09/17 19:43:28 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20170917194328-0000/1 on worker-20170917194320-169.235.27.135-45720 (169.235.27.135:45720) with 7 cores
-17/09/17 19:43:28 INFO StandaloneSchedulerBackend: Granted executor ID app-20170917194328-0000/1 on hostPort 169.235.27.135:45720 with 7 cores, 12.0 GB RAM
-17/09/17 19:43:28 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20170917194328-0000/2 on worker-20170917194321-169.235.27.137-38288 (169.235.27.137:38288) with 7 cores
-17/09/17 19:43:28 INFO StandaloneSchedulerBackend: Granted executor ID app-20170917194328-0000/2 on hostPort 169.235.27.137:38288 with 7 cores, 12.0 GB RAM
-17/09/17 19:43:28 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20170917194328-0000/1 is now RUNNING
-17/09/17 19:43:28 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20170917194328-0000/2 is now RUNNING
-17/09/17 19:43:28 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20170917194328-0000/0 is now RUNNING
-17/09/17 19:43:29 INFO EventLoggingListener: Logging events to file:///home/acald013/Logs/app-20170917194328-0000
-17/09/17 19:43:29 INFO StandaloneSchedulerBackend: SchedulerBackend is ready for scheduling beginning after reached minRegisteredResourcesRatio: 0.0
-17/09/17 19:43:29 INFO SharedState: Warehouse path is 'file:/home/acald013/PhD/Y2Q4/Scripts/Scaleup/spark-warehouse/'.
-Running app-20170917194328-0000 on 21 cores and 1024 partitions...
-       Tag    Epsilon    Dataset      TimeD      TimeM  TotalTime NCandidate   NMaximal      Cores Partitions       Timestamp
-17/09/17 19:43:51 ERROR LiveListenerBus: Dropping SparkListenerEvent because no remaining room in event queue. This likely means one of the SparkListeners is too slow and cannot keep up with the rate at which tasks are being started by the scheduler.
-    PFlock       50.0        60K     59.417     30.922     90.339     418042       1106         21       1024    19:45:00.945
-    PFlock       60.0        60K     52.602     29.515     82.117     497100       1282         21       1024    19:46:23.230
-    PFlock       70.0        60K     47.689     31.209     78.898     580400       1364         21       1024    19:47:42.227
-    PFlock       80.0        60K     48.173     37.257     85.430     668720       1469         21       1024    19:49:07.749
-    PFlock       90.0        60K     51.060     38.062     89.122     765034       1791         21       1024    19:50:36.960
-    PFlock      100.0        60K     53.481     38.118     91.599     871886       1874         21       1024    19:52:08.655
-Done!!!
-Running in 21 cores and 1024 partitions.  Setting mu = 40 ...
-Using Spark's default log4j profile: org/apache/spark/log4j-defaults.properties
-17/09/17 19:52:14 INFO SparkContext: Running Spark version 2.1.0
-17/09/17 19:52:15 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
-17/09/17 19:52:15 INFO SecurityManager: Changing view acls to: acald013
-17/09/17 19:52:15 INFO SecurityManager: Changing modify acls to: acald013
-17/09/17 19:52:15 INFO SecurityManager: Changing view acls groups to: 
-17/09/17 19:52:15 INFO SecurityManager: Changing modify acls groups to: 
-17/09/17 19:52:15 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(acald013); groups with view permissions: Set(); users  with modify permissions: Set(acald013); groups with modify permissions: Set()
-17/09/17 19:52:15 INFO Utils: Successfully started service 'sparkDriver' on port 33991.
-17/09/17 19:52:15 INFO SparkEnv: Registering MapOutputTracker
-17/09/17 19:52:16 INFO SparkEnv: Registering BlockManagerMaster
-17/09/17 19:52:16 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
-17/09/17 19:52:16 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
-17/09/17 19:52:16 INFO DiskBlockManager: Created local directory at /tmp/blockmgr-dde06fe8-f0b6-4245-84e4-806e0cfa26d2
-17/09/17 19:52:16 INFO MemoryStore: MemoryStore started with capacity 6.2 GB
-17/09/17 19:52:16 INFO SparkEnv: Registering OutputCommitCoordinator
-17/09/17 19:52:16 INFO Utils: Successfully started service 'SparkUI' on port 4040.
-17/09/17 19:52:16 INFO SparkUI: Bound SparkUI to 0.0.0.0, and started at http://169.235.27.138:4040
-17/09/17 19:52:16 INFO SparkContext: Added JAR file:/home/acald013/PhD/Y2Q4/PFlock/target/scala-2.11/pflock_2.11-1.0.jar at spark://169.235.27.138:33991/jars/pflock_2.11-1.0.jar with timestamp 1505703136629
-17/09/17 19:52:16 INFO StandaloneAppClient$ClientEndpoint: Connecting to master spark://169.235.27.138:7077...
-17/09/17 19:52:16 INFO TransportClientFactory: Successfully created connection to /169.235.27.138:7077 after 50 ms (0 ms spent in bootstraps)
-17/09/17 19:52:16 INFO StandaloneSchedulerBackend: Connected to Spark cluster with app ID app-20170917195216-0001
-17/09/17 19:52:17 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20170917195216-0001/0 on worker-20170917194321-169.235.27.138-35049 (169.235.27.138:35049) with 7 cores
-17/09/17 19:52:17 INFO StandaloneSchedulerBackend: Granted executor ID app-20170917195216-0001/0 on hostPort 169.235.27.138:35049 with 7 cores, 12.0 GB RAM
-17/09/17 19:52:17 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20170917195216-0001/1 on worker-20170917194320-169.235.27.135-45720 (169.235.27.135:45720) with 7 cores
-17/09/17 19:52:17 INFO StandaloneSchedulerBackend: Granted executor ID app-20170917195216-0001/1 on hostPort 169.235.27.135:45720 with 7 cores, 12.0 GB RAM
-17/09/17 19:52:17 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20170917195216-0001/2 on worker-20170917194321-169.235.27.137-38288 (169.235.27.137:38288) with 7 cores
-17/09/17 19:52:17 INFO StandaloneSchedulerBackend: Granted executor ID app-20170917195216-0001/2 on hostPort 169.235.27.137:38288 with 7 cores, 12.0 GB RAM
-17/09/17 19:52:17 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 35742.
-17/09/17 19:52:17 INFO NettyBlockTransferService: Server created on 169.235.27.138:35742
-17/09/17 19:52:17 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
-17/09/17 19:52:17 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 169.235.27.138, 35742, None)
-17/09/17 19:52:17 INFO BlockManagerMasterEndpoint: Registering block manager 169.235.27.138:35742 with 6.2 GB RAM, BlockManagerId(driver, 169.235.27.138, 35742, None)
-17/09/17 19:52:17 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20170917195216-0001/1 is now RUNNING
-17/09/17 19:52:17 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20170917195216-0001/0 is now RUNNING
-17/09/17 19:52:17 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 169.235.27.138, 35742, None)
-17/09/17 19:52:17 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20170917195216-0001/2 is now RUNNING
-17/09/17 19:52:17 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 169.235.27.138, 35742, None)
-17/09/17 19:52:17 INFO EventLoggingListener: Logging events to file:///home/acald013/Logs/app-20170917195216-0001
-17/09/17 19:52:17 INFO StandaloneSchedulerBackend: SchedulerBackend is ready for scheduling beginning after reached minRegisteredResourcesRatio: 0.0
-17/09/17 19:52:17 INFO SharedState: Warehouse path is 'file:/home/acald013/PhD/Y2Q4/Scripts/Scaleup/spark-warehouse/'.
-Running app-20170917195216-0001 on 21 cores and 1024 partitions...
-       Tag    Epsilon    Dataset      TimeD      TimeM  TotalTime NCandidate   NMaximal      Cores Partitions       Timestamp
-17/09/17 19:52:41 ERROR LiveListenerBus: Dropping SparkListenerEvent because no remaining room in event queue. This likely means one of the SparkListeners is too slow and cannot keep up with the rate at which tasks are being started by the scheduler.
-    PFlock       50.0        60K     60.963     32.689     93.652     418042       1106         21       1024    19:53:52.805
-    PFlock       60.0        60K     49.317     33.784     83.101     497100       1282         21       1024    19:55:16.069
-    PFlock       70.0        60K     46.763     33.705     80.468     580400       1364         21       1024    19:56:36.639
-    PFlock       80.0        60K     48.240     34.499     82.739     668720       1469         21       1024    19:57:59.469
-    PFlock       90.0        60K     50.544     39.400     89.944     765034       1791         21       1024    19:59:29.566
-    PFlock      100.0        60K     62.321     42.654    104.975     871886       1874         21       1024    20:01:14.633
-Done!!!
-Running in 21 cores and 1024 partitions.  Setting mu = 40 ...
-Using Spark's default log4j profile: org/apache/spark/log4j-defaults.properties
-17/09/17 20:01:19 INFO SparkContext: Running Spark version 2.1.0
-17/09/17 20:01:20 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
-17/09/17 20:01:20 INFO SecurityManager: Changing view acls to: acald013
-17/09/17 20:01:20 INFO SecurityManager: Changing modify acls to: acald013
-17/09/17 20:01:20 INFO SecurityManager: Changing view acls groups to: 
-17/09/17 20:01:20 INFO SecurityManager: Changing modify acls groups to: 
-17/09/17 20:01:20 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(acald013); groups with view permissions: Set(); users  with modify permissions: Set(acald013); groups with modify permissions: Set()
-17/09/17 20:01:21 INFO Utils: Successfully started service 'sparkDriver' on port 37066.
-17/09/17 20:01:21 INFO SparkEnv: Registering MapOutputTracker
-17/09/17 20:01:21 INFO SparkEnv: Registering BlockManagerMaster
-17/09/17 20:01:21 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
-17/09/17 20:01:21 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
-17/09/17 20:01:21 INFO DiskBlockManager: Created local directory at /tmp/blockmgr-730daa64-d0d8-4027-8e58-d38c38ed1210
-17/09/17 20:01:21 INFO MemoryStore: MemoryStore started with capacity 6.2 GB
-17/09/17 20:01:21 INFO SparkEnv: Registering OutputCommitCoordinator
-17/09/17 20:01:21 INFO Utils: Successfully started service 'SparkUI' on port 4040.
-17/09/17 20:01:21 INFO SparkUI: Bound SparkUI to 0.0.0.0, and started at http://169.235.27.138:4040
-17/09/17 20:01:21 INFO SparkContext: Added JAR file:/home/acald013/PhD/Y2Q4/PFlock/target/scala-2.11/pflock_2.11-1.0.jar at spark://169.235.27.138:37066/jars/pflock_2.11-1.0.jar with timestamp 1505703681733
-17/09/17 20:01:21 INFO StandaloneAppClient$ClientEndpoint: Connecting to master spark://169.235.27.138:7077...
-17/09/17 20:01:21 INFO TransportClientFactory: Successfully created connection to /169.235.27.138:7077 after 48 ms (0 ms spent in bootstraps)
-17/09/17 20:01:22 INFO StandaloneSchedulerBackend: Connected to Spark cluster with app ID app-20170917200122-0002
-17/09/17 20:01:22 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20170917200122-0002/0 on worker-20170917194321-169.235.27.138-35049 (169.235.27.138:35049) with 7 cores
-17/09/17 20:01:22 INFO StandaloneSchedulerBackend: Granted executor ID app-20170917200122-0002/0 on hostPort 169.235.27.138:35049 with 7 cores, 12.0 GB RAM
-17/09/17 20:01:22 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20170917200122-0002/1 on worker-20170917194320-169.235.27.135-45720 (169.235.27.135:45720) with 7 cores
-17/09/17 20:01:22 INFO StandaloneSchedulerBackend: Granted executor ID app-20170917200122-0002/1 on hostPort 169.235.27.135:45720 with 7 cores, 12.0 GB RAM
-17/09/17 20:01:22 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20170917200122-0002/2 on worker-20170917194321-169.235.27.137-38288 (169.235.27.137:38288) with 7 cores
-17/09/17 20:01:22 INFO StandaloneSchedulerBackend: Granted executor ID app-20170917200122-0002/2 on hostPort 169.235.27.137:38288 with 7 cores, 12.0 GB RAM
-17/09/17 20:01:22 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 42660.
-17/09/17 20:01:22 INFO NettyBlockTransferService: Server created on 169.235.27.138:42660
-17/09/17 20:01:22 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
-17/09/17 20:01:22 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 169.235.27.138, 42660, None)
-17/09/17 20:01:22 INFO BlockManagerMasterEndpoint: Registering block manager 169.235.27.138:42660 with 6.2 GB RAM, BlockManagerId(driver, 169.235.27.138, 42660, None)
-17/09/17 20:01:22 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20170917200122-0002/1 is now RUNNING
-17/09/17 20:01:22 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20170917200122-0002/0 is now RUNNING
-17/09/17 20:01:22 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 169.235.27.138, 42660, None)
-17/09/17 20:01:22 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20170917200122-0002/2 is now RUNNING
-17/09/17 20:01:22 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 169.235.27.138, 42660, None)
-17/09/17 20:01:22 INFO EventLoggingListener: Logging events to file:///home/acald013/Logs/app-20170917200122-0002
-17/09/17 20:01:22 INFO StandaloneSchedulerBackend: SchedulerBackend is ready for scheduling beginning after reached minRegisteredResourcesRatio: 0.0
-17/09/17 20:01:22 INFO SharedState: Warehouse path is 'file:/home/acald013/PhD/Y2Q4/Scripts/Scaleup/spark-warehouse/'.
-Running app-20170917200122-0002 on 21 cores and 1024 partitions...
-       Tag    Epsilon    Dataset      TimeD      TimeM  TotalTime NCandidate   NMaximal      Cores Partitions       Timestamp
-17/09/17 20:01:46 ERROR LiveListenerBus: Dropping SparkListenerEvent because no remaining room in event queue. This likely means one of the SparkListeners is too slow and cannot keep up with the rate at which tasks are being started by the scheduler.
-    PFlock       50.0        60K     60.104     33.597     93.701     418042       1106         21       1024    20:02:57.876
-    PFlock       60.0        60K     50.348     31.870     82.218     497100       1282         21       1024    20:04:20.254
-    PFlock       70.0        60K     47.772     33.861     81.633     580400       1364         21       1024    20:05:41.987
-    PFlock       80.0        60K     50.631     36.760     87.391     668720       1469         21       1024    20:07:09.470
-    PFlock       90.0        60K     50.525     37.931     88.456     765034       1791         21       1024    20:08:38.018
-    PFlock      100.0        60K     55.878     37.507     93.385     871886       1874         21       1024    20:10:11.499
-17/09/17 20:10:12 ERROR LiveListenerBus: SparkListenerBus has already stopped! Dropping event SparkListenerExecutorMetricsUpdate(0,WrappedArray())
-Done!!!
-acald013@dblab-rack15: stopping org.apache.spark.deploy.worker.Worker
-acald013@dblab-rack12: stopping org.apache.spark.deploy.worker.Worker
-acald013@dblab-rack14: stopping org.apache.spark.deploy.worker.Worker
-stopping org.apache.spark.deploy.master.Master
-starting org.apache.spark.deploy.master.Master, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.master.Master-1-dblab-rack15.out
-acald013@dblab-rack12: starting org.apache.spark.deploy.worker.Worker, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.worker.Worker-1-dblab-rack12.out
-acald013@dblab-rack14: starting org.apache.spark.deploy.worker.Worker, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.worker.Worker-1-dblab-rack14.cs.ucr.edu.out
-acald013@dblab-rack15: starting org.apache.spark.deploy.worker.Worker, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.worker.Worker-1-dblab-rack15.out
 acald013@dblab-rack11: starting org.apache.spark.deploy.worker.Worker, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.worker.Worker-1-dblab-rack11.cs.ucr.edu.out
-Running in 28 cores and 1024 partitions.  Setting mu = 40 ...
+Running in 7 cores and 1024 partitions.  Setting mu = 40 ...
 Using Spark's default log4j profile: org/apache/spark/log4j-defaults.properties
-17/09/17 20:10:23 INFO SparkContext: Running Spark version 2.1.0
-17/09/17 20:10:23 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
-17/09/17 20:10:24 INFO SecurityManager: Changing view acls to: acald013
-17/09/17 20:10:24 INFO SecurityManager: Changing modify acls to: acald013
-17/09/17 20:10:24 INFO SecurityManager: Changing view acls groups to: 
-17/09/17 20:10:24 INFO SecurityManager: Changing modify acls groups to: 
-17/09/17 20:10:24 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(acald013); groups with view permissions: Set(); users  with modify permissions: Set(acald013); groups with modify permissions: Set()
-17/09/17 20:10:24 INFO Utils: Successfully started service 'sparkDriver' on port 37448.
-17/09/17 20:10:24 INFO SparkEnv: Registering MapOutputTracker
-17/09/17 20:10:24 INFO SparkEnv: Registering BlockManagerMaster
-17/09/17 20:10:24 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
-17/09/17 20:10:24 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
-17/09/17 20:10:24 INFO DiskBlockManager: Created local directory at /tmp/blockmgr-53c936fc-4d1b-41db-a162-1374bc403c5c
-17/09/17 20:10:24 INFO MemoryStore: MemoryStore started with capacity 6.2 GB
-17/09/17 20:10:24 INFO SparkEnv: Registering OutputCommitCoordinator
-17/09/17 20:10:25 INFO Utils: Successfully started service 'SparkUI' on port 4040.
-17/09/17 20:10:25 INFO SparkUI: Bound SparkUI to 0.0.0.0, and started at http://169.235.27.138:4040
-17/09/17 20:10:25 INFO SparkContext: Added JAR file:/home/acald013/PhD/Y2Q4/PFlock/target/scala-2.11/pflock_2.11-1.0.jar at spark://169.235.27.138:37448/jars/pflock_2.11-1.0.jar with timestamp 1505704225262
-17/09/17 20:10:25 INFO StandaloneAppClient$ClientEndpoint: Connecting to master spark://169.235.27.138:7077...
-17/09/17 20:10:25 INFO TransportClientFactory: Successfully created connection to /169.235.27.138:7077 after 47 ms (0 ms spent in bootstraps)
-17/09/17 20:10:25 INFO StandaloneSchedulerBackend: Connected to Spark cluster with app ID app-20170917201025-0000
-17/09/17 20:10:25 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 43099.
-17/09/17 20:10:25 INFO NettyBlockTransferService: Server created on 169.235.27.138:43099
-17/09/17 20:10:25 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
-17/09/17 20:10:25 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 169.235.27.138, 43099, None)
-17/09/17 20:10:25 INFO BlockManagerMasterEndpoint: Registering block manager 169.235.27.138:43099 with 6.2 GB RAM, BlockManagerId(driver, 169.235.27.138, 43099, None)
-17/09/17 20:10:25 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 169.235.27.138, 43099, None)
-17/09/17 20:10:25 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 169.235.27.138, 43099, None)
-17/09/17 20:10:25 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20170917201025-0000/0 on worker-20170917201019-169.235.27.138-44513 (169.235.27.138:44513) with 7 cores
-17/09/17 20:10:25 INFO StandaloneSchedulerBackend: Granted executor ID app-20170917201025-0000/0 on hostPort 169.235.27.138:44513 with 7 cores, 12.0 GB RAM
-17/09/17 20:10:25 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20170917201025-0000/1 on worker-20170917201017-169.235.27.134-37996 (169.235.27.134:37996) with 7 cores
-17/09/17 20:10:25 INFO StandaloneSchedulerBackend: Granted executor ID app-20170917201025-0000/1 on hostPort 169.235.27.134:37996 with 7 cores, 12.0 GB RAM
-17/09/17 20:10:25 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20170917201025-0000/2 on worker-20170917201017-169.235.27.137-43258 (169.235.27.137:43258) with 7 cores
-17/09/17 20:10:25 INFO StandaloneSchedulerBackend: Granted executor ID app-20170917201025-0000/2 on hostPort 169.235.27.137:43258 with 7 cores, 12.0 GB RAM
-17/09/17 20:10:25 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20170917201025-0000/3 on worker-20170917201017-169.235.27.135-33341 (169.235.27.135:33341) with 7 cores
-17/09/17 20:10:25 INFO StandaloneSchedulerBackend: Granted executor ID app-20170917201025-0000/3 on hostPort 169.235.27.135:33341 with 7 cores, 12.0 GB RAM
-17/09/17 20:10:25 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20170917201025-0000/3 is now RUNNING
-17/09/17 20:10:25 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20170917201025-0000/1 is now RUNNING
-17/09/17 20:10:25 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20170917201025-0000/2 is now RUNNING
-17/09/17 20:10:25 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20170917201025-0000/0 is now RUNNING
-17/09/17 20:10:26 INFO EventLoggingListener: Logging events to file:///home/acald013/Logs/app-20170917201025-0000
-17/09/17 20:10:26 INFO StandaloneSchedulerBackend: SchedulerBackend is ready for scheduling beginning after reached minRegisteredResourcesRatio: 0.0
-17/09/17 20:10:26 INFO SharedState: Warehouse path is 'file:/home/acald013/PhD/Y2Q4/Scripts/Scaleup/spark-warehouse/'.
-Running app-20170917201025-0000 on 28 cores and 1024 partitions...
+17/09/20 18:02:38 INFO SparkContext: Running Spark version 2.1.0
+17/09/20 18:02:38 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+17/09/20 18:02:38 INFO SecurityManager: Changing view acls to: acald013
+17/09/20 18:02:38 INFO SecurityManager: Changing modify acls to: acald013
+17/09/20 18:02:38 INFO SecurityManager: Changing view acls groups to: 
+17/09/20 18:02:38 INFO SecurityManager: Changing modify acls groups to: 
+17/09/20 18:02:38 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(acald013); groups with view permissions: Set(); users  with modify permissions: Set(acald013); groups with modify permissions: Set()
+17/09/20 18:02:39 INFO Utils: Successfully started service 'sparkDriver' on port 32787.
+17/09/20 18:02:39 INFO SparkEnv: Registering MapOutputTracker
+17/09/20 18:02:39 INFO SparkEnv: Registering BlockManagerMaster
+17/09/20 18:02:39 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+17/09/20 18:02:39 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
+17/09/20 18:02:39 INFO DiskBlockManager: Created local directory at /tmp/blockmgr-aa09c547-7ab0-49b5-88b0-68fb85780689
+17/09/20 18:02:39 INFO MemoryStore: MemoryStore started with capacity 6.2 GB
+17/09/20 18:02:39 INFO SparkEnv: Registering OutputCommitCoordinator
+17/09/20 18:02:39 INFO Utils: Successfully started service 'SparkUI' on port 4040.
+17/09/20 18:02:39 INFO SparkUI: Bound SparkUI to 0.0.0.0, and started at http://169.235.27.138:4040
+17/09/20 18:02:39 INFO SparkContext: Added JAR file:/home/acald013/PhD/Y2Q4/PFlock/target/scala-2.11/pflock_2.11-1.0.jar at spark://169.235.27.138:32787/jars/pflock_2.11-1.0.jar with timestamp 1505955759921
+17/09/20 18:02:40 INFO StandaloneAppClient$ClientEndpoint: Connecting to master spark://169.235.27.138:7077...
+17/09/20 18:02:40 INFO TransportClientFactory: Successfully created connection to /169.235.27.138:7077 after 47 ms (0 ms spent in bootstraps)
+17/09/20 18:02:40 INFO StandaloneSchedulerBackend: Connected to Spark cluster with app ID app-20170920180240-0000
+17/09/20 18:02:40 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 45722.
+17/09/20 18:02:40 INFO NettyBlockTransferService: Server created on 169.235.27.138:45722
+17/09/20 18:02:40 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
+17/09/20 18:02:40 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 169.235.27.138, 45722, None)
+17/09/20 18:02:40 INFO BlockManagerMasterEndpoint: Registering block manager 169.235.27.138:45722 with 6.2 GB RAM, BlockManagerId(driver, 169.235.27.138, 45722, None)
+17/09/20 18:02:40 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 169.235.27.138, 45722, None)
+17/09/20 18:02:40 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 169.235.27.138, 45722, None)
+17/09/20 18:02:40 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20170920180240-0000/0 on worker-20170920180234-169.235.27.134-46720 (169.235.27.134:46720) with 7 cores
+17/09/20 18:02:40 INFO StandaloneSchedulerBackend: Granted executor ID app-20170920180240-0000/0 on hostPort 169.235.27.134:46720 with 7 cores, 12.0 GB RAM
+17/09/20 18:02:40 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20170920180240-0000/0 is now RUNNING
+17/09/20 18:02:41 INFO EventLoggingListener: Logging events to file:///home/acald013/Logs/app-20170920180240-0000
+17/09/20 18:02:41 INFO StandaloneSchedulerBackend: SchedulerBackend is ready for scheduling beginning after reached minRegisteredResourcesRatio: 0.0
+17/09/20 18:02:41 INFO SharedState: Warehouse path is 'file:/home/acald013/PhD/Y2Q4/Scripts/Scaleup/spark-warehouse/'.
+Running app-20170920180240-0000 on 7 cores and 1024 partitions...
        Tag    Epsilon    Dataset      TimeD      TimeM  TotalTime NCandidate   NMaximal      Cores Partitions       Timestamp
-17/09/17 20:10:48 ERROR LiveListenerBus: Dropping SparkListenerEvent because no remaining room in event queue. This likely means one of the SparkListeners is too slow and cannot keep up with the rate at which tasks are being started by the scheduler.
-    PFlock       50.0        80K     57.409     29.752     87.161     575930       1131         28       1024    20:11:55.056
-    PFlock       60.0        80K     45.395     28.174     73.569     700950       1194         28       1024    20:13:08.790
-    PFlock       70.0        80K     44.158     30.830     74.988     833016       1474         28       1024    20:14:23.873
-    PFlock       80.0        80K     45.983     33.316     79.299     974432       1652         28       1024    20:15:43.266
-    PFlock       90.0        80K     51.829     37.751     89.580    1130136       2035         28       1024    20:17:12.936
-    PFlock      100.0        80K     51.081     40.417     91.498    1302882       2331         28       1024    20:18:44.524
+17/09/20 18:03:04 ERROR LiveListenerBus: Dropping SparkListenerEvent because no remaining room in event queue. This likely means one of the SparkListeners is too slow and cannot keep up with the rate at which tasks are being started by the scheduler.
+Exception in thread "main" java.lang.UnsupportedOperationException: empty collection
+	at org.apache.spark.rdd.RDD$$anonfun$first$1.apply(RDD.scala:1369)
+	at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:151)
+	at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:112)
+	at org.apache.spark.rdd.RDD.withScope(RDD.scala:362)
+	at org.apache.spark.rdd.RDD.first(RDD.scala:1366)
+	at org.apache.spark.sql.simba.index.RTreeIndexedRelation.<init>(RTreeIndexedRelation.scala:55)
+	at org.apache.spark.sql.simba.index.IndexedRelation$.apply(IndexedRelation.scala:41)
+	at org.apache.spark.sql.simba.IndexManager$$anonfun$createIndexQuery$1.apply(IndexManager.scala:201)
+	at org.apache.spark.sql.simba.IndexManager.writeLock(IndexManager.scala:64)
+	at org.apache.spark.sql.simba.IndexManager.createIndexQuery(IndexManager.scala:192)
+	at org.apache.spark.sql.simba.Dataset.index(DataSet.scala:179)
+	at PFlock$$anonfun$main$1$$anonfun$apply$mcVI$sp$1.apply(PFlock.scala:98)
+	at PFlock$$anonfun$main$1$$anonfun$apply$mcVI$sp$1.apply(PFlock.scala:53)
+	at scala.collection.immutable.NumericRange.foreach(NumericRange.scala:73)
+	at PFlock$$anonfun$main$1.apply$mcVI$sp(PFlock.scala:53)
+	at scala.collection.immutable.Range.foreach$mVc$sp(Range.scala:160)
+	at PFlock$.main(PFlock.scala:52)
+	at PFlock.main(PFlock.scala)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.apache.spark.deploy.SparkSubmit$.org$apache$spark$deploy$SparkSubmit$$runMain(SparkSubmit.scala:738)
+	at org.apache.spark.deploy.SparkSubmit$.doRunMain$1(SparkSubmit.scala:187)
+	at org.apache.spark.deploy.SparkSubmit$.submit(SparkSubmit.scala:212)
+	at org.apache.spark.deploy.SparkSubmit$.main(SparkSubmit.scala:126)
+	at org.apache.spark.deploy.SparkSubmit.main(SparkSubmit.scala)
 Done!!!
-Running in 28 cores and 1024 partitions.  Setting mu = 40 ...
+Running in 7 cores and 1024 partitions.  Setting mu = 40 ...
 Using Spark's default log4j profile: org/apache/spark/log4j-defaults.properties
-17/09/17 20:18:51 INFO SparkContext: Running Spark version 2.1.0
-17/09/17 20:18:51 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
-17/09/17 20:18:51 INFO SecurityManager: Changing view acls to: acald013
-17/09/17 20:18:51 INFO SecurityManager: Changing modify acls to: acald013
-17/09/17 20:18:51 INFO SecurityManager: Changing view acls groups to: 
-17/09/17 20:18:51 INFO SecurityManager: Changing modify acls groups to: 
-17/09/17 20:18:51 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(acald013); groups with view permissions: Set(); users  with modify permissions: Set(acald013); groups with modify permissions: Set()
-17/09/17 20:18:52 INFO Utils: Successfully started service 'sparkDriver' on port 39528.
-17/09/17 20:18:52 INFO SparkEnv: Registering MapOutputTracker
-17/09/17 20:18:52 INFO SparkEnv: Registering BlockManagerMaster
-17/09/17 20:18:52 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
-17/09/17 20:18:52 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
-17/09/17 20:18:52 INFO DiskBlockManager: Created local directory at /tmp/blockmgr-fc60c4ee-e344-44ec-84a1-e059b0ebe0fd
-17/09/17 20:18:52 INFO MemoryStore: MemoryStore started with capacity 6.2 GB
-17/09/17 20:18:52 INFO SparkEnv: Registering OutputCommitCoordinator
-17/09/17 20:18:52 INFO Utils: Successfully started service 'SparkUI' on port 4040.
-17/09/17 20:18:52 INFO SparkUI: Bound SparkUI to 0.0.0.0, and started at http://169.235.27.138:4040
-17/09/17 20:18:52 INFO SparkContext: Added JAR file:/home/acald013/PhD/Y2Q4/PFlock/target/scala-2.11/pflock_2.11-1.0.jar at spark://169.235.27.138:39528/jars/pflock_2.11-1.0.jar with timestamp 1505704732827
-17/09/17 20:18:52 INFO StandaloneAppClient$ClientEndpoint: Connecting to master spark://169.235.27.138:7077...
-17/09/17 20:18:53 INFO TransportClientFactory: Successfully created connection to /169.235.27.138:7077 after 49 ms (0 ms spent in bootstraps)
-17/09/17 20:18:53 INFO StandaloneSchedulerBackend: Connected to Spark cluster with app ID app-20170917201853-0001
-17/09/17 20:18:53 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20170917201853-0001/0 on worker-20170917201019-169.235.27.138-44513 (169.235.27.138:44513) with 7 cores
-17/09/17 20:18:53 INFO StandaloneSchedulerBackend: Granted executor ID app-20170917201853-0001/0 on hostPort 169.235.27.138:44513 with 7 cores, 12.0 GB RAM
-17/09/17 20:18:53 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20170917201853-0001/1 on worker-20170917201017-169.235.27.134-37996 (169.235.27.134:37996) with 7 cores
-17/09/17 20:18:53 INFO StandaloneSchedulerBackend: Granted executor ID app-20170917201853-0001/1 on hostPort 169.235.27.134:37996 with 7 cores, 12.0 GB RAM
-17/09/17 20:18:53 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20170917201853-0001/2 on worker-20170917201017-169.235.27.137-43258 (169.235.27.137:43258) with 7 cores
-17/09/17 20:18:53 INFO StandaloneSchedulerBackend: Granted executor ID app-20170917201853-0001/2 on hostPort 169.235.27.137:43258 with 7 cores, 12.0 GB RAM
-17/09/17 20:18:53 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 36516.
-17/09/17 20:18:53 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20170917201853-0001/3 on worker-20170917201017-169.235.27.135-33341 (169.235.27.135:33341) with 7 cores
-17/09/17 20:18:53 INFO StandaloneSchedulerBackend: Granted executor ID app-20170917201853-0001/3 on hostPort 169.235.27.135:33341 with 7 cores, 12.0 GB RAM
-17/09/17 20:18:53 INFO NettyBlockTransferService: Server created on 169.235.27.138:36516
-17/09/17 20:18:53 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
-17/09/17 20:18:53 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 169.235.27.138, 36516, None)
-17/09/17 20:18:53 INFO BlockManagerMasterEndpoint: Registering block manager 169.235.27.138:36516 with 6.2 GB RAM, BlockManagerId(driver, 169.235.27.138, 36516, None)
-17/09/17 20:18:53 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20170917201853-0001/1 is now RUNNING
-17/09/17 20:18:53 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20170917201853-0001/3 is now RUNNING
-17/09/17 20:18:53 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 169.235.27.138, 36516, None)
-17/09/17 20:18:53 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 169.235.27.138, 36516, None)
-17/09/17 20:18:53 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20170917201853-0001/2 is now RUNNING
-17/09/17 20:18:53 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20170917201853-0001/0 is now RUNNING
-17/09/17 20:18:54 INFO EventLoggingListener: Logging events to file:///home/acald013/Logs/app-20170917201853-0001
-17/09/17 20:18:54 INFO StandaloneSchedulerBackend: SchedulerBackend is ready for scheduling beginning after reached minRegisteredResourcesRatio: 0.0
-17/09/17 20:18:54 INFO SharedState: Warehouse path is 'file:/home/acald013/PhD/Y2Q4/Scripts/Scaleup/spark-warehouse/'.
-Running app-20170917201853-0001 on 28 cores and 1024 partitions...
+17/09/20 18:04:02 INFO SparkContext: Running Spark version 2.1.0
+17/09/20 18:04:02 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+17/09/20 18:04:03 INFO SecurityManager: Changing view acls to: acald013
+17/09/20 18:04:03 INFO SecurityManager: Changing modify acls to: acald013
+17/09/20 18:04:03 INFO SecurityManager: Changing view acls groups to: 
+17/09/20 18:04:03 INFO SecurityManager: Changing modify acls groups to: 
+17/09/20 18:04:03 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(acald013); groups with view permissions: Set(); users  with modify permissions: Set(acald013); groups with modify permissions: Set()
+17/09/20 18:04:03 INFO Utils: Successfully started service 'sparkDriver' on port 44001.
+17/09/20 18:04:03 INFO SparkEnv: Registering MapOutputTracker
+17/09/20 18:04:03 INFO SparkEnv: Registering BlockManagerMaster
+17/09/20 18:04:03 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+17/09/20 18:04:03 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
+17/09/20 18:04:03 INFO DiskBlockManager: Created local directory at /tmp/blockmgr-54b950bf-cec0-45f6-8b4a-0b8e8c840bb5
+17/09/20 18:04:03 INFO MemoryStore: MemoryStore started with capacity 6.2 GB
+17/09/20 18:04:03 INFO SparkEnv: Registering OutputCommitCoordinator
+17/09/20 18:04:04 INFO Utils: Successfully started service 'SparkUI' on port 4040.
+17/09/20 18:04:04 INFO SparkUI: Bound SparkUI to 0.0.0.0, and started at http://169.235.27.138:4040
+17/09/20 18:04:04 INFO SparkContext: Added JAR file:/home/acald013/PhD/Y2Q4/PFlock/target/scala-2.11/pflock_2.11-1.0.jar at spark://169.235.27.138:44001/jars/pflock_2.11-1.0.jar with timestamp 1505955844322
+17/09/20 18:04:04 INFO StandaloneAppClient$ClientEndpoint: Connecting to master spark://169.235.27.138:7077...
+17/09/20 18:04:04 INFO TransportClientFactory: Successfully created connection to /169.235.27.138:7077 after 49 ms (0 ms spent in bootstraps)
+17/09/20 18:04:04 INFO StandaloneSchedulerBackend: Connected to Spark cluster with app ID app-20170920180404-0001
+17/09/20 18:04:04 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20170920180404-0001/0 on worker-20170920180234-169.235.27.134-46720 (169.235.27.134:46720) with 7 cores
+17/09/20 18:04:04 INFO StandaloneSchedulerBackend: Granted executor ID app-20170920180404-0001/0 on hostPort 169.235.27.134:46720 with 7 cores, 12.0 GB RAM
+17/09/20 18:04:04 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 42550.
+17/09/20 18:04:04 INFO NettyBlockTransferService: Server created on 169.235.27.138:42550
+17/09/20 18:04:04 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
+17/09/20 18:04:04 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 169.235.27.138, 42550, None)
+17/09/20 18:04:04 INFO BlockManagerMasterEndpoint: Registering block manager 169.235.27.138:42550 with 6.2 GB RAM, BlockManagerId(driver, 169.235.27.138, 42550, None)
+17/09/20 18:04:04 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 169.235.27.138, 42550, None)
+17/09/20 18:04:04 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 169.235.27.138, 42550, None)
+17/09/20 18:04:04 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20170920180404-0001/0 is now RUNNING
+17/09/20 18:04:05 INFO EventLoggingListener: Logging events to file:///home/acald013/Logs/app-20170920180404-0001
+17/09/20 18:04:05 INFO StandaloneSchedulerBackend: SchedulerBackend is ready for scheduling beginning after reached minRegisteredResourcesRatio: 0.0
+17/09/20 18:04:05 INFO SharedState: Warehouse path is 'file:/home/acald013/PhD/Y2Q4/Scripts/Scaleup/spark-warehouse/'.
+Running app-20170920180404-0001 on 7 cores and 1024 partitions...
        Tag    Epsilon    Dataset      TimeD      TimeM  TotalTime NCandidate   NMaximal      Cores Partitions       Timestamp
-17/09/17 20:19:19 ERROR LiveListenerBus: Dropping SparkListenerEvent because no remaining room in event queue. This likely means one of the SparkListeners is too slow and cannot keep up with the rate at which tasks are being started by the scheduler.
-    PFlock       50.0        80K     61.065     28.799     89.864     575930       1131         28       1024    20:20:25.134
-    PFlock       60.0        80K     44.767     30.919     75.686     700950       1194         28       1024    20:21:40.996
-    PFlock       70.0        80K     47.888     30.881     78.769     833016       1474         28       1024    20:22:59.861
-    PFlock       80.0        80K     45.448     33.384     78.832     974432       1652         28       1024    20:24:18.792
-    PFlock       90.0        80K     48.355     38.436     86.791    1130136       2035         28       1024    20:25:45.674
-    PFlock      100.0        80K     58.581     39.486     98.067    1302882       2331         28       1024    20:27:23.837
+Exception in thread "main" java.lang.UnsupportedOperationException: empty collection
+	at org.apache.spark.rdd.RDD$$anonfun$first$1.apply(RDD.scala:1369)
+	at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:151)
+	at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:112)
+	at org.apache.spark.rdd.RDD.withScope(RDD.scala:362)
+	at org.apache.spark.rdd.RDD.first(RDD.scala:1366)
+	at org.apache.spark.sql.simba.index.RTreeIndexedRelation.<init>(RTreeIndexedRelation.scala:55)
+	at org.apache.spark.sql.simba.index.IndexedRelation$.apply(IndexedRelation.scala:41)
+	at org.apache.spark.sql.simba.IndexManager$$anonfun$createIndexQuery$1.apply(IndexManager.scala:201)
+	at org.apache.spark.sql.simba.IndexManager.writeLock(IndexManager.scala:64)
+	at org.apache.spark.sql.simba.IndexManager.createIndexQuery(IndexManager.scala:192)
+	at org.apache.spark.sql.simba.Dataset.index(DataSet.scala:179)
+	at PFlock$$anonfun$main$1$$anonfun$apply$mcVI$sp$1.apply(PFlock.scala:98)
+	at PFlock$$anonfun$main$1$$anonfun$apply$mcVI$sp$1.apply(PFlock.scala:53)
+	at scala.collection.immutable.NumericRange.foreach(NumericRange.scala:73)
+	at PFlock$$anonfun$main$1.apply$mcVI$sp(PFlock.scala:53)
+	at scala.collection.immutable.Range.foreach$mVc$sp(Range.scala:160)
+	at PFlock$.main(PFlock.scala:52)
+	at PFlock.main(PFlock.scala)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.apache.spark.deploy.SparkSubmit$.org$apache$spark$deploy$SparkSubmit$$runMain(SparkSubmit.scala:738)
+	at org.apache.spark.deploy.SparkSubmit$.doRunMain$1(SparkSubmit.scala:187)
+	at org.apache.spark.deploy.SparkSubmit$.submit(SparkSubmit.scala:212)
+	at org.apache.spark.deploy.SparkSubmit$.main(SparkSubmit.scala:126)
+	at org.apache.spark.deploy.SparkSubmit.main(SparkSubmit.scala)
 Done!!!
-Running in 28 cores and 1024 partitions.  Setting mu = 40 ...
+Running in 7 cores and 1024 partitions.  Setting mu = 40 ...
 Using Spark's default log4j profile: org/apache/spark/log4j-defaults.properties
-17/09/17 20:27:30 INFO SparkContext: Running Spark version 2.1.0
-17/09/17 20:27:31 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
-17/09/17 20:27:31 INFO SecurityManager: Changing view acls to: acald013
-17/09/17 20:27:31 INFO SecurityManager: Changing modify acls to: acald013
-17/09/17 20:27:31 INFO SecurityManager: Changing view acls groups to: 
-17/09/17 20:27:31 INFO SecurityManager: Changing modify acls groups to: 
-17/09/17 20:27:31 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(acald013); groups with view permissions: Set(); users  with modify permissions: Set(acald013); groups with modify permissions: Set()
-17/09/17 20:27:31 INFO Utils: Successfully started service 'sparkDriver' on port 43387.
-17/09/17 20:27:31 INFO SparkEnv: Registering MapOutputTracker
-17/09/17 20:27:31 INFO SparkEnv: Registering BlockManagerMaster
-17/09/17 20:27:31 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
-17/09/17 20:27:31 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
-17/09/17 20:27:31 INFO DiskBlockManager: Created local directory at /tmp/blockmgr-68729866-e0f8-42cb-b440-ab0d3376cb68
-17/09/17 20:27:31 INFO MemoryStore: MemoryStore started with capacity 6.2 GB
-17/09/17 20:27:31 INFO SparkEnv: Registering OutputCommitCoordinator
-17/09/17 20:27:32 INFO Utils: Successfully started service 'SparkUI' on port 4040.
-17/09/17 20:27:32 INFO SparkUI: Bound SparkUI to 0.0.0.0, and started at http://169.235.27.138:4040
-17/09/17 20:27:32 INFO SparkContext: Added JAR file:/home/acald013/PhD/Y2Q4/PFlock/target/scala-2.11/pflock_2.11-1.0.jar at spark://169.235.27.138:43387/jars/pflock_2.11-1.0.jar with timestamp 1505705252429
-17/09/17 20:27:32 INFO StandaloneAppClient$ClientEndpoint: Connecting to master spark://169.235.27.138:7077...
-17/09/17 20:27:32 INFO TransportClientFactory: Successfully created connection to /169.235.27.138:7077 after 49 ms (0 ms spent in bootstraps)
-17/09/17 20:27:32 INFO StandaloneSchedulerBackend: Connected to Spark cluster with app ID app-20170917202732-0002
-17/09/17 20:27:32 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20170917202732-0002/0 on worker-20170917201019-169.235.27.138-44513 (169.235.27.138:44513) with 7 cores
-17/09/17 20:27:32 INFO StandaloneSchedulerBackend: Granted executor ID app-20170917202732-0002/0 on hostPort 169.235.27.138:44513 with 7 cores, 12.0 GB RAM
-17/09/17 20:27:32 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 38464.
-17/09/17 20:27:32 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20170917202732-0002/1 on worker-20170917201017-169.235.27.134-37996 (169.235.27.134:37996) with 7 cores
-17/09/17 20:27:32 INFO StandaloneSchedulerBackend: Granted executor ID app-20170917202732-0002/1 on hostPort 169.235.27.134:37996 with 7 cores, 12.0 GB RAM
-17/09/17 20:27:32 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20170917202732-0002/2 on worker-20170917201017-169.235.27.137-43258 (169.235.27.137:43258) with 7 cores
-17/09/17 20:27:32 INFO StandaloneSchedulerBackend: Granted executor ID app-20170917202732-0002/2 on hostPort 169.235.27.137:43258 with 7 cores, 12.0 GB RAM
-17/09/17 20:27:32 INFO NettyBlockTransferService: Server created on 169.235.27.138:38464
-17/09/17 20:27:32 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20170917202732-0002/3 on worker-20170917201017-169.235.27.135-33341 (169.235.27.135:33341) with 7 cores
-17/09/17 20:27:32 INFO StandaloneSchedulerBackend: Granted executor ID app-20170917202732-0002/3 on hostPort 169.235.27.135:33341 with 7 cores, 12.0 GB RAM
-17/09/17 20:27:32 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
-17/09/17 20:27:32 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 169.235.27.138, 38464, None)
-17/09/17 20:27:32 INFO BlockManagerMasterEndpoint: Registering block manager 169.235.27.138:38464 with 6.2 GB RAM, BlockManagerId(driver, 169.235.27.138, 38464, None)
-17/09/17 20:27:32 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20170917202732-0002/3 is now RUNNING
-17/09/17 20:27:32 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 169.235.27.138, 38464, None)
-17/09/17 20:27:32 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20170917202732-0002/0 is now RUNNING
-17/09/17 20:27:32 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 169.235.27.138, 38464, None)
-17/09/17 20:27:32 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20170917202732-0002/1 is now RUNNING
-17/09/17 20:27:32 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20170917202732-0002/2 is now RUNNING
-17/09/17 20:27:33 INFO EventLoggingListener: Logging events to file:///home/acald013/Logs/app-20170917202732-0002
-17/09/17 20:27:33 INFO StandaloneSchedulerBackend: SchedulerBackend is ready for scheduling beginning after reached minRegisteredResourcesRatio: 0.0
-17/09/17 20:27:33 INFO SharedState: Warehouse path is 'file:/home/acald013/PhD/Y2Q4/Scripts/Scaleup/spark-warehouse/'.
-Running app-20170917202732-0002 on 28 cores and 1024 partitions...
+17/09/20 18:05:26 INFO SparkContext: Running Spark version 2.1.0
+17/09/20 18:05:26 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+17/09/20 18:05:26 INFO SecurityManager: Changing view acls to: acald013
+17/09/20 18:05:26 INFO SecurityManager: Changing modify acls to: acald013
+17/09/20 18:05:26 INFO SecurityManager: Changing view acls groups to: 
+17/09/20 18:05:26 INFO SecurityManager: Changing modify acls groups to: 
+17/09/20 18:05:26 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(acald013); groups with view permissions: Set(); users  with modify permissions: Set(acald013); groups with modify permissions: Set()
+17/09/20 18:05:27 INFO Utils: Successfully started service 'sparkDriver' on port 36866.
+17/09/20 18:05:27 INFO SparkEnv: Registering MapOutputTracker
+17/09/20 18:05:27 INFO SparkEnv: Registering BlockManagerMaster
+17/09/20 18:05:27 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+17/09/20 18:05:27 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
+17/09/20 18:05:27 INFO DiskBlockManager: Created local directory at /tmp/blockmgr-f1eee96e-6481-4a2f-8bbb-3988d5f9c0fe
+17/09/20 18:05:27 INFO MemoryStore: MemoryStore started with capacity 6.2 GB
+17/09/20 18:05:27 INFO SparkEnv: Registering OutputCommitCoordinator
+17/09/20 18:05:28 INFO Utils: Successfully started service 'SparkUI' on port 4040.
+17/09/20 18:05:28 INFO SparkUI: Bound SparkUI to 0.0.0.0, and started at http://169.235.27.138:4040
+17/09/20 18:05:28 INFO SparkContext: Added JAR file:/home/acald013/PhD/Y2Q4/PFlock/target/scala-2.11/pflock_2.11-1.0.jar at spark://169.235.27.138:36866/jars/pflock_2.11-1.0.jar with timestamp 1505955928066
+17/09/20 18:05:28 INFO StandaloneAppClient$ClientEndpoint: Connecting to master spark://169.235.27.138:7077...
+17/09/20 18:05:28 INFO TransportClientFactory: Successfully created connection to /169.235.27.138:7077 after 49 ms (0 ms spent in bootstraps)
+17/09/20 18:05:28 INFO StandaloneSchedulerBackend: Connected to Spark cluster with app ID app-20170920180528-0002
+17/09/20 18:05:28 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20170920180528-0002/0 on worker-20170920180234-169.235.27.134-46720 (169.235.27.134:46720) with 7 cores
+17/09/20 18:05:28 INFO StandaloneSchedulerBackend: Granted executor ID app-20170920180528-0002/0 on hostPort 169.235.27.134:46720 with 7 cores, 12.0 GB RAM
+17/09/20 18:05:28 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 44747.
+17/09/20 18:05:28 INFO NettyBlockTransferService: Server created on 169.235.27.138:44747
+17/09/20 18:05:28 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
+17/09/20 18:05:28 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 169.235.27.138, 44747, None)
+17/09/20 18:05:28 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20170920180528-0002/0 is now RUNNING
+17/09/20 18:05:28 INFO BlockManagerMasterEndpoint: Registering block manager 169.235.27.138:44747 with 6.2 GB RAM, BlockManagerId(driver, 169.235.27.138, 44747, None)
+17/09/20 18:05:28 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 169.235.27.138, 44747, None)
+17/09/20 18:05:28 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 169.235.27.138, 44747, None)
+17/09/20 18:05:29 INFO EventLoggingListener: Logging events to file:///home/acald013/Logs/app-20170920180528-0002
+17/09/20 18:05:29 INFO StandaloneSchedulerBackend: SchedulerBackend is ready for scheduling beginning after reached minRegisteredResourcesRatio: 0.0
+17/09/20 18:05:29 INFO SharedState: Warehouse path is 'file:/home/acald013/PhD/Y2Q4/Scripts/Scaleup/spark-warehouse/'.
+Running app-20170920180528-0002 on 7 cores and 1024 partitions...
        Tag    Epsilon    Dataset      TimeD      TimeM  TotalTime NCandidate   NMaximal      Cores Partitions       Timestamp
-17/09/17 20:27:57 ERROR LiveListenerBus: Dropping SparkListenerEvent because no remaining room in event queue. This likely means one of the SparkListeners is too slow and cannot keep up with the rate at which tasks are being started by the scheduler.
-    PFlock       50.0        80K     60.214     29.071     89.285     575930       1131         28       1024    20:29:04.234
-    PFlock       60.0        80K     45.327     29.834     75.161     700950       1194         28       1024    20:30:19.559
-    PFlock       70.0        80K     44.143     30.847     74.990     833016       1474         28       1024    20:31:34.646
-    PFlock       80.0        80K     45.835     33.308     79.143     974432       1652         28       1024    20:32:53.882
-    PFlock       90.0        80K     52.472     39.698     92.170    1130136       2035         28       1024    20:34:26.141
-    PFlock      100.0        80K     53.952     39.681     93.633    1302882       2331         28       1024    20:35:59.866
+Exception in thread "main" java.lang.UnsupportedOperationException: empty collection
+	at org.apache.spark.rdd.RDD$$anonfun$first$1.apply(RDD.scala:1369)
+	at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:151)
+	at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:112)
+	at org.apache.spark.rdd.RDD.withScope(RDD.scala:362)
+	at org.apache.spark.rdd.RDD.first(RDD.scala:1366)
+	at org.apache.spark.sql.simba.index.RTreeIndexedRelation.<init>(RTreeIndexedRelation.scala:55)
+	at org.apache.spark.sql.simba.index.IndexedRelation$.apply(IndexedRelation.scala:41)
+	at org.apache.spark.sql.simba.IndexManager$$anonfun$createIndexQuery$1.apply(IndexManager.scala:201)
+	at org.apache.spark.sql.simba.IndexManager.writeLock(IndexManager.scala:64)
+	at org.apache.spark.sql.simba.IndexManager.createIndexQuery(IndexManager.scala:192)
+	at org.apache.spark.sql.simba.Dataset.index(DataSet.scala:179)
+	at PFlock$$anonfun$main$1$$anonfun$apply$mcVI$sp$1.apply(PFlock.scala:98)
+	at PFlock$$anonfun$main$1$$anonfun$apply$mcVI$sp$1.apply(PFlock.scala:53)
+	at scala.collection.immutable.NumericRange.foreach(NumericRange.scala:73)
+	at PFlock$$anonfun$main$1.apply$mcVI$sp(PFlock.scala:53)
+	at scala.collection.immutable.Range.foreach$mVc$sp(Range.scala:160)
+	at PFlock$.main(PFlock.scala:52)
+	at PFlock.main(PFlock.scala)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.apache.spark.deploy.SparkSubmit$.org$apache$spark$deploy$SparkSubmit$$runMain(SparkSubmit.scala:738)
+	at org.apache.spark.deploy.SparkSubmit$.doRunMain$1(SparkSubmit.scala:187)
+	at org.apache.spark.deploy.SparkSubmit$.submit(SparkSubmit.scala:212)
+	at org.apache.spark.deploy.SparkSubmit$.main(SparkSubmit.scala:126)
+	at org.apache.spark.deploy.SparkSubmit.main(SparkSubmit.scala)
 Done!!!
-acald013@dblab-rack12: stopping org.apache.spark.deploy.worker.Worker
-acald013@dblab-rack14: stopping org.apache.spark.deploy.worker.Worker
-acald013@dblab-rack15: stopping org.apache.spark.deploy.worker.Worker
 acald013@dblab-rack11: stopping org.apache.spark.deploy.worker.Worker
 stopping org.apache.spark.deploy.master.Master
+starting org.apache.spark.deploy.master.Master, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.master.Master-1-dblab-rack15.out
+acald013@dblab-rack12: starting org.apache.spark.deploy.worker.Worker, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.worker.Worker-1-dblab-rack12.out
+acald013@dblab-rack11: starting org.apache.spark.deploy.worker.Worker, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.worker.Worker-1-dblab-rack11.cs.ucr.edu.out
+Running in 14 cores and 1024 partitions.  Setting mu = 40 ...
+Using Spark's default log4j profile: org/apache/spark/log4j-defaults.properties
+17/09/20 18:06:55 INFO SparkContext: Running Spark version 2.1.0
+17/09/20 18:06:55 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+17/09/20 18:06:55 INFO SecurityManager: Changing view acls to: acald013
+17/09/20 18:06:55 INFO SecurityManager: Changing modify acls to: acald013
+17/09/20 18:06:55 INFO SecurityManager: Changing view acls groups to: 
+17/09/20 18:06:55 INFO SecurityManager: Changing modify acls groups to: 
+17/09/20 18:06:55 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(acald013); groups with view permissions: Set(); users  with modify permissions: Set(acald013); groups with modify permissions: Set()
+17/09/20 18:06:56 INFO Utils: Successfully started service 'sparkDriver' on port 42985.
+17/09/20 18:06:56 INFO SparkEnv: Registering MapOutputTracker
+17/09/20 18:06:56 INFO SparkEnv: Registering BlockManagerMaster
+17/09/20 18:06:56 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+17/09/20 18:06:56 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
+17/09/20 18:06:56 INFO DiskBlockManager: Created local directory at /tmp/blockmgr-b31bad92-f5f9-48c0-97b5-f7add624f80d
+17/09/20 18:06:56 INFO MemoryStore: MemoryStore started with capacity 6.2 GB
+17/09/20 18:06:56 INFO SparkEnv: Registering OutputCommitCoordinator
+17/09/20 18:06:56 INFO Utils: Successfully started service 'SparkUI' on port 4040.
+17/09/20 18:06:56 INFO SparkUI: Bound SparkUI to 0.0.0.0, and started at http://169.235.27.138:4040
+17/09/20 18:06:57 INFO SparkContext: Added JAR file:/home/acald013/PhD/Y2Q4/PFlock/target/scala-2.11/pflock_2.11-1.0.jar at spark://169.235.27.138:42985/jars/pflock_2.11-1.0.jar with timestamp 1505956017003
+17/09/20 18:06:57 INFO StandaloneAppClient$ClientEndpoint: Connecting to master spark://169.235.27.138:7077...
+17/09/20 18:06:57 INFO TransportClientFactory: Successfully created connection to /169.235.27.138:7077 after 49 ms (0 ms spent in bootstraps)
+17/09/20 18:06:57 INFO StandaloneSchedulerBackend: Connected to Spark cluster with app ID app-20170920180657-0000
+17/09/20 18:06:57 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 35375.
+17/09/20 18:06:57 INFO NettyBlockTransferService: Server created on 169.235.27.138:35375
+17/09/20 18:06:57 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
+17/09/20 18:06:57 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 169.235.27.138, 35375, None)
+17/09/20 18:06:57 INFO BlockManagerMasterEndpoint: Registering block manager 169.235.27.138:35375 with 6.2 GB RAM, BlockManagerId(driver, 169.235.27.138, 35375, None)
+17/09/20 18:06:57 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 169.235.27.138, 35375, None)
+17/09/20 18:06:57 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 169.235.27.138, 35375, None)
+17/09/20 18:06:57 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20170920180657-0000/0 on worker-20170920180649-169.235.27.134-42567 (169.235.27.134:42567) with 7 cores
+17/09/20 18:06:57 INFO StandaloneSchedulerBackend: Granted executor ID app-20170920180657-0000/0 on hostPort 169.235.27.134:42567 with 7 cores, 12.0 GB RAM
+17/09/20 18:06:57 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20170920180657-0000/1 on worker-20170920180649-169.235.27.135-40192 (169.235.27.135:40192) with 7 cores
+17/09/20 18:06:57 INFO StandaloneSchedulerBackend: Granted executor ID app-20170920180657-0000/1 on hostPort 169.235.27.135:40192 with 7 cores, 12.0 GB RAM
+17/09/20 18:06:57 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20170920180657-0000/1 is now RUNNING
+17/09/20 18:06:57 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20170920180657-0000/0 is now RUNNING
+17/09/20 18:06:58 INFO EventLoggingListener: Logging events to file:///home/acald013/Logs/app-20170920180657-0000
+17/09/20 18:06:58 INFO StandaloneSchedulerBackend: SchedulerBackend is ready for scheduling beginning after reached minRegisteredResourcesRatio: 0.0
+17/09/20 18:06:58 INFO SharedState: Warehouse path is 'file:/home/acald013/PhD/Y2Q4/Scripts/Scaleup/spark-warehouse/'.
+Running app-20170920180657-0000 on 14 cores and 1024 partitions...
+       Tag    Epsilon    Dataset      TimeD      TimeM  TotalTime NCandidate   NMaximal      Cores Partitions       Timestamp
+17/09/20 18:07:17 ERROR LiveListenerBus: Dropping SparkListenerEvent because no remaining room in event queue. This likely means one of the SparkListeners is too slow and cannot keep up with the rate at which tasks are being started by the scheduler.
+    PFlock       50.0        40K     51.786     23.862     75.648     144582         11         14       1024    18:08:15.140
+    PFlock       60.0        40K     37.309     20.055     57.364     175982         38         14       1024    18:09:12.658
+    PFlock       70.0        40K     37.999     21.829     59.828     209268         95         14       1024    18:10:12.577
+    PFlock       80.0        40K     39.972     24.265     64.237     244670        216         14       1024    18:11:16.900
+    PFlock       90.0        40K     42.651     27.893     70.544     283164        426         14       1024    18:12:27.528
+    PFlock      100.0        40K     44.385     30.280     74.665     325850        610         14       1024    18:13:42.282
 Done!!!
+Running in 14 cores and 1024 partitions.  Setting mu = 40 ...
+Using Spark's default log4j profile: org/apache/spark/log4j-defaults.properties
+17/09/20 18:13:48 INFO SparkContext: Running Spark version 2.1.0
+17/09/20 18:13:48 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+17/09/20 18:13:48 INFO SecurityManager: Changing view acls to: acald013
+17/09/20 18:13:48 INFO SecurityManager: Changing modify acls to: acald013
+17/09/20 18:13:48 INFO SecurityManager: Changing view acls groups to: 
+17/09/20 18:13:48 INFO SecurityManager: Changing modify acls groups to: 
+17/09/20 18:13:48 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(acald013); groups with view permissions: Set(); users  with modify permissions: Set(acald013); groups with modify permissions: Set()
+17/09/20 18:13:49 INFO Utils: Successfully started service 'sparkDriver' on port 42827.
+17/09/20 18:13:49 INFO SparkEnv: Registering MapOutputTracker
+17/09/20 18:13:49 INFO SparkEnv: Registering BlockManagerMaster
+17/09/20 18:13:49 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+17/09/20 18:13:49 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
+17/09/20 18:13:49 INFO DiskBlockManager: Created local directory at /tmp/blockmgr-eb990269-6e42-4de4-b4c6-542c6c23a740
+17/09/20 18:13:49 INFO MemoryStore: MemoryStore started with capacity 6.2 GB
+17/09/20 18:13:49 INFO SparkEnv: Registering OutputCommitCoordinator
+17/09/20 18:13:50 INFO Utils: Successfully started service 'SparkUI' on port 4040.
+17/09/20 18:13:50 INFO SparkUI: Bound SparkUI to 0.0.0.0, and started at http://169.235.27.138:4040
+17/09/20 18:13:50 INFO SparkContext: Added JAR file:/home/acald013/PhD/Y2Q4/PFlock/target/scala-2.11/pflock_2.11-1.0.jar at spark://169.235.27.138:42827/jars/pflock_2.11-1.0.jar with timestamp 1505956430132
+17/09/20 18:13:50 INFO StandaloneAppClient$ClientEndpoint: Connecting to master spark://169.235.27.138:7077...
+17/09/20 18:13:50 INFO TransportClientFactory: Successfully created connection to /169.235.27.138:7077 after 49 ms (0 ms spent in bootstraps)
+17/09/20 18:13:50 INFO StandaloneSchedulerBackend: Connected to Spark cluster with app ID app-20170920181350-0001
+17/09/20 18:13:50 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20170920181350-0001/0 on worker-20170920180649-169.235.27.134-42567 (169.235.27.134:42567) with 7 cores
+17/09/20 18:13:50 INFO StandaloneSchedulerBackend: Granted executor ID app-20170920181350-0001/0 on hostPort 169.235.27.134:42567 with 7 cores, 12.0 GB RAM
+17/09/20 18:13:50 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20170920181350-0001/1 on worker-20170920180649-169.235.27.135-40192 (169.235.27.135:40192) with 7 cores
+17/09/20 18:13:50 INFO StandaloneSchedulerBackend: Granted executor ID app-20170920181350-0001/1 on hostPort 169.235.27.135:40192 with 7 cores, 12.0 GB RAM
+17/09/20 18:13:50 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 41115.
+17/09/20 18:13:50 INFO NettyBlockTransferService: Server created on 169.235.27.138:41115
+17/09/20 18:13:50 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
+17/09/20 18:13:50 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 169.235.27.138, 41115, None)
+17/09/20 18:13:50 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20170920181350-0001/1 is now RUNNING
+17/09/20 18:13:50 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20170920181350-0001/0 is now RUNNING
+17/09/20 18:13:50 INFO BlockManagerMasterEndpoint: Registering block manager 169.235.27.138:41115 with 6.2 GB RAM, BlockManagerId(driver, 169.235.27.138, 41115, None)
+17/09/20 18:13:50 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 169.235.27.138, 41115, None)
+17/09/20 18:13:50 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 169.235.27.138, 41115, None)
+17/09/20 18:13:51 INFO EventLoggingListener: Logging events to file:///home/acald013/Logs/app-20170920181350-0001
+17/09/20 18:13:51 INFO StandaloneSchedulerBackend: SchedulerBackend is ready for scheduling beginning after reached minRegisteredResourcesRatio: 0.0
+17/09/20 18:13:51 INFO SharedState: Warehouse path is 'file:/home/acald013/PhD/Y2Q4/Scripts/Scaleup/spark-warehouse/'.
+Running app-20170920181350-0001 on 14 cores and 1024 partitions...
+       Tag    Epsilon    Dataset      TimeD      TimeM  TotalTime NCandidate   NMaximal      Cores Partitions       Timestamp
+17/09/20 18:14:11 ERROR LiveListenerBus: Dropping SparkListenerEvent because no remaining room in event queue. This likely means one of the SparkListeners is too slow and cannot keep up with the rate at which tasks are being started by the scheduler.
+    PFlock       50.0        40K     53.503     22.679     76.182     144582         11         14       1024    18:15:08.841
+    PFlock       60.0        40K     37.215     19.652     56.867     175982         38         14       1024    18:16:05.861
+    PFlock       70.0        40K     38.759     22.620     61.379     209268         95         14       1024    18:17:07.329
+    PFlock       80.0        40K     40.975     24.528     65.503     244670        216         14       1024    18:18:12.915
