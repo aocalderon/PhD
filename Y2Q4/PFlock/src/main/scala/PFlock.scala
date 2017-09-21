@@ -95,59 +95,64 @@ object PFlock {
       times = times :+ s"""{"content":"Filtering less-than-mu disks...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
       val filteredCandidates =  candidates.filter(row => row.getList(3).size() >= MU)
         .map(d => (d.getLong(0), d.getDouble(1), d.getDouble(2), d.getList[Integer](3).toString))
-        .index(RTreeType, "candidatesRT", Array("_2", "_3"))
-      // Filtering redundant candidates
-      times = times :+ s"""{"content":"Getting maximals inside...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
-      val maximalInside = filteredCandidates
-        .rdd
-        .mapPartitions { partition =>
-          val transactions = partition
-            .map { disk =>
-              disk._4
-                .replace("[","")
-                .replace("]","")
-                .split(",")
-                .map{ id =>
-                  new Integer(id.trim)
-                }
-                .sorted
-                .toList
-                .asJava
-            }.toList.asJava
-          val fpMax = new AlgoFPMax
-          val itemsets = fpMax.runAlgorithm(transactions, 1)
-          itemsets.getItemsets(MU).asScala.toIterator
-        }
-      maximalInside.count()
-      times = times :+ s"""{"content":"Getting maximals in frame...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
-      val maximalFrame = filteredCandidates
-        .rdd
-        .mapPartitions { partition =>
-          val pList = partition.toList
-          val bbox = getBoundingBox(pList)
-          val transactions = pList
-            .map(disk => (disk._1, disk._2, disk._3, disk._4, !isInside(disk._2, disk._3, bbox, epsilon)))
-            .filter(_._5)
-            .map { disk =>
-              disk._4
-                .replace("[","")
-                .replace("]","")
-                .split(",")
-                .map{ id =>
-                  new Integer(id.trim)
-                }
-                .sorted
-                .toList
-                .asJava
-            }.asJava
-          val fpMax = new AlgoFPMax
-          val itemsets = fpMax.runAlgorithm(transactions, 1)
-          itemsets.getItemsets(MU).asScala.toIterator
-        }
-      maximalFrame.count()
-      times = times :+ s"""{"content":"Prunning duplicates...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
-      val maximal = maximalInside.union(maximalFrame).distinct()
-      val nmaximal = maximal.count()
+      var nmaximal: Long = 0
+      // Prevent indexing of empty collections...
+      if(filteredCandidates.count() != 0){
+        // Indexing remaining candidates disks...
+        filteredCandidates.index(RTreeType, "candidatesRT", Array("_2", "_3"))
+        // Filtering redundant candidates
+        times = times :+ s"""{"content":"Getting maximals inside...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
+        val maximalInside = filteredCandidates
+          .rdd
+          .mapPartitions { partition =>
+            val transactions = partition
+              .map { disk =>
+                disk._4
+                  .replace("[","")
+                  .replace("]","")
+                  .split(",")
+                  .map{ id =>
+                    new Integer(id.trim)
+                  }
+                  .sorted
+                  .toList
+                  .asJava
+              }.toList.asJava
+            val fpMax = new AlgoFPMax
+            val itemsets = fpMax.runAlgorithm(transactions, 1)
+            itemsets.getItemsets(MU).asScala.toIterator
+          }
+        maximalInside.count()
+        times = times :+ s"""{"content":"Getting maximals in frame...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
+        val maximalFrame = filteredCandidates
+          .rdd
+          .mapPartitions { partition =>
+            val pList = partition.toList
+            val bbox = getBoundingBox(pList)
+            val transactions = pList
+              .map(disk => (disk._1, disk._2, disk._3, disk._4, !isInside(disk._2, disk._3, bbox, epsilon)))
+              .filter(_._5)
+              .map { disk =>
+                disk._4
+                  .replace("[","")
+                  .replace("]","")
+                  .split(",")
+                  .map{ id =>
+                    new Integer(id.trim)
+                  }
+                  .sorted
+                  .toList
+                  .asJava
+              }.asJava
+            val fpMax = new AlgoFPMax
+            val itemsets = fpMax.runAlgorithm(transactions, 1)
+            itemsets.getItemsets(MU).asScala.toIterator
+          }
+        maximalFrame.count()
+        times = times :+ s"""{"content":"Prunning duplicates...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
+        val maximal = maximalInside.union(maximalFrame).distinct()
+        nmaximal = maximal.count()
+      }
       // Stopping timer...
       time2 = System.currentTimeMillis()
       val timeM: Double = (time2 - time1) / 1000.0
@@ -258,7 +263,7 @@ object PFlock {
   }
 
   class Conf(arguments: Seq[String]) extends ScallopConf(arguments) {
-    val mu: ScallopOption[Int] = opt[Int](default = Some(5))
+    val mu: ScallopOption[Int] = opt[Int](default = Some(3))
     val dstart: ScallopOption[Int] = opt[Int](default = Some(10))
     val dend: ScallopOption[Int] = opt[Int](default = Some(10))
     val dstep: ScallopOption[Int] = opt[Int](default = Some(10))
