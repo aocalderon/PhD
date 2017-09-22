@@ -1,5 +1,5 @@
 ---
-title: "Speedup and Scaleup Analysis"
+title: "Execution time and Scaleup Analysis"
 author: "Andres Calderon"
 date: '`r Sys.Date()`'
 output:
@@ -7,9 +7,9 @@ output:
   pdf_document: default
 ---
 
-[//]: # ( Speedup )
+[//]: # ( Execution time )
 
-#### Speedup for Berlin dataset.
+#### Execution time for Berlin dataset.
 
 We used the dataset built with SUMO using the Berlin network.  The size of the dataset is around 80K trajectories.  For speedup, a single timeslot was used with 80000 points.  Four nodes were available, 7 cores each.
 
@@ -35,14 +35,14 @@ data = data[data$Epsilon > 50, ]
 
 ```{r SpeedupPlot, echo=FALSE, fig.width=10.5, fig.height=7.5, fig.align='center'}
 temp_title = paste("(radius of disk in mts) in Berlin dataset.")
-title = substitute(paste("Speedup by ", epsilon) ~ temp_title, list(temp_title = temp_title))
+title = substitute(paste("Execution time by ", epsilon) ~ temp_title, list(temp_title = temp_title))
 g = ggplot(data=data, aes(x=factor(Epsilon), y=Time, fill=Cores)) +
   geom_bar(stat="identity", position=position_dodge(width = 0.75),width = 0.75) +
   labs(title=title, y="Time(s)", x=expression(paste(epsilon,"(mts)")))
 plot(g)
 ```
 
-#### Speedup on a Single Node.
+#### Execution time on a Single Node.
 
 ```{r SpeedupSingleNodeSetup, include=FALSE}
 PATH = "Y2Q4/Scripts/SpeedupSingleNode/"
@@ -62,7 +62,7 @@ data = data[data$Epsilon > 50, ]
 
 ```{r SpeedupSingleNodePlot, echo=FALSE, fig.width=10.5, fig.height=7.5, fig.align='center'}
 temp_title = paste("(radius of disk in mts) in Berlin dataset.")
-title = substitute(paste("Speedup by ", epsilon) ~ temp_title, list(temp_title = temp_title))
+title = substitute(paste("Execution time by ", epsilon) ~ temp_title, list(temp_title = temp_title))
 g = ggplot(data=data, aes(x=factor(Epsilon), y=Time, fill=Cores)) +
   geom_bar(stat="identity", position=position_dodge(width = 0.75),width = 0.75) +
   labs(title=title, y="Time(s)", x=expression(paste(epsilon,"(mts)")))
@@ -100,6 +100,6 @@ temp_title = paste("(radius of disk in mts) in Berlin dataset.")
 title = substitute(paste("Scaleup by ", epsilon) ~ temp_title, list(temp_title = temp_title))
 g = ggplot(data=data, aes(x=factor(Epsilon), y=Time, fill=Cores)) +
   geom_bar(stat="identity", position=position_dodge(width = 0.75),width = 0.75) +
-  labs(title=title, x=expression(paste(epsilon,"(mts)")))
+  labs(title=title, y="Time(s)", x=expression(paste(epsilon,"(mts)")))
 plot(g)
 ```
