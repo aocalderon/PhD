@@ -14,6 +14,8 @@ FIRST_LAYER = 117
 WGS84 = "+init=epsg:4326"
 DHDN = "+init=epsg:3068"
 SOURCE = "bing"
+DATASET = "/opt/Datasets/Berlin/berlin.csv"
+DATASET = "~/Datasets/Berlin/berlin.csv"
 
 ###################
 # Mapping functions...
@@ -35,10 +37,10 @@ map3d <- function(map, stc_data = NULL){
   coordinates(stc_data) <- c("x", "y")
   proj4string(stc_data) <- CRS(WGS84)
   stc_data = spTransform(stc_data, CRS(DHDN))
-  points3d(coordinates(stc_data)[,"x"]
-           , coordinates(stc_data)[,"y"]
-           , stc_data$t * EXAGGERATION
-           , stc_data$t - FIRST_LAYER + 1)
+  points3d(x=coordinates(stc_data)[,"x"]
+           , y=coordinates(stc_data)[,"y"]
+           , z=stc_data$t * EXAGGERATION
+           , col=stc_data$t - FIRST_LAYER + 1)
 }
 
 createBaseMap <- function(dataframe, Zoom = NULL, Type = "osm", MergeTiles = TRUE, Title = "Test", proj = NULL) {
@@ -59,7 +61,7 @@ createBaseMap <- function(dataframe, Zoom = NULL, Type = "osm", MergeTiles = TRU
                      ,type = Type
                      ,mergeTiles = MergeTiles)
   datamap = openproj(datamap, projection = DHDN)
-  # plot(datamap,raster = T,main = paste(Title, "test visualization"))
+  plot(datamap,raster = T,main = paste(Title, "test visualization"))
   return(datamap)
 }
 
@@ -67,7 +69,7 @@ createBaseMap <- function(dataframe, Zoom = NULL, Type = "osm", MergeTiles = TRU
 # Reading data...
 ###################
 
-# data = read.csv('/opt/Datasets/Berlin/berlin.csv', header = F)
+data = read.csv(DATASET, header = F)
 berlin = as.data.table(data[,c(2,3,4,1)])
 names(berlin) = c('id','x','y','t')
 berlin = berlin[berlin$t >= FIRST_LAYER, ]
@@ -97,7 +99,7 @@ berlin = berlin[sample(1:nrow(berlin), 10000) ,]
 # Render scatterplot 3D...
 ###################
 
-# map = createBaseMap(berlin, Type = SOURCE)
+map = createBaseMap(berlin, Type = SOURCE)
 map3d(map, berlin)
 
 ###################
