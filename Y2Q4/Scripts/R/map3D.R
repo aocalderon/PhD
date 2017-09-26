@@ -1,8 +1,6 @@
 library("OpenStreetMap")
 library("rgl")
 
-EXAGGERATION = 50
-
 map3d <- function(map, stc_data = NULL){
   if(length(map$tiles)!=1){stop("multiple tiles not implemented") }
   nx = map$tiles[[1]]$xres
@@ -16,7 +14,7 @@ map3d <- function(map, stc_data = NULL){
   colours = matrix(map$tiles[[1]]$colorData,ny,nx)
   m = matrix(117/EXAGGERATION,ny,nx)
   surface3d(xc,yc,m,col=colours)
-  points3d(stc_data$x, stc_data$y, stc_data$t)
+  points3d(stc_data$x, stc_data$y, stc_data$t, col=1:)
 }
 
 createBaseMap <- function(dataframe, Zoom = NULL, Type = "osm", MergeTiles = TRUE, Title = "Test", proj = NULL) {
