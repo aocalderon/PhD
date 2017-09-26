@@ -1,8 +1,7 @@
 #!/usr/bin/Rscript
-
-
 library(data.table)
-library(plotly)
+path = Sys.getenv("PHD_HOME")
+source(paste0(path,'Y2Q4/Scripts/R/map3D.R'))
 
 ###################
 # Setting credentials...
@@ -38,16 +37,20 @@ berlin = berlin[ , list(id = min(id)), by = c('x', 'y', 't')]
 # Taking a sample...
 ###################
 
-berlin = berlin[berlin$t < 127, ]
+berlin = berlin[berlin$t < 125, ]
 berlin = berlin[sample(1:nrow(berlin), 10000) ,]
+berlin$t = berlin$t/EXAGGERATION 
 
 ###################
 # Render scatterplot 3D...
 ###################
 
-p <- plot_ly(berlin, x = ~x, y = ~y, z = ~t, color = ~t) %>%
-  add_markers() %>%
-  layout(scene = list(xaxis = list(title = 'Lon'),
-                      yaxis = list(title = 'Lat'),
-                      zaxis = list(title = 'Time')))
-chart_link = api_create(p, filename="test", fileopt = "overwrite")
+# map = createBaseMap(berlin)
+map3d(map, berlin)
+
+# p <- plot_ly(berlin, x = ~x, y = ~y, z = ~t, marker = list(size = 1), color = ~t) %>%
+#  add_markers() %>%
+#  layout(scene = list(xaxis = list(title = 'Lon'),
+#                      yaxis = list(title = 'Lat'),
+#                      zaxis = list(title = 'Time')))
+# chart_link = api_create(p, filename="test", fileopt = "overwrite")
