@@ -6,16 +6,139 @@ import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.Row
 import org.apache.spark.sql.catalyst.ScalaReflection
 import org.apache.spark.sql.functions._
-import org.apache.spark.sql.simba.SimbaSession
+import org.apache.spark.sql.simba.{Dataset, SimbaSession}
 import org.apache.spark.sql.simba.index.RTreeType
 import org.apache.spark.sql.types.StructType
 import org.rogach.scallop._
+
 import scala.collection.JavaConverters._
 
 /**
   * Created by and on 5/4/17.
   */
 object PFlock {
+  // Setting variables...
+  var log = List.empty[String]
+  var output = List.empty[String]
+  
+  def run(points: Dataset[PFlock.APoint]
+          , timestamp: Int
+          , epsilon: Double
+          , mu: Int
+          , delta: Double
+          , cores: Int
+          , simba: SimbaSession): Unit ={
+    // Calling implicits...
+    import simba.implicits._
+    import simba.simbaImplicits._
+    // Starting timer...
+    log = log :+ s"""{"content":"Indexing points...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
+    var time1: Long = System.currentTimeMillis()
+    // Indexing points...
+    val p1 = points.toDF("id1", "x1", "y1")
+    p1.index(RTreeType, "p1RT", Array("x1", "y1"))
+    val p2 = points.toDF("id2", "x2", "y2")
+    p2.index(RTreeType, "p2RT", Array("x2", "y2"))
+    // Self-joining to find pairs of points close enough (< epsilon)...
+    log = log :+ s"""{"content":"Finding pairs (Self-join)...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
+    val pairsRDD = p1.distanceJoin(p2, Array("x1", "y1"), Array("x2", "y2"), epsilon).rdd
+    // Calculating disk's centers coordinates...
+    log = log :+ s"""{"content":"Computing disks...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
+    val centers = findDisks(pairsRDD, epsilon)
+      .distinct()
+      .toDS()
+      .index(RTreeType, "centersRT", Array("x", "y"))
+      .withColumn("id", monotonically_increasing_id())
+      .as[ACenter]
+    val partitions: Int = centers.rdd.getNumPartitions
+    // Grouping objects enclosed by candidates disks...
+    log = log :+ s"""{"content":"Mapping disks and points...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
+    val candidates = centers
+      .distanceJoin(p1, Array("x", "y"), Array("x1", "y1"), (epsilon / 2) + delta)
+      .groupBy("id", "x", "y")
+      .agg(collect_list("id1").alias("IDs"))
+    val ncandidates = candidates.count()
+    var time2: Long = System.currentTimeMillis()
+    val timeD: Double = (time2 - time1) / 1000.0
+    // Filtering candidates less than mu...
+    time1 = System.currentTimeMillis()
+    log = log :+ s"""{"content":"Filtering less-than-mu disks...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
+    val filteredCandidates =  candidates.filter(row => row.getList(3).size() >= mu)
+      .map(d => (d.getLong(0), d.getDouble(1), d.getDouble(2), d.getList[Integer](3).toString))
+    var nmaximal: Long = 0
+    // Prevent indexing of empty collections...
+    if(filteredCandidates.count() != 0){
+      // Indexing remaining candidates disks...
+      filteredCandidates.index(RTreeType, "candidatesRT", Array("_2", "_3"))
+      // Filtering redundant candidates
+      log = log :+ s"""{"content":"Getting maximals inside...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
+      val maximalInside = filteredCandidates
+        .rdd
+        .mapPartitions { partition =>
+          val transactions = partition
+            .map { disk =>
+              disk._4
+                .replace("[","")
+                .replace("]","")
+                .split(",")
+                .map{ id =>
+                  new Integer(id.trim)
+                }
+                .sorted
+                .toList
+                .asJava
+            }.toList.asJava
+          val fpMax = new AlgoFPMax
+          val itemsets = fpMax.runAlgorithm(transactions, 1)
+          itemsets.getItemsets(mu).asScala.toIterator
+        }
+      maximalInside.count()
+      log = log :+ s"""{"content":"Getting maximals in frame...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
+      val maximalFrame = filteredCandidates
+        .rdd
+        .mapPartitions { partition =>
+          val pList = partition.toList
+          val bbox = getBoundingBox(pList)
+          val transactions = pList
+            .map(disk => (disk._1, disk._2, disk._3, disk._4, !isInside(disk._2, disk._3, bbox, epsilon)))
+            .filter(_._5)
+            .map { disk =>
+              disk._4
+                .replace("[","")
+                .replace("]","")
+                .split(",")
+                .map{ id =>
+                  new Integer(id.trim)
+                }
+                .sorted
+                .toList
+                .asJava
+            }.asJava
+          val fpMax = new AlgoFPMax
+          val itemsets = fpMax.runAlgorithm(transactions, 1)
+          itemsets.getItemsets(mu).asScala.toIterator
+        }
+      maximalFrame.count()
+      log = log :+ s"""{"content":"Prunning duplicates...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
+      val maximal = maximalInside.union(maximalFrame).distinct()
+      nmaximal = maximal.count()
+    }
+    // Stopping timer...
+    time2 = System.currentTimeMillis()
+    val timeM: Double = (time2 - time1) / 1000.0
+    val time: Double = BigDecimal(timeD + timeM).setScale(3, BigDecimal.RoundingMode.HALF_DOWN).toDouble
+    // Print summary...
+    val record = s"PFlock,$epsilon,$timestamp,$timeD,$timeM,$time,$ncandidates,$nmaximal,$cores,$partitions,${org.joda.time.DateTime.now.toLocalTime}\n"
+    output = output :+ record
+    print("%10.10s %10.1f %10.10s %10.3f %10.3f %10.3f %10d %10d %10d %10d %15.15s\n"
+      .format("PFlock",epsilon,timestamp,timeD,timeM,time,ncandidates,nmaximal,cores,partitions,org.joda.time.DateTime.now.toLocalTime))
+    // Dropping indices
+    log = log :+ s"""{"content":"Dropping indices...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
+    p1.dropIndexByName("p1RT")
+    p2.dropIndexByName("p2RT")
+    centers.dropIndexByName("centersRT")
+    filteredCandidates.dropIndexByName("candidatesRT")
+  }
 
   def main(args: Array[String]): Unit = {
     var times = List.empty[String] 

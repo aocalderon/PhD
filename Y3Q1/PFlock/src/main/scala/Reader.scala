@@ -40,6 +40,10 @@ object Reader {
       .csv(filename)
       .as[APoint]
     dataset.show()
+    val timestamps = dataset.map(point => point.t).distinct().collect().sorted
+    timestamps.foreach(println)
+
+    simba.close()
   }
 
   class Conf(arguments: Seq[String]) extends ScallopConf(arguments) {
