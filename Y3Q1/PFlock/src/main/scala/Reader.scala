@@ -2,6 +2,7 @@ import org.apache.spark.sql.catalyst.ScalaReflection
 import org.apache.spark.sql.simba.SimbaSession
 import org.apache.spark.sql.types.StructType
 import org.rogach.scallop.{ScallopConf, ScallopOption}
+import org.apache.spark.sql.functions._
 
 object Reader {
   case class APoint(x: Double, y: Double, t: Int, id: Int)
@@ -40,21 +41,23 @@ object Reader {
       .csv(filename)
       .as[APoint]
     dataset.show()
-    val timestamps = dataset.map(point => point.t).distinct().collect().sorted
+    val timestamps = dataset.map(datapoint => datapoint.t).distinct.sort("value").collect
+    timestamps.foreach(println)
+    
     timestamps.foreach{ timestamp =>
       val points = dataset
-		.filter(datapoint => datapoint.t == timestamp)
-		.map(datapoint => PFlock.APoint(datapoint.id, datapoint.x, datapoint.y))
+    		.filter(datapoint => datapoint.t == timestamp)
+    		.map(datapoint => PFlock.APoint(datapoint.id, datapoint.x, datapoint.y))
       println("%d points in time %d".format(points.count(), timestamp))
-      PFlock.run(points, timestamp, 10.0, 8, simba)
+      PFlock.run(points, timestamp, 10.0, 3, simba)
     }
-
+    
     simba.close()
   }
 
   class Conf(arguments: Seq[String]) extends ScallopConf(arguments) {
     val partitions: ScallopOption[Int] = opt[Int](default = Some(32))
-    val cores: ScallopOption[Int] = opt[Int](default = Some(4))
+    val cores: ScallopOption[Int] = opt[Int](default = Some(7))
     val master: ScallopOption[String] = opt[String](default = Some("local[*]"))
     val logs: ScallopOption[String] = opt[String](default = Some("ERROR"))
     val output: ScallopOption[String] = opt[String](default = Some("output"))
