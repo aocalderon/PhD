@@ -1,14 +1,9 @@
-import java.io.{BufferedWriter, FileOutputStream, OutputStreamWriter}
 import SPMF.AlgoFPMax
-import org.apache.spark.Partitioner
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.Row
-import org.apache.spark.sql.catalyst.ScalaReflection
 import org.apache.spark.sql.functions._
-import org.apache.spark.sql.simba.{Dataset, SimbaSession}
 import org.apache.spark.sql.simba.index.RTreeType
-import org.apache.spark.sql.types.StructType
-import org.rogach.scallop._
+import org.apache.spark.sql.simba.{Dataset, SimbaSession}
 import scala.collection.JavaConverters._
 
 /**
@@ -19,14 +14,18 @@ object PFlock {
   var MASTER: String = "local[*]"
   var EPSILON: Double = 10.0
   var MU: Int = 3
-  var LABEL: String = "PFLOCK"
+  var DATASET: String = "Berlin"
   var PARTITIONS: Int = 1024
   var CORES: Int = 4
-  var DELTA: Double = 0.01
   var LOG = List.empty[String]
   var OUTPUT = List.empty[String]
+  private val DELTA: Double = 0.01
 
-  def run(points: Dataset[PFlock.APoint]
+  case class SP_Point(id: Int, x: Double, y: Double)
+  case class ACenter(id: Long, x: Double, y: Double)
+  case class BBox(minx: Double, miny: Double, maxx: Double, maxy: Double)
+
+  def run(points: Dataset[SP_Point]
           , timestamp: Int
           , epsilon: Double
           , mu: Int
@@ -143,19 +142,19 @@ object PFlock {
     filteredCandidates.dropIndexByName("candidatesRT")
   }
   
-    def findDisks(pairsRDD: RDD[Row], epsilon: Double): RDD[ACenter] = {
+  def findDisks(pairsRDD: RDD[Row], epsilon: Double): RDD[ACenter] = {
     val r2: Double = math.pow(epsilon / 2, 2)
     val centers = pairsRDD
       .filter((row: Row) => row.getInt(0) != row.getInt(3))
       .map { (row: Row) =>
-        val p1 = APoint(row.getInt(0), row.getDouble(1), row.getDouble(2))
-        val p2 = APoint(row.getInt(3), row.getDouble(4), row.getDouble(5))
+        val p1 = SP_Point(row.getInt(0), row.getDouble(1), row.getDouble(2))
+        val p2 = SP_Point(row.getInt(3), row.getDouble(4), row.getDouble(5))
         calculateDiskCenterCoordinates(p1, p2, r2)
       }
     centers
   }
 
-  def calculateDiskCenterCoordinates(p1: APoint, p2: APoint, r2: Double): ACenter = {
+  def calculateDiskCenterCoordinates(p1: SP_Point, p2: SP_Point, r2: Double): ACenter = {
     val X: Double = p1.x - p2.x
     val Y: Double = p1.y - p2.y
     var D2: Double = math.pow(X, 2) + math.pow(Y, 2)
@@ -207,93 +206,4 @@ object PFlock {
     )
 
   def toWKT(x: Double, y: Double): String = "POINT (%f %f)".format(x, y)
-
-  case class APoint(id: Int, x: Double, y: Double)
-
-  case class ACenter(id: Long, x: Double, y: Double)
-
-  case class BBox(minx: Double, miny: Double, maxx: Double, maxy: Double)
-
-  class CustomPartitioner(numParts: Int) extends Partitioner {
-    override def numPartitions: Int = numParts
-
-    override def getPartition(key: Any): Int = {
-      val out = key.asInstanceOf[Long] >> 33
-      out.toInt
-    }
-  }
-
-  class Conf(arguments: Seq[String]) extends ScallopConf(arguments) {
-    val epsilon: ScallopOption[Double] = opt[Double](default = Some(10.0))
-    val mu: ScallopOption[Int] = opt[Int](default = Some(3))
-    val dstart: ScallopOption[Int] = opt[Int](default = Some(10))
-    val dend: ScallopOption[Int] = opt[Int](default = Some(10))
-    val dstep: ScallopOption[Int] = opt[Int](default = Some(10))
-    val estart: ScallopOption[Double] = opt[Double](default = Some(10.0))
-    val eend: ScallopOption[Double] = opt[Double](default = Some(10.0))
-    val estep: ScallopOption[Double] = opt[Double](default = Some(10.0))
-    val delta: ScallopOption[Double] = opt[Double](default = Some(0.01))
-    val partitions: ScallopOption[Int] = opt[Int](default = Some(32))
-    val cores: ScallopOption[Int] = opt[Int](default = Some(4))
-    val master: ScallopOption[String] = opt[String](default = Some("local[*]"))
-    val logs: ScallopOption[String] = opt[String](default = Some("ERROR"))
-    val label: ScallopOption[String] = opt[String](default = Some("PFLOCK"))
-    val prefix: ScallopOption[String] = opt[String](default = Some("/opt/Datasets/Berlin/B"))
-    val suffix: ScallopOption[String] = opt[String](default = Some("K_3068"))
-    val dirlogs: ScallopOption[String] = opt[String](default = Some("/opt/Spark/Logs"))
-    val tag: ScallopOption[String] = opt[String](default = Some(""))
-
-    verify()
-  }
-
-  def main(args: Array[String]): Unit = {
-    // Reading arguments from command line...
-    val conf = new Conf(args)
-    // Tuning master and number of cores...
-    MASTER = conf.master()
-    if(conf.cores() == 1){
-      MASTER = "local[1]"
-    }
-    // Setting parameters...
-    PARTITIONS = conf.partitions()
-    EPSILON = conf.epsilon()
-    LABEL = conf.label()
-    val POINT_SCHEMA = ScalaReflection.schemaFor[APoint].dataType.asInstanceOf[StructType]
-    // Starting a session...
-    LOG = LOG :+ s"""{"content":"Setting paramaters...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
-    val simba = SimbaSession
-      .builder()
-      .master(MASTER)
-      .appName("PFlock")
-      .config("simba.index.partitions", s"$PARTITIONS")
-      .config("spark.cores.max", s"$CORES")
-      //.config("spark.eventLog.enabled","true")
-      //.config("spark.eventLog.dir", s"file://${conf.dirlogs()}")
-      .getOrCreate()
-    simba.sparkContext.setLogLevel(conf.logs())
-    // Calling implicits...
-    import simba.implicits._
-    import simba.simbaImplicits._
-    println(s"Running ${simba.sparkContext.applicationId} on ${conf.cores()} cores and ${conf.partitions()} partitions...")
-    println("%10.10s %10.10s %10.10s %10.10s %10.10s %10.10s %10.10s %10.10s %10.10s %10.10s %15.15s"
-      .format("Tag","Epsilon","Dataset","TimeD","TimeM","TotalTime","NCandidates","NMaximal","Cores", "Partitions","Timestamp"))
-    // Reading data...
-    val DATASET = s"${conf.prefix()}10${conf.suffix()}.csv"
-    val points = simba.read
-      .option("header", "false")
-      .schema(POINT_SCHEMA)
-      .csv(DATASET)
-      .as[APoint]
-    // Running the code...
-    PFlock.run(points, 1, EPSILON, MU, simba)
-    // Saving results...
-    LABEL = DATASET.substring(DATASET.lastIndexOf("/")).split("\\.")(0).substring(1)
-    val filename = s"${LABEL}_E${EPSILON}_M${MU}_C${CORES}_P${PARTITIONS}_${System.currentTimeMillis()}.csv"
-    val writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename)))
-    OUTPUT.foreach(writer.write)
-    writer.close()
-    // Closing the session...
-    simba.close()
-  }
-
 }

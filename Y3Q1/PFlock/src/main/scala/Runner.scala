@@ -1,10 +1,11 @@
+import java.io.{BufferedWriter, FileOutputStream, OutputStreamWriter}
+
 import org.apache.spark.sql.catalyst.ScalaReflection
 import org.apache.spark.sql.simba.SimbaSession
 import org.apache.spark.sql.types.StructType
 import org.rogach.scallop.{ScallopConf, ScallopOption}
-import org.apache.spark.sql.functions._
 
-object Reader {
+object Runner {
   case class APoint(x: Double, y: Double, t: Int, id: Int)
 
   def main(args: Array[String]): Unit = {
@@ -32,38 +33,53 @@ object Reader {
     // Calling implicits...
     import simba.implicits._
     import simba.simbaImplicits._
-    val phd_home = scala.util.Properties.envOrElse("PHD_HOME", "Please, set up PHD_HOME environment variable...")
-    val filename = s"${phd_home}${conf.path()}${conf.filename()}.${conf.extension()}"
+    val phd_home = scala.util.Properties.envOrElse("PHD_HOME", "/home/and/Documents/PhD/Code/")
+    val filename = s"$phd_home${conf.path()}${conf.dataset()}.${conf.extension()}"
     println(filename)
     val dataset = simba.read
       .option("header", "false")
       .schema(POINT_SCHEMA)
       .csv(filename)
       .as[APoint]
+      .filter(datapoint => datapoint.t < 119)
     dataset.show()
+    println(dataset.count())
     val timestamps = dataset.map(datapoint => datapoint.t).distinct.sort("value").collect
     timestamps.foreach(println)
-    
+    // Setting PFlock...
+    PFlock.MASTER = conf.master()
+    PFlock.CORES = conf.cores()
+    PFlock.EPSILON = conf.epsilon()
+    PFlock.MU = conf.mu()
+    PFlock.DATASET = conf.dataset()
+    PFlock.PARTITIONS = conf.partitions()
+    // Running PFlock...
     timestamps.foreach{ timestamp =>
       val points = dataset
     		.filter(datapoint => datapoint.t == timestamp)
-    		.map(datapoint => PFlock.APoint(datapoint.id, datapoint.x, datapoint.y))
+    		.map(datapoint => PFlock.SP_Point(datapoint.id, datapoint.x, datapoint.y))
       println("%d points in time %d".format(points.count(), timestamp))
       PFlock.run(points, timestamp, 10.0, 3, simba)
     }
+    // Saving results...
+    val output = s"${PFlock.DATASET}_E${PFlock.EPSILON}_M${PFlock.MU}_C${PFlock.CORES}_P${PFlock.PARTITIONS}_${System.currentTimeMillis()}.csv"
+    val writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(output)))
+    PFlock.OUTPUT.foreach(writer.write)
+    writer.close()
     
     simba.close()
   }
 
   class Conf(arguments: Seq[String]) extends ScallopConf(arguments) {
-    val partitions: ScallopOption[Int] = opt[Int](default = Some(32))
-    val cores: ScallopOption[Int] = opt[Int](default = Some(7))
+    val epsilon: ScallopOption[Double] = opt[Double](default = Some(10.0))
+    val mu: ScallopOption[Int] = opt[Int](default = Some(3))
+    val partitions: ScallopOption[Int] = opt[Int](default = Some(64))
+    val cores: ScallopOption[Int] = opt[Int](default = Some(4))
     val master: ScallopOption[String] = opt[String](default = Some("local[*]"))
     val logs: ScallopOption[String] = opt[String](default = Some("ERROR"))
-    val output: ScallopOption[String] = opt[String](default = Some("output"))
     val phd_home: ScallopOption[String] = opt[String](default = sys.env.get("PHD_HOME"))
     val path: ScallopOption[String] = opt[String](default = Some("Y3Q1/Datasets/"))
-    val filename: ScallopOption[String] = opt[String](default = Some("Berlin_N277K_A18K_T15"))
+    val dataset: ScallopOption[String] = opt[String](default = Some("Berlin_N277K_A18K_T15"))
     val extension: ScallopOption[String] = opt[String](default = Some("csv"))
 
     verify()
