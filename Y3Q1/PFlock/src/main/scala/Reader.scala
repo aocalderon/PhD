@@ -41,7 +41,13 @@ object Reader {
       .as[APoint]
     dataset.show()
     val timestamps = dataset.map(point => point.t).distinct().collect().sorted
-    timestamps.foreach(println)
+    timestamps.foreach{ timestamp =>
+      val points = dataset
+		.filter(datapoint => datapoint.t == timestamp)
+		.map(datapoint => PFlock.APoint(datapoint.id, datapoint.x, datapoint.y))
+      println("%d points in time %d".format(points.count(), timestamp))
+      PFlock.run(points, timestamp, 10.0, 8, simba)
+    }
 
     simba.close()
   }

@@ -142,58 +142,8 @@ object PFlock {
     centers.dropIndexByName("centersRT")
     filteredCandidates.dropIndexByName("candidatesRT")
   }
-
-  def main(args: Array[String]): Unit = {
-    // Reading arguments from command line...
-    val conf = new Conf(args)
-    // Tuning master and number of cores...
-    MASTER = conf.master()
-    if(conf.cores() == 1){
-      MASTER = "local[1]"
-    }
-    // Setting parameters...
-    PARTITIONS = conf.partitions()
-    EPSILON = conf.epsilon()
-    LABEL = conf.label()
-    val POINT_SCHEMA = ScalaReflection.schemaFor[APoint].dataType.asInstanceOf[StructType]
-    // Starting a session...
-    LOG = LOG :+ s"""{"content":"Setting paramaters...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
-    val simba = SimbaSession
-      .builder()
-      .master(MASTER)
-      .appName("PFlock")
-      .config("simba.index.partitions", s"$PARTITIONS")
-      .config("spark.cores.max", s"$CORES")
-      //.config("spark.eventLog.enabled","true")
-      //.config("spark.eventLog.dir", s"file://${conf.dirlogs()}")
-      .getOrCreate()
-    simba.sparkContext.setLogLevel(conf.logs())
-    // Calling implicits...
-    import simba.implicits._
-    import simba.simbaImplicits._
-    println(s"Running ${simba.sparkContext.applicationId} on ${conf.cores()} cores and ${conf.partitions()} partitions...")
-    println("%10.10s %10.10s %10.10s %10.10s %10.10s %10.10s %10.10s %10.10s %10.10s %10.10s %15.15s"
-      .format("Tag","Epsilon","Dataset","TimeD","TimeM","TotalTime","NCandidates","NMaximal","Cores", "Partitions","Timestamp"))
-    // Reading data...
-    val DATASET = s"${conf.prefix()}10${conf.suffix()}.csv"
-    val points = simba.read
-      .option("header", "false")
-      .schema(POINT_SCHEMA)
-      .csv(DATASET)
-      .as[APoint]
-    // Running the code...
-    PFlock.run(points, 1, EPSILON, MU, simba)
-    // Saving results...
-    LABEL = DATASET.substring(DATASET.lastIndexOf("/")).split("\\.")(0).substring(1)
-    val filename = s"${LABEL}_E${EPSILON}_M${MU}_C${CORES}_P${PARTITIONS}_${System.currentTimeMillis()}.csv"
-    val writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename)))
-    OUTPUT.foreach(writer.write)
-    writer.close()
-    // Closing the session...
-    simba.close()
-  }
-
-  def findDisks(pairsRDD: RDD[Row], epsilon: Double): RDD[ACenter] = {
+  
+    def findDisks(pairsRDD: RDD[Row], epsilon: Double): RDD[ACenter] = {
     val r2: Double = math.pow(epsilon / 2, 2)
     val centers = pairsRDD
       .filter((row: Row) => row.getInt(0) != row.getInt(3))
@@ -295,4 +245,55 @@ object PFlock {
 
     verify()
   }
+
+  def main(args: Array[String]): Unit = {
+    // Reading arguments from command line...
+    val conf = new Conf(args)
+    // Tuning master and number of cores...
+    MASTER = conf.master()
+    if(conf.cores() == 1){
+      MASTER = "local[1]"
+    }
+    // Setting parameters...
+    PARTITIONS = conf.partitions()
+    EPSILON = conf.epsilon()
+    LABEL = conf.label()
+    val POINT_SCHEMA = ScalaReflection.schemaFor[APoint].dataType.asInstanceOf[StructType]
+    // Starting a session...
+    LOG = LOG :+ s"""{"content":"Setting paramaters...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
+    val simba = SimbaSession
+      .builder()
+      .master(MASTER)
+      .appName("PFlock")
+      .config("simba.index.partitions", s"$PARTITIONS")
+      .config("spark.cores.max", s"$CORES")
+      //.config("spark.eventLog.enabled","true")
+      //.config("spark.eventLog.dir", s"file://${conf.dirlogs()}")
+      .getOrCreate()
+    simba.sparkContext.setLogLevel(conf.logs())
+    // Calling implicits...
+    import simba.implicits._
+    import simba.simbaImplicits._
+    println(s"Running ${simba.sparkContext.applicationId} on ${conf.cores()} cores and ${conf.partitions()} partitions...")
+    println("%10.10s %10.10s %10.10s %10.10s %10.10s %10.10s %10.10s %10.10s %10.10s %10.10s %15.15s"
+      .format("Tag","Epsilon","Dataset","TimeD","TimeM","TotalTime","NCandidates","NMaximal","Cores", "Partitions","Timestamp"))
+    // Reading data...
+    val DATASET = s"${conf.prefix()}10${conf.suffix()}.csv"
+    val points = simba.read
+      .option("header", "false")
+      .schema(POINT_SCHEMA)
+      .csv(DATASET)
+      .as[APoint]
+    // Running the code...
+    PFlock.run(points, 1, EPSILON, MU, simba)
+    // Saving results...
+    LABEL = DATASET.substring(DATASET.lastIndexOf("/")).split("\\.")(0).substring(1)
+    val filename = s"${LABEL}_E${EPSILON}_M${MU}_C${CORES}_P${PARTITIONS}_${System.currentTimeMillis()}.csv"
+    val writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename)))
+    OUTPUT.foreach(writer.write)
+    writer.close()
+    // Closing the session...
+    simba.close()
+  }
+
 }
