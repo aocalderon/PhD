@@ -1,9 +1,12 @@
+import java.io.{BufferedWriter, FileOutputStream, OutputStreamWriter}
+
 import SPMF.AlgoFPMax
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.Row
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.simba.index.RTreeType
 import org.apache.spark.sql.simba.{Dataset, SimbaSession}
+
 import scala.collection.JavaConverters._
 
 /**
@@ -11,12 +14,11 @@ import scala.collection.JavaConverters._
   */
 object PFlock {
   // Setting variables...
-  var MASTER: String = "local[*]"
   var EPSILON: Double = 10.0
   var MU: Int = 3
   var DATASET: String = "Berlin"
-  var PARTITIONS: Int = 1024
-  var CORES: Int = 4
+  var CORES: Int = 0
+  var PARTITIONS: Int = 0
   var LOG = List.empty[String]
   var OUTPUT = List.empty[String]
   private val DELTA: Double = 0.01
@@ -27,9 +29,9 @@ object PFlock {
 
   def run(points: Dataset[SP_Point]
           , timestamp: Int
-          , epsilon: Double
-          , mu: Int
-          , simba: SimbaSession): Unit ={
+          , simba: SimbaSession
+          , epsilon: Double = PFlock.EPSILON
+          , mu: Int = PFlock.MU): RDD[List[Int]] ={
     // Calling implicits...
     import simba.implicits._
     import simba.simbaImplicits._
@@ -52,7 +54,6 @@ object PFlock {
       .index(RTreeType, "centersRT", Array("x", "y"))
       .withColumn("id", monotonically_increasing_id())
       .as[ACenter]
-    val partitions: Int = centers.rdd.getNumPartitions
     // Grouping objects enclosed by candidates disks...
     LOG = LOG :+ s"""{"content":"Mapping disks and points...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
     val candidates = centers
@@ -68,6 +69,7 @@ object PFlock {
     val filteredCandidates =  candidates.filter(row => row.getList(3).size() >= mu)
       .map(d => (d.getLong(0), d.getDouble(1), d.getDouble(2), d.getList[Integer](3).toString))
     var nmaximal: Long = 0
+    var maximal: RDD[List[Int]] = simba.sparkContext.emptyRDD
     // Prevent indexing of empty collections...
     if(filteredCandidates.count() != 0){
       // Indexing remaining candidates disks...
@@ -122,7 +124,7 @@ object PFlock {
         }
       maximalFrame.count()
       LOG = LOG :+ s"""{"content":"Prunning duplicates...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
-      val maximal = maximalInside.union(maximalFrame).distinct()
+      maximal = maximalInside.union(maximalFrame).distinct().map(_.asScala.toList.map(_.intValue()))
       nmaximal = maximal.count()
     }
     // Stopping timer...
@@ -130,16 +132,18 @@ object PFlock {
     val timeM: Double = (time2 - time1) / 1000.0
     val time: Double = BigDecimal(timeD + timeM).setScale(3, BigDecimal.RoundingMode.HALF_DOWN).toDouble
     // Print summary...
-    val record = s"PFlock,$epsilon,$timestamp,$timeD,$timeM,$time,$ncandidates,$nmaximal,$CORES,$partitions,${org.joda.time.DateTime.now.toLocalTime}\n"
+    val record = s"PFlock,$epsilon,$timestamp,$timeD,$timeM,$time,$ncandidates,$nmaximal,$CORES,$PARTITIONS,${org.joda.time.DateTime.now.toLocalTime}\n"
     OUTPUT = OUTPUT :+ record
     print("%10.10s %10.1f %10.10s %10.3f %10.3f %10.3f %10d %10d %10d %10d %15.15s\n"
-      .format("PFlock",epsilon,timestamp,timeD,timeM,time,ncandidates,nmaximal,CORES,partitions,org.joda.time.DateTime.now.toLocalTime))
+      .format("PFlock",epsilon,timestamp,timeD,timeM,time,ncandidates,nmaximal,CORES,PARTITIONS,org.joda.time.DateTime.now.toLocalTime))
     // Dropping indices
     LOG = LOG :+ s"""{"content":"Dropping indices...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
     p1.dropIndexByName("p1RT")
     p2.dropIndexByName("p2RT")
     centers.dropIndexByName("centersRT")
     filteredCandidates.dropIndexByName("candidatesRT")
+
+    maximal
   }
   
   def findDisks(pairsRDD: RDD[Row], epsilon: Double): RDD[ACenter] = {
@@ -206,4 +210,11 @@ object PFlock {
     )
 
   def toWKT(x: Double, y: Double): String = "POINT (%f %f)".format(x, y)
+
+  def saveOutput(): Unit ={
+    val output = s"${DATASET}_E${EPSILON}_M${MU}_C${CORES}_P${PARTITIONS}_${System.currentTimeMillis()}.csv"
+    val writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(output)))
+    OUTPUT.foreach(writer.write)
+    writer.close()
+  }
 }

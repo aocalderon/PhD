@@ -1,16 +1,19 @@
-import java.io.{BufferedWriter, FileOutputStream, OutputStreamWriter}
-
+import org.apache.spark.rdd.RDD
+import wvlet.log._
 import org.apache.spark.sql.catalyst.ScalaReflection
 import org.apache.spark.sql.simba.SimbaSession
 import org.apache.spark.sql.types.StructType
 import org.rogach.scallop.{ScallopConf, ScallopOption}
 
-object Runner {
-  case class APoint(x: Double, y: Double, t: Int, id: Int)
+object Runner extends LogSupport{
+  private val LAYER_0 = 117
+  private val LAYERS_N = 2
+
+  case class ST_Point(x: Double, y: Double, t: Int, id: Int)
 
   def main(args: Array[String]): Unit = {
-    var log = List.empty[String]
-    log = log :+ s"""{"content":"Starting app...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
+    Logger.setDefaultFormatter(LogFormatter.SourceCodeLogFormatter)
+    info(s"""{"content":"Starting app...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n""")
     // Reading arguments from command line...
     val conf = new Conf(args)
     // Tuning master and number of cores...
@@ -19,9 +22,9 @@ object Runner {
       MASTER = "local[1]"
     }
     // Setting parameters...
-    val POINT_SCHEMA = ScalaReflection.schemaFor[APoint].dataType.asInstanceOf[StructType]
+    val POINT_SCHEMA = ScalaReflection.schemaFor[ST_Point].dataType.asInstanceOf[StructType]
     // Starting a session...
-    log = log :+ s"""{"content":"Setting paramaters...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
+    info(s"""{"content":"Setting paramaters...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n""")
     val simba = SimbaSession
       .builder()
       .master(MASTER)
@@ -35,38 +38,43 @@ object Runner {
     import simba.simbaImplicits._
     val phd_home = scala.util.Properties.envOrElse("PHD_HOME", "/home/and/Documents/PhD/Code/")
     val filename = s"$phd_home${conf.path()}${conf.dataset()}.${conf.extension()}"
-    println(filename)
+    info("Reading %s ...".format(filename))
     val dataset = simba.read
       .option("header", "false")
       .schema(POINT_SCHEMA)
       .csv(filename)
-      .as[APoint]
-      .filter(datapoint => datapoint.t < 119)
-    dataset.show()
-    println(dataset.count())
-    val timestamps = dataset.map(datapoint => datapoint.t).distinct.sort("value").collect
-    timestamps.foreach(println)
+      .as[ST_Point]
+      .filter(datapoint => datapoint.t < LAYER_0 + LAYERS_N)
+    dataset.cache()
+    info("Number of points in dataset: %d".format(dataset.count()))
+    val timestamps = dataset.map(datapoint => datapoint.t).distinct.sort("value").collect.toList
     // Setting PFlock...
-    PFlock.MASTER = conf.master()
-    PFlock.CORES = conf.cores()
     PFlock.EPSILON = conf.epsilon()
     PFlock.MU = conf.mu()
     PFlock.DATASET = conf.dataset()
+    PFlock.CORES = conf.cores()
     PFlock.PARTITIONS = conf.partitions()
     // Running PFlock...
-    timestamps.foreach{ timestamp =>
-      val points = dataset
-    		.filter(datapoint => datapoint.t == timestamp)
-    		.map(datapoint => PFlock.SP_Point(datapoint.id, datapoint.x, datapoint.y))
-      println("%d points in time %d".format(points.count(), timestamp))
-      PFlock.run(points, timestamp, 10.0, 3, simba)
-    }
+    var timestamp = timestamps.head
+    var currentPoints = dataset
+      .filter(datapoint => datapoint.t == timestamp)
+      .map(datapoint => PFlock.SP_Point(datapoint.id, datapoint.x, datapoint.y))
+    println("%d points in time %d".format(currentPoints.count(), timestamp))
+    var f0: RDD[List[Int]] = PFlock.run(currentPoints, timestamp, simba)
+
+    timestamp = timestamps(1)
+    currentPoints = dataset
+      .filter(datapoint => datapoint.t == timestamp)
+      .map(datapoint => PFlock.SP_Point(datapoint.id, datapoint.x, datapoint.y))
+    println("%d points in time %d".format(currentPoints.count(), timestamp))
+    var f1: RDD[List[Int]] = PFlock.run(currentPoints, timestamp, simba)
+    println("f0 has %d maximal disks and f1 has %d".format(f0.count(), f1.count()))
+    // f0.toDF("f0").crossJoin(f1.toDF("f1"))
+
     // Saving results...
-    val output = s"${PFlock.DATASET}_E${PFlock.EPSILON}_M${PFlock.MU}_C${PFlock.CORES}_P${PFlock.PARTITIONS}_${System.currentTimeMillis()}.csv"
-    val writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(output)))
-    PFlock.OUTPUT.foreach(writer.write)
-    writer.close()
-    
+    PFlock.saveOutput()
+    // Closing all...
+    info(s"""{"content":"Closing app...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n""")
     simba.close()
   }
 
