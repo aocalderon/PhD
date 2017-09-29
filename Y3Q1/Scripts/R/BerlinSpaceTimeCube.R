@@ -16,7 +16,7 @@ WGS84 = "+init=epsg:4326"
 DHDN = "+init=epsg:3068"
 SOURCE = "bing"
 DATASET = "/opt/Datasets/Berlin/berlin.csv"
-DATASET = "~/Datasets/Berlin/berlin.csv"
+#DATASET = "~/Datasets/Berlin/berlin.csv"
 rgl.viewpoint(  zoom = .8 )
 
 ###################
