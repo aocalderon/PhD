@@ -15,7 +15,8 @@ WGS84 = "+init=epsg:4326"
 DHDN = "+init=epsg:3068"
 SOURCE = "bing"
 DATASET = "/opt/Datasets/Berlin/berlin.csv"
-DATASET = "~/Datasets/Berlin/berlin.csv"
+#DATASET = "~/Datasets/Berlin/berlin.csv"
+rgl.viewpoint(  zoom = .8 )
 
 ###################
 # Mapping functions...
@@ -69,7 +70,7 @@ createBaseMap <- function(dataframe, Zoom = NULL, Type = "osm", MergeTiles = TRU
 # Reading data...
 ###################
 
-data = read.csv(DATASET, header = F)
+#data = read.csv(DATASET, header = F)
 berlin = as.data.table(data[,c(2,3,4,1)])
 names(berlin) = c('id','x','y','t')
 berlin = berlin[berlin$t >= FIRST_LAYER, ]
@@ -99,8 +100,10 @@ berlin = berlin[sample(1:nrow(berlin), 10000) ,]
 # Render scatterplot 3D...
 ###################
 
-map = createBaseMap(berlin, Type = SOURCE)
+#map = createBaseMap(berlin, Type = SOURCE)
 map3d(map, berlin)
+writeWebGL("/tmp/test")
+
 
 ###################
 # Plotly code...
