@@ -11,6 +11,7 @@ echo "acald013@dblab-rack11" >> $SPARK_HOME/conf/slaves
 $SPARK_HOME/sbin/start-all.sh
 for i in `seq 1 $N`
 do
+	echo "Running iteration $i ..."
 	./runDataset.sh 20 7 $PARTITIONS $MU
 done
 
@@ -23,6 +24,7 @@ $SPARK_HOME/sbin/start-all.sh
 
 for i in `seq 1 $N`
 do
+	echo "Running iteration $i ..."
         ./runDataset.sh 40 14 $PARTITIONS $MU
 done
 
@@ -36,6 +38,7 @@ $SPARK_HOME/sbin/start-all.sh
 
 for i in `seq 1 $N`
 do
+	echo "Running iteration $i ..."
         ./runDataset.sh 60 21 $PARTITIONS $MU
 done
 
@@ -50,6 +53,7 @@ $SPARK_HOME/sbin/start-all.sh
 
 for i in `seq 1 $N`
 do
+	echo "Running iteration $i ..."
         ./runDataset.sh 80 28 $PARTITIONS $MU
 done
 
