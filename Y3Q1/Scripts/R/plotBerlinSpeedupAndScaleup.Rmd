@@ -18,7 +18,7 @@ if (!require("pacman")) install.packages("pacman")
 pacman::p_load(ggplot2, data.table, foreach, sqldf)
 
 PHD_HOME = Sys.getenv(c("PHD_HOME"))
-PATH = "Y2Q4/Scripts/Speedup/"
+PATH = "Y3Q1/Scripts/Speedup/"
 filename ="Berlin_N80K-80K_E50.0-100.0"
 files = system(paste0("ls ",PHD_HOME,PATH,filename,"_C*.csv"), intern = T)
 data = data.frame()
@@ -45,7 +45,7 @@ plot(g)
 #### Execution time on a Single Node.
 
 ```{r SpeedupSingleNodeSetup, include=FALSE}
-PATH = "Y2Q4/Scripts/SpeedupSingleNode/"
+PATH = "Y3Q1/Scripts/SpeedupSingleNode/"
 filename ="Berlin_N80K-80K_E50.0-100.0"
 files = system(paste0("ls ",PHD_HOME,PATH,filename,"_C*.csv"), intern = T)
 data = data.frame()
@@ -75,7 +75,7 @@ plot(g)
 Similar dataset was used to run scaleup analysis.  The 80K points were divided on four samples.  First one collected 1/4 of the data, second one 1/2, third one collected 3/4 and finally the last one kept the full content. The small sample was run using just one node (seven cores). The next sample used 2 nodes (14 cores).  Similarly, the third sample run over 3 nodes (21 cores) and, finally, the full dataset run over the four available nodes. 
 
 ```{r ScaleupSetup, include=FALSE}
-PATH = "Y2Q4/Scripts/Scaleup/"
+PATH = "Y3Q1/Scripts/Scaleup/"
 filename ="Berlin_N20K-80K_E50.0-100.0"
 
 files = system(paste0("ls ",PHD_HOME,PATH,filename,"_C*.csv"), intern = T)
