@@ -3,66 +3,166 @@
 if (!require("pacman")) install.packages("pacman")
 pacman::p_load(ggplot2, data.table, foreach, sqldf)
 
-PHD_HOME = Sys.getenv(c("PHD_HOME"))
-PATH = "/home/and/Documents/PhD/Code/Y2Q4/Scripts/"
-#filename = "Beijing_N10K-100K_E5.0-45.0"
-filename = "Berlin_N120K-160K_E10.0-30.0"
-dataset = strsplit(filename, '_')[[1]][1]
-
-files = system(paste0("ls ",PHD_HOME,PATH,filename,"_C1_*.csv"), intern = T)
-core1 = data.frame()
-foreach(f = files) %do% {
-  core1 = rbind(core1, read.csv(f, header = F))
-}
-core1 = core1[, c(2, 3, 5, 6)]
-core1$Time = core1$V5 + core1$V6  
-names(core1) = c("Epsilon", "Dataset", "Time1", "Time2","Time")
-core1 = sqldf("SELECT Epsilon, Dataset, AVG(Time) AS Time1 FROM core1 GROUP BY 1, 2")
+## Second_Scaleup
+PATH = "Y3Q1/Scripts/Scaleup/"
+filename ="Berlin_N20K-80K_E50.0-100.0"
 
 files = system(paste0("ls ",PHD_HOME,PATH,filename,"_C*.csv"), intern = T)
 data = data.frame()
 foreach(f = files) %do% {
   data = rbind(data, read.csv(f, header = F))
 }
-data = data[, c(2, 3, 5, 6, 7)]
-data$Time = data$V5 + data$V6  
-data = data[, c(1, 2, 5, 6)]
-names(data) = c("Epsilon", "Dataset", "Cores", "Time")
-
+data = data[, c(2, 3, 6, 9)]
+names(data) = c("Epsilon", "Dataset", "Time", "Cores")
+data20 = sqldf("SELECT Epsilon, Dataset, Cores, Time FROM data WHERE Dataset LIKE '20K' AND Cores = 7")
+data40 = sqldf("SELECT Epsilon, Dataset, Cores, Time FROM data WHERE Dataset LIKE '40K' AND Cores = 14")
+data60 = sqldf("SELECT Epsilon, Dataset, Cores, Time FROM data WHERE Dataset LIKE '60K' AND Cores = 21")
+data80 = sqldf("SELECT Epsilon, Dataset, Cores, Time FROM data WHERE Dataset LIKE '80K' AND Cores = 28")
+data = rbind(data20, data40, data60, data80)
 data = sqldf("SELECT Epsilon, Dataset, Cores, AVG(Time) AS Time FROM data GROUP BY 1, 2, 3")
-data = sqldf("SELECT Epsilon, Dataset, Cores, Time1/Time AS Scaleup FROM data NATURAL JOIN core1")
-data$Dataset = factor(data$Dataset, levels = paste0(seq(120, 160, 20), "K"))
+data$Cores = factor(data$Cores)
+data = data[data$Epsilon > 50, ]
+temp_title = paste("(radius of disk in mts) in Berlin dataset.")
+title = substitute(paste("Scaleup by ", epsilon) ~ temp_title, list(temp_title = temp_title))
+g = ggplot(data=data, aes(x=factor(Epsilon), y=Time, fill=Cores)) +
+  geom_bar(stat="identity", position=position_dodge(width = 0.75),width = 0.75) +
+  scale_y_continuous(limits = c(0, 125)) +
+  labs(title=title, y="Time(s)", x=expression(paste(epsilon,"(mts)")))
+plot(g)
+ggsave("2_Second_Scaleup.png", width = 20, height = 14, units = "cm")
+
+## First_Scaleup
+PATH = "Y3Q1/Scripts/Scaleup/tmp/"
+filename ="Berlin_N20K-80K_E50.0-100.0"
+
+files = system(paste0("ls ",PHD_HOME,PATH,filename,"_C*.csv"), intern = T)
+data = data.frame()
+foreach(f = files) %do% {
+  data = rbind(data, read.csv(f, header = F))
+}
+data = data[, c(2, 3, 6, 9)]
+names(data) = c("Epsilon", "Dataset", "Time", "Cores")
+data20 = sqldf("SELECT Epsilon, Dataset, Cores, Time FROM data WHERE Dataset LIKE '20K' AND Cores = 7")
+data40 = sqldf("SELECT Epsilon, Dataset, Cores, Time FROM data WHERE Dataset LIKE '40K' AND Cores = 14")
+data60 = sqldf("SELECT Epsilon, Dataset, Cores, Time FROM data WHERE Dataset LIKE '60K' AND Cores = 21")
+data80 = sqldf("SELECT Epsilon, Dataset, Cores, Time FROM data WHERE Dataset LIKE '80K' AND Cores = 28")
+data = rbind(data20, data40, data60, data80)
+data = sqldf("SELECT Epsilon, Dataset, Cores, AVG(Time) AS Time FROM data GROUP BY 1, 2, 3")
+data$Cores = factor(data$Cores)
+data = data[data$Epsilon > 50, ]
+temp_title = paste("(radius of disk in mts) in Berlin dataset.")
+title = substitute(paste("Scaleup by ", epsilon) ~ temp_title, list(temp_title = temp_title))
+g = ggplot(data=data, aes(x=factor(Epsilon), y=Time, fill=Cores)) +
+  geom_bar(stat="identity", position=position_dodge(width = 0.75),width = 0.75) +
+  scale_y_continuous(limits = c(0, 125)) +
+  labs(title=title, y="Time(s)", x=expression(paste(epsilon,"(mts)")))
+plot(g)
+ggsave("1_First_Scaleup.png", width = 20, height = 14, units = "cm")
+
+#####
+# Plotting number of candidates and maximal disks...
+#####
+
+## Second_Scaleup
+PATH = "Y3Q1/Scripts/Scaleup/"
+filename ="Berlin_N20K-80K_E50.0-100.0"
+files = system(paste0("ls ",PHD_HOME,PATH,filename,"_C*.csv"), intern = T)
+data = data.frame()
+foreach(f = files) %do% {
+  data = rbind(data, read.csv(f, header = F))
+}
+data = data[, c(2, 3, 7, 8, 9)]
+names(data) = c("Epsilon", "Dataset", "Candidates", "Maximals", "Cores")
+data20 = sqldf("SELECT Epsilon, Dataset, Cores, Candidates, Maximals FROM data WHERE Dataset LIKE '20K' AND Cores = 7")
+data40 = sqldf("SELECT Epsilon, Dataset, Cores, Candidates, Maximals FROM data WHERE Dataset LIKE '40K' AND Cores = 14")
+data60 = sqldf("SELECT Epsilon, Dataset, Cores, Candidates, Maximals FROM data WHERE Dataset LIKE '60K' AND Cores = 21")
+data80 = sqldf("SELECT Epsilon, Dataset, Cores, Candidates, Maximals FROM data WHERE Dataset LIKE '80K' AND Cores = 28")
+data = rbind(data20, data40, data60, data80)
+data = sqldf("SELECT DISTINCT Epsilon, Dataset, Cores, Candidates, Maximals FROM data")
+data$Dataset = factor(data$Dataset, levels = paste0(seq(20, 80, 20), "K"))
 data$Cores = factor(data$Cores)
 
-data = data[data$Epsilon > 10 & data$Epsilon < 50, ]
-data = data[data$Cores != 1, ]
-
-temp_title = paste0("(radius of disk in mts) in ", dataset, " dataset.")
-title = substitute(paste("Scaleup by ", epsilon) ~ temp_title, list(temp_title = temp_title))
-g = ggplot(data = data, aes(x = factor(Dataset), y = Scaleup, group = Cores, colour = Cores, shape = Cores)) + 
-    geom_line(aes(linetype = Cores)) + 
-    geom_point(size = 2) + 
-    labs(title = title, y = "Scaleup") + 
-    scale_x_discrete("Number of points", breaks = paste0(seq(120, 160, 20), "K")) +
-    theme(axis.text.x = element_text(size = 8, angle = 90), axis.text.y = element_text(size = 8)) + 
-    facet_wrap(~Epsilon) + 
-    scale_colour_discrete() + 
-    scale_shape_discrete() + 
-    scale_linetype_discrete()
-pdf(paste0(PHD_HOME,PATH,filename,"_Scaleup.pdf"), width = 10.5, height = 7.5)
+library("tidyr")
+data = gather(data, "Disks", "Count", 4:5)
+candidates2 = data[data$Disks == "Candidates",]
+temp_title = paste("(radius of disk in mts) in Berlin dataset.")
+title = substitute(paste("Number of Candidate disks by ", epsilon) ~ temp_title, list(temp_title = temp_title))
+g = ggplot(data=candidates2, aes(x=factor(Cores), y=Count, group = Disks, colour = Disks, shape = Disks)) + 
+  geom_line(aes(linetype = Disks)) + 
+  geom_point(size = 2) + 
+  labs(title = title, y = "Count") + 
+  scale_x_discrete("Cores") +
+  theme(axis.text.x = element_text(size = 8, angle = 90), axis.text.y = element_text(size = 8)) + 
+  facet_wrap(~Epsilon) + 
+  scale_color_manual(values=c("#F8766D")) + 
+  scale_shape_manual(values=c(16)) + 
+  scale_linetype_discrete()
 plot(g)
-dev.off()
+ggsave("Candidates_1.png", width = 20, height = 14, units = "cm")
 
-title = paste("Speedup in", dataset,"dataset.")
-g = ggplot(data=data, aes(x=factor(Epsilon), y=Scaleup, fill=Cores)) +
-  geom_bar(stat="identity", position=position_dodge(width = 0.75),width = 0.75) +
-  labs(title=title, x=expression(paste(epsilon,"(mts)")))
-pdf(paste0(PHD_HOME,PATH,filename,"_Speedup.pdf"), width = 10.5, height = 7.5)
+maximals2 = data[data$Disks == "Maximals",]
+title = substitute(paste("Number of Maximal disks by ", epsilon) ~ temp_title, list(temp_title = temp_title))
+g = ggplot(data=maximals2, aes(x=factor(Cores), y=Count, group = Disks, colour = Disks, shape = Disks)) + 
+  geom_line(aes(linetype = Disks)) + 
+  geom_point(size = 2) + 
+  labs(title = title, y = "Count") + 
+  scale_x_discrete("Cores") +
+  theme(axis.text.x = element_text(size = 8, angle = 90), axis.text.y = element_text(size = 8)) + 
+  facet_wrap(~Epsilon) + 
+  scale_color_manual(values=c("#00BFC4")) + 
+  scale_shape_manual(values=c(16)) + 
+  scale_linetype_discrete()
 plot(g)
-dev.off()
+ggsave("Maximals_1.png", width = 20, height = 14, units = "cm")
 
-#setwd(PHD_HOME)
-#system("git add .", wait=TRUE)
-#system(paste0("git commit -m 'Uploading scaleup analysis for ", filename, "...'"), wait=TRUE)
-#system("git pull", wait=TRUE)
-#system("git push", wait=TRUE)
+
+## First_Scaleup
+PATH = "Y3Q1/Scripts/Scaleup/tmp/"
+filename ="Berlin_N20K-80K_E50.0-100.0"
+files = system(paste0("ls ",PHD_HOME,PATH,filename,"_C*.csv"), intern = T)
+data = data.frame()
+foreach(f = files) %do% {
+  data = rbind(data, read.csv(f, header = F))
+}
+data = data[, c(2, 3, 7, 8, 9)]
+names(data) = c("Epsilon", "Dataset", "Candidates", "Maximals", "Cores")
+data20 = sqldf("SELECT Epsilon, Dataset, Cores, Candidates, Maximals FROM data WHERE Dataset LIKE '20K' AND Cores = 7")
+data40 = sqldf("SELECT Epsilon, Dataset, Cores, Candidates, Maximals FROM data WHERE Dataset LIKE '40K' AND Cores = 14")
+data60 = sqldf("SELECT Epsilon, Dataset, Cores, Candidates, Maximals FROM data WHERE Dataset LIKE '60K' AND Cores = 21")
+data80 = sqldf("SELECT Epsilon, Dataset, Cores, Candidates, Maximals FROM data WHERE Dataset LIKE '80K' AND Cores = 28")
+data = rbind(data20, data40, data60, data80)
+data = sqldf("SELECT DISTINCT Epsilon, Dataset, Cores, Candidates, Maximals FROM data")
+data$Dataset = factor(data$Dataset, levels = paste0(seq(20, 80, 20), "K"))
+data$Cores = factor(data$Cores)
+
+data = gather(data, "Disks", "Count", 4:5)
+candidates1 = data[data$Disks == "Candidates",]
+temp_title = paste("(radius of disk in mts) in Berlin dataset.")
+title = substitute(paste("Number of Candidate disks by ", epsilon) ~ temp_title, list(temp_title = temp_title))
+g = ggplot(data=candidates1, aes(x=factor(Cores), y=Count, group = Disks, colour = Disks, shape = Disks)) + 
+  geom_line(aes(linetype = Disks)) + 
+  geom_point(size = 2) + 
+  labs(title = title, y = "Count") + 
+  scale_x_discrete("Cores") +
+  theme(axis.text.x = element_text(size = 8, angle = 90), axis.text.y = element_text(size = 8)) + 
+  facet_wrap(~Epsilon) + 
+  scale_color_manual(values=c("#F8766D")) + 
+  scale_shape_manual(values=c(16)) + 
+  scale_linetype_discrete()
+plot(g)
+ggsave("Candidates_2.png", width = 20, height = 14, units = "cm")
+
+maximals1 = data[data$Disks == "Maximals",]
+title = substitute(paste("Number of Maximal disks by ", epsilon) ~ temp_title, list(temp_title = temp_title))
+g = ggplot(data=maximals1, aes(x=factor(Cores), y=Count, group = Disks, colour = Disks, shape = Disks)) + 
+  geom_line(aes(linetype = Disks)) + 
+  geom_point(size = 2) + 
+  labs(title = title, y = "Count") + 
+  scale_x_discrete("Cores") +
+  theme(axis.text.x = element_text(size = 8, angle = 90), axis.text.y = element_text(size = 8)) + 
+  facet_wrap(~Epsilon) + 
+  scale_color_manual(values=c("#00BFC4")) + 
+  scale_shape_manual(values=c(16)) + 
+  scale_linetype_discrete()
+plot(g)
+ggsave("Maximals_2.png", width = 20, height = 14, units = "cm")
