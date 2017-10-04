@@ -7,7 +7,7 @@ import org.rogach.scallop.{ScallopConf, ScallopOption}
 
 object Runner extends LogSupport{
   private val LAYER_0 = 117
-  private val LAYERS_N = 2
+  private val LAYERS_N = 10
 
   case class ST_Point(x: Double, y: Double, t: Int, id: Int)
 
@@ -61,6 +61,7 @@ object Runner extends LogSupport{
       .map(datapoint => PFlock.SP_Point(datapoint.id, datapoint.x, datapoint.y))
     println("%d points in time %d".format(currentPoints.count(), timestamp))
     var f0: RDD[List[Int]] = PFlock.run(currentPoints, timestamp, simba)
+    f0.cache()
 
     timestamp = timestamps(1)
     currentPoints = dataset
@@ -68,9 +69,36 @@ object Runner extends LogSupport{
       .map(datapoint => PFlock.SP_Point(datapoint.id, datapoint.x, datapoint.y))
     println("%d points in time %d".format(currentPoints.count(), timestamp))
     var f1: RDD[List[Int]] = PFlock.run(currentPoints, timestamp, simba)
-    println("f0 has %d maximal disks and f1 has %d".format(f0.count(), f1.count()))
-    // f0.toDF("f0").crossJoin(f1.toDF("f1"))
+    f1.cache()
 
+    println("F0: " + f0.count())
+    f0.foreach(println)
+    println("F1: " + f1.count())
+    f1.foreach(println)
+
+    val g0 = simba.sparkContext
+      .textFile("file:///home/and/Documents/PhD/Code/Y3Q1/Datasets/s1.txt")
+      .map(_.split(",").toList.map(_.trim.toInt))
+    println("G0: " + g0.count())
+    f0.foreach(println)
+    val g1 = simba.sparkContext
+      .textFile("file:///home/and/Documents/PhD/Code/Y3Q1/Datasets/s2.txt")
+      .map(_.split(",").toList.map(_.trim.toInt))
+    println("G1: " + g1.count())
+    f1.foreach(println)
+
+    val g = g0.cartesian(g1)
+    println(g.count())
+
+    val f = f0.cartesian(f1)
+    println("f has %d flocks".format(f.count()))
+/*
+    val MU = conf.mu()
+    f.map(tuple => tuple._1.intersect(tuple._2).sorted)
+      .filter(flock => flock.length >= MU)
+      .distinct()
+      .foreach(println)
+*/
     // Saving results...
     PFlock.saveOutput()
     // Closing all...
@@ -79,7 +107,7 @@ object Runner extends LogSupport{
   }
 
   class Conf(arguments: Seq[String]) extends ScallopConf(arguments) {
-    val epsilon: ScallopOption[Double] = opt[Double](default = Some(10.0))
+    val epsilon: ScallopOption[Double] = opt[Double](default = Some(100.0))
     val mu: ScallopOption[Int] = opt[Int](default = Some(3))
     val partitions: ScallopOption[Int] = opt[Int](default = Some(64))
     val cores: ScallopOption[Int] = opt[Int](default = Some(4))
@@ -87,10 +115,8 @@ object Runner extends LogSupport{
     val logs: ScallopOption[String] = opt[String](default = Some("ERROR"))
     val phd_home: ScallopOption[String] = opt[String](default = sys.env.get("PHD_HOME"))
     val path: ScallopOption[String] = opt[String](default = Some("Y3Q1/Datasets/"))
-    val dataset: ScallopOption[String] = opt[String](default = Some("Berlin_N277K_A18K_T15"))
+    val dataset: ScallopOption[String] = opt[String](default = Some("Berlin_N15K_A1K_T15"))
     val extension: ScallopOption[String] = opt[String](default = Some("csv"))
-
     verify()
   }
-
 }

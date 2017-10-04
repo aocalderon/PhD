@@ -13,13 +13,16 @@ object Combiner {
       .getOrCreate()
     simba.sparkContext.setLogLevel("ERROR")
     val f0 = simba.sparkContext
-      .textFile("file:///home/and/Documents/PhD/Code/Y3Q1/Datasets/f0.txt")
-      .map(_.split(",").toList.map(_.toInt))
-    println(f0.count())
+      .textFile("file:///home/and/Documents/PhD/Code/Y3Q1/Datasets/s1.txt")
+      .map(_.split(",").toList.map(_.trim.toInt))
+    println("F0: " + f0.count())
+    f0.foreach(println)
     val f1 = simba.sparkContext
-      .textFile("file:///home/and/Documents/PhD/Code/Y3Q1/Datasets/f1.txt")
-      .map(_.split(",").toList.map(_.toInt))
-    println(f1.count())
+      .textFile("file:///home/and/Documents/PhD/Code/Y3Q1/Datasets/s2.txt")
+      .map(_.split(",").toList.map(_.trim.toInt))
+    println("F1: " + f1.count())
+    f1.foreach(println)
+
     val f = f0.cartesian(f1)
     println(f.count())
 
@@ -27,6 +30,7 @@ object Combiner {
       .filter(flock => flock.length >= MU)
       .distinct()
       .foreach(println)
+
 
     simba.close()
   }
