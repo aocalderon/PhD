@@ -1,19 +1,21 @@
 import org.apache.spark.rdd.RDD
-import wvlet.log._
 import org.apache.spark.sql.catalyst.ScalaReflection
 import org.apache.spark.sql.simba.SimbaSession
 import org.apache.spark.sql.types.StructType
 import org.rogach.scallop.{ScallopConf, ScallopOption}
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
-object Runner extends LogSupport{
+object Runner {
   private val LAYER_0 = 117
   private val LAYERS_N = 10
 
   case class ST_Point(x: Double, y: Double, t: Int, id: Int)
 
   def main(args: Array[String]): Unit = {
-    Logger.setDefaultFormatter(LogFormatter.SourceCodeLogFormatter)
-    info(s"""{"content":"Starting app...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n""")
+	// Setting a custom logger...
+	val log: Logger = LoggerFactory.getLogger("myLogger")
+    log.info(s"""{"content":"Starting app...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n""")
     // Reading arguments from command line...
     val conf = new Conf(args)
     // Tuning master and number of cores...
@@ -24,11 +26,11 @@ object Runner extends LogSupport{
     // Setting parameters...
     val POINT_SCHEMA = ScalaReflection.schemaFor[ST_Point].dataType.asInstanceOf[StructType]
     // Starting a session...
-    info(s"""{"content":"Setting paramaters...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n""")
+    log.info(s"""{"content":"Setting paramaters...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n""")
     val simba = SimbaSession
       .builder()
       .master(MASTER)
-      .appName("Reader")
+      .appName("Runner")
       .config("simba.index.partitions", s"${conf.partitions()}")
       .config("spark.cores.max", s"${conf.cores()}")
       .getOrCreate()
@@ -36,9 +38,9 @@ object Runner extends LogSupport{
     // Calling implicits...
     import simba.implicits._
     import simba.simbaImplicits._
-    val phd_home = scala.util.Properties.envOrElse("PHD_HOME", "/home/and/Documents/PhD/Code/")
+    val phd_home = scala.util.Properties.envOrElse("PHD_HOME", "/home/acald013/PhD/")
     val filename = s"$phd_home${conf.path()}${conf.dataset()}.${conf.extension()}"
-    info("Reading %s ...".format(filename))
+    log.info("Reading %s ...".format(filename))
     val dataset = simba.read
       .option("header", "false")
       .schema(POINT_SCHEMA)
@@ -46,7 +48,7 @@ object Runner extends LogSupport{
       .as[ST_Point]
       .filter(datapoint => datapoint.t < LAYER_0 + LAYERS_N)
     dataset.cache()
-    info("Number of points in dataset: %d".format(dataset.count()))
+    log.info("Number of points in dataset: %d".format(dataset.count()))
     val timestamps = dataset.map(datapoint => datapoint.t).distinct.sort("value").collect.toList
     // Setting PFlock...
     PFlock.EPSILON = conf.epsilon()
@@ -59,7 +61,7 @@ object Runner extends LogSupport{
     var currentPoints = dataset
       .filter(datapoint => datapoint.t == timestamp)
       .map(datapoint => PFlock.SP_Point(datapoint.id, datapoint.x, datapoint.y))
-    println("%d points in time %d".format(currentPoints.count(), timestamp))
+    log.info("%d points in time %d".format(currentPoints.count(), timestamp))
     var f0: RDD[List[Int]] = PFlock.run(currentPoints, timestamp, simba)
     f0.cache()
 
@@ -67,31 +69,31 @@ object Runner extends LogSupport{
     currentPoints = dataset
       .filter(datapoint => datapoint.t == timestamp)
       .map(datapoint => PFlock.SP_Point(datapoint.id, datapoint.x, datapoint.y))
-    println("%d points in time %d".format(currentPoints.count(), timestamp))
+    log.info("%d points in time %d".format(currentPoints.count(), timestamp))
     var f1: RDD[List[Int]] = PFlock.run(currentPoints, timestamp, simba)
     f1.cache()
 
-    println("F0: " + f0.count())
+    log.info("F0: " + f0.count())
     f0.foreach(println)
-    println("F1: " + f1.count())
+    log.info("F1: " + f1.count())
     f1.foreach(println)
 
     val g0 = simba.sparkContext
-      .textFile("file:///home/and/Documents/PhD/Code/Y3Q1/Datasets/s1.txt")
+      .textFile("file:///home/acald013/PhD/Y3Q1/Datasets/s1.txt")
       .map(_.split(",").toList.map(_.trim.toInt))
-    println("G0: " + g0.count())
+    log.info("G0: " + g0.count())
     f0.foreach(println)
     val g1 = simba.sparkContext
-      .textFile("file:///home/and/Documents/PhD/Code/Y3Q1/Datasets/s2.txt")
+      .textFile("file:///home/acald013/PhD/Y3Q1/Datasets/s2.txt")
       .map(_.split(",").toList.map(_.trim.toInt))
-    println("G1: " + g1.count())
+    log.info("G1: " + g1.count())
     f1.foreach(println)
 
     val g = g0.cartesian(g1)
-    println(g.count())
+    log.info("g has %d flocks...".format(g.count()))
 
-    val f = f0.cartesian(f1)
-    println("f has %d flocks".format(f.count()))
+    //val f = f0.cartesian(f1)
+    //println("f has %d flocks...".format(f.count()))
 /*
     val MU = conf.mu()
     f.map(tuple => tuple._1.intersect(tuple._2).sorted)
@@ -102,7 +104,7 @@ object Runner extends LogSupport{
     // Saving results...
     PFlock.saveOutput()
     // Closing all...
-    info(s"""{"content":"Closing app...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n""")
+    log.info(s"""{"content":"Closing app...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n""")
     simba.close()
   }
 
@@ -112,7 +114,7 @@ object Runner extends LogSupport{
     val partitions: ScallopOption[Int] = opt[Int](default = Some(64))
     val cores: ScallopOption[Int] = opt[Int](default = Some(4))
     val master: ScallopOption[String] = opt[String](default = Some("local[*]"))
-    val logs: ScallopOption[String] = opt[String](default = Some("ERROR"))
+    val logs: ScallopOption[String] = opt[String](default = Some("INFO"))
     val phd_home: ScallopOption[String] = opt[String](default = sys.env.get("PHD_HOME"))
     val path: ScallopOption[String] = opt[String](default = Some("Y3Q1/Datasets/"))
     val dataset: ScallopOption[String] = opt[String](default = Some("Berlin_N15K_A1K_T15"))
