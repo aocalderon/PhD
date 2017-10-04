@@ -62,7 +62,7 @@ object Runner {
       .filter(datapoint => datapoint.t == timestamp)
       .map(datapoint => PFlock.SP_Point(datapoint.id, datapoint.x, datapoint.y))
     log.info("%d points in time %d".format(currentPoints.count(), timestamp))
-    var f0: RDD[List[Int]] = PFlock.run(currentPoints, timestamp, simba)
+    val f0: RDD[List[Int]] = PFlock.run(currentPoints, timestamp, simba)
     f0.cache()
 
     timestamp = timestamps(1)
@@ -70,7 +70,7 @@ object Runner {
       .filter(datapoint => datapoint.t == timestamp)
       .map(datapoint => PFlock.SP_Point(datapoint.id, datapoint.x, datapoint.y))
     log.info("%d points in time %d".format(currentPoints.count(), timestamp))
-    var f1: RDD[List[Int]] = PFlock.run(currentPoints, timestamp, simba)
+    val f1: RDD[List[Int]] = PFlock.run(currentPoints, timestamp, simba)
     f1.cache()
 
     log.info("F0: " + f0.count())
