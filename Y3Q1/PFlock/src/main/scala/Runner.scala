@@ -27,13 +27,10 @@ object Runner {
     val POINT_SCHEMA = ScalaReflection.schemaFor[ST_Point].dataType.asInstanceOf[StructType]
     // Starting a session...
     log.info(s"""{"content":"Setting paramaters...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n""")
-    val simba = SimbaSession
-      .builder()
-      .master(MASTER)
-      .appName("Runner")
-      .config("simba.index.partitions", s"${conf.partitions()}")
-      .config("spark.cores.max", s"${conf.cores()}")
-      .getOrCreate()
+    val simba = SimbaSession.builder().master(MASTER).appName("Runner").
+		config("simba.index.partitions", s"${conf.partitions()}").
+		config("spark.cores.max", s"${conf.cores()}").
+		getOrCreate()
     simba.sparkContext.setLogLevel(conf.logs())
     // Calling implicits...
     import simba.implicits._
@@ -78,14 +75,14 @@ object Runner {
     log.info("F1: " + f1.count())
     f1.foreach(println)
 
-    val g0 = simba.sparkContext
-      .textFile("file:///home/acald013/PhD/Y3Q1/Datasets/s1.txt")
-      .map(_.split(",").toList.map(_.trim.toInt))
+    val g0 = simba.sparkContext.
+		textFile("file:///home/acald013/PhD/Y3Q1/Datasets/s1.txt").
+		map(_.split(",").toList.map(_.trim.toInt))
     log.info("G0: " + g0.count())
     f0.foreach(println)
-    val g1 = simba.sparkContext
-      .textFile("file:///home/acald013/PhD/Y3Q1/Datasets/s2.txt")
-      .map(_.split(",").toList.map(_.trim.toInt))
+    val g1 = simba.sparkContext.
+		textFile("file:///home/acald013/PhD/Y3Q1/Datasets/s2.txt").
+		map(_.split(",").toList.map(_.trim.toInt))
     log.info("G1: " + g1.count())
     f1.foreach(println)
 
