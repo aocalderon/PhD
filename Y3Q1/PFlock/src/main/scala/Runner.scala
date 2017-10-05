@@ -70,18 +70,13 @@ object Runner {
     val f1: RDD[List[Int]] = PFlock.run(currentPoints, timestamp, simba)
     f1.cache()
 
-    log.info("F0: " + f0.count())
-    f0.foreach(println)
-    log.info("F1: " + f1.count())
-    f1.foreach(println)
-
     val g0 = simba.sparkContext
       .textFile(s"file://$phd_home${conf path()}s1.txt")
       .map(_.split(",").toList.map(_.trim.toInt))
     log.info("G0: " + g0.count())
     f0.foreach(println)
     val g1 = simba.sparkContext
-      .textFile(s"file://$phd_home${conf.path()}s1.txt")
+      .textFile(s"file://$phd_home${conf.path()}s2.txt")
       .map(_.split(",").toList.map(_.trim.toInt))
     log.info("G1: " + g1.count())
     f1.foreach(println)
@@ -89,8 +84,13 @@ object Runner {
     val g = g0.cartesian(g1)
     log.info("g has %d flocks...".format(g.count()))
 
-    //val f = f0.cartesian(f1)
-    //println("f has %d flocks...".format(f.count()))
+
+    log.info("F0: " + f0.count())
+    f0.foreach(println)
+    log.info("F1: " + f1.count())
+    f1.foreach(println)
+    val f = f0.cartesian(f1)
+    log.info("f has %d flocks...".format(f.count()))
 /*
     val MU = conf.mu()
     f.map(tuple => tuple._1.intersect(tuple._2).sorted)
