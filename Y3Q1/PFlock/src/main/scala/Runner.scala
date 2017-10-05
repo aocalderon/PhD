@@ -13,8 +13,8 @@ object Runner {
   case class ST_Point(x: Double, y: Double, t: Int, id: Int)
 
   def main(args: Array[String]): Unit = {
-	// Setting a custom logger...
-	val log: Logger = LoggerFactory.getLogger("myLogger")
+    // Setting a custom logger...
+    val log: Logger = LoggerFactory.getLogger("myLogger")
     log.info(s"""{"content":"Starting app...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n""")
     // Reading arguments from command line...
     val conf = new Conf(args)
@@ -59,7 +59,7 @@ object Runner {
       .filter(datapoint => datapoint.t == timestamp)
       .map(datapoint => PFlock.SP_Point(datapoint.id, datapoint.x, datapoint.y))
     log.info("%d points in time %d".format(currentPoints.count(), timestamp))
-    var f0: RDD[List[Int]] = PFlock.run(currentPoints, timestamp, simba)
+    val f0: RDD[List[Int]] = PFlock.run(currentPoints, timestamp, simba)
     f0.cache()
 
     timestamp = timestamps(1)
@@ -67,7 +67,7 @@ object Runner {
       .filter(datapoint => datapoint.t == timestamp)
       .map(datapoint => PFlock.SP_Point(datapoint.id, datapoint.x, datapoint.y))
     log.info("%d points in time %d".format(currentPoints.count(), timestamp))
-    var f1: RDD[List[Int]] = PFlock.run(currentPoints, timestamp, simba)
+    val f1: RDD[List[Int]] = PFlock.run(currentPoints, timestamp, simba)
     f1.cache()
 
     log.info("F0: " + f0.count())
@@ -75,14 +75,14 @@ object Runner {
     log.info("F1: " + f1.count())
     f1.foreach(println)
 
-    val g0 = simba.sparkContext.
-		textFile("file:///home/acald013/PhD/Y3Q1/Datasets/s1.txt").
-		map(_.split(",").toList.map(_.trim.toInt))
+    val g0 = simba.sparkContext
+      .textFile(s"file://$phd_home${conf path()}s1.txt")
+      .map(_.split(",").toList.map(_.trim.toInt))
     log.info("G0: " + g0.count())
     f0.foreach(println)
-    val g1 = simba.sparkContext.
-		textFile("file:///home/acald013/PhD/Y3Q1/Datasets/s2.txt").
-		map(_.split(",").toList.map(_.trim.toInt))
+    val g1 = simba.sparkContext
+      .textFile(s"file://$phd_home${conf.path()}s1.txt")
+      .map(_.split(",").toList.map(_.trim.toInt))
     log.info("G1: " + g1.count())
     f1.foreach(println)
 
@@ -112,7 +112,6 @@ object Runner {
     val cores: ScallopOption[Int] = opt[Int](default = Some(4))
     val master: ScallopOption[String] = opt[String](default = Some("local[*]"))
     val logs: ScallopOption[String] = opt[String](default = Some("INFO"))
-    val phd_home: ScallopOption[String] = opt[String](default = sys.env.get("PHD_HOME"))
     val path: ScallopOption[String] = opt[String](default = Some("Y3Q1/Datasets/"))
     val dataset: ScallopOption[String] = opt[String](default = Some("Berlin_N15K_A1K_T15"))
     val extension: ScallopOption[String] = opt[String](default = Some("csv"))
