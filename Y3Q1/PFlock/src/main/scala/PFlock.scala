@@ -125,6 +125,7 @@ object PFlock {
       maximalFrame.count()
       LOG = LOG :+ s"""{"content":"Prunning duplicates...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
       maximal = maximalInside.union(maximalFrame).distinct().map(_.asScala.toList.map(_.intValue()))
+      //maximal.cache
       nmaximal = maximal.count()
     }
     // Stopping timer...

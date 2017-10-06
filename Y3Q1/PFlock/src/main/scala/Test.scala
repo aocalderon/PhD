@@ -22,28 +22,41 @@ object Test {
         PFlock.MU = 3
         val timestamps = d.map(datapoint => datapoint.t).distinct.sort("value").collect.toList
 
+        println("\nTesting from files...")
+        val g0 = simba.sparkContext.textFile(s"file:///home/acald013/PhD/Y3Q1/Datasets/s1.txt").map(_.split(",").toList.map(_.trim.toInt))
+        g0.foreach(println)
+        val g1 = simba.sparkContext.textFile(s"file:///home/acald013/PhD/Y3Q1/Datasets/s2.txt").map(_.split(",").toList.map(_.trim.toInt))
+        g1.foreach(println)
+
+        var time1: Long = System.currentTimeMillis()
+        val g = g0.toDS.crossJoin(g1.toDS).show
+        var time2: Long = System.currentTimeMillis()
+        println("Cross Join in %d ms...".format(time2-time1))
+
+        println("\nTesting from PFlock...")
         var timestamp = timestamps.head
         var currentPoints = d.filter(datapoint => datapoint.t == timestamp).map(datapoint => PFlock.SP_Point(datapoint.id, datapoint.x, datapoint.y))
         val f0: RDD[List[Int]] = PFlock.run(currentPoints, timestamp, simba)
+        //f0.persist
         f0.foreach(println)
 
         timestamp = timestamps(1)
         currentPoints = d.filter(datapoint => datapoint.t == timestamp).map(datapoint => PFlock.SP_Point(datapoint.id, datapoint.x, datapoint.y))
         val f1: RDD[List[Int]] = PFlock.run(currentPoints, timestamp, simba)
+        //f1.persist
         f1.foreach(println)
 
-        val f = f0.cartesian(f1)
-        f.foreach(println)
-        println(f.count())     
-        
-        val g0 = simba.sparkContext.textFile(s"file://${phd_home}Y3Q1/Datasets/s1.txt").map(_.split(",").toList.map(_.trim.toInt))
-        g0.foreach(println)
-        val g1 = simba.sparkContext.textFile(s"file://${phd_home}Y3Q1/Datasets/s2.txt").map(_.split(",").toList.map(_.trim.toInt))
-        g1.foreach(println)
+        time1 = System.currentTimeMillis()
+        val f = f0.repartition(2).toDS.crossJoin(f1.repartition(2).toDS).show
+        time2 = System.currentTimeMillis()
+        println("Cross Join in %d ms...".format(time2-time1))
 
-        val g = g0.cartesian(g1)
-        g.foreach(println)
-        println(g.count())
+        // f.map(pair => pair.getList[Int](0).asScala.toList.intersect(pair.getList[Int](1).asScala.toList))        
+        //f.cache()
+        //println(f.count())
+        //f.show
+        
+        
         
         dataset.dropIndexByName("dRT")
         simba.close()

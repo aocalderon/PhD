@@ -21,7 +21,7 @@ object Runner {
     // Tuning master and number of cores...
     var MASTER = conf.master()
     if (conf.cores() == 1) {
-      MASTER = "local[1]"
+      MASTER = "local"
     }
     // Setting parameters...
     val POINT_SCHEMA = ScalaReflection.schemaFor[ST_Point].dataType.asInstanceOf[StructType]
