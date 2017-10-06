@@ -7,7 +7,7 @@ import org.apache.spark.sql.simba.index.RTreeType
 
 object Test {
     case class ST_Point(x: Double, y: Double, t: Int, id: Int)
-	def main(args: Array[String]): Unit = {
+    def main(args: Array[String]): Unit = {
         val POINT_SCHEMA = ScalaReflection.schemaFor[ST_Point].dataType.asInstanceOf[StructType]
         val simba = SimbaSession.builder().master("local[7]").appName("Runner").config("simba.index.partitions", "64").config("spark.cores.max", "7").getOrCreate()
         import simba.implicits._
@@ -61,5 +61,5 @@ object Test {
         dataset.dropIndexByName("dRT")
         simba.close()
 
-	}
+    }
 }
