@@ -51,15 +51,7 @@ object Test {
         time2 = System.currentTimeMillis()
         println("Cross Join in %d ms...".format(time2-time1))
 
-        // f.map(pair => pair.getList[Int](0).asScala.toList.intersect(pair.getList[Int](1).asScala.toList))        
-        //f.cache()
-        //println(f.count())
-        //f.show
-        
-        
-        
         dataset.dropIndexByName("dRT")
         simba.close()
-
     }
 }

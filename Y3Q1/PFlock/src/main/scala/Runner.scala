@@ -7,46 +7,46 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 object Runner {
-  private val LAYER_0 = 117
-  private val LAYERS_N = 15
-  private val CARTESIAN_PARTITIONS = 2
+  private val log: Logger = LoggerFactory.getLogger("myLogger")
 
   case class ST_Point(x: Double, y: Double, t: Int, id: Int)
 
   class Conf(arguments: Seq[String]) extends ScallopConf(arguments) {
-    val epsilon: ScallopOption[Double] = opt[Double](default = Some(20.0))
+    val epsilon: ScallopOption[Double] = opt[Double](default = Some(10.0))
     val mu: ScallopOption[Int] = opt[Int](default = Some(3))
     val partitions: ScallopOption[Int] = opt[Int](default = Some(64))
     val cores: ScallopOption[Int] = opt[Int](default = Some(4))
+    val tstart: ScallopOption[Int] = opt[Int](default = Some(117))
+    val tend: ScallopOption[Int] = opt[Int](default = Some(118))
+    val cartesian_partitions: ScallopOption[Int] = opt[Int](default = Some(2))
     val master: ScallopOption[String] = opt[String](default = Some("local[*]"))
     val logs: ScallopOption[String] = opt[String](default = Some("INFO"))
     val path: ScallopOption[String] = opt[String](default = Some("Y3Q1/Datasets/"))
-    val dataset: ScallopOption[String] = opt[String](default = Some("Berlin_N277K_A18K_T15"))
+    val dataset: ScallopOption[String] = opt[String](default = Some("Berlin_N15K_A1K_T15"))
     val extension: ScallopOption[String] = opt[String](default = Some("csv"))
     verify()
   }
   
-  def main(args: Array[String]): Unit = {
-    // Setting a custom logger...
-    val log: Logger = LoggerFactory.getLogger("myLogger")
-    log.info(s"""{"content":"Starting app...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n""")
-    // Reading arguments from command line...
-    val conf = new Conf(args)
+  def findFlocks(conf: Conf): Unit = {
     // Tuning master and number of cores...
     var MASTER = conf.master()
     if (conf.cores() == 1) {
       MASTER = "local"
     }
     // Setting parameters...
-    val POINT_SCHEMA = ScalaReflection.schemaFor[ST_Point].dataType.
+    val POINT_SCHEMA = ScalaReflection.schemaFor[ST_Point].
+        dataType.
         asInstanceOf[StructType]
     // Starting a session...
-    log.info(s"""{"content":"Setting paramaters...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n""")
-    val simba = SimbaSession.builder().master(MASTER).appName("Runner").
+    log.info("Setting paramaters...")
+    val simba = SimbaSession.builder().
+        master(MASTER).
+        appName("Runner").
         config("simba.index.partitions", s"${conf.partitions()}").
         config("spark.cores.max", s"${conf.cores()}").
         getOrCreate()
-    simba.sparkContext.setLogLevel(conf.logs())
+    simba.sparkContext.
+        setLogLevel(conf.logs())
     // Calling implicits...
     import simba.implicits._
     import simba.simbaImplicits._
@@ -54,12 +54,18 @@ object Runner {
         envOrElse("PHD_HOME", "/home/acald013/PhD/")
     val filename = s"$phd_home${conf.path()}${conf.dataset()}.${conf.extension()}"
     log.info("Reading %s ...".format(filename))
-    val dataset = simba.read.option("header", "false").
-        schema(POINT_SCHEMA).csv(filename).as[ST_Point].
-        filter(datapoint => datapoint.t < LAYER_0 + LAYERS_N)
+    val TSTART: Int = conf.tstart()
+    val TEND: Int = conf.tend()
+    val dataset = simba.
+        read.option("header", "false").
+        schema(POINT_SCHEMA).csv(filename).
+        as[ST_Point].
+        filter(datapoint => datapoint.t >= TSTART && datapoint.t <= TEND)
     dataset.cache()
     log.info("Number of points in dataset: %d".format(dataset.count()))
-    var timestamps = dataset.map(datapoint => datapoint.t).distinct.
+    var timestamps = dataset.
+        map(datapoint => datapoint.t).
+        distinct.
         sort("value").collect.toList
     // Setting PFlock...
     PFlock.EPSILON = conf.epsilon()
@@ -67,7 +73,6 @@ object Runner {
     PFlock.DATASET = conf.dataset()
     PFlock.CORES = conf.cores()
     PFlock.PARTITIONS = conf.partitions()
-
     // Running PFlock...
     var timestamp = timestamps.head
     var currentPoints = dataset
@@ -75,6 +80,7 @@ object Runner {
         .map(datapoint => 
             PFlock.SP_Point(datapoint.id, datapoint.x, datapoint.y))
     log.info("%d points in time %d".format(currentPoints.count(), timestamp))
+    val CARTESIAN_PARTITIONS: Int = conf.cartesian_partitions()
     var f0: RDD[List[Int]] = PFlock.run(currentPoints, timestamp, simba).
         repartition(CARTESIAN_PARTITIONS)
 
@@ -84,8 +90,7 @@ object Runner {
             .filter(datapoint => datapoint.t == timestamp)
             .map(datapoint => PFlock.SP_Point(datapoint.id, datapoint.x, datapoint.y))
         log.info("%d points in time %d".format(currentPoints.count(), timestamp))
-        var f1: RDD[List[Int]] = PFlock.
-            run(currentPoints, timestamp, simba).
+        var f1: RDD[List[Int]] = PFlock.run(currentPoints, timestamp, simba).
             repartition(CARTESIAN_PARTITIONS)
 
         log.info("Running cartesian function between timestamps %d and %d...".format(timestamp, timestamp - 1))
@@ -94,17 +99,26 @@ object Runner {
         log.info("Cartesian returns %d combinations...".format(ncombinations))
 
         val MU = conf.mu()
-        val flocks = combinations.
-            map(tuple => tuple._1.intersect(tuple._2).sorted).
+        val flocks = combinations.map{
+                tuple => tuple._1.intersect(tuple._2).
+                sorted
+            }.
             filter(flock => flock.length >= MU).
             distinct()
         log.info("\n######\n#\n# Done!\n# %d flocks found in timestamp %d...\n#\n######".format(flocks.count(), timestamp))
-        //flocks.foreach(println)
     }
     // Saving results...
     PFlock.saveOutput()
     // Closing all...
-    log.info(s"""{"content":"Closing app...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n""")
+    log.info("Closing app...")
     simba.close()
+  }
+
+  def main(args: Array[String]): Unit = {
+    // Setting a custom logger...
+    log.info("Starting app...")
+    // Reading arguments from command line...
+    val conf = new Conf(args)
+    Runner.findFlocks(conf)
   }
 }
