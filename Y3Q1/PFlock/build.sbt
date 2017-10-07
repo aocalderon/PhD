@@ -11,5 +11,5 @@ libraryDependencies += "InitialDLab" % "simba_2.11" % "1.0"
 libraryDependencies += "org.slf4j" % "slf4j-jdk14" % "1.7.25"
 //libraryDependencies += "com.groupon.sparklint" % "sparklint-spark210_2.11" % "1.0.9-SNAPSHOT"
 
-mainClass in (Compile, run) := Some("Runner")
-mainClass in (Compile, packageBin) := Some("Runner")
+mainClass in (Compile, run) := Some("FlockFinder")
+mainClass in (Compile, packageBin) := Some("FlockFinder")

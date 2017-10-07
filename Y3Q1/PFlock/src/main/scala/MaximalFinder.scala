@@ -12,7 +12,7 @@ import scala.collection.JavaConverters._
 /**
   * Created by and on 5/4/17.
   */
-object PFlock {
+object MaximalFinder {
   // Setting variables...
   var EPSILON: Double = 10.0
   var MU: Int = 3
@@ -30,8 +30,8 @@ object PFlock {
   def run(points: Dataset[SP_Point]
           , timestamp: Int
           , simba: SimbaSession
-          , epsilon: Double = PFlock.EPSILON
-          , mu: Int = PFlock.MU): RDD[List[Int]] ={
+          , epsilon: Double = MaximalFinder.EPSILON
+          , mu: Int = MaximalFinder.MU): RDD[List[Int]] ={
     // Calling implicits...
     import simba.implicits._
     import simba.simbaImplicits._
@@ -133,10 +133,10 @@ object PFlock {
     val timeM: Double = (time2 - time1) / 1000.0
     val time: Double = BigDecimal(timeD + timeM).setScale(3, BigDecimal.RoundingMode.HALF_DOWN).toDouble
     // Print summary...
-    val record = s"PFlock,$epsilon,$timestamp,$timeD,$timeM,$time,$ncandidates,$nmaximal,$CORES,$PARTITIONS,${org.joda.time.DateTime.now.toLocalTime}\n"
+    val record = s"MaximalFinder,$epsilon,$timestamp,$timeD,$timeM,$time,$ncandidates,$nmaximal,$CORES,$PARTITIONS,${org.joda.time.DateTime.now.toLocalTime}\n"
     OUTPUT = OUTPUT :+ record
     print("%10.10s %10.1f %10.10s %10.3f %10.3f %10.3f %10d %10d %10d %10d %15.15s\n"
-      .format("PFlock",epsilon,timestamp,timeD,timeM,time,ncandidates,nmaximal,CORES,PARTITIONS,org.joda.time.DateTime.now.toLocalTime))
+      .format("MaximalFinder",epsilon,timestamp,timeD,timeM,time,ncandidates,nmaximal,CORES,PARTITIONS,org.joda.time.DateTime.now.toLocalTime))
     // Dropping indices
     LOG = LOG :+ s"""{"content":"Dropping indices...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
     p1.dropIndexByName("p1RT")

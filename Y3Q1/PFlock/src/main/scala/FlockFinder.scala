@@ -6,7 +6,7 @@ import org.rogach.scallop.{ScallopConf, ScallopOption}
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-object Runner {
+object FlockFinder {
   private val log: Logger = LoggerFactory.getLogger("myLogger")
 
   case class ST_Point(x: Double, y: Double, t: Int, id: Int)
@@ -27,7 +27,7 @@ object Runner {
     verify()
   }
   
-  def findFlocks(conf: Conf): Unit = {
+  def run(conf: Conf): Unit = {
     // Tuning master and number of cores...
     var MASTER = conf.master()
     if (conf.cores() == 1) {
@@ -41,7 +41,7 @@ object Runner {
     log.info("Setting paramaters...")
     val simba = SimbaSession.builder().
         master(MASTER).
-        appName("Runner").
+        appName("FlockFinder").
         config("simba.index.partitions", s"${conf.partitions()}").
         config("spark.cores.max", s"${conf.cores()}").
         getOrCreate()
@@ -67,30 +67,30 @@ object Runner {
         map(datapoint => datapoint.t).
         distinct.
         sort("value").collect.toList
-    // Setting PFlock...
-    PFlock.EPSILON = conf.epsilon()
-    PFlock.MU = conf.mu()
-    PFlock.DATASET = conf.dataset()
-    PFlock.CORES = conf.cores()
-    PFlock.PARTITIONS = conf.partitions()
-    // Running PFlock...
+    // Setting MaximalFinder...
+    MaximalFinder.EPSILON = conf.epsilon()
+    MaximalFinder.MU = conf.mu()
+    MaximalFinder.DATASET = conf.dataset()
+    MaximalFinder.CORES = conf.cores()
+    MaximalFinder.PARTITIONS = conf.partitions()
+    // Running MaximalFinder...
     var timestamp = timestamps.head
     var currentPoints = dataset
         .filter(datapoint => datapoint.t == timestamp)
         .map(datapoint => 
-            PFlock.SP_Point(datapoint.id, datapoint.x, datapoint.y))
+            MaximalFinder.SP_Point(datapoint.id, datapoint.x, datapoint.y))
     log.info("%d points in time %d".format(currentPoints.count(), timestamp))
     val CARTESIAN_PARTITIONS: Int = conf.cartesian_partitions()
-    var f0: RDD[List[Int]] = PFlock.run(currentPoints, timestamp, simba).
+    var f0: RDD[List[Int]] = MaximalFinder.run(currentPoints, timestamp, simba).
         repartition(CARTESIAN_PARTITIONS)
 
     timestamps = timestamps.drop(1)
     for(timestamp <- timestamps){
         currentPoints = dataset
             .filter(datapoint => datapoint.t == timestamp)
-            .map(datapoint => PFlock.SP_Point(datapoint.id, datapoint.x, datapoint.y))
+            .map(datapoint => MaximalFinder.SP_Point(datapoint.id, datapoint.x, datapoint.y))
         log.info("%d points in time %d".format(currentPoints.count(), timestamp))
-        var f1: RDD[List[Int]] = PFlock.run(currentPoints, timestamp, simba).
+        var f1: RDD[List[Int]] = MaximalFinder.run(currentPoints, timestamp, simba).
             repartition(CARTESIAN_PARTITIONS)
 
         log.info("Running cartesian function between timestamps %d and %d...".format(timestamp, timestamp - 1))
@@ -108,7 +108,7 @@ object Runner {
         log.info("\n######\n#\n# Done!\n# %d flocks found in timestamp %d...\n#\n######".format(flocks.count(), timestamp))
     }
     // Saving results...
-    PFlock.saveOutput()
+    MaximalFinder.saveOutput()
     // Closing all...
     log.info("Closing app...")
     simba.close()
@@ -119,6 +119,6 @@ object Runner {
     log.info("Starting app...")
     // Reading arguments from command line...
     val conf = new Conf(args)
-    Runner.findFlocks(conf)
+    FlockFinder.run(conf)
   }
 }

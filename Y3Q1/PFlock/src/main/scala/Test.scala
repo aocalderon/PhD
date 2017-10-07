@@ -18,8 +18,8 @@ object Test {
         val d = dataset.index(RTreeType, "dRT", Array("x", "y"))
         val c = d.count()
         d.cache
-        PFlock.EPSILON = 100.0
-        PFlock.MU = 3
+        MaximalFinder.EPSILON = 100.0
+        MaximalFinder.MU = 3
         val timestamps = d.map(datapoint => datapoint.t).distinct.sort("value").collect.toList
 
         println("\nTesting from files...")
@@ -33,16 +33,16 @@ object Test {
         var time2: Long = System.currentTimeMillis()
         println("Cross Join in %d ms...".format(time2-time1))
 
-        println("\nTesting from PFlock...")
+        println("\nTesting from MaximalFinder...")
         var timestamp = timestamps.head
-        var currentPoints = d.filter(datapoint => datapoint.t == timestamp).map(datapoint => PFlock.SP_Point(datapoint.id, datapoint.x, datapoint.y))
-        val f0: RDD[List[Int]] = PFlock.run(currentPoints, timestamp, simba)
+        var currentPoints = d.filter(datapoint => datapoint.t == timestamp).map(datapoint => MaximalFinder.SP_Point(datapoint.id, datapoint.x, datapoint.y))
+        val f0: RDD[List[Int]] = MaximalFinder.run(currentPoints, timestamp, simba)
         //f0.persist
         f0.foreach(println)
 
         timestamp = timestamps(1)
-        currentPoints = d.filter(datapoint => datapoint.t == timestamp).map(datapoint => PFlock.SP_Point(datapoint.id, datapoint.x, datapoint.y))
-        val f1: RDD[List[Int]] = PFlock.run(currentPoints, timestamp, simba)
+        currentPoints = d.filter(datapoint => datapoint.t == timestamp).map(datapoint => MaximalFinder.SP_Point(datapoint.id, datapoint.x, datapoint.y))
+        val f1: RDD[List[Int]] = MaximalFinder.run(currentPoints, timestamp, simba)
         //f1.persist
         f1.foreach(println)
 
