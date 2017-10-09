@@ -19,8 +19,8 @@ object MaximalFinder {
   var DATASET: String = "Berlin"
   var CORES: Int = 0
   var PARTITIONS: Int = 0
-  var LOG = List.empty[String]
-  var OUTPUT = List.empty[String]
+  var LOG: List[String] = List("")
+  var OUTPUT: List[String] = List.empty[String]
   private val DELTA: Double = 0.01
 
   case class SP_Point(id: Int, x: Double, y: Double)
@@ -36,7 +36,7 @@ object MaximalFinder {
     import simba.implicits._
     import simba.simbaImplicits._
     // Starting timer...
-    LOG = LOG :+ s"""{"content":"Indexing points...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
+    LOG = LOG :+ s"""{"content":"Indexing points...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},"""
     var time1: Long = System.currentTimeMillis()
     // Indexing points...
     val p1 = points.toDF("id1", "x1", "y1")
@@ -44,10 +44,10 @@ object MaximalFinder {
     val p2 = points.toDF("id2", "x2", "y2")
     p2.index(RTreeType, "p2RT", Array("x2", "y2"))
     // Self-joining to find pairs of points close enough (< epsilon)...
-    LOG = LOG :+ s"""{"content":"Finding pairs (Self-join)...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
+    LOG = LOG :+ s"""{"content":"Finding pairs (Self-join)...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},"""
     val pairsRDD = p1.distanceJoin(p2, Array("x1", "y1"), Array("x2", "y2"), epsilon).rdd
     // Calculating disk's centers coordinates...
-    LOG = LOG :+ s"""{"content":"Computing disks...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
+    LOG = LOG :+ s"""{"content":"Computing disks...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},"""
     val centers = findDisks(pairsRDD, epsilon)
       .distinct()
       .toDS()
@@ -55,7 +55,7 @@ object MaximalFinder {
       .withColumn("id", monotonically_increasing_id())
       .as[ACenter]
     // Grouping objects enclosed by candidates disks...
-    LOG = LOG :+ s"""{"content":"Mapping disks and points...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
+    LOG = LOG :+ s"""{"content":"Mapping disks and points...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},"""
     val candidates = centers
       .distanceJoin(p1, Array("x", "y"), Array("x1", "y1"), (epsilon / 2) + DELTA)
       .groupBy("id", "x", "y")
@@ -65,7 +65,7 @@ object MaximalFinder {
     val timeD: Double = (time2 - time1) / 1000.0
     // Filtering candidates less than mu...
     time1 = System.currentTimeMillis()
-    LOG = LOG :+ s"""{"content":"Filtering less-than-mu disks...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
+    LOG = LOG :+ s"""{"content":"Filtering less-than-mu disks...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},"""
     val filteredCandidates =  candidates.filter(row => row.getList(3).size() >= mu)
       .map(d => (d.getLong(0), d.getDouble(1), d.getDouble(2), d.getList[Integer](3).toString))
     var nmaximal: Long = 0
@@ -75,7 +75,7 @@ object MaximalFinder {
       // Indexing remaining candidates disks...
       filteredCandidates.index(RTreeType, "candidatesRT", Array("_2", "_3"))
       // Filtering redundant candidates
-      LOG = LOG :+ s"""{"content":"Getting maximals inside...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
+      LOG = LOG :+ s"""{"content":"Getting maximals inside...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},"""
       val maximalInside = filteredCandidates
         .rdd
         .mapPartitions { partition =>
@@ -97,7 +97,7 @@ object MaximalFinder {
           itemsets.getItemsets(mu).asScala.toIterator
         }
       maximalInside.count()
-      LOG = LOG :+ s"""{"content":"Getting maximals in frame...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
+      LOG = LOG :+ s"""{"content":"Getting maximals in frame...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},"""
       val maximalFrame = filteredCandidates
         .rdd
         .mapPartitions { partition =>
@@ -123,7 +123,7 @@ object MaximalFinder {
           itemsets.getItemsets(mu).asScala.toIterator
         }
       maximalFrame.count()
-      LOG = LOG :+ s"""{"content":"Prunning duplicates...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
+      LOG = LOG :+ s"""{"content":"Prunning duplicates...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},"""
       maximal = maximalInside.union(maximalFrame).distinct().map(_.asScala.toList.map(_.intValue()))
       //maximal.cache
       nmaximal = maximal.count()
@@ -133,12 +133,11 @@ object MaximalFinder {
     val timeM: Double = (time2 - time1) / 1000.0
     val time: Double = BigDecimal(timeD + timeM).setScale(3, BigDecimal.RoundingMode.HALF_DOWN).toDouble
     // Print summary...
-    val record = s"MaximalFinder,$epsilon,$timestamp,$timeD,$timeM,$time,$ncandidates,$nmaximal,$CORES,$PARTITIONS,${org.joda.time.DateTime.now.toLocalTime}\n"
-    OUTPUT = OUTPUT :+ record
-    print("%10.10s %10.1f %10.10s %10.3f %10.3f %10.3f %10d %10d %10d %10d %15.15s\n"
-      .format("MaximalFinder",epsilon,timestamp,timeD,timeM,time,ncandidates,nmaximal,CORES,PARTITIONS,org.joda.time.DateTime.now.toLocalTime))
+    OUTPUT = OUTPUT :+ s"PFLOCK,$epsilon,$mu,$timestamp,$timeD,$timeM,$time,$ncandidates,$nmaximal,$CORES,$PARTITIONS,${org.joda.time.DateTime.now.toLocalTime}\n"
+    print("%10.10s %10.1f %10d %10d %10.3f %10.3f %10.3f %10d %10d %10d %10d %15.15s\n"
+      .format("PFLOCK",epsilon,mu,timestamp,timeD,timeM,time,ncandidates,nmaximal,CORES,PARTITIONS,org.joda.time.DateTime.now.toLocalTime))
     // Dropping indices
-    LOG = LOG :+ s"""{"content":"Dropping indices...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
+    LOG = LOG :+ s"""{"content":"Dropping indices...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},"""
     p1.dropIndexByName("p1RT")
     p2.dropIndexByName("p2RT")
     centers.dropIndexByName("centersRT")

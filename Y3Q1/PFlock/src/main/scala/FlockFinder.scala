@@ -12,8 +12,12 @@ object FlockFinder {
   case class ST_Point(x: Double, y: Double, t: Int, id: Int)
 
   class Conf(arguments: Seq[String]) extends ScallopConf(arguments) {
-    val epsilon: ScallopOption[Double] = opt[Double](default = Some(10.0))
-    val mu: ScallopOption[Int] = opt[Int](default = Some(3))
+    val estart: ScallopOption[Double] = opt[Double](default = Some(10.0))
+    val estep:  ScallopOption[Double] = opt[Double](default = Some(10.0))
+    val eend:   ScallopOption[Double] = opt[Double](default = Some(20.0))
+    val mstart: ScallopOption[Int] = opt[Int](default = Some(4))
+    val mstep:  ScallopOption[Int] = opt[Int](default = Some(2))
+    val mend:   ScallopOption[Int] = opt[Int](default = Some(4))
     val partitions: ScallopOption[Int] = opt[Int](default = Some(64))
     val cores: ScallopOption[Int] = opt[Int](default = Some(4))
     val tstart: ScallopOption[Int] = opt[Int](default = Some(117))
@@ -34,6 +38,7 @@ object FlockFinder {
       MASTER = "local"
     }
     // Setting parameters...
+    val CARTESIAN_PARTITIONS: Int = conf.cartesian_partitions()
     val POINT_SCHEMA = ScalaReflection.schemaFor[ST_Point].
         dataType.
         asInstanceOf[StructType]
@@ -68,47 +73,52 @@ object FlockFinder {
         distinct.
         sort("value").collect.toList
     // Setting MaximalFinder...
-    MaximalFinder.EPSILON = conf.epsilon()
-    MaximalFinder.MU = conf.mu()
     MaximalFinder.DATASET = conf.dataset()
     MaximalFinder.CORES = conf.cores()
     MaximalFinder.PARTITIONS = conf.partitions()
-    // Running MaximalFinder...
-    var timestamp = timestamps.head
-    var currentPoints = dataset
-        .filter(datapoint => datapoint.t == timestamp)
-        .map(datapoint => 
-            MaximalFinder.SP_Point(datapoint.id, datapoint.x, datapoint.y))
-    log.info("%d points in time %d".format(currentPoints.count(), timestamp))
-    val CARTESIAN_PARTITIONS: Int = conf.cartesian_partitions()
-    var f0: RDD[List[Int]] = MaximalFinder.run(currentPoints, timestamp, simba).
-        repartition(CARTESIAN_PARTITIONS)
-
-    timestamps = timestamps.drop(1)
-    for(timestamp <- timestamps){
-        currentPoints = dataset
+    // Running experiment with different values of epsilon and mu...
+    for( epsilon <- conf.estart() to conf.eend() by conf.estep();
+         mu <- conf.mstart() to conf.mend() by conf.mstep()){
+        MaximalFinder.EPSILON = epsilon
+        MaximalFinder.MU = mu
+        log.info("Epsilon = %.1f Mu = %d iteration...".format(epsilon, mu))
+        // Running MaximalFinder...
+        var timestamp = timestamps.head
+        var currentPoints = dataset
             .filter(datapoint => datapoint.t == timestamp)
-            .map(datapoint => MaximalFinder.SP_Point(datapoint.id, datapoint.x, datapoint.y))
+            .map(datapoint => 
+                MaximalFinder.SP_Point(datapoint.id, datapoint.x, datapoint.y))
         log.info("%d points in time %d".format(currentPoints.count(), timestamp))
-        var f1: RDD[List[Int]] = MaximalFinder.run(currentPoints, timestamp, simba).
+        // Maximal disks for time 0
+        var f0: RDD[List[Int]] = MaximalFinder.run(currentPoints, timestamp, simba).
             repartition(CARTESIAN_PARTITIONS)
-
-        log.info("Running cartesian function between timestamps %d and %d...".format(timestamp, timestamp - 1))
-        var combinations = f0.cartesian(f1)
-        val ncombinations = combinations.count()
-        log.info("Cartesian returns %d combinations...".format(ncombinations))
-
-        val MU = conf.mu()
-        val flocks = combinations.map{
-                tuple => tuple._1.intersect(tuple._2).
-                sorted
-            }.
-            filter(flock => flock.length >= MU).
-            distinct()
-        log.info("\n######\n#\n# Done!\n# %d flocks found in timestamp %d...\n#\n######".format(flocks.count(), timestamp))
+        log.info(MaximalFinder.LOG.mkString("\n"))
+        MaximalFinder.LOG = List("")
+        // Maximal disks for time 1 and onwards
+        for(timestamp <- timestamps.slice(1,timestamps.length)){
+            currentPoints = dataset
+                .filter(datapoint => datapoint.t == timestamp)
+                .map(datapoint => MaximalFinder.SP_Point(datapoint.id, datapoint.x, datapoint.y))
+            log.info("%d points in time %d".format(currentPoints.count(), timestamp))
+            var f1: RDD[List[Int]] = MaximalFinder.run(currentPoints, timestamp, simba).
+                repartition(CARTESIAN_PARTITIONS)
+            log.info(MaximalFinder.LOG.mkString("\n"))
+            MaximalFinder.LOG = List("")                
+            log.info("Running cartesian function between timestamps %d and %d...".format(timestamp, timestamp - 1))
+            var combinations = f0.cartesian(f1)
+            val ncombinations = combinations.count()
+            log.info("Cartesian returns %d combinations...".format(ncombinations))
+            val flocks = combinations.map{
+                    tuple => tuple._1.intersect(tuple._2).
+                    sorted
+                }.
+                filter(flock => flock.length >= mu).
+                distinct()
+            log.info("\n######\n#\n# Done!\n# %d flocks found in timestamp %d...\n#\n######".format(flocks.count(), timestamp))
+        }
+        // Saving results...
+        MaximalFinder.saveOutput()
     }
-    // Saving results...
-    MaximalFinder.saveOutput()
     // Closing all...
     log.info("Closing app...")
     simba.close()
