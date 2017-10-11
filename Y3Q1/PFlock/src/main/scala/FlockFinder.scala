@@ -98,7 +98,6 @@ object FlockFinder {
         log.info(MaximalFinder.LOG.mkString("\n"))
         MaximalFinder.LOG = List("")
         // Maximal disks for time 1 and onwards
-        var flocks: RDD[Flock] = simba.sparkContext.emptyRDD[Flock]
         for(timestamp <- timestamps.slice(1,timestamps.length)){
 			// Reading points for current timestamp...
             currentPoints = dataset
@@ -127,7 +126,7 @@ object FlockFinder {
                 // Appending new potential flocks from current timestamp...
                 union(F_prime)
             F.collect().foreach(f => log.info("Flock,%d,%d,%s".format(f.start, f.end, f.ids.mkString(";"))))
-            log.info("\n######\n#\n# Done!\n# %d flocks found in timestamp %d...\n#\n######".format(flocks.count(), timestamp))
+            log.info("\n######\n#\n# Done!\n# %d flocks found in timestamp %d...\n#\n######".format(F.count(), timestamp))
         }
         // Saving results...
         MaximalFinder.saveOutput()

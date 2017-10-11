@@ -1,7 +1,7 @@
 #!/bin/bash
 
 EPSILON=50
-MU=3
+MU=10
 
 spark-submit /home/acald013/PhD/Y3Q1/PFlock/target/scala-2.11/pflock_2.11-1.0.jar \
 --estart $EPSILON --eend $EPSILON --estep 10 \
