@@ -10,6 +10,7 @@ object FlockFinder {
   private val log: Logger = LoggerFactory.getLogger("myLogger")
 
   case class ST_Point(x: Double, y: Double, t: Int, id: Int)
+  case class Flock(start: Int, end: Int, ids: List[Int], lon: Double = 0.0, lat: Double = 0.0)
 
   class Conf(arguments: Seq[String]) extends ScallopConf(arguments) {
     val estart: ScallopOption[Double] = opt[Double](default = Some(10.0))
@@ -76,6 +77,7 @@ object FlockFinder {
     MaximalFinder.DATASET = conf.dataset()
     MaximalFinder.CORES = conf.cores()
     MaximalFinder.PARTITIONS = conf.partitions()
+    var FLOCKS_OUT = List.empty[String]
     // Running experiment with different values of epsilon and mu...
     for( epsilon <- conf.estart() to conf.eend() by conf.estep();
          mu <- conf.mstart() to conf.mend() by conf.mstep()){
@@ -90,30 +92,41 @@ object FlockFinder {
                 MaximalFinder.SP_Point(datapoint.id, datapoint.x, datapoint.y))
         log.info("%d points in time %d".format(currentPoints.count(), timestamp))
         // Maximal disks for time 0
-        var f0: RDD[List[Int]] = MaximalFinder.run(currentPoints, timestamp, simba).
-            repartition(CARTESIAN_PARTITIONS)
+        var F: RDD[Flock] = MaximalFinder.run(currentPoints, timestamp, simba).
+            repartition(CARTESIAN_PARTITIONS).
+            map(f => Flock(timestamp, timestamp, f))
         log.info(MaximalFinder.LOG.mkString("\n"))
         MaximalFinder.LOG = List("")
         // Maximal disks for time 1 and onwards
+        var flocks: RDD[Flock] = simba.sparkContext.emptyRDD[Flock]
         for(timestamp <- timestamps.slice(1,timestamps.length)){
+			// Reading points for current timestamp...
             currentPoints = dataset
                 .filter(datapoint => datapoint.t == timestamp)
                 .map(datapoint => MaximalFinder.SP_Point(datapoint.id, datapoint.x, datapoint.y))
             log.info("%d points in time %d".format(currentPoints.count(), timestamp))
-            var f1: RDD[List[Int]] = MaximalFinder.run(currentPoints, timestamp, simba).
-                repartition(CARTESIAN_PARTITIONS)
+            // Finding maximal disks for current timestamp...
+            val F_prime: RDD[Flock] = MaximalFinder.run(currentPoints, timestamp, simba).
+                repartition(CARTESIAN_PARTITIONS).
+                map(f => Flock(timestamp, timestamp, f))
             log.info(MaximalFinder.LOG.mkString("\n"))
-            MaximalFinder.LOG = List("")                
-            log.info("Running cartesian function between timestamps %d and %d...".format(timestamp, timestamp - 1))
-            var combinations = f0.cartesian(f1)
+            MaximalFinder.LOG = List("")
+            // Joining previous flocks and current ones...
+            log.info("Running cartesian function between timestamps %d and %d...".format(timestamp - 1, timestamp))
+            var combinations = F.cartesian(F_prime)
             val ncombinations = combinations.count()
             log.info("Cartesian returns %d combinations...".format(ncombinations))
-            val flocks = combinations.map{
-                    tuple => tuple._1.intersect(tuple._2).
-                    sorted
+            // Checking if ids intersect...
+            F = combinations.map{
+                    tuple => 
+                    val ids_in_common = tuple._1.ids.intersect(tuple._2.ids).sorted
+                    Flock(tuple._1.start, tuple._2.end, ids_in_common)
                 }.
-                filter(flock => flock.length >= mu).
-                distinct()
+                //  Checking if they are greater than mu...
+                filter(flock => flock.ids.length >= mu).
+                // Appending new potential flocks from current timestamp...
+                union(F_prime)
+            F.collect().foreach(f => log.info("Flock,%d,%d,%s".format(f.start, f.end, f.ids.mkString(";"))))
             log.info("\n######\n#\n# Done!\n# %d flocks found in timestamp %d...\n#\n######".format(flocks.count(), timestamp))
         }
         // Saving results...
