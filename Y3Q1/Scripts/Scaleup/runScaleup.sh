@@ -1,6 +1,6 @@
 #!/bin/bash
 
-N=3
+N=5
 MU=50
 PARTITIONS=1024
 
