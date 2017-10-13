@@ -9,14 +9,14 @@ output:
 
 <!--- Execution time --->
 
-### Experiments using spatial sampling (mu=50).
+### Experiments using spatial sampling (mu=12).
 
 ```{r ScaleupSetup, include=FALSE}
 if (!require("pacman")) install.packages("pacman")
 pacman::p_load(ggplot2, data.table, foreach, sqldf, tidyr)
 
-PATH = "Y3Q1/Scripts/Scaleup/tmp/V3/"
-filename ="Berlin_N20K-80K_E50.0-100.0"
+PATH = "Y3Q1/Scripts/Scaleup/"
+filename ="Berlin_N20K-80K_E10.0-50.0"
 PHD_HOME = Sys.getenv(c("PHD_HOME"))
 
 files = system(paste0("ls ",PHD_HOME,PATH,filename,"_C*.csv"), intern = T)
@@ -47,11 +47,9 @@ plot(g)
 
 <!--- Candidate and maximal disks --->
 
-### Number of candidate and maximal disks (mu=50).
+### Number of candidate and maximal disks (mu=12).
 
 ```{r DisksSetup1, include=FALSE}
-PATH = "Y3Q1/Scripts/Scaleup/tmp/V3/"
-filename ="Berlin_N20K-80K_E50.0-100.0"
 files = system(paste0("ls ",PHD_HOME,PATH,filename,"_C*.csv"), intern = T)
 data = data.frame()
 foreach(f = files) %do% {
