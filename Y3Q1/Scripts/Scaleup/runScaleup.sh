@@ -1,7 +1,7 @@
 #!/bin/bash
 
 N=1
-MU=10
+MU=12
 PARTITIONS=256
 
 # Running Scaleup on 1 Node with 20K dataset...
