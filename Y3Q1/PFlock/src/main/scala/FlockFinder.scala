@@ -19,7 +19,7 @@ object FlockFinder {
     val mstart: ScallopOption[Int] = opt[Int](default = Some(4))
     val mstep:  ScallopOption[Int] = opt[Int](default = Some(2))
     val mend:   ScallopOption[Int] = opt[Int](default = Some(4))
-    val partitions: ScallopOption[Int] = opt[Int](default = Some(64))
+    val partitions: ScallopOption[Int] = opt[Int](default = Some(256))
     val cores: ScallopOption[Int] = opt[Int](default = Some(4))
     val tstart: ScallopOption[Int] = opt[Int](default = Some(117))
     val tend: ScallopOption[Int] = opt[Int](default = Some(118))
