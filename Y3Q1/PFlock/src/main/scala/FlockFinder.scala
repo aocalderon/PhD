@@ -13,22 +13,23 @@ object FlockFinder {
   case class Flock(start: Int, end: Int, ids: List[Int], lon: Double = 0.0, lat: Double = 0.0)
 
   class Conf(arguments: Seq[String]) extends ScallopConf(arguments) {
-    val estart: ScallopOption[Double] = opt[Double](default = Some(10.0))
-    val estep:  ScallopOption[Double] = opt[Double](default = Some(10.0))
-    val eend:   ScallopOption[Double] = opt[Double](default = Some(20.0))
-    val mstart: ScallopOption[Int] = opt[Int](default = Some(4))
-    val mstep:  ScallopOption[Int] = opt[Int](default = Some(2))
-    val mend:   ScallopOption[Int] = opt[Int](default = Some(4))
-    val partitions: ScallopOption[Int] = opt[Int](default = Some(256))
-    val cores: ScallopOption[Int] = opt[Int](default = Some(4))
-    val tstart: ScallopOption[Int] = opt[Int](default = Some(117))
-    val tend: ScallopOption[Int] = opt[Int](default = Some(118))
-    val cartesian_partitions: ScallopOption[Int] = opt[Int](default = Some(2))
-    val master: ScallopOption[String] = opt[String](default = Some("local[*]"))
-    val logs: ScallopOption[String] = opt[String](default = Some("INFO"))
-    val path: ScallopOption[String] = opt[String](default = Some("Y3Q1/Datasets/"))
-    val dataset: ScallopOption[String] = opt[String](default = Some("Berlin_N15K_A1K_T15"))
-    val extension: ScallopOption[String] = opt[String](default = Some("csv"))
+    val estart:					ScallopOption[Double] = opt[Double](default = Some(10.0))
+    val estep:					ScallopOption[Double] = opt[Double](default = Some(10.0))
+    val eend:					ScallopOption[Double] = opt[Double](default = Some(20.0))
+    val mstart:					ScallopOption[Int]	  = opt[Int]   (default = Some(4))
+    val mstep:					ScallopOption[Int]	  = opt[Int]   (default = Some(2))
+    val mend:					ScallopOption[Int]	  = opt[Int]   (default = Some(4))
+    val delta:					ScallopOption[Int]	  = opt[Int]   (default = Some(3))
+    val partitions:				ScallopOption[Int]	  = opt[Int]   (default = Some(256))
+    val cores:					ScallopOption[Int]	  = opt[Int]   (default = Some(4))
+    val tstart:					ScallopOption[Int]	  = opt[Int]   (default = Some(117))
+    val tend:					ScallopOption[Int]	  = opt[Int]   (default = Some(118))
+    val cartesian_partitions: 	ScallopOption[Int]	  = opt[Int]   (default = Some(2))
+    val master:					ScallopOption[String] = opt[String](default = Some("local[*]"))
+    val logs:					ScallopOption[String] = opt[String](default = Some("INFO"))
+    val path:					ScallopOption[String] = opt[String](default = Some("Y3Q1/Datasets/"))
+    val dataset:				ScallopOption[String] = opt[String](default = Some("Berlin_N15K_A1K_T15"))
+    val extension:				ScallopOption[String] = opt[String](default = Some("csv"))
     verify()
   }
   
@@ -97,6 +98,7 @@ object FlockFinder {
             map(f => Flock(timestamp, timestamp, f))
         log.info(MaximalFinder.LOG.mkString("\n"))
         MaximalFinder.LOG = List("")
+        log.info("Flock,Start,End,Flock")
         // Maximal disks for time 1 and onwards
         for(timestamp <- timestamps.slice(1,timestamps.length)){
 			// Reading points for current timestamp...
@@ -111,7 +113,7 @@ object FlockFinder {
             log.info(MaximalFinder.LOG.mkString("\n"))
             MaximalFinder.LOG = List("")
             // Joining previous flocks and current ones...
-            log.info("Running cartesian function between timestamps %d and %d...".format(timestamp - 1, timestamp))
+            log.info("Running cartesian function for timestamps %d...".format(timestamp))
             var combinations = F.cartesian(F_prime)
             val ncombinations = combinations.count()
             log.info("Cartesian returns %d combinations...".format(ncombinations))
@@ -121,12 +123,22 @@ object FlockFinder {
                     val ids_in_common = tuple._1.ids.intersect(tuple._2.ids).sorted
                     Flock(tuple._1.start, tuple._2.end, ids_in_common)
                 }.
-                //  Checking if they are greater than mu...
+                // Checking if they are greater than mu...
                 filter(flock => flock.ids.length >= mu).
-                // Appending new potential flocks from current timestamp...
-                union(F_prime)
-            F.collect().foreach(f => log.info("Flock,%d,%d,%s".format(f.start, f.end, f.ids.mkString(";"))))
-            log.info("\n######\n#\n# Done!\n# %d flocks found in timestamp %d...\n#\n######".format(F.count(), timestamp))
+                // Removing duplicates...
+                distinct
+                
+            val DELTA = conf.delta()
+            // Reporting flocks with duration delta...
+            F.foreach{ flock =>
+					if(flock.end - flock.start == DELTA){
+						log.info("Flock,%d,%d,\"%s\"".format(flock.start, flock.end, flock.ids.mkString(";")))
+					}
+				}
+			val n = F.filter(flock => flock.end - flock.start == DELTA).count()
+            log.info("\n######\n#\n# Done!\n# %d flocks found in timestamp %d...\n#\n######".format(n, timestamp))
+            // Appending new potential flocks from current timestamp...
+            F = F.union(F_prime)
         }
         // Saving results...
         MaximalFinder.saveOutput()
