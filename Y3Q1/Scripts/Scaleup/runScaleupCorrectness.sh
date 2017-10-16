@@ -1,6 +1,5 @@
 #!/bin/bash
 
-N=3
 MU=12
 PARTITIONS=512
 
@@ -13,29 +12,15 @@ echo "acald013@dblab-rack14" >> $SPARK_HOME/conf/slaves
 echo "acald013@dblab-rack15" >> $SPARK_HOME/conf/slaves
 $SPARK_HOME/sbin/start-all.sh
 
-for i in `seq 1 $N`
-do
-	echo "Running iteration $i ..."
-        ./runDatasetCorrectness.sh 1 28 $PARTITIONS $MU
-done
+./runDatasetCorrectness.sh 1 28 $PARTITIONS $MU
+./runDatasetCorrectness.sh 2 28 $PARTITIONS $MU
+./runDataset.sh 40 28 $PARTITIONS $MU
 
-for i in `seq 1 $N`
-do
-	echo "Running iteration $i ..."
-        ./runDatasetCorrectness.sh 2 28 $PARTITIONS $MU
-done
+./runDatasetCorrectness.sh 3 28 $PARTITIONS $MU
+./runDataset.sh 60 28 $PARTITIONS $MU
 
-for i in `seq 1 $N`
-do
-	echo "Running iteration $i ..."
-        ./runDatasetCorrectness.sh 3 28 $PARTITIONS $MU
-done
-
-for i in `seq 1 $N`
-do
-	echo "Running iteration $i ..."
-        ./runDatasetCorrectness.sh 4 28 $PARTITIONS $MU
-done
+./runDatasetCorrectness.sh 4 28 $PARTITIONS $MU
+./runDataset.sh 80 28 $PARTITIONS $MU
 
 $SPARK_HOME/sbin/stop-all.sh
 echo "Done!!!"
