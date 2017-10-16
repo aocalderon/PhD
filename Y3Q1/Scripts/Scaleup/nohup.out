@@ -10,301 +10,161 @@ acald013@dblab-rack14: starting org.apache.spark.deploy.worker.Worker, logging t
 acald013@dblab-rack11: starting org.apache.spark.deploy.worker.Worker, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.worker.Worker-1-dblab-rack11.cs.ucr.edu.out
 Running in 28 cores and 512 partitions.  Setting mu = 12 ...
 Using Spark's default log4j profile: org/apache/spark/log4j-defaults.properties
-17/10/16 12:02:43 INFO SparkContext: Running Spark version 2.1.0
-17/10/16 12:02:43 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
-17/10/16 12:02:43 INFO SecurityManager: Changing view acls to: acald013
-17/10/16 12:02:43 INFO SecurityManager: Changing modify acls to: acald013
-17/10/16 12:02:43 INFO SecurityManager: Changing view acls groups to: 
-17/10/16 12:02:43 INFO SecurityManager: Changing modify acls groups to: 
-17/10/16 12:02:43 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(acald013); groups with view permissions: Set(); users  with modify permissions: Set(acald013); groups with modify permissions: Set()
-17/10/16 12:02:44 INFO Utils: Successfully started service 'sparkDriver' on port 37212.
-17/10/16 12:02:44 INFO SparkEnv: Registering MapOutputTracker
-17/10/16 12:02:44 INFO SparkEnv: Registering BlockManagerMaster
-17/10/16 12:02:44 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
-17/10/16 12:02:44 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
-17/10/16 12:02:44 INFO DiskBlockManager: Created local directory at /tmp/blockmgr-7f945177-4fe7-4974-964c-f45c6a6f56f0
-17/10/16 12:02:44 INFO MemoryStore: MemoryStore started with capacity 6.2 GB
-17/10/16 12:02:44 INFO SparkEnv: Registering OutputCommitCoordinator
-17/10/16 12:02:44 WARN Utils: Service 'SparkUI' could not bind on port 4040. Attempting port 4041.
-17/10/16 12:02:44 INFO Utils: Successfully started service 'SparkUI' on port 4041.
-17/10/16 12:02:44 INFO SparkUI: Bound SparkUI to 0.0.0.0, and started at http://169.235.27.138:4041
-17/10/16 12:02:44 INFO SparkContext: Added JAR file:/home/acald013/PhD/Y2Q4/PFlock/target/scala-2.11/pflock_2.11-1.0.jar at spark://169.235.27.138:37212/jars/pflock_2.11-1.0.jar with timestamp 1508180564936
-17/10/16 12:02:45 INFO StandaloneAppClient$ClientEndpoint: Connecting to master spark://169.235.27.138:7077...
-17/10/16 12:02:45 INFO TransportClientFactory: Successfully created connection to /169.235.27.138:7077 after 49 ms (0 ms spent in bootstraps)
-17/10/16 12:02:45 INFO StandaloneSchedulerBackend: Connected to Spark cluster with app ID app-20171016120245-0000
-17/10/16 12:02:45 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 37105.
-17/10/16 12:02:45 INFO NettyBlockTransferService: Server created on 169.235.27.138:37105
-17/10/16 12:02:45 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
-17/10/16 12:02:45 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 169.235.27.138, 37105, None)
-17/10/16 12:02:45 INFO BlockManagerMasterEndpoint: Registering block manager 169.235.27.138:37105 with 6.2 GB RAM, BlockManagerId(driver, 169.235.27.138, 37105, None)
-17/10/16 12:02:45 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 169.235.27.138, 37105, None)
-17/10/16 12:02:45 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 169.235.27.138, 37105, None)
-17/10/16 12:02:45 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20171016120245-0000/0 on worker-20171016120238-169.235.27.138-46611 (169.235.27.138:46611) with 7 cores
-17/10/16 12:02:45 INFO StandaloneSchedulerBackend: Granted executor ID app-20171016120245-0000/0 on hostPort 169.235.27.138:46611 with 7 cores, 12.0 GB RAM
-17/10/16 12:02:45 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20171016120245-0000/1 on worker-20171016120237-169.235.27.134-42953 (169.235.27.134:42953) with 7 cores
-17/10/16 12:02:45 INFO StandaloneSchedulerBackend: Granted executor ID app-20171016120245-0000/1 on hostPort 169.235.27.134:42953 with 7 cores, 12.0 GB RAM
-17/10/16 12:02:45 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20171016120245-0000/2 on worker-20171016120237-169.235.27.137-41914 (169.235.27.137:41914) with 7 cores
-17/10/16 12:02:45 INFO StandaloneSchedulerBackend: Granted executor ID app-20171016120245-0000/2 on hostPort 169.235.27.137:41914 with 7 cores, 12.0 GB RAM
-17/10/16 12:02:45 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20171016120245-0000/3 on worker-20171016120237-169.235.27.135-38504 (169.235.27.135:38504) with 7 cores
-17/10/16 12:02:45 INFO StandaloneSchedulerBackend: Granted executor ID app-20171016120245-0000/3 on hostPort 169.235.27.135:38504 with 7 cores, 12.0 GB RAM
-17/10/16 12:02:45 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20171016120245-0000/2 is now RUNNING
-17/10/16 12:02:45 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20171016120245-0000/1 is now RUNNING
-17/10/16 12:02:45 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20171016120245-0000/3 is now RUNNING
-17/10/16 12:02:45 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20171016120245-0000/0 is now RUNNING
-17/10/16 12:02:46 INFO EventLoggingListener: Logging events to file:///home/acald013/Spark/Logs/app-20171016120245-0000
-17/10/16 12:02:46 INFO StandaloneSchedulerBackend: SchedulerBackend is ready for scheduling beginning after reached minRegisteredResourcesRatio: 0.0
-17/10/16 12:02:46 INFO SharedState: Warehouse path is 'file:/home/acald013/PhD/Y3Q1/Scripts/Scaleup/spark-warehouse/'.
-Running app-20171016120245-0000 on 28 cores and 512 partitions...
+17/10/16 12:05:31 INFO SparkContext: Running Spark version 2.1.0
+17/10/16 12:05:32 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+17/10/16 12:05:32 INFO SecurityManager: Changing view acls to: acald013
+17/10/16 12:05:32 INFO SecurityManager: Changing modify acls to: acald013
+17/10/16 12:05:32 INFO SecurityManager: Changing view acls groups to: 
+17/10/16 12:05:32 INFO SecurityManager: Changing modify acls groups to: 
+17/10/16 12:05:32 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(acald013); groups with view permissions: Set(); users  with modify permissions: Set(acald013); groups with modify permissions: Set()
+17/10/16 12:05:32 INFO Utils: Successfully started service 'sparkDriver' on port 34722.
+17/10/16 12:05:32 INFO SparkEnv: Registering MapOutputTracker
+17/10/16 12:05:33 INFO SparkEnv: Registering BlockManagerMaster
+17/10/16 12:05:33 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+17/10/16 12:05:33 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
+17/10/16 12:05:33 INFO DiskBlockManager: Created local directory at /tmp/blockmgr-30e9c9e2-ff65-49c3-ba81-6b701830e2e7
+17/10/16 12:05:33 INFO MemoryStore: MemoryStore started with capacity 6.2 GB
+17/10/16 12:05:33 INFO SparkEnv: Registering OutputCommitCoordinator
+17/10/16 12:05:33 WARN Utils: Service 'SparkUI' could not bind on port 4040. Attempting port 4041.
+17/10/16 12:05:33 INFO Utils: Successfully started service 'SparkUI' on port 4041.
+17/10/16 12:05:33 INFO SparkUI: Bound SparkUI to 0.0.0.0, and started at http://169.235.27.138:4041
+17/10/16 12:05:33 INFO SparkContext: Added JAR file:/home/acald013/PhD/Y2Q4/PFlock/target/scala-2.11/pflock_2.11-1.0.jar at spark://169.235.27.138:34722/jars/pflock_2.11-1.0.jar with timestamp 1508180733674
+17/10/16 12:05:33 INFO StandaloneAppClient$ClientEndpoint: Connecting to master spark://169.235.27.138:7077...
+17/10/16 12:05:33 INFO TransportClientFactory: Successfully created connection to /169.235.27.138:7077 after 48 ms (0 ms spent in bootstraps)
+17/10/16 12:05:34 INFO StandaloneSchedulerBackend: Connected to Spark cluster with app ID app-20171016120534-0000
+17/10/16 12:05:34 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 39659.
+17/10/16 12:05:34 INFO NettyBlockTransferService: Server created on 169.235.27.138:39659
+17/10/16 12:05:34 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
+17/10/16 12:05:34 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 169.235.27.138, 39659, None)
+17/10/16 12:05:34 INFO BlockManagerMasterEndpoint: Registering block manager 169.235.27.138:39659 with 6.2 GB RAM, BlockManagerId(driver, 169.235.27.138, 39659, None)
+17/10/16 12:05:34 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 169.235.27.138, 39659, None)
+17/10/16 12:05:34 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 169.235.27.138, 39659, None)
+17/10/16 12:05:34 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20171016120534-0000/0 on worker-20171016120527-169.235.27.138-38832 (169.235.27.138:38832) with 7 cores
+17/10/16 12:05:34 INFO StandaloneSchedulerBackend: Granted executor ID app-20171016120534-0000/0 on hostPort 169.235.27.138:38832 with 7 cores, 12.0 GB RAM
+17/10/16 12:05:34 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20171016120534-0000/1 on worker-20171016120526-169.235.27.135-42250 (169.235.27.135:42250) with 7 cores
+17/10/16 12:05:34 INFO StandaloneSchedulerBackend: Granted executor ID app-20171016120534-0000/1 on hostPort 169.235.27.135:42250 with 7 cores, 12.0 GB RAM
+17/10/16 12:05:34 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20171016120534-0000/2 on worker-20171016120526-169.235.27.134-35131 (169.235.27.134:35131) with 7 cores
+17/10/16 12:05:34 INFO StandaloneSchedulerBackend: Granted executor ID app-20171016120534-0000/2 on hostPort 169.235.27.134:35131 with 7 cores, 12.0 GB RAM
+17/10/16 12:05:34 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20171016120534-0000/3 on worker-20171016120526-169.235.27.137-37842 (169.235.27.137:37842) with 7 cores
+17/10/16 12:05:34 INFO StandaloneSchedulerBackend: Granted executor ID app-20171016120534-0000/3 on hostPort 169.235.27.137:37842 with 7 cores, 12.0 GB RAM
+17/10/16 12:05:34 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20171016120534-0000/1 is now RUNNING
+17/10/16 12:05:34 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20171016120534-0000/2 is now RUNNING
+17/10/16 12:05:34 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20171016120534-0000/3 is now RUNNING
+17/10/16 12:05:34 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20171016120534-0000/0 is now RUNNING
+17/10/16 12:05:34 INFO EventLoggingListener: Logging events to file:///home/acald013/Spark/Logs/app-20171016120534-0000
+17/10/16 12:05:34 INFO StandaloneSchedulerBackend: SchedulerBackend is ready for scheduling beginning after reached minRegisteredResourcesRatio: 0.0
+17/10/16 12:05:34 INFO SharedState: Warehouse path is 'file:/home/acald013/PhD/Y3Q1/Scripts/Scaleup/spark-warehouse/'.
+Running app-20171016120534-0000 on 28 cores and 512 partitions...
        Tag    Epsilon    Dataset      TimeD      TimeM  TotalTime NCandidate   NMaximal      Cores Partitions       Timestamp
-17/10/16 12:02:54 ERROR TaskSetManager: Task 0 in stage 1.0 failed 4 times; aborting job
-Exception in thread "main" org.apache.spark.SparkException: Job aborted due to stage failure: Task 0 in stage 1.0 failed 4 times, most recent failure: Lost task 0.3 in stage 1.0 (TID 6, 169.235.27.135, executor 3): java.io.FileNotFoundException: File file:/home/acald013/PhD/Y3Q1/Datasets/B20K_1S.csv does not exist
-It is possible the underlying files have been updated. You can explicitly invalidate the cache in Spark by running 'REFRESH TABLE tableName' command in SQL or by recreating the Dataset/DataFrame involved.
-	at org.apache.spark.sql.execution.datasources.FileScanRDD$$anon$1.nextIterator(FileScanRDD.scala:157)
-	at org.apache.spark.sql.execution.datasources.FileScanRDD$$anon$1.hasNext(FileScanRDD.scala:102)
-	at org.apache.spark.sql.catalyst.expressions.GeneratedClass$GeneratedIterator.processNext(Unknown Source)
-	at org.apache.spark.sql.execution.BufferedRowIterator.hasNext(BufferedRowIterator.java:43)
-	at org.apache.spark.sql.execution.WholeStageCodegenExec$$anonfun$8$$anon$1.hasNext(WholeStageCodegenExec.scala:377)
-	at scala.collection.Iterator$$anon$11.hasNext(Iterator.scala:408)
-	at scala.collection.Iterator$$anon$11.hasNext(Iterator.scala:408)
-	at scala.collection.Iterator$class.foreach(Iterator.scala:893)
-	at scala.collection.AbstractIterator.foreach(Iterator.scala:1336)
-	at scala.collection.TraversableOnce$class.foldLeft(TraversableOnce.scala:157)
-	at scala.collection.AbstractIterator.foldLeft(Iterator.scala:1336)
-	at scala.collection.TraversableOnce$class.aggregate(TraversableOnce.scala:214)
-	at scala.collection.AbstractIterator.aggregate(Iterator.scala:1336)
-	at org.apache.spark.rdd.RDD$$anonfun$aggregate$1$$anonfun$22.apply(RDD.scala:1112)
-	at org.apache.spark.rdd.RDD$$anonfun$aggregate$1$$anonfun$22.apply(RDD.scala:1112)
-	at org.apache.spark.SparkContext$$anonfun$33.apply(SparkContext.scala:1980)
-	at org.apache.spark.SparkContext$$anonfun$33.apply(SparkContext.scala:1980)
-	at org.apache.spark.scheduler.ResultTask.runTask(ResultTask.scala:87)
-	at org.apache.spark.scheduler.Task.run(Task.scala:99)
-	at org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:282)
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
-	at java.lang.Thread.run(Thread.java:745)
-
-Driver stacktrace:
-	at org.apache.spark.scheduler.DAGScheduler.org$apache$spark$scheduler$DAGScheduler$$failJobAndIndependentStages(DAGScheduler.scala:1435)
-	at org.apache.spark.scheduler.DAGScheduler$$anonfun$abortStage$1.apply(DAGScheduler.scala:1423)
-	at org.apache.spark.scheduler.DAGScheduler$$anonfun$abortStage$1.apply(DAGScheduler.scala:1422)
-	at scala.collection.mutable.ResizableArray$class.foreach(ResizableArray.scala:59)
-	at scala.collection.mutable.ArrayBuffer.foreach(ArrayBuffer.scala:48)
-	at org.apache.spark.scheduler.DAGScheduler.abortStage(DAGScheduler.scala:1422)
-	at org.apache.spark.scheduler.DAGScheduler$$anonfun$handleTaskSetFailed$1.apply(DAGScheduler.scala:802)
-	at org.apache.spark.scheduler.DAGScheduler$$anonfun$handleTaskSetFailed$1.apply(DAGScheduler.scala:802)
-	at scala.Option.foreach(Option.scala:257)
-	at org.apache.spark.scheduler.DAGScheduler.handleTaskSetFailed(DAGScheduler.scala:802)
-	at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.doOnReceive(DAGScheduler.scala:1650)
-	at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.onReceive(DAGScheduler.scala:1605)
-	at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.onReceive(DAGScheduler.scala:1594)
-	at org.apache.spark.util.EventLoop$$anon$1.run(EventLoop.scala:48)
-	at org.apache.spark.scheduler.DAGScheduler.runJob(DAGScheduler.scala:628)
-	at org.apache.spark.SparkContext.runJob(SparkContext.scala:1918)
-	at org.apache.spark.SparkContext.runJob(SparkContext.scala:1981)
-	at org.apache.spark.rdd.RDD$$anonfun$aggregate$1.apply(RDD.scala:1114)
-	at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:151)
-	at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:112)
-	at org.apache.spark.rdd.RDD.withScope(RDD.scala:362)
-	at org.apache.spark.rdd.RDD.aggregate(RDD.scala:1107)
-	at org.apache.spark.sql.simba.partitioner.STRPartitioner.<init>(STRPartitioner.scala:69)
-	at org.apache.spark.sql.simba.partitioner.STRPartition$.apply(STRPartitioner.scala:49)
-	at org.apache.spark.sql.simba.index.RTreeIndexedRelation.buildIndex(RTreeIndexedRelation.scala:72)
-	at org.apache.spark.sql.simba.index.RTreeIndexedRelation.<init>(RTreeIndexedRelation.scala:58)
-	at org.apache.spark.sql.simba.index.IndexedRelation$.apply(IndexedRelation.scala:41)
-	at org.apache.spark.sql.simba.IndexManager$$anonfun$createIndexQuery$1.apply(IndexManager.scala:201)
-	at org.apache.spark.sql.simba.IndexManager.writeLock(IndexManager.scala:64)
-	at org.apache.spark.sql.simba.IndexManager.createIndexQuery(IndexManager.scala:192)
-	at org.apache.spark.sql.simba.Dataset.index(DataSet.scala:179)
-	at PFlock$$anonfun$main$1$$anonfun$apply$mcVI$sp$1.apply$mcVD$sp(PFlock.scala:71)
-	at PFlock$$anonfun$main$1$$anonfun$apply$mcVI$sp$1.apply(PFlock.scala:57)
-	at PFlock$$anonfun$main$1$$anonfun$apply$mcVI$sp$1.apply(PFlock.scala:57)
-	at scala.collection.immutable.NumericRange.foreach(NumericRange.scala:73)
-	at PFlock$$anonfun$main$1.apply$mcVI$sp(PFlock.scala:57)
-	at scala.collection.immutable.Range.foreach$mVc$sp(Range.scala:160)
-	at PFlock$.main(PFlock.scala:56)
-	at PFlock.main(PFlock.scala)
-	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
-	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-	at java.lang.reflect.Method.invoke(Method.java:498)
-	at org.apache.spark.deploy.SparkSubmit$.org$apache$spark$deploy$SparkSubmit$$runMain(SparkSubmit.scala:738)
-	at org.apache.spark.deploy.SparkSubmit$.doRunMain$1(SparkSubmit.scala:187)
-	at org.apache.spark.deploy.SparkSubmit$.submit(SparkSubmit.scala:212)
-	at org.apache.spark.deploy.SparkSubmit$.main(SparkSubmit.scala:126)
-	at org.apache.spark.deploy.SparkSubmit.main(SparkSubmit.scala)
-Caused by: java.io.FileNotFoundException: File file:/home/acald013/PhD/Y3Q1/Datasets/B20K_1S.csv does not exist
-It is possible the underlying files have been updated. You can explicitly invalidate the cache in Spark by running 'REFRESH TABLE tableName' command in SQL or by recreating the Dataset/DataFrame involved.
-	at org.apache.spark.sql.execution.datasources.FileScanRDD$$anon$1.nextIterator(FileScanRDD.scala:157)
-	at org.apache.spark.sql.execution.datasources.FileScanRDD$$anon$1.hasNext(FileScanRDD.scala:102)
-	at org.apache.spark.sql.catalyst.expressions.GeneratedClass$GeneratedIterator.processNext(Unknown Source)
-	at org.apache.spark.sql.execution.BufferedRowIterator.hasNext(BufferedRowIterator.java:43)
-	at org.apache.spark.sql.execution.WholeStageCodegenExec$$anonfun$8$$anon$1.hasNext(WholeStageCodegenExec.scala:377)
-	at scala.collection.Iterator$$anon$11.hasNext(Iterator.scala:408)
-	at scala.collection.Iterator$$anon$11.hasNext(Iterator.scala:408)
-	at scala.collection.Iterator$class.foreach(Iterator.scala:893)
-	at scala.collection.AbstractIterator.foreach(Iterator.scala:1336)
-	at scala.collection.TraversableOnce$class.foldLeft(TraversableOnce.scala:157)
-	at scala.collection.AbstractIterator.foldLeft(Iterator.scala:1336)
-	at scala.collection.TraversableOnce$class.aggregate(TraversableOnce.scala:214)
-	at scala.collection.AbstractIterator.aggregate(Iterator.scala:1336)
-	at org.apache.spark.rdd.RDD$$anonfun$aggregate$1$$anonfun$22.apply(RDD.scala:1112)
-	at org.apache.spark.rdd.RDD$$anonfun$aggregate$1$$anonfun$22.apply(RDD.scala:1112)
-	at org.apache.spark.SparkContext$$anonfun$33.apply(SparkContext.scala:1980)
-	at org.apache.spark.SparkContext$$anonfun$33.apply(SparkContext.scala:1980)
-	at org.apache.spark.scheduler.ResultTask.runTask(ResultTask.scala:87)
-	at org.apache.spark.scheduler.Task.run(Task.scala:99)
-	at org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:282)
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
-	at java.lang.Thread.run(Thread.java:745)
-Done!!! Mon Oct 16 12:02:55 PDT 2017
+    PFlock       10.0     20K_1S     44.673      4.031     48.704      25626         13         28        529    12:06:24.903
+    PFlock       20.0     20K_1S     22.958      3.771     26.729      52118        152         28        529    12:06:51.741
+    PFlock       30.0     20K_1S     24.517      5.678     30.195      78182        381         28        529    12:07:22.005
+    PFlock       40.0     20K_1S     23.714      7.164     30.878     105536        780         28        529    12:07:52.946
+    PFlock       50.0     20K_1S     23.544     80.895    104.439     133652        975         28        529    12:09:37.443
+Done!!! Mon Oct 16 12:09:38 PDT 2017
 Running in 28 cores and 512 partitions.  Setting mu = 12 ...
 Using Spark's default log4j profile: org/apache/spark/log4j-defaults.properties
-17/10/16 12:02:59 INFO SparkContext: Running Spark version 2.1.0
-17/10/16 12:02:59 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
-17/10/16 12:03:00 INFO SecurityManager: Changing view acls to: acald013
-17/10/16 12:03:00 INFO SecurityManager: Changing modify acls to: acald013
-17/10/16 12:03:00 INFO SecurityManager: Changing view acls groups to: 
-17/10/16 12:03:00 INFO SecurityManager: Changing modify acls groups to: 
-17/10/16 12:03:00 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(acald013); groups with view permissions: Set(); users  with modify permissions: Set(acald013); groups with modify permissions: Set()
-17/10/16 12:03:00 INFO Utils: Successfully started service 'sparkDriver' on port 37409.
-17/10/16 12:03:00 INFO SparkEnv: Registering MapOutputTracker
-17/10/16 12:03:00 INFO SparkEnv: Registering BlockManagerMaster
-17/10/16 12:03:00 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
-17/10/16 12:03:00 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
-17/10/16 12:03:00 INFO DiskBlockManager: Created local directory at /tmp/blockmgr-2c69634e-671b-4d4c-aacd-cec5a79fc6bd
-17/10/16 12:03:00 INFO MemoryStore: MemoryStore started with capacity 6.2 GB
-17/10/16 12:03:00 INFO SparkEnv: Registering OutputCommitCoordinator
-17/10/16 12:03:01 WARN Utils: Service 'SparkUI' could not bind on port 4040. Attempting port 4041.
-17/10/16 12:03:01 INFO Utils: Successfully started service 'SparkUI' on port 4041.
-17/10/16 12:03:01 INFO SparkUI: Bound SparkUI to 0.0.0.0, and started at http://169.235.27.138:4041
-17/10/16 12:03:01 INFO SparkContext: Added JAR file:/home/acald013/PhD/Y2Q4/PFlock/target/scala-2.11/pflock_2.11-1.0.jar at spark://169.235.27.138:37409/jars/pflock_2.11-1.0.jar with timestamp 1508180581278
-17/10/16 12:03:01 INFO StandaloneAppClient$ClientEndpoint: Connecting to master spark://169.235.27.138:7077...
-17/10/16 12:03:01 INFO TransportClientFactory: Successfully created connection to /169.235.27.138:7077 after 46 ms (0 ms spent in bootstraps)
-17/10/16 12:03:01 INFO StandaloneSchedulerBackend: Connected to Spark cluster with app ID app-20171016120301-0001
-17/10/16 12:03:01 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20171016120301-0001/0 on worker-20171016120238-169.235.27.138-46611 (169.235.27.138:46611) with 7 cores
-17/10/16 12:03:01 INFO StandaloneSchedulerBackend: Granted executor ID app-20171016120301-0001/0 on hostPort 169.235.27.138:46611 with 7 cores, 12.0 GB RAM
-17/10/16 12:03:01 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20171016120301-0001/1 on worker-20171016120237-169.235.27.134-42953 (169.235.27.134:42953) with 7 cores
-17/10/16 12:03:01 INFO StandaloneSchedulerBackend: Granted executor ID app-20171016120301-0001/1 on hostPort 169.235.27.134:42953 with 7 cores, 12.0 GB RAM
-17/10/16 12:03:01 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20171016120301-0001/2 on worker-20171016120237-169.235.27.137-41914 (169.235.27.137:41914) with 7 cores
-17/10/16 12:03:01 INFO StandaloneSchedulerBackend: Granted executor ID app-20171016120301-0001/2 on hostPort 169.235.27.137:41914 with 7 cores, 12.0 GB RAM
-17/10/16 12:03:01 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20171016120301-0001/3 on worker-20171016120237-169.235.27.135-38504 (169.235.27.135:38504) with 7 cores
-17/10/16 12:03:01 INFO StandaloneSchedulerBackend: Granted executor ID app-20171016120301-0001/3 on hostPort 169.235.27.135:38504 with 7 cores, 12.0 GB RAM
-17/10/16 12:03:01 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 36395.
-17/10/16 12:03:01 INFO NettyBlockTransferService: Server created on 169.235.27.138:36395
-17/10/16 12:03:01 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
-17/10/16 12:03:01 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 169.235.27.138, 36395, None)
-17/10/16 12:03:01 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20171016120301-0001/0 is now RUNNING
-17/10/16 12:03:01 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20171016120301-0001/3 is now RUNNING
-17/10/16 12:03:01 INFO BlockManagerMasterEndpoint: Registering block manager 169.235.27.138:36395 with 6.2 GB RAM, BlockManagerId(driver, 169.235.27.138, 36395, None)
-17/10/16 12:03:01 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20171016120301-0001/1 is now RUNNING
-17/10/16 12:03:01 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20171016120301-0001/2 is now RUNNING
-17/10/16 12:03:01 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 169.235.27.138, 36395, None)
-17/10/16 12:03:01 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 169.235.27.138, 36395, None)
-17/10/16 12:03:02 INFO EventLoggingListener: Logging events to file:///home/acald013/Spark/Logs/app-20171016120301-0001
-17/10/16 12:03:02 INFO StandaloneSchedulerBackend: SchedulerBackend is ready for scheduling beginning after reached minRegisteredResourcesRatio: 0.0
-17/10/16 12:03:02 INFO SharedState: Warehouse path is 'file:/home/acald013/PhD/Y3Q1/Scripts/Scaleup/spark-warehouse/'.
-Running app-20171016120301-0001 on 28 cores and 512 partitions...
+17/10/16 12:09:42 INFO SparkContext: Running Spark version 2.1.0
+17/10/16 12:09:43 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+17/10/16 12:09:43 INFO SecurityManager: Changing view acls to: acald013
+17/10/16 12:09:43 INFO SecurityManager: Changing modify acls to: acald013
+17/10/16 12:09:43 INFO SecurityManager: Changing view acls groups to: 
+17/10/16 12:09:43 INFO SecurityManager: Changing modify acls groups to: 
+17/10/16 12:09:43 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(acald013); groups with view permissions: Set(); users  with modify permissions: Set(acald013); groups with modify permissions: Set()
+17/10/16 12:09:44 INFO Utils: Successfully started service 'sparkDriver' on port 46800.
+17/10/16 12:09:44 INFO SparkEnv: Registering MapOutputTracker
+17/10/16 12:09:44 INFO SparkEnv: Registering BlockManagerMaster
+17/10/16 12:09:44 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+17/10/16 12:09:44 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
+17/10/16 12:09:44 INFO DiskBlockManager: Created local directory at /tmp/blockmgr-7ff55439-018f-4987-a95c-dfc1df29371b
+17/10/16 12:09:44 INFO MemoryStore: MemoryStore started with capacity 6.2 GB
+17/10/16 12:09:44 INFO SparkEnv: Registering OutputCommitCoordinator
+17/10/16 12:09:44 WARN Utils: Service 'SparkUI' could not bind on port 4040. Attempting port 4041.
+17/10/16 12:09:44 INFO Utils: Successfully started service 'SparkUI' on port 4041.
+17/10/16 12:09:44 INFO SparkUI: Bound SparkUI to 0.0.0.0, and started at http://169.235.27.138:4041
+17/10/16 12:09:44 INFO SparkContext: Added JAR file:/home/acald013/PhD/Y2Q4/PFlock/target/scala-2.11/pflock_2.11-1.0.jar at spark://169.235.27.138:46800/jars/pflock_2.11-1.0.jar with timestamp 1508180984727
+17/10/16 12:09:44 INFO StandaloneAppClient$ClientEndpoint: Connecting to master spark://169.235.27.138:7077...
+17/10/16 12:09:44 INFO TransportClientFactory: Successfully created connection to /169.235.27.138:7077 after 48 ms (0 ms spent in bootstraps)
+17/10/16 12:09:45 INFO StandaloneSchedulerBackend: Connected to Spark cluster with app ID app-20171016120945-0001
+17/10/16 12:09:45 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20171016120945-0001/0 on worker-20171016120527-169.235.27.138-38832 (169.235.27.138:38832) with 7 cores
+17/10/16 12:09:45 INFO StandaloneSchedulerBackend: Granted executor ID app-20171016120945-0001/0 on hostPort 169.235.27.138:38832 with 7 cores, 12.0 GB RAM
+17/10/16 12:09:45 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20171016120945-0001/1 on worker-20171016120526-169.235.27.135-42250 (169.235.27.135:42250) with 7 cores
+17/10/16 12:09:45 INFO StandaloneSchedulerBackend: Granted executor ID app-20171016120945-0001/1 on hostPort 169.235.27.135:42250 with 7 cores, 12.0 GB RAM
+17/10/16 12:09:45 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20171016120945-0001/2 on worker-20171016120526-169.235.27.134-35131 (169.235.27.134:35131) with 7 cores
+17/10/16 12:09:45 INFO StandaloneSchedulerBackend: Granted executor ID app-20171016120945-0001/2 on hostPort 169.235.27.134:35131 with 7 cores, 12.0 GB RAM
+17/10/16 12:09:45 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 38982.
+17/10/16 12:09:45 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20171016120945-0001/3 on worker-20171016120526-169.235.27.137-37842 (169.235.27.137:37842) with 7 cores
+17/10/16 12:09:45 INFO NettyBlockTransferService: Server created on 169.235.27.138:38982
+17/10/16 12:09:45 INFO StandaloneSchedulerBackend: Granted executor ID app-20171016120945-0001/3 on hostPort 169.235.27.137:37842 with 7 cores, 12.0 GB RAM
+17/10/16 12:09:45 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
+17/10/16 12:09:45 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 169.235.27.138, 38982, None)
+17/10/16 12:09:45 INFO BlockManagerMasterEndpoint: Registering block manager 169.235.27.138:38982 with 6.2 GB RAM, BlockManagerId(driver, 169.235.27.138, 38982, None)
+17/10/16 12:09:45 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20171016120945-0001/1 is now RUNNING
+17/10/16 12:09:45 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20171016120945-0001/0 is now RUNNING
+17/10/16 12:09:45 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 169.235.27.138, 38982, None)
+17/10/16 12:09:45 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 169.235.27.138, 38982, None)
+17/10/16 12:09:45 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20171016120945-0001/2 is now RUNNING
+17/10/16 12:09:45 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20171016120945-0001/3 is now RUNNING
+17/10/16 12:09:45 INFO EventLoggingListener: Logging events to file:///home/acald013/Spark/Logs/app-20171016120945-0001
+17/10/16 12:09:45 INFO StandaloneSchedulerBackend: SchedulerBackend is ready for scheduling beginning after reached minRegisteredResourcesRatio: 0.0
+17/10/16 12:09:45 INFO SharedState: Warehouse path is 'file:/home/acald013/PhD/Y3Q1/Scripts/Scaleup/spark-warehouse/'.
+Running app-20171016120945-0001 on 28 cores and 512 partitions...
        Tag    Epsilon    Dataset      TimeD      TimeM  TotalTime NCandidate   NMaximal      Cores Partitions       Timestamp
-17/10/16 12:03:11 ERROR TaskSetManager: Task 0 in stage 1.0 failed 4 times; aborting job
-Exception in thread "main" org.apache.spark.SparkException: Job aborted due to stage failure: Task 0 in stage 1.0 failed 4 times, most recent failure: Lost task 0.3 in stage 1.0 (TID 7, 169.235.27.137, executor 2): java.io.FileNotFoundException: File file:/home/acald013/PhD/Y3Q1/Datasets/B20K_2S.csv does not exist
-It is possible the underlying files have been updated. You can explicitly invalidate the cache in Spark by running 'REFRESH TABLE tableName' command in SQL or by recreating the Dataset/DataFrame involved.
-	at org.apache.spark.sql.execution.datasources.FileScanRDD$$anon$1.nextIterator(FileScanRDD.scala:157)
-	at org.apache.spark.sql.execution.datasources.FileScanRDD$$anon$1.hasNext(FileScanRDD.scala:102)
-	at org.apache.spark.sql.catalyst.expressions.GeneratedClass$GeneratedIterator.processNext(Unknown Source)
-	at org.apache.spark.sql.execution.BufferedRowIterator.hasNext(BufferedRowIterator.java:43)
-	at org.apache.spark.sql.execution.WholeStageCodegenExec$$anonfun$8$$anon$1.hasNext(WholeStageCodegenExec.scala:377)
-	at scala.collection.Iterator$$anon$11.hasNext(Iterator.scala:408)
-	at scala.collection.Iterator$$anon$11.hasNext(Iterator.scala:408)
-	at scala.collection.Iterator$class.foreach(Iterator.scala:893)
-	at scala.collection.AbstractIterator.foreach(Iterator.scala:1336)
-	at scala.collection.TraversableOnce$class.foldLeft(TraversableOnce.scala:157)
-	at scala.collection.AbstractIterator.foldLeft(Iterator.scala:1336)
-	at scala.collection.TraversableOnce$class.aggregate(TraversableOnce.scala:214)
-	at scala.collection.AbstractIterator.aggregate(Iterator.scala:1336)
-	at org.apache.spark.rdd.RDD$$anonfun$aggregate$1$$anonfun$22.apply(RDD.scala:1112)
-	at org.apache.spark.rdd.RDD$$anonfun$aggregate$1$$anonfun$22.apply(RDD.scala:1112)
-	at org.apache.spark.SparkContext$$anonfun$33.apply(SparkContext.scala:1980)
-	at org.apache.spark.SparkContext$$anonfun$33.apply(SparkContext.scala:1980)
-	at org.apache.spark.scheduler.ResultTask.runTask(ResultTask.scala:87)
-	at org.apache.spark.scheduler.Task.run(Task.scala:99)
-	at org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:282)
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
-	at java.lang.Thread.run(Thread.java:745)
-
-Driver stacktrace:
-	at org.apache.spark.scheduler.DAGScheduler.org$apache$spark$scheduler$DAGScheduler$$failJobAndIndependentStages(DAGScheduler.scala:1435)
-	at org.apache.spark.scheduler.DAGScheduler$$anonfun$abortStage$1.apply(DAGScheduler.scala:1423)
-	at org.apache.spark.scheduler.DAGScheduler$$anonfun$abortStage$1.apply(DAGScheduler.scala:1422)
-	at scala.collection.mutable.ResizableArray$class.foreach(ResizableArray.scala:59)
-	at scala.collection.mutable.ArrayBuffer.foreach(ArrayBuffer.scala:48)
-	at org.apache.spark.scheduler.DAGScheduler.abortStage(DAGScheduler.scala:1422)
-	at org.apache.spark.scheduler.DAGScheduler$$anonfun$handleTaskSetFailed$1.apply(DAGScheduler.scala:802)
-	at org.apache.spark.scheduler.DAGScheduler$$anonfun$handleTaskSetFailed$1.apply(DAGScheduler.scala:802)
-	at scala.Option.foreach(Option.scala:257)
-	at org.apache.spark.scheduler.DAGScheduler.handleTaskSetFailed(DAGScheduler.scala:802)
-	at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.doOnReceive(DAGScheduler.scala:1650)
-	at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.onReceive(DAGScheduler.scala:1605)
-	at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.onReceive(DAGScheduler.scala:1594)
-	at org.apache.spark.util.EventLoop$$anon$1.run(EventLoop.scala:48)
-	at org.apache.spark.scheduler.DAGScheduler.runJob(DAGScheduler.scala:628)
-	at org.apache.spark.SparkContext.runJob(SparkContext.scala:1918)
-	at org.apache.spark.SparkContext.runJob(SparkContext.scala:1981)
-	at org.apache.spark.rdd.RDD$$anonfun$aggregate$1.apply(RDD.scala:1114)
-	at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:151)
-	at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:112)
-	at org.apache.spark.rdd.RDD.withScope(RDD.scala:362)
-	at org.apache.spark.rdd.RDD.aggregate(RDD.scala:1107)
-	at org.apache.spark.sql.simba.partitioner.STRPartitioner.<init>(STRPartitioner.scala:69)
-	at org.apache.spark.sql.simba.partitioner.STRPartition$.apply(STRPartitioner.scala:49)
-	at org.apache.spark.sql.simba.index.RTreeIndexedRelation.buildIndex(RTreeIndexedRelation.scala:72)
-	at org.apache.spark.sql.simba.index.RTreeIndexedRelation.<init>(RTreeIndexedRelation.scala:58)
-	at org.apache.spark.sql.simba.index.IndexedRelation$.apply(IndexedRelation.scala:41)
-	at org.apache.spark.sql.simba.IndexManager$$anonfun$createIndexQuery$1.apply(IndexManager.scala:201)
-	at org.apache.spark.sql.simba.IndexManager.writeLock(IndexManager.scala:64)
-	at org.apache.spark.sql.simba.IndexManager.createIndexQuery(IndexManager.scala:192)
-	at org.apache.spark.sql.simba.Dataset.index(DataSet.scala:179)
-	at PFlock$$anonfun$main$1$$anonfun$apply$mcVI$sp$1.apply$mcVD$sp(PFlock.scala:71)
-	at PFlock$$anonfun$main$1$$anonfun$apply$mcVI$sp$1.apply(PFlock.scala:57)
-	at PFlock$$anonfun$main$1$$anonfun$apply$mcVI$sp$1.apply(PFlock.scala:57)
-	at scala.collection.immutable.NumericRange.foreach(NumericRange.scala:73)
-	at PFlock$$anonfun$main$1.apply$mcVI$sp(PFlock.scala:57)
-	at scala.collection.immutable.Range.foreach$mVc$sp(Range.scala:160)
-	at PFlock$.main(PFlock.scala:56)
-	at PFlock.main(PFlock.scala)
-	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
-	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-	at java.lang.reflect.Method.invoke(Method.java:498)
-	at org.apache.spark.deploy.SparkSubmit$.org$apache$spark$deploy$SparkSubmit$$runMain(SparkSubmit.scala:738)
-	at org.apache.spark.deploy.SparkSubmit$.doRunMain$1(SparkSubmit.scala:187)
-	at org.apache.spark.deploy.SparkSubmit$.submit(SparkSubmit.scala:212)
-	at org.apache.spark.deploy.SparkSubmit$.main(SparkSubmit.scala:126)
-	at org.apache.spark.deploy.SparkSubmit.main(SparkSubmit.scala)
-Caused by: java.io.FileNotFoundException: File file:/home/acald013/PhD/Y3Q1/Datasets/B20K_2S.csv does not exist
-It is possible the underlying files have been updated. You can explicitly invalidate the cache in Spark by running 'REFRESH TABLE tableName' command in SQL or by recreating the Dataset/DataFrame involved.
-	at org.apache.spark.sql.execution.datasources.FileScanRDD$$anon$1.nextIterator(FileScanRDD.scala:157)
-	at org.apache.spark.sql.execution.datasources.FileScanRDD$$anon$1.hasNext(FileScanRDD.scala:102)
-	at org.apache.spark.sql.catalyst.expressions.GeneratedClass$GeneratedIterator.processNext(Unknown Source)
-	at org.apache.spark.sql.execution.BufferedRowIterator.hasNext(BufferedRowIterator.java:43)
-	at org.apache.spark.sql.execution.WholeStageCodegenExec$$anonfun$8$$anon$1.hasNext(WholeStageCodegenExec.scala:377)
-	at scala.collection.Iterator$$anon$11.hasNext(Iterator.scala:408)
-	at scala.collection.Iterator$$anon$11.hasNext(Iterator.scala:408)
-	at scala.collection.Iterator$class.foreach(Iterator.scala:893)
-	at scala.collection.AbstractIterator.foreach(Iterator.scala:1336)
-	at scala.collection.TraversableOnce$class.foldLeft(TraversableOnce.scala:157)
-	at scala.collection.AbstractIterator.foldLeft(Iterator.scala:1336)
-	at scala.collection.TraversableOnce$class.aggregate(TraversableOnce.scala:214)
-	at scala.collection.AbstractIterator.aggregate(Iterator.scala:1336)
-	at org.apache.spark.rdd.RDD$$anonfun$aggregate$1$$anonfun$22.apply(RDD.scala:1112)
-	at org.apache.spark.rdd.RDD$$anonfun$aggregate$1$$anonfun$22.apply(RDD.scala:1112)
-	at org.apache.spark.SparkContext$$anonfun$33.apply(SparkContext.scala:1980)
-	at org.apache.spark.SparkContext$$anonfun$33.apply(SparkContext.scala:1980)
-	at org.apache.spark.scheduler.ResultTask.runTask(ResultTask.scala:87)
-	at org.apache.spark.scheduler.Task.run(Task.scala:99)
-	at org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:282)
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
-	at java.lang.Thread.run(Thread.java:745)
-Done!!! Mon Oct 16 12:03:11 PDT 2017
+    PFlock       10.0     20K_2S     40.033      4.187     44.220      34316        194         28        529    12:10:31.369
+    PFlock       20.0     20K_2S     24.165      4.332     28.497      69306        437         28        529    12:10:59.971
+    PFlock       30.0     20K_2S     22.655      5.006     27.661     102350        669         28        529    12:11:27.700
+    PFlock       40.0     20K_2S     23.681     38.512     62.193     135432       1156         28        529    12:12:29.952
+    PFlock       50.0     20K_2S     23.787     65.624     89.411     167998       1579         28        529    12:13:59.422
+Done!!! Mon Oct 16 12:13:59 PDT 2017
+Running in 28 cores and 512 partitions.  Setting mu = 12 ...
+Using Spark's default log4j profile: org/apache/spark/log4j-defaults.properties
+17/10/16 12:14:04 INFO SparkContext: Running Spark version 2.1.0
+17/10/16 12:14:04 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+17/10/16 12:14:04 INFO SecurityManager: Changing view acls to: acald013
+17/10/16 12:14:04 INFO SecurityManager: Changing modify acls to: acald013
+17/10/16 12:14:04 INFO SecurityManager: Changing view acls groups to: 
+17/10/16 12:14:04 INFO SecurityManager: Changing modify acls groups to: 
+17/10/16 12:14:04 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(acald013); groups with view permissions: Set(); users  with modify permissions: Set(acald013); groups with modify permissions: Set()
+17/10/16 12:14:05 INFO Utils: Successfully started service 'sparkDriver' on port 38311.
+17/10/16 12:14:05 INFO SparkEnv: Registering MapOutputTracker
+17/10/16 12:14:05 INFO SparkEnv: Registering BlockManagerMaster
+17/10/16 12:14:05 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+17/10/16 12:14:05 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
+17/10/16 12:14:05 INFO DiskBlockManager: Created local directory at /tmp/blockmgr-f64b08dd-67e8-4a2b-8425-f1759e6a15bb
+17/10/16 12:14:05 INFO MemoryStore: MemoryStore started with capacity 6.2 GB
+17/10/16 12:14:05 INFO SparkEnv: Registering OutputCommitCoordinator
+17/10/16 12:14:06 WARN Utils: Service 'SparkUI' could not bind on port 4040. Attempting port 4041.
+17/10/16 12:14:06 INFO Utils: Successfully started service 'SparkUI' on port 4041.
+17/10/16 12:14:06 INFO SparkUI: Bound SparkUI to 0.0.0.0, and started at http://169.235.27.138:4041
+17/10/16 12:14:06 INFO SparkContext: Added JAR file:/home/acald013/PhD/Y2Q4/PFlock/target/scala-2.11/pflock_2.11-1.0.jar at spark://169.235.27.138:38311/jars/pflock_2.11-1.0.jar with timestamp 1508181246095
+17/10/16 12:14:06 INFO StandaloneAppClient$ClientEndpoint: Connecting to master spark://169.235.27.138:7077...
+17/10/16 12:14:06 INFO TransportClientFactory: Successfully created connection to /169.235.27.138:7077 after 48 ms (0 ms spent in bootstraps)
+17/10/16 12:14:06 INFO StandaloneSchedulerBackend: Connected to Spark cluster with app ID app-20171016121406-0002
+17/10/16 12:14:06 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20171016121406-0002/0 on worker-20171016120527-169.235.27.138-38832 (169.235.27.138:38832) with 7 cores
+17/10/16 12:14:06 INFO StandaloneSchedulerBackend: Granted executor ID app-20171016121406-0002/0 on hostPort 169.235.27.138:38832 with 7 cores, 12.0 GB RAM
+17/10/16 12:14:06 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20171016121406-0002/1 on worker-20171016120526-169.235.27.135-42250 (169.235.27.135:42250) with 7 cores
+17/10/16 12:14:06 INFO StandaloneSchedulerBackend: Granted executor ID app-20171016121406-0002/1 on hostPort 169.235.27.135:42250 with 7 cores, 12.0 GB RAM
+17/10/16 12:14:06 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20171016121406-0002/2 on worker-20171016120526-169.235.27.134-35131 (169.235.27.134:35131) with 7 cores
+17/10/16 12:14:06 INFO StandaloneSchedulerBackend: Granted executor ID app-20171016121406-0002/2 on hostPort 169.235.27.134:35131 with 7 cores, 12.0 GB RAM
+17/10/16 12:14:06 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20171016121406-0002/3 on worker-20171016120526-169.235.27.137-37842 (169.235.27.137:37842) with 7 cores
+17/10/16 12:14:06 INFO StandaloneSchedulerBackend: Granted executor ID app-20171016121406-0002/3 on hostPort 169.235.27.137:37842 with 7 cores, 12.0 GB RAM
+17/10/16 12:14:06 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 38544.
+17/10/16 12:14:06 INFO NettyBlockTransferService: Server created on 169.235.27.138:38544
+17/10/16 12:14:06 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
+17/10/16 12:14:06 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 169.235.27.138, 38544, None)
+17/10/16 12:14:06 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20171016121406-0002/1 is now RUNNING
+17/10/16 12:14:06 INFO BlockManagerMasterEndpoint: Registering block manager 169.235.27.138:38544 with 6.2 GB RAM, BlockManagerId(driver, 169.235.27.138, 38544, None)
+17/10/16 12:14:06 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20171016121406-0002/0 is now RUNNING
+17/10/16 12:14:06 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20171016121406-0002/2 is now RUNNING
+17/10/16 12:14:06 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20171016121406-0002/3 is now RUNNING
+17/10/16 12:14:06 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 169.235.27.138, 38544, None)
+17/10/16 12:14:06 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 169.235.27.138, 38544, None)
+17/10/16 12:14:07 INFO EventLoggingListener: Logging events to file:///home/acald013/Spark/Logs/app-20171016121406-0002
+17/10/16 12:14:07 INFO StandaloneSchedulerBackend: SchedulerBackend is ready for scheduling beginning after reached minRegisteredResourcesRatio: 0.0
+17/10/16 12:14:07 INFO SharedState: Warehouse path is 'file:/home/acald013/PhD/Y3Q1/Scripts/Scaleup/spark-warehouse/'.
+Running app-20171016121406-0002 on 28 cores and 512 partitions...
+       Tag    Epsilon    Dataset      TimeD      TimeM  TotalTime NCandidate   NMaximal      Cores Partitions       Timestamp
+    PFlock       10.0        40K     43.480      5.162     48.642      59972        165         28        529    12:14:57.256
+    PFlock       20.0        40K     25.403      5.489     30.892     121488        461         28        529    12:15:28.254
+    PFlock       30.0        40K     29.574      6.439     36.013     180652        796         28        529    12:16:04.334
+17/10/16 15:28:27 ERROR TaskSchedulerImpl: Lost executor 0 on 169.235.27.138: Remote RPC client disassociated. Likely due to containers exceeding thresholds, or network issues. Check driver logs for WARN messages.
