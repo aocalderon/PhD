@@ -98,29 +98,30 @@ object Partitioner {
     foreach(println)	
     
 	import java.io.{BufferedWriter, FileOutputStream, OutputStreamWriter}
-	var writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("/tmp/B20K.csv")))
+	var writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("/tmp/B20K_a.csv")))
     data.
       filter(point => point._1 == 0).
       map(point => "%d,%f,%f\n".format(point._2, point._3, point._4)).
       collect.toList.foreach(writer.write)
     writer.close()	
 
-	writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("/tmp/B40K.csv")))
+	writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("/tmp/B20K_b.csv")))
     data.
-      filter(point => point._1 == 0 || point._1 == 1).
+      filter(point => point._1 == 1).
       map(point => "%d,%f,%f\n".format(point._2, point._3, point._4)).
       collect.toList.foreach(writer.write)
     writer.close()	
 	
-	writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("/tmp/B60K.csv")))
+	writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("/tmp/B20K_c.csv")))
     data.
-      filter(point => point._1 == 0 || point._1 == 1 || point._1 == 2).
+      filter(point => point._1 == 2).
       map(point => "%d,%f,%f\n".format(point._2, point._3, point._4)).
       collect.toList.foreach(writer.write)
     writer.close()	
 
-	writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("/tmp/B80K.csv")))
+	writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("/tmp/B20K_d.csv")))
     data.
+      filter(point => point._1 == 3).    
       map(point => "%d,%f,%f\n".format(point._2, point._3, point._4)).
       collect.toList.foreach(writer.write)
     writer.close()	
