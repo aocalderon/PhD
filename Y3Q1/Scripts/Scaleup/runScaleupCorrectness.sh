@@ -13,6 +13,8 @@ echo "acald013@dblab-rack15" >> $SPARK_HOME/conf/slaves
 $SPARK_HOME/sbin/start-all.sh
 
 ./runDatasetCorrectness.sh 1 28 $PARTITIONS $MU
+./runDataset.sh 20 28 $PARTITIONS $MU
+
 ./runDatasetCorrectness.sh 2 28 $PARTITIONS $MU
 ./runDataset.sh 40 28 $PARTITIONS $MU
 

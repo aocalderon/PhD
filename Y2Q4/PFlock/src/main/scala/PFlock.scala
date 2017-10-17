@@ -204,7 +204,7 @@ object PFlock {
 					nmaximal = maximal.count()
 					if(conf.output_md()){
 						logger.info("Writing maximal disks...")
-						val diskset = "Maximals_D%s_E%f_M%d_N%d_%d.txt".
+						val diskset = "Maximals_D%s_E%.1f_M%d_N%d_%d.txt".
 							format(tag,epsilon,conf.mu(),nmaximal,System.currentTimeMillis)
 						var writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(diskset)))
 						maximal.
