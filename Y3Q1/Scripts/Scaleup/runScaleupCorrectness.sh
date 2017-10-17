@@ -1,7 +1,7 @@
 #!/bin/bash
 
 MU=12
-PARTITIONS=512
+PARTITIONS=256
 
 # Running Scaleup on 4 Nodes with different 20K datasets...
 $SPARK_HOME/sbin/stop-all.sh

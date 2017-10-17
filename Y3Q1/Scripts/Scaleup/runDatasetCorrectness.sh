@@ -7,10 +7,9 @@ DSTART=$1
 DEND=$1
 SUFFIX="S"
 ESTART=10.0
-EEND=50.0
+EEND=30.0
 OUTPUT="Berlin"
 TS=`date +%s`
-echo "Running in $CORES cores and $PARTITIONS partitions.  Setting mu = $MU ..."
 spark-submit ~/PhD/Y2Q4/PFlock/target/scala-2.11/pflock_2.11-1.0.jar \
 --prefix "/home/acald013/PhD/Y3Q1/Datasets/B20K_" \
 --suffix $SUFFIX \
@@ -26,6 +25,7 @@ spark-submit ~/PhD/Y2Q4/PFlock/target/scala-2.11/pflock_2.11-1.0.jar \
 --dend $DEND \
 --dstep 20 \
 --dirlogs ~/Spark/Logs \
---output $OUTPUT
+--output $OUTPUT \
+--output_md
 DATE=`date`
 echo "Done!!! $DATE"

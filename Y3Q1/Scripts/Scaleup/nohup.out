@@ -1,170 +1,114 @@
-acald013@dblab-rack12: stopping org.apache.spark.deploy.worker.Worker
-acald013@dblab-rack15: stopping org.apache.spark.deploy.worker.Worker
-acald013@dblab-rack14: stopping org.apache.spark.deploy.worker.Worker
-acald013@dblab-rack11: stopping org.apache.spark.deploy.worker.Worker
-stopping org.apache.spark.deploy.master.Master
+acald013@dblab-rack12: no org.apache.spark.deploy.worker.Worker to stop
+acald013@dblab-rack15: no org.apache.spark.deploy.worker.Worker to stop
+acald013@dblab-rack14: no org.apache.spark.deploy.worker.Worker to stop
+acald013@dblab-rack11: no org.apache.spark.deploy.worker.Worker to stop
+no org.apache.spark.deploy.master.Master to stop
 starting org.apache.spark.deploy.master.Master, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.master.Master-1-dblab-rack15.out
 acald013@dblab-rack12: starting org.apache.spark.deploy.worker.Worker, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.worker.Worker-1-dblab-rack12.out
 acald013@dblab-rack15: starting org.apache.spark.deploy.worker.Worker, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.worker.Worker-1-dblab-rack15.out
 acald013@dblab-rack14: starting org.apache.spark.deploy.worker.Worker, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.worker.Worker-1-dblab-rack14.cs.ucr.edu.out
 acald013@dblab-rack11: starting org.apache.spark.deploy.worker.Worker, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.worker.Worker-1-dblab-rack11.cs.ucr.edu.out
-Running in 28 cores and 512 partitions.  Setting mu = 12 ...
-Using Spark's default log4j profile: org/apache/spark/log4j-defaults.properties
-17/10/16 12:05:31 INFO SparkContext: Running Spark version 2.1.0
-17/10/16 12:05:32 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
-17/10/16 12:05:32 INFO SecurityManager: Changing view acls to: acald013
-17/10/16 12:05:32 INFO SecurityManager: Changing modify acls to: acald013
-17/10/16 12:05:32 INFO SecurityManager: Changing view acls groups to: 
-17/10/16 12:05:32 INFO SecurityManager: Changing modify acls groups to: 
-17/10/16 12:05:32 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(acald013); groups with view permissions: Set(); users  with modify permissions: Set(acald013); groups with modify permissions: Set()
-17/10/16 12:05:32 INFO Utils: Successfully started service 'sparkDriver' on port 34722.
-17/10/16 12:05:32 INFO SparkEnv: Registering MapOutputTracker
-17/10/16 12:05:33 INFO SparkEnv: Registering BlockManagerMaster
-17/10/16 12:05:33 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
-17/10/16 12:05:33 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
-17/10/16 12:05:33 INFO DiskBlockManager: Created local directory at /tmp/blockmgr-30e9c9e2-ff65-49c3-ba81-6b701830e2e7
-17/10/16 12:05:33 INFO MemoryStore: MemoryStore started with capacity 6.2 GB
-17/10/16 12:05:33 INFO SparkEnv: Registering OutputCommitCoordinator
-17/10/16 12:05:33 WARN Utils: Service 'SparkUI' could not bind on port 4040. Attempting port 4041.
-17/10/16 12:05:33 INFO Utils: Successfully started service 'SparkUI' on port 4041.
-17/10/16 12:05:33 INFO SparkUI: Bound SparkUI to 0.0.0.0, and started at http://169.235.27.138:4041
-17/10/16 12:05:33 INFO SparkContext: Added JAR file:/home/acald013/PhD/Y2Q4/PFlock/target/scala-2.11/pflock_2.11-1.0.jar at spark://169.235.27.138:34722/jars/pflock_2.11-1.0.jar with timestamp 1508180733674
-17/10/16 12:05:33 INFO StandaloneAppClient$ClientEndpoint: Connecting to master spark://169.235.27.138:7077...
-17/10/16 12:05:33 INFO TransportClientFactory: Successfully created connection to /169.235.27.138:7077 after 48 ms (0 ms spent in bootstraps)
-17/10/16 12:05:34 INFO StandaloneSchedulerBackend: Connected to Spark cluster with app ID app-20171016120534-0000
-17/10/16 12:05:34 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 39659.
-17/10/16 12:05:34 INFO NettyBlockTransferService: Server created on 169.235.27.138:39659
-17/10/16 12:05:34 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
-17/10/16 12:05:34 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 169.235.27.138, 39659, None)
-17/10/16 12:05:34 INFO BlockManagerMasterEndpoint: Registering block manager 169.235.27.138:39659 with 6.2 GB RAM, BlockManagerId(driver, 169.235.27.138, 39659, None)
-17/10/16 12:05:34 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 169.235.27.138, 39659, None)
-17/10/16 12:05:34 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 169.235.27.138, 39659, None)
-17/10/16 12:05:34 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20171016120534-0000/0 on worker-20171016120527-169.235.27.138-38832 (169.235.27.138:38832) with 7 cores
-17/10/16 12:05:34 INFO StandaloneSchedulerBackend: Granted executor ID app-20171016120534-0000/0 on hostPort 169.235.27.138:38832 with 7 cores, 12.0 GB RAM
-17/10/16 12:05:34 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20171016120534-0000/1 on worker-20171016120526-169.235.27.135-42250 (169.235.27.135:42250) with 7 cores
-17/10/16 12:05:34 INFO StandaloneSchedulerBackend: Granted executor ID app-20171016120534-0000/1 on hostPort 169.235.27.135:42250 with 7 cores, 12.0 GB RAM
-17/10/16 12:05:34 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20171016120534-0000/2 on worker-20171016120526-169.235.27.134-35131 (169.235.27.134:35131) with 7 cores
-17/10/16 12:05:34 INFO StandaloneSchedulerBackend: Granted executor ID app-20171016120534-0000/2 on hostPort 169.235.27.134:35131 with 7 cores, 12.0 GB RAM
-17/10/16 12:05:34 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20171016120534-0000/3 on worker-20171016120526-169.235.27.137-37842 (169.235.27.137:37842) with 7 cores
-17/10/16 12:05:34 INFO StandaloneSchedulerBackend: Granted executor ID app-20171016120534-0000/3 on hostPort 169.235.27.137:37842 with 7 cores, 12.0 GB RAM
-17/10/16 12:05:34 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20171016120534-0000/1 is now RUNNING
-17/10/16 12:05:34 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20171016120534-0000/2 is now RUNNING
-17/10/16 12:05:34 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20171016120534-0000/3 is now RUNNING
-17/10/16 12:05:34 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20171016120534-0000/0 is now RUNNING
-17/10/16 12:05:34 INFO EventLoggingListener: Logging events to file:///home/acald013/Spark/Logs/app-20171016120534-0000
-17/10/16 12:05:34 INFO StandaloneSchedulerBackend: SchedulerBackend is ready for scheduling beginning after reached minRegisteredResourcesRatio: 0.0
-17/10/16 12:05:34 INFO SharedState: Warehouse path is 'file:/home/acald013/PhD/Y3Q1/Scripts/Scaleup/spark-warehouse/'.
-Running app-20171016120534-0000 on 28 cores and 512 partitions...
-       Tag    Epsilon    Dataset      TimeD      TimeM  TotalTime NCandidate   NMaximal      Cores Partitions       Timestamp
-    PFlock       10.0     20K_1S     44.673      4.031     48.704      25626         13         28        529    12:06:24.903
-    PFlock       20.0     20K_1S     22.958      3.771     26.729      52118        152         28        529    12:06:51.741
-    PFlock       30.0     20K_1S     24.517      5.678     30.195      78182        381         28        529    12:07:22.005
-    PFlock       40.0     20K_1S     23.714      7.164     30.878     105536        780         28        529    12:07:52.946
-    PFlock       50.0     20K_1S     23.544     80.895    104.439     133652        975         28        529    12:09:37.443
-Done!!! Mon Oct 16 12:09:38 PDT 2017
-Running in 28 cores and 512 partitions.  Setting mu = 12 ...
-Using Spark's default log4j profile: org/apache/spark/log4j-defaults.properties
-17/10/16 12:09:42 INFO SparkContext: Running Spark version 2.1.0
-17/10/16 12:09:43 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
-17/10/16 12:09:43 INFO SecurityManager: Changing view acls to: acald013
-17/10/16 12:09:43 INFO SecurityManager: Changing modify acls to: acald013
-17/10/16 12:09:43 INFO SecurityManager: Changing view acls groups to: 
-17/10/16 12:09:43 INFO SecurityManager: Changing modify acls groups to: 
-17/10/16 12:09:43 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(acald013); groups with view permissions: Set(); users  with modify permissions: Set(acald013); groups with modify permissions: Set()
-17/10/16 12:09:44 INFO Utils: Successfully started service 'sparkDriver' on port 46800.
-17/10/16 12:09:44 INFO SparkEnv: Registering MapOutputTracker
-17/10/16 12:09:44 INFO SparkEnv: Registering BlockManagerMaster
-17/10/16 12:09:44 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
-17/10/16 12:09:44 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
-17/10/16 12:09:44 INFO DiskBlockManager: Created local directory at /tmp/blockmgr-7ff55439-018f-4987-a95c-dfc1df29371b
-17/10/16 12:09:44 INFO MemoryStore: MemoryStore started with capacity 6.2 GB
-17/10/16 12:09:44 INFO SparkEnv: Registering OutputCommitCoordinator
-17/10/16 12:09:44 WARN Utils: Service 'SparkUI' could not bind on port 4040. Attempting port 4041.
-17/10/16 12:09:44 INFO Utils: Successfully started service 'SparkUI' on port 4041.
-17/10/16 12:09:44 INFO SparkUI: Bound SparkUI to 0.0.0.0, and started at http://169.235.27.138:4041
-17/10/16 12:09:44 INFO SparkContext: Added JAR file:/home/acald013/PhD/Y2Q4/PFlock/target/scala-2.11/pflock_2.11-1.0.jar at spark://169.235.27.138:46800/jars/pflock_2.11-1.0.jar with timestamp 1508180984727
-17/10/16 12:09:44 INFO StandaloneAppClient$ClientEndpoint: Connecting to master spark://169.235.27.138:7077...
-17/10/16 12:09:44 INFO TransportClientFactory: Successfully created connection to /169.235.27.138:7077 after 48 ms (0 ms spent in bootstraps)
-17/10/16 12:09:45 INFO StandaloneSchedulerBackend: Connected to Spark cluster with app ID app-20171016120945-0001
-17/10/16 12:09:45 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20171016120945-0001/0 on worker-20171016120527-169.235.27.138-38832 (169.235.27.138:38832) with 7 cores
-17/10/16 12:09:45 INFO StandaloneSchedulerBackend: Granted executor ID app-20171016120945-0001/0 on hostPort 169.235.27.138:38832 with 7 cores, 12.0 GB RAM
-17/10/16 12:09:45 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20171016120945-0001/1 on worker-20171016120526-169.235.27.135-42250 (169.235.27.135:42250) with 7 cores
-17/10/16 12:09:45 INFO StandaloneSchedulerBackend: Granted executor ID app-20171016120945-0001/1 on hostPort 169.235.27.135:42250 with 7 cores, 12.0 GB RAM
-17/10/16 12:09:45 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20171016120945-0001/2 on worker-20171016120526-169.235.27.134-35131 (169.235.27.134:35131) with 7 cores
-17/10/16 12:09:45 INFO StandaloneSchedulerBackend: Granted executor ID app-20171016120945-0001/2 on hostPort 169.235.27.134:35131 with 7 cores, 12.0 GB RAM
-17/10/16 12:09:45 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 38982.
-17/10/16 12:09:45 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20171016120945-0001/3 on worker-20171016120526-169.235.27.137-37842 (169.235.27.137:37842) with 7 cores
-17/10/16 12:09:45 INFO NettyBlockTransferService: Server created on 169.235.27.138:38982
-17/10/16 12:09:45 INFO StandaloneSchedulerBackend: Granted executor ID app-20171016120945-0001/3 on hostPort 169.235.27.137:37842 with 7 cores, 12.0 GB RAM
-17/10/16 12:09:45 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
-17/10/16 12:09:45 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 169.235.27.138, 38982, None)
-17/10/16 12:09:45 INFO BlockManagerMasterEndpoint: Registering block manager 169.235.27.138:38982 with 6.2 GB RAM, BlockManagerId(driver, 169.235.27.138, 38982, None)
-17/10/16 12:09:45 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20171016120945-0001/1 is now RUNNING
-17/10/16 12:09:45 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20171016120945-0001/0 is now RUNNING
-17/10/16 12:09:45 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 169.235.27.138, 38982, None)
-17/10/16 12:09:45 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 169.235.27.138, 38982, None)
-17/10/16 12:09:45 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20171016120945-0001/2 is now RUNNING
-17/10/16 12:09:45 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20171016120945-0001/3 is now RUNNING
-17/10/16 12:09:45 INFO EventLoggingListener: Logging events to file:///home/acald013/Spark/Logs/app-20171016120945-0001
-17/10/16 12:09:45 INFO StandaloneSchedulerBackend: SchedulerBackend is ready for scheduling beginning after reached minRegisteredResourcesRatio: 0.0
-17/10/16 12:09:45 INFO SharedState: Warehouse path is 'file:/home/acald013/PhD/Y3Q1/Scripts/Scaleup/spark-warehouse/'.
-Running app-20171016120945-0001 on 28 cores and 512 partitions...
-       Tag    Epsilon    Dataset      TimeD      TimeM  TotalTime NCandidate   NMaximal      Cores Partitions       Timestamp
-    PFlock       10.0     20K_2S     40.033      4.187     44.220      34316        194         28        529    12:10:31.369
-    PFlock       20.0     20K_2S     24.165      4.332     28.497      69306        437         28        529    12:10:59.971
-    PFlock       30.0     20K_2S     22.655      5.006     27.661     102350        669         28        529    12:11:27.700
-    PFlock       40.0     20K_2S     23.681     38.512     62.193     135432       1156         28        529    12:12:29.952
-    PFlock       50.0     20K_2S     23.787     65.624     89.411     167998       1579         28        529    12:13:59.422
-Done!!! Mon Oct 16 12:13:59 PDT 2017
-Running in 28 cores and 512 partitions.  Setting mu = 12 ...
-Using Spark's default log4j profile: org/apache/spark/log4j-defaults.properties
-17/10/16 12:14:04 INFO SparkContext: Running Spark version 2.1.0
-17/10/16 12:14:04 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
-17/10/16 12:14:04 INFO SecurityManager: Changing view acls to: acald013
-17/10/16 12:14:04 INFO SecurityManager: Changing modify acls to: acald013
-17/10/16 12:14:04 INFO SecurityManager: Changing view acls groups to: 
-17/10/16 12:14:04 INFO SecurityManager: Changing modify acls groups to: 
-17/10/16 12:14:04 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(acald013); groups with view permissions: Set(); users  with modify permissions: Set(acald013); groups with modify permissions: Set()
-17/10/16 12:14:05 INFO Utils: Successfully started service 'sparkDriver' on port 38311.
-17/10/16 12:14:05 INFO SparkEnv: Registering MapOutputTracker
-17/10/16 12:14:05 INFO SparkEnv: Registering BlockManagerMaster
-17/10/16 12:14:05 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
-17/10/16 12:14:05 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
-17/10/16 12:14:05 INFO DiskBlockManager: Created local directory at /tmp/blockmgr-f64b08dd-67e8-4a2b-8425-f1759e6a15bb
-17/10/16 12:14:05 INFO MemoryStore: MemoryStore started with capacity 6.2 GB
-17/10/16 12:14:05 INFO SparkEnv: Registering OutputCommitCoordinator
-17/10/16 12:14:06 WARN Utils: Service 'SparkUI' could not bind on port 4040. Attempting port 4041.
-17/10/16 12:14:06 INFO Utils: Successfully started service 'SparkUI' on port 4041.
-17/10/16 12:14:06 INFO SparkUI: Bound SparkUI to 0.0.0.0, and started at http://169.235.27.138:4041
-17/10/16 12:14:06 INFO SparkContext: Added JAR file:/home/acald013/PhD/Y2Q4/PFlock/target/scala-2.11/pflock_2.11-1.0.jar at spark://169.235.27.138:38311/jars/pflock_2.11-1.0.jar with timestamp 1508181246095
-17/10/16 12:14:06 INFO StandaloneAppClient$ClientEndpoint: Connecting to master spark://169.235.27.138:7077...
-17/10/16 12:14:06 INFO TransportClientFactory: Successfully created connection to /169.235.27.138:7077 after 48 ms (0 ms spent in bootstraps)
-17/10/16 12:14:06 INFO StandaloneSchedulerBackend: Connected to Spark cluster with app ID app-20171016121406-0002
-17/10/16 12:14:06 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20171016121406-0002/0 on worker-20171016120527-169.235.27.138-38832 (169.235.27.138:38832) with 7 cores
-17/10/16 12:14:06 INFO StandaloneSchedulerBackend: Granted executor ID app-20171016121406-0002/0 on hostPort 169.235.27.138:38832 with 7 cores, 12.0 GB RAM
-17/10/16 12:14:06 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20171016121406-0002/1 on worker-20171016120526-169.235.27.135-42250 (169.235.27.135:42250) with 7 cores
-17/10/16 12:14:06 INFO StandaloneSchedulerBackend: Granted executor ID app-20171016121406-0002/1 on hostPort 169.235.27.135:42250 with 7 cores, 12.0 GB RAM
-17/10/16 12:14:06 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20171016121406-0002/2 on worker-20171016120526-169.235.27.134-35131 (169.235.27.134:35131) with 7 cores
-17/10/16 12:14:06 INFO StandaloneSchedulerBackend: Granted executor ID app-20171016121406-0002/2 on hostPort 169.235.27.134:35131 with 7 cores, 12.0 GB RAM
-17/10/16 12:14:06 INFO StandaloneAppClient$ClientEndpoint: Executor added: app-20171016121406-0002/3 on worker-20171016120526-169.235.27.137-37842 (169.235.27.137:37842) with 7 cores
-17/10/16 12:14:06 INFO StandaloneSchedulerBackend: Granted executor ID app-20171016121406-0002/3 on hostPort 169.235.27.137:37842 with 7 cores, 12.0 GB RAM
-17/10/16 12:14:06 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 38544.
-17/10/16 12:14:06 INFO NettyBlockTransferService: Server created on 169.235.27.138:38544
-17/10/16 12:14:06 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
-17/10/16 12:14:06 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 169.235.27.138, 38544, None)
-17/10/16 12:14:06 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20171016121406-0002/1 is now RUNNING
-17/10/16 12:14:06 INFO BlockManagerMasterEndpoint: Registering block manager 169.235.27.138:38544 with 6.2 GB RAM, BlockManagerId(driver, 169.235.27.138, 38544, None)
-17/10/16 12:14:06 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20171016121406-0002/0 is now RUNNING
-17/10/16 12:14:06 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20171016121406-0002/2 is now RUNNING
-17/10/16 12:14:06 INFO StandaloneAppClient$ClientEndpoint: Executor updated: app-20171016121406-0002/3 is now RUNNING
-17/10/16 12:14:06 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 169.235.27.138, 38544, None)
-17/10/16 12:14:06 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 169.235.27.138, 38544, None)
-17/10/16 12:14:07 INFO EventLoggingListener: Logging events to file:///home/acald013/Spark/Logs/app-20171016121406-0002
-17/10/16 12:14:07 INFO StandaloneSchedulerBackend: SchedulerBackend is ready for scheduling beginning after reached minRegisteredResourcesRatio: 0.0
-17/10/16 12:14:07 INFO SharedState: Warehouse path is 'file:/home/acald013/PhD/Y3Q1/Scripts/Scaleup/spark-warehouse/'.
-Running app-20171016121406-0002 on 28 cores and 512 partitions...
-       Tag    Epsilon    Dataset      TimeD      TimeM  TotalTime NCandidate   NMaximal      Cores Partitions       Timestamp
-    PFlock       10.0        40K     43.480      5.162     48.642      59972        165         28        529    12:14:57.256
-    PFlock       20.0        40K     25.403      5.489     30.892     121488        461         28        529    12:15:28.254
-    PFlock       30.0        40K     29.574      6.439     36.013     180652        796         28        529    12:16:04.334
-17/10/16 15:28:27 ERROR TaskSchedulerImpl: Lost executor 0 on 169.235.27.138: Remote RPC client disassociated. Likely due to containers exceeding thresholds, or network issues. Check driver logs for WARN messages.
+Running in 28 cores and 256 partitions.  Setting mu = 12 ...
+2017-10-16 17:51:52,508 [main] INFO  myLogger - Starting app...
+2017-10-16 17:51:58,249 [main] INFO  myLogger - Running app-20171016175157-0000 on 28 cores and 256 partitions...
+2017-10-16 17:52:47,921 [main] INFO  myLogger - Writing maximal disks...
+2017-10-16 17:52:48,184 [main] INFO  myLogger - 8 maximal disks has been written...
+2017-10-16 17:52:48,188 [main] INFO  myLogger -  PFlock  10.0     20K_1S    34.363    14.387    48.750     25626      8   28   256    17:52:48.188
+2017-10-16 17:53:16,035 [main] INFO  myLogger - Writing maximal disks...
+2017-10-16 17:53:16,463 [main] INFO  myLogger - 334 maximal disks has been written...
+2017-10-16 17:53:16,464 [main] INFO  myLogger -  PFlock  20.0     20K_1S    13.961    14.137    28.098     52118    334   28   256    17:53:16.464
+2017-10-16 17:53:44,977 [main] INFO  myLogger - Writing maximal disks...
+2017-10-16 17:53:45,441 [main] INFO  myLogger - 644 maximal disks has been written...
+2017-10-16 17:53:45,442 [main] INFO  myLogger -  PFlock  30.0     20K_1S    14.434    14.439    28.873     78182    644   28   256    17:53:45.442
+2017-10-16 17:53:45,515 [main] INFO  myLogger - Clossing app...
+Done!!! Mon Oct 16 17:53:45 PDT 2017
+Running in 28 cores and 256 partitions.  Setting mu = 12 ...
+2017-10-16 17:53:47,357 [main] INFO  myLogger - Starting app...
+2017-10-16 17:53:53,189 [main] INFO  myLogger - Running app-20171016175352-0001 on 28 cores and 256 partitions...
+2017-10-16 17:54:43,585 [main] INFO  myLogger - Writing maximal disks...
+2017-10-16 17:54:44,041 [main] INFO  myLogger - 356 maximal disks has been written...
+2017-10-16 17:54:44,046 [main] INFO  myLogger -  PFlock  10.0     20K_2S    33.578    16.085    49.663     34316    356   28   256    17:54:44.045
+2017-10-16 17:55:14,127 [main] INFO  myLogger - Writing maximal disks...
+2017-10-16 17:55:14,624 [main] INFO  myLogger - 661 maximal disks has been written...
+2017-10-16 17:55:14,625 [main] INFO  myLogger -  PFlock  20.0     20K_2S    16.129    14.264    30.393     69306    661   28   256    17:55:14.624
+2017-10-16 17:55:43,618 [main] INFO  myLogger - Writing maximal disks...
+2017-10-16 17:55:44,208 [main] INFO  myLogger - 816 maximal disks has been written...
+2017-10-16 17:55:44,209 [main] INFO  myLogger -  PFlock  30.0     20K_2S    14.355    15.119    29.474    102350    816   28   256    17:55:44.208
+2017-10-16 17:55:44,278 [main] INFO  myLogger - Clossing app...
+Done!!! Mon Oct 16 17:55:44 PDT 2017
+Running in 28 cores and 256 partitions.  Setting mu = 12 ...
+2017-10-16 17:55:46,093 [main] INFO  myLogger - Starting app...
+2017-10-16 17:55:51,972 [main] INFO  myLogger - Running app-20171016175551-0002 on 28 cores and 256 partitions...
+2017-10-16 17:56:44,466 [main] INFO  myLogger - Writing maximal disks...
+2017-10-16 17:56:44,899 [main] INFO  myLogger - 361 maximal disks has been written...
+2017-10-16 17:56:44,904 [main] INFO  myLogger -  PFlock  10.0        40K    34.237    17.490    51.727     59972    361   28   256    17:56:44.903
+2017-10-16 17:57:19,746 [main] INFO  myLogger - Writing maximal disks...
+2017-10-16 17:57:20,309 [main] INFO  myLogger - 752 maximal disks has been written...
+2017-10-16 17:57:20,310 [main] INFO  myLogger -  PFlock  20.0        40K    18.876    16.349    35.225    121488    752   28   256    17:57:20.309
+2017-10-16 17:58:04,260 [main] INFO  myLogger - Writing maximal disks...
+2017-10-16 17:58:04,810 [main] INFO  myLogger - 1105 maximal disks has been written...
+2017-10-16 17:58:04,811 [main] INFO  myLogger -  PFlock  30.0        40K    20.077    24.319    44.396    180652   1105   28   256    17:58:04.811
+2017-10-16 17:58:04,882 [main] INFO  myLogger - Clossing app...
+Done!!! Mon Oct 16 17:58:05 PDT 2017
+Running in 28 cores and 256 partitions.  Setting mu = 12 ...
+2017-10-16 17:58:06,693 [main] INFO  myLogger - Starting app...
+2017-10-16 17:58:12,500 [main] INFO  myLogger - Running app-20171016175811-0003 on 28 cores and 256 partitions...
+2017-10-16 17:58:56,439 [main] INFO  myLogger - Writing maximal disks...
+2017-10-16 17:58:56,708 [main] INFO  myLogger - 19 maximal disks has been written...
+2017-10-16 17:58:56,713 [main] INFO  myLogger -  PFlock  10.0     20K_3S    29.883    13.175    43.058     22452     19   28   256    17:58:56.712
+2017-10-16 17:59:27,615 [main] INFO  myLogger - Writing maximal disks...
+2017-10-16 17:59:28,133 [main] INFO  myLogger - 339 maximal disks has been written...
+2017-10-16 17:59:28,134 [main] INFO  myLogger -  PFlock  20.0     20K_3S    16.284    14.946    31.230     47638    339   28   256    17:59:28.133
+2017-10-16 17:59:55,503 [main] INFO  myLogger - Writing maximal disks...
+2017-10-16 17:59:55,953 [main] INFO  myLogger - 467 maximal disks has been written...
+2017-10-16 17:59:55,954 [main] INFO  myLogger -  PFlock  30.0     20K_3S    14.815    12.895    27.710     72348    467   28   256    17:59:55.954
+2017-10-16 17:59:56,027 [main] INFO  myLogger - Clossing app...
+Done!!! Mon Oct 16 17:59:56 PDT 2017
+Running in 28 cores and 256 partitions.  Setting mu = 12 ...
+2017-10-16 17:59:57,839 [main] INFO  myLogger - Starting app...
+2017-10-16 18:00:03,592 [main] INFO  myLogger - Running app-20171016180002-0004 on 28 cores and 256 partitions...
+2017-10-16 18:01:07,448 [main] INFO  myLogger - Writing maximal disks...
+2017-10-16 18:01:07,905 [main] INFO  myLogger - 364 maximal disks has been written...
+2017-10-16 18:01:07,909 [main] INFO  myLogger -  PFlock  10.0        60K    41.396    21.782    63.178     82420    364   28   256    18:01:07.908
+2017-10-16 18:01:49,053 [main] INFO  myLogger - Writing maximal disks...
+2017-10-16 18:01:49,601 [main] INFO  myLogger - 776 maximal disks has been written...
+2017-10-16 18:01:49,602 [main] INFO  myLogger -  PFlock  20.0        60K    21.785    19.724    41.509    169122    776   28   256    18:01:49.602
+2017-10-16 18:02:36,549 [main] INFO  myLogger - Writing maximal disks...
+2017-10-16 18:02:37,154 [main] INFO  myLogger - 1161 maximal disks has been written...
+2017-10-16 18:02:37,156 [main] INFO  myLogger -  PFlock  30.0        60K    22.055    25.393    47.448    252992   1161   28   256    18:02:37.155
+2017-10-16 18:02:37,225 [main] INFO  myLogger - Clossing app...
+Done!!! Mon Oct 16 18:02:37 PDT 2017
+Running in 28 cores and 256 partitions.  Setting mu = 12 ...
+2017-10-16 18:02:39,103 [main] INFO  myLogger - Starting app...
+2017-10-16 18:02:44,828 [main] INFO  myLogger - Running app-20171016180244-0005 on 28 cores and 256 partitions...
+2017-10-16 18:03:29,295 [main] INFO  myLogger - Writing maximal disks...
+2017-10-16 18:03:29,726 [main] INFO  myLogger - 255 maximal disks has been written...
+2017-10-16 18:03:29,730 [main] INFO  myLogger -  PFlock  10.0     20K_4S    29.392    14.311    43.703     25490    255   28   256    18:03:29.730
+2017-10-16 18:03:57,583 [main] INFO  myLogger - Writing maximal disks...
+2017-10-16 18:03:58,008 [main] INFO  myLogger - 417 maximal disks has been written...
+2017-10-16 18:03:58,009 [main] INFO  myLogger -  PFlock  20.0     20K_4S    14.729    13.364    28.093     52228    417   28   256    18:03:58.009
+2017-10-16 18:04:25,614 [main] INFO  myLogger - Writing maximal disks...
+2017-10-16 18:04:26,076 [main] INFO  myLogger - 586 maximal disks has been written...
+2017-10-16 18:04:26,077 [main] INFO  myLogger -  PFlock  30.0     20K_4S    13.572    14.389    27.961     78364    586   28   256    18:04:26.077
+2017-10-16 18:04:26,148 [main] INFO  myLogger - Clossing app...
+Done!!! Mon Oct 16 18:04:26 PDT 2017
+Running in 28 cores and 256 partitions.  Setting mu = 12 ...
+2017-10-16 18:04:27,988 [main] INFO  myLogger - Starting app...
+2017-10-16 18:04:33,673 [main] INFO  myLogger - Running app-20171016180432-0006 on 28 cores and 256 partitions...
+2017-10-16 18:05:37,406 [main] INFO  myLogger - Writing maximal disks...
+2017-10-16 18:05:37,913 [main] INFO  myLogger - 450 maximal disks has been written...
+2017-10-16 18:05:37,917 [main] INFO  myLogger -  PFlock  10.0        80K    42.306    20.781    63.087    107922    450   28   256    18:05:37.916
+2017-10-16 18:06:26,273 [main] INFO  myLogger - Writing maximal disks...
+2017-10-16 18:06:26,894 [main] INFO  myLogger - 868 maximal disks has been written...
+2017-10-16 18:06:26,895 [main] INFO  myLogger -  PFlock  20.0        80K    25.522    23.277    48.799    221368    868   28   256    18:06:26.895
+2017-10-16 18:07:24,964 [main] INFO  myLogger - Writing maximal disks...
+2017-10-16 18:07:25,547 [main] INFO  myLogger - 1351 maximal disks has been written...
+2017-10-16 18:07:25,548 [main] INFO  myLogger -  PFlock  30.0        80K    24.644    33.905    58.549    331400   1351   28   256    18:07:25.548
+2017-10-16 18:07:25,616 [main] INFO  myLogger - Clossing app...
+Done!!! Mon Oct 16 18:07:26 PDT 2017
+acald013@dblab-rack12: stopping org.apache.spark.deploy.worker.Worker
+acald013@dblab-rack14: stopping org.apache.spark.deploy.worker.Worker
+acald013@dblab-rack11: stopping org.apache.spark.deploy.worker.Worker
+acald013@dblab-rack15: stopping org.apache.spark.deploy.worker.Worker
+stopping org.apache.spark.deploy.master.Master
+Done!!!
