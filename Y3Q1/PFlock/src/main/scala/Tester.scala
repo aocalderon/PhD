@@ -16,27 +16,35 @@ object Tester {
 			appName("Tester").
 			config("spark.cores.max", "32").
 			getOrCreate()
-		spark.sparkContext.setLogLevel("INFO")
+		spark.sparkContext.setLogLevel("ERROR")
+		log.info("SparkSession has been created...")
 		import spark.implicits._
 		val phd_home = scala.util.Properties.envOrElse("PHD_HOME", "/home/acald013/PhD/")
 		val path = "Y3Q1/Scripts/Scaleup/"
 		val filename1 = "%s%sMaximals_D20K_1S_E10.0_M12_N8_1508217504608.txt".format(phd_home, path)
 		val disks1 = spark.sparkContext.textFile(filename1)
+		log.info("Reading from %s".format(filename1))
 		val filename2 = "%s%sMaximals_D20K_2S_E10.0_M12_N356_1508217626817.txt".format(phd_home, path)
 		val disks2 = spark.sparkContext.textFile(filename2)
+		log.info("Reading from %s".format(filename2))
 		val filename3 = "%s%sMaximals_D40K_E10.0_M12_N361_1508217759092.txt".format(phd_home, path)
 		val disks3 = spark.sparkContext.textFile(filename3)
+		log.info("Reading from %s".format(filename2))
 		val a = disks1.map(d => d.split(",").map(_.toInt).toList.sorted)
 		val b = disks2.map(d => d.split(",").map(_.toInt).toList.sorted)
 		val c = a.union(b).map(r => (r.mkString(";"), r.length)).toDF("items","clen")
+		log.info("Making c and d...")
 		val d = disks3.map(d => d.split(",").map(_.toInt).toList.sorted).map(r => (r.mkString(";"), r.length)).toDF("items","dlen")
-		c.join(d,Seq("items"),"fullouter")
+		log.info("Merging...")
 		val r = c.join(d,Seq("items"),"fullouter")
+		log.info("Filtering")
 		val c1 = r.filter("dlen IS NULL").select("items","clen") 
 		val d1 = r.filter("clen IS NULL").select("items","dlen")
+		log.info("Cross joining...")
 		val cross = c1.repartition(2).crossJoin(d1.repartition(2))
 		cross.cache
 		val mu = 12
+		log.info("Intersecting...")
 		val f = cross.
 			map{ 
 				r => (
