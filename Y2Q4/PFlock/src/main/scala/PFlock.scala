@@ -84,30 +84,35 @@ object PFlock {
 		// Calling implicits...
 		import simba.implicits._
 		import simba.simbaImplicits._
-		// Looping over different datasets and epsilon values...
+		// Looping over different datasets...
 		for (dataset <- conf.dstart() to conf.dend() by conf.dstep()) {
 			val filename = s"${conf.prefix()}$dataset${conf.suffix()}.csv"
 			val tag = filename.substring(filename.lastIndexOf("/") + 1).split("\\.")(0).substring(1)
 			// Reading data...
-			times = times :+ s"""{"content":"Reading data...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
+			logger.info("Reading %s...".format(filename))
+			times = times :+ s"""{"content":"Reading ${filename}...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
 			val points = simba.read
 				.option("header", "false")
 				.schema(POINT_SCHEMA)
 				.csv(filename)
 				.as[APoint]
 			// Indexing points...
+			times = times :+ s"""{"content":"Indexing points...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
 			val p1 = points.toDF("id1", "x1", "y1")
 			p1.index(RTreeType, "p1RT", Array("x1", "y1"))
 			val p2 = points.toDF("id2", "x2", "y2")
 			p2.index(RTreeType, "p2RT", Array("x2", "y2"))
+			// Looping over different epsilon values...
 			for(epsilon <- conf.estart() to conf.eend() by conf.estep()){
+				logger.info("Evaluating dataset %s with epsilon %d...".format(dataset, epsilon))
 				// Starting timer...
-				times = times :+ s"""{"content":"Indexing points...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
 				var time1: Long = System.currentTimeMillis()
 				// Self-joining to find pairs of points close enough (< epsilon)...
+				logger.info("Finding pairs (Self-join)...")
 				times = times :+ s"""{"content":"Finding pairs (Self-join)...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
 				val pairsRDD = p1.distanceJoin(p2, Array("x1", "y1"), Array("x2", "y2"), epsilon).rdd
 				// Calculating disk's centers coordinates...
+				logger.info("Computing disks...")
 				times = times :+ s"""{"content":"Computing disks...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
 				val centers = findDisks(pairsRDD, epsilon)
 					.distinct()
@@ -118,6 +123,7 @@ object PFlock {
 				val PARTITIONS: Int = centers.rdd.getNumPartitions
 				val MU: Int = conf.mu()
 				// Grouping objects enclosed by candidates disks...
+				logger.info("Mapping disks and points...")
 				times = times :+ s"""{"content":"Mapping disks and points...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
 				val candidates = centers
 					.distanceJoin(p1, Array("x", "y"), Array("x1", "y1"), (epsilon / 2) + conf.delta())
@@ -128,15 +134,19 @@ object PFlock {
 				timeD = (time2 - time1) / 1000.0
 				// Filtering candidates less than mu...
 				time1 = System.currentTimeMillis()
+				logger.info("Filtering less-than-mu disks...")
 				times = times :+ s"""{"content":"Filtering less-than-mu disks...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
 				val filteredCandidates =	candidates.filter(row => row.getList(3).size() >= MU)
 					.map(d => (d.getLong(0), d.getDouble(1), d.getDouble(2), d.getList[Integer](3).toString))
 				var nmaximal: Long = 0
-				// Prevent indexing of empty collections...
-				if(filteredCandidates.count() != 0){
+				// Preventing indexing on empty collections...
+				if(filteredCandidates.count() > 0){
 					// Indexing remaining candidates disks...
+					logger.info("Indexing candidates disks...")
+					times = times :+ s"""{"content":"Indexing candidates disks...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
 					filteredCandidates.index(RTreeType, "candidatesRT", Array("_2", "_3"))
-					// Filtering redundant candidates
+					// Filtering redundant candidates...
+					logger.info("Getting maximals inside...")
 					times = times :+ s"""{"content":"Getting maximals inside...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
 					val maximalInside = filteredCandidates.
 						rdd.
@@ -163,6 +173,7 @@ object PFlock {
 							itemsets.getItemsets(MU).asScala.toIterator
 						}
 					maximalInside.count()
+					logger.info("Getting maximals in frame...")
 					times = times :+ s"""{"content":"Getting maximals in frame...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
 					val maximalFrame = filteredCandidates.
 						rdd.
@@ -196,6 +207,7 @@ object PFlock {
 							itemsets.getItemsets(MU).asScala.toIterator
 						}
 					maximalFrame.count()
+					logger.info("Prunning duplicates...")
 					times = times :+ s"""{"content":"Prunning duplicates...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
 					val maximal = maximalInside.
 						union(maximalFrame).
@@ -240,14 +252,19 @@ object PFlock {
 					)
 				)
 				// Dropping center and candidate indices...
+				logger.info("Dropping center and candidate indices...")
+				times = times :+ s"""{"content":"Dropping center and candidate indices...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
 				centers.dropIndexByName("centersRT")
 				filteredCandidates.dropIndexByName("candidatesRT")
 			}
 			// Dropping point indices...
-			times = times :+ s"""{"content":"Dropping indices...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
+			logger.info("Dropping point indices...")
+			times = times :+ s"""{"content":"Dropping point indices...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
 			p1.dropIndexByName("p1RT")
 			p2.dropIndexByName("p2RT")
 		}
+		logger.info("Writing files...")
+		times = times :+ s"""{"content":"Writing files...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"}"""
 		val filename = s"${conf.output()}_N${conf.dstart()}${conf.suffix()}-${conf.dend()}${conf.suffix()}_E${conf.estart()}-${conf.eend()}_C${conf.cores()}_M${conf.mu()}_P${conf.partitions()}_${System.currentTimeMillis}.csv"
 		val writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename)))
 		output.foreach(writer.write)
@@ -256,8 +273,8 @@ object PFlock {
 		val json = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(jsonname)))
 		times.foreach(json.write)
 		json.close()
-		times = times :+ s"""{"content":"Closing app...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"}"""
 		logger.info("Clossing app...")
+		times = times :+ s"""{"content":"Closing app...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"}"""
 		simba.close()
 	}
 
