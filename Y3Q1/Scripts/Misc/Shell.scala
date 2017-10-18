@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory
 
 spark.close
 
-val simba = SimbaSession.builder().
+val spark = SparkSession.builder().
     master("local[*]").
 	appName("Shell").
 	config("simba.index.partitions", "64").
