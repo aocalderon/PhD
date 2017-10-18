@@ -97,6 +97,7 @@ object PFlock {
 				.csv(filename)
 				.as[APoint]
 			// Indexing points...
+			logger.info("Indexing points...")
 			times = times :+ s"""{"content":"Indexing points...","start":"${org.joda.time.DateTime.now.toLocalDateTime}"},\n"""
 			val p1 = points.toDF("id1", "x1", "y1")
 			p1.index(RTreeType, "p1RT", Array("x1", "y1"))
@@ -104,7 +105,7 @@ object PFlock {
 			p2.index(RTreeType, "p2RT", Array("x2", "y2"))
 			// Looping over different epsilon values...
 			for(epsilon <- conf.estart() to conf.eend() by conf.estep()){
-				logger.info("Evaluating dataset %s with epsilon %d...".format(dataset, epsilon))
+				logger.info("Evaluating dataset %s with epsilon %.1f...".format(dataset, epsilon))
 				// Starting timer...
 				var time1: Long = System.currentTimeMillis()
 				// Self-joining to find pairs of points close enough (< epsilon)...
