@@ -1,7 +1,10 @@
 if (!require("pacman")) install.packages("pacman")
 pacman::p_load(stringr, plotly)
 
-log = read.table('~/PhD/Y3Q1/Scripts/Misc/optimizer_output.log')
+PHD_HOME = Sys.getenv(c("PHD_HOME"))
+PATH = "Y3Q1/Scripts/Misc/"
+filename = paste0(PHD_HOME,PATH,"optimizer_output.log")
+log = read.table(filename)
 data = as.data.frame(str_split_fixed(as.character(log$V7),",",10))
 names(data) = c('Dataset','size','Partitions','Entries','time','avg','sd','var','min','max')
 data$size = as.numeric(data$size)
@@ -18,4 +21,11 @@ p <- plot_ly(data = data, x = ~Partitions, y = ~Entries, z = ~time, color = ~Dat
   layout(scene = list(xaxis = list(title = 'Partitions'),
                       yaxis = list(title = 'Maximun entries per node'),
                       zaxis = list(title = 'Time (s)')))
-p
+###################
+# Setting credentials...
+###################
+
+Sys.setenv("plotly_username"="aocalderon1978")
+Sys.setenv("plotly_api_key"="dx4LIeqcXzokLrO2SUHF")
+chart_link = api_create(p, filename="Optimizer", fileopt = "overwrite")
+
