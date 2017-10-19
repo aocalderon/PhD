@@ -1,12 +1,12 @@
 #!/bin/bash
 
-for dataset in 40K 60K 80K
+for dataset in B40K B60K B80K
 do
 	for entries in `seq 2 6 26`
 	do
 		for partitions in `seq 512 512 3072`
 		do
-			spark-submit --class Test /home/and/Documents/PhD/Code/Y3Q1/PFlock/target/scala-2.11/pflock_2.11-2.0.jar $dataset $entries $partitions spark://169.235.27.138:7077 28
+			spark-submit --class Test /home/acald013/PhD/Y3Q1/PFlock/target/scala-2.11/pflock_2.11-2.0.jar $dataset $entries $partitions spark://169.235.27.138:7077 28
 		done
 	done
 done
