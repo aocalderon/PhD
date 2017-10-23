@@ -36,7 +36,7 @@ public class GeoGSON {
         features = new ArrayList<>();
     }
 
-    public void makeMBR(Double lon1, Double lat1, Double lon2, Double lat2, Integer id, Integer popup){
+    public void makeMBRs(Double lon1, Double lat1, Double lon2, Double lat2, Integer id, Integer popup){
         LinearRing l = LinearRing.of(
                 Point.from(lon1, lat1),
                 Point.from(lon1, lat2),
@@ -47,6 +47,10 @@ public class GeoGSON {
         JsonElement jsonElement = new JsonPrimitive(popup);
         Feature f = Feature.of(p).withProperties(ImmutableMap.of("popup", jsonElement)).withId(id.toString());
         features.add(f);
+    }
+    
+    public void makePoints(Double lon, Double lat){
+        features.add(Feature.of(Point.from(lon, lat)));
     }
 
     public void saveGeoJSON(String filename){
@@ -84,7 +88,7 @@ public class GeoGSON {
         Integer id = 1;
 
         GeoGSON gson = new GeoGSON("4799");
-        gson.makeMBR(lon1, lat1, lon2, lat2, id, 5);
+        gson.makeMBRs(lon1, lat1, lon2, lat2, id, 5);
         gson.saveGeoJSON("output/RTree.json");
     }
 }

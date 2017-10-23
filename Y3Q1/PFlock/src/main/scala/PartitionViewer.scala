@@ -124,11 +124,16 @@ object PartitionViewer {
 			}
 			List((min_x, min_y, max_x, max_y, index, size)).iterator
 		}
-		val gson = new GeoGSON(EPSG)
+		// Writing Geojson...
+		logger.info("Writing Geojson...")
+		var gson = new GeoGSON(EPSG)
 		mbrs.collect().foreach{ row =>
-			gson.makeMBR(row._1, row._2, row._3, row._4, row._5, row._6)
+			gson.makeMBRs(row._1, row._2, row._3, row._4, row._5, row._6)
 		}
-		val geojson: String = "%s%sRTree_%s_E%.1f_M%d_P%s.geojson".format(phd_home, path, dataset, epsilon, mu, partitions)
+		filteredCandidates.collect().foreach{ row =>
+			gson.makePoints(row._2, row._3)
+		}
+		var geojson: String = "%s%sRTree_%s_E%.1f_M%d_P%s.geojson".format(phd_home, path, dataset, epsilon, mu, partitions)
 		gson.saveGeoJSON(geojson)
 		logger.info("%s has been written...".format(geojson))
 
