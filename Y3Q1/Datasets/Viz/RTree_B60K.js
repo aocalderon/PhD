@@ -27,7 +27,7 @@ function MBRsStyle(feature) {
 var MBRsSource =  new ol.source.Vector({
 	format: new ol.format.GeoJSON(),
 	projection : 'urn:ogc:def:crs:EPSG::3068',
-	url: 'RTree_B60K_E50.0_M12_P1024.geojson'
+	url: 'RTree_B20K_E10.0_M5_P1024.geojson'
 })
 
 var MBRsLayer = new ol.layer.Vector({
@@ -39,7 +39,7 @@ var MBRsLayer = new ol.layer.Vector({
 var PointsSource =  new ol.source.Vector({
 	format: new ol.format.GeoJSON(),
 	projection : 'urn:ogc:def:crs:EPSG::3068',
-	url: 'RTree_B60K.geojson'
+	url: 'Points_B20K_E10.0_M5_P1024.geojson'
 })
 
 var PointsLayer = new ol.layer.Vector({
@@ -48,15 +48,21 @@ var PointsLayer = new ol.layer.Vector({
 	style: PointsStyle
 });
 
-var cx = 25264.538
-var cy = 21037.674
-var extend = 15000
-proj4.defs("EPSG:3068","+proj=tmerc +lat_0=0 +lon_0=126 +k=1 +x_0=500000 +y_0=0 +ellps=krass +units=m +no_defs");
+var cx = 25521.486 
+var cy = 20836.726
+var extend = 500000
+proj4.defs("EPSG:3068","+proj=cass +lat_0=52.41864827777778 +lon_0=13.62720366666667 +x_0=40000 +y_0=10000 +ellps=bessel +datum=potsdam +units=m +no_defs");
 var proj = ol.proj.get('EPSG:3068');
 proj.setExtent([cx - extend, cy - extend, cx + extend, cy + extend]);    
 
 var map = new ol.Map({
 	layers: [
+		new ol.layer.Tile({
+			title: 'OSM',
+			type: 'base',
+			visible: true,
+			source: new ol.source.OSM()
+		}),
 		new ol.layer.Tile({
 			title: 'OSM',
 			type: 'base',

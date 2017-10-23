@@ -17,13 +17,13 @@ import org.slf4j.{Logger, LoggerFactory}
 
 object PartitionViewer {
 	private val logger: Logger = LoggerFactory.getLogger("myLogger")
+	private val EPSG: String = "3068"
 	
 	case class SP_Point(id: Int, x: Double, y: Double)
     case class APoint(id: Int, x: Double, y: Double)
 	case class ACenter(id: Long, x: Double, y: Double)
 
 	def main(args: Array[String]): Unit = {
-		val EPSG: String = "3068"
 		val dataset = args(0)
 		val entries = args(1)
 		val partitions = args(2)
@@ -125,16 +125,20 @@ object PartitionViewer {
 			List((min_x, min_y, max_x, max_y, index, size)).iterator
 		}
 		// Writing Geojson...
-		logger.info("Writing Geojson...")
-		var gson = new GeoGSON(EPSG)
+		logger.info("Writing Geojsons...")
+		var gson1 = new GeoGSON(EPSG)
 		mbrs.collect().foreach{ row =>
-			gson.makeMBRs(row._1, row._2, row._3, row._4, row._5, row._6)
+			gson1.makeMBRs(row._1, row._2, row._3, row._4, row._5, row._6)
 		}
+		var geojson: String = "%s%sViz/RTree_%s_E%.1f_M%d_P%s.geojson".format(phd_home, path, dataset, epsilon, mu, partitions)
+		gson1.saveGeoJSON(geojson)
+		logger.info("%s has been written...".format(geojson))
+		var gson2 = new GeoGSON(EPSG)
 		filteredCandidates.collect().foreach{ row =>
-			gson.makePoints(row._2, row._3)
+			gson2.makePoints(row._2, row._3)
 		}
-		var geojson: String = "%s%sRTree_%s_E%.1f_M%d_P%s.geojson".format(phd_home, path, dataset, epsilon, mu, partitions)
-		gson.saveGeoJSON(geojson)
+		geojson = "%s%sViz/Points_%s_E%.1f_M%d_P%s.geojson".format(phd_home, path, dataset, epsilon, mu, partitions)
+		gson2.saveGeoJSON(geojson)
 		logger.info("%s has been written...".format(geojson))
 
 		// Dropping indices...

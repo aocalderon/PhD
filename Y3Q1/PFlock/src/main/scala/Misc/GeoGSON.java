@@ -52,6 +52,10 @@ public class GeoGSON {
     public void makePoints(Double lon, Double lat){
         features.add(Feature.of(Point.from(lon, lat)));
     }
+    
+    public void clearFeatures(){
+			this.features.clear();
+	}
 
     public void saveGeoJSON(String filename){
         FeatureCollection collection = new FeatureCollection(features);
@@ -87,9 +91,13 @@ public class GeoGSON {
         Double lat2 = 20.0;
         Integer id = 1;
 
-        GeoGSON gson = new GeoGSON("4799");
-        gson.makeMBRs(lon1, lat1, lon2, lat2, id, 5);
-        gson.saveGeoJSON("output/RTree.json");
+        GeoGSON gson1 = new GeoGSON("4799");
+        gson1.makeMBRs(lon1, lat1, lon2, lat2, id, 5);
+        gson1.saveGeoJSON("/tmp/MBRs.json");
+
+        GeoGSON gson2 = new GeoGSON("3068");
+        gson2.makePoints(lon1, lat1);
+        gson2.saveGeoJSON("/tmp/Points.json");
     }
 }
 
