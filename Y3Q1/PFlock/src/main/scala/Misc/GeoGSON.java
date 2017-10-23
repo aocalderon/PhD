@@ -36,7 +36,7 @@ public class GeoGSON {
         features = new ArrayList<>();
     }
 
-    public void makeMBR(Double lon1, Double lat1, Double lon2, Double lat2, String id, Integer popup){
+    public void makeMBR(Double lon1, Double lat1, Double lon2, Double lat2, Integer id, Integer popup){
         LinearRing l = LinearRing.of(
                 Point.from(lon1, lat1),
                 Point.from(lon1, lat2),
@@ -45,7 +45,7 @@ public class GeoGSON {
                 Point.from(lon1, lat1));
         Polygon p = Polygon.of(l);
         JsonElement jsonElement = new JsonPrimitive(popup);
-        Feature f = Feature.of(p).withProperties(ImmutableMap.of("popup", jsonElement)).withId(id);
+        Feature f = Feature.of(p).withProperties(ImmutableMap.of("popup", jsonElement)).withId(id.toString());
         features.add(f);
     }
 
@@ -81,7 +81,7 @@ public class GeoGSON {
         Double lat1 = 10.0;
         Double lon2 = 20.0;
         Double lat2 = 20.0;
-        String id = "1";
+        Integer id = 1;
 
         GeoGSON gson = new GeoGSON("4799");
         gson.makeMBR(lon1, lat1, lon2, lat2, id, 5);
