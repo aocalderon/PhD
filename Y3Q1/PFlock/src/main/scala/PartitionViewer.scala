@@ -128,7 +128,7 @@ object PartitionViewer {
 		mbrs.collect().foreach{ row =>
 			gson.makeMBR(row._1, row._2, row._3, row._4, row._5, row._6)
 		}
-		val geojson: String = "%s%sRTree_%s_E%.1f_M%d_P%d.geojson".format(phd_home, path, dataset, epsilon, mu, partitions)
+		val geojson: String = "%s%sRTree_%s_E%.1f_M%d_P%s.geojson".format(phd_home, path, dataset, epsilon, mu, partitions)
 		gson.saveGeoJSON(geojson)
 		logger.info("%s has been written...".format(geojson))
 
