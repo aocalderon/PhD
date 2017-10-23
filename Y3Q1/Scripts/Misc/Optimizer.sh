@@ -17,9 +17,9 @@ $SPARK_HOME/sbin/start-all.sh
 
 for dataset in B40K
 do
-	for entries in `seq 14 6 26`
+	for entries in `seq 20 6 26`
 	do
-		for partitions in `seq 2048 512 3072`
+		for partitions in `seq 512 512 1536`
 		do
 			spark-submit --class Optimizer /home/acald013/PhD/Y3Q1/PFlock/target/scala-2.11/pflock_2.11-2.0.jar \
 				$dataset \

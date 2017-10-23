@@ -1,48 +1,44 @@
 import Misc.GeoGSON
 import org.apache.spark.sql.simba.SimbaSession
 import org.apache.spark.sql.simba.index._
+import org.slf4j.{Logger, LoggerFactory}
 
 /**
   * Created by and on 3/20/17.
   */
 
 object PartitionViewer {
-
+  private val logger: Logger = LoggerFactory.getLogger("myLogger")
   case class PointItem(id: Int, x: Double, y: Double)
-
-  val master: String = "local[*]"
-  val logs: String = "ERROR"
 
   def main(args: Array[String]): Unit = {
     val EPSG: String = "3068"
-    val dataset: String = "Berlin"
-    val filename: String = "/home/and/Documents/PhD/Code/Y2Q4/BerlinSample/B160K_3068.csv"
-    val path: String = "output/"
-    val epsilon: Double = 10.0
-    val partitions: String = "4096"
-//    master = args(0)
-//    filename = args(1)
-//    logs = args(2)
+    val phd_home = "/home/acald013/PhD/"
+    val path: String = "Y3Q1/Datasets/"
+    val extension: String = ".csv"
+    val dataset: String = args(0)
+    val epsilon: Double = args(1)
+    val partitions: String = args(2)
+    val master: String = args(3)
 
+    logger.info("Starting session...")
     val simbaSession = SimbaSession
       .builder()
       .master(master)
       .appName("PartitionViewer")
       .config("simba.index.partitions", partitions)
       .getOrCreate()
-
     import simbaSession.implicits._
     import simbaSession.simbaImplicits._
-
-    val sc = simbaSession.sparkContext
-    sc.setLogLevel(logs)
-
+    val filename: String = "%s%s%s.%s".format(phd_home, path, dataset, extension)
+    logger.info("Reading %s...".format(filename))
     val points = sc.textFile(filename,10)
       .map(_.split(","))
       .map(p => PointItem(id = p(0).trim.toInt, x = p(1).trim.toDouble, y = p(2).trim.toDouble))
       .toDS()
-    println(points.count())
-    points.index(RTreeType, "rt", Array("x", "y"))
+    logger.info("%d have been readed...".format(points.count()))
+    logger.info("Indexing...")
+    points.index(RTreeType, "pRT", Array("x", "y"))
 
 
     val mbrs = points.rdd.mapPartitionsWithIndex{ (index, iterator) =>
