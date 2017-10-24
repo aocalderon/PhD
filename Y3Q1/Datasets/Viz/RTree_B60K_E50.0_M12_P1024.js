@@ -2,8 +2,12 @@ function PointsStyle(feature) {
 	var style = new ol.style.Style({
 		image: new ol.style.Circle({
 			radius: 2,
+			stroke: new ol.style.Stroke({
+				color: 'black',
+				width: 1
+			}),
 			fill: new ol.style.Fill({
-				color: 'rgba(255, 0, 255, 0.75)'
+				color: 'red'
 			})
 		})
 	})
@@ -13,12 +17,12 @@ function PointsStyle(feature) {
 function MBRsStyle(feature) {
 	var style = new ol.style.Style({
 		stroke: new ol.style.Stroke({
-			color: 'blue',
-			lineDash: [3],
-			width: 1.5
+			color: 'orange',
+			lineDash: [5],
+			width: 2
 		}),
 		fill: new ol.style.Fill({
-			color: 'rgba(0, 0, 255, 0.01)'
+			color: 'rgba(0, 0, 255, 0.05)'
 		})
 	})
 	return [style];
@@ -27,7 +31,7 @@ function MBRsStyle(feature) {
 var MBRsSource =  new ol.source.Vector({
 	format: new ol.format.GeoJSON(),
 	projection : 'urn:ogc:def:crs:EPSG::3068',
-	url: 'RTree_B20K_E10.0_M5_P1024.geojson'
+	url: 'RTree_B60K_E50.0_M12_P1024.geojson'
 })
 
 var MBRsLayer = new ol.layer.Vector({
@@ -39,11 +43,11 @@ var MBRsLayer = new ol.layer.Vector({
 var PointsSource =  new ol.source.Vector({
 	format: new ol.format.GeoJSON(),
 	projection : 'urn:ogc:def:crs:EPSG::3068',
-	url: 'Points_B20K_E10.0_M5_P1024.geojson'
+	url: 'Points_B60K_E50.0_M12_P1024.geojson'
 })
 
 var PointsLayer = new ol.layer.Vector({
-	title: 'Points',
+	title: 'Candidate disks',
 	source: PointsSource,
 	style: PointsStyle
 });
@@ -60,14 +64,24 @@ var map = new ol.Map({
 		new ol.layer.Tile({
 			title: 'OSM',
 			type: 'base',
-			visible: true,
+			visible: false,
 			source: new ol.source.OSM()
 		}),
 		new ol.layer.Tile({
-			title: 'OSM',
+			title: 'Bing',
 			type: 'base',
 			visible: true,
-			source: new ol.source.OSM()
+			source: new ol.source.BingMaps({
+				key: 'AnBTYXxmiTX1rqG4gmggxSEzegeK5P1KLG6oF7EJhUuKgI-cS8UefgI5mUTvVHTo',
+				imagerySet: 'AerialWithLabels',
+				maxZoom: 18
+			})
+		}),
+		new ol.layer.Tile({
+			title: 'Blank',
+			type: 'base',
+			visible: false,
+			source: null
 		}),
 		PointsLayer,
 		MBRsLayer
