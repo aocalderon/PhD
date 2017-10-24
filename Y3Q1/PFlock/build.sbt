@@ -11,6 +11,7 @@ libraryDependencies += "InitialDLab" % "simba_2.11" % "1.0"
 libraryDependencies += "org.slf4j" % "slf4j-jdk14" % "1.7.25"
 libraryDependencies += "com.github.filosganga" % "geogson-core" % "1.2.21"
 
+//libraryDependencies += "org.wvlet.airframe" %% "airframe-log" % "0.24"
 //libraryDependencies += "com.groupon.sparklint" % "sparklint-spark210_2.11" % "1.0.9-SNAPSHOT"
 
 mainClass in (Compile, run) := Some("FlockFinder")

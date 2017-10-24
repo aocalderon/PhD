@@ -1,4 +1,6 @@
 import Misc.GeoGSON
+import SPMF.AlgoFPMax
+import scala.collection.JavaConverters._
 import org.apache.spark.rdd.DoubleRDDFunctions
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.functions._
@@ -22,6 +24,7 @@ object PartitionViewer {
 	case class SP_Point(id: Int, x: Double, y: Double)
     case class APoint(id: Int, x: Double, y: Double)
 	case class ACenter(id: Long, x: Double, y: Double)
+	case class BBox(minx: Double, miny: Double, maxx: Double, maxy: Double)
 
 	def main(args: Array[String]): Unit = {
 		val dataset = args(0)
@@ -53,7 +56,7 @@ object PartitionViewer {
 		val points = simba.read.option("header", "false").schema(POINT_SCHEMA).csv(filename).as[SP_Point]
 		val n = points.count()
         // Indexing...
-		logger.info("Indexing...")
+		logger.info("Point indexing...")
 		val p1 = points.toDF("id1", "x1", "y1")
 		p1.index(RTreeType, "p1RT", Array("x1", "y1"))
 		val p2 = points.toDF("id2", "x2", "y2")
@@ -81,13 +84,66 @@ object PartitionViewer {
 		val filteredCandidates = candidates.
 			filter(row => row.getList(3).size() >= mu).
 			map(d => (d.getLong(0), d.getDouble(1), d.getDouble(2), d.getList[Integer](3).toString))
-		val nfilteredCandidates = filteredCandidates.count()
-		// The Indexing!!!
-		logger.info("The Indexing!!!")
-		val time1 = System.currentTimeMillis()
+		val nFilteredCandidates = filteredCandidates.count()
+		// Candidate indexing...
+		logger.info("Candidate indexing...")
 		filteredCandidates.index(RTreeType, "candidatesRT", Array("_2", "_3"))
-		val time2 = System.currentTimeMillis()
-		val time = (time2 - time1) / 1000.0
+		// Getting maximal disks inside partitions...
+		logger.info("Getting maximal disks inside partitions...")
+		var time1 = System.currentTimeMillis()
+		val maximalInside = filteredCandidates
+			.rdd
+			.mapPartitions { partition =>
+				val transactions = partition
+				.map { disk =>
+					disk._4
+					.replace("[","")
+					.replace("]","")
+					.split(",")
+					.map{ id =>
+						new Integer(id.trim)
+					}
+					.sorted
+					.toList
+					.asJava
+				}.toList.asJava
+				val fpMax = new AlgoFPMax
+				val itemsets = fpMax.runAlgorithm(transactions, 1)
+				itemsets.getItemsets(mu).asScala.toIterator
+			}
+		val nMaximalInside = maximalInside.count()
+		var time2 = System.currentTimeMillis()
+		val timeI = (time2 - time1) / 1000.0
+		// Getting maximal disks on frame partitions...
+		logger.info("Getting maximal disks on frame partitions...")
+		time1 = System.currentTimeMillis()
+		val maximalFrame = filteredCandidates
+			.rdd
+			.mapPartitions { partition =>
+				val pList = partition.toList
+				val bbox = getBoundingBox(pList)
+				val transactions = pList
+				.map(disk => (disk._1, disk._2, disk._3, disk._4, !isInside(disk._2, disk._3, bbox, epsilon)))
+				.filter(_._5)
+				.map { disk =>
+					disk._4
+					.replace("[","")
+					.replace("]","")
+					.split(",")
+					.map{ id =>
+						new Integer(id.trim)
+					}
+					.sorted
+					.toList
+					.asJava
+				}.asJava
+			val fpMax = new AlgoFPMax
+			val itemsets = fpMax.runAlgorithm(transactions, 1)
+			itemsets.getItemsets(mu).asScala.toIterator
+		}
+		val nMaximalFrame = maximalFrame.count()
+		time2 = System.currentTimeMillis()
+		val timeF = (time2 - time1) / 1000.0
 		// Collecting stats...
 		logger.info("Collecting stats...")
 		val partition_sizes = filteredCandidates.rdd.
@@ -103,10 +159,20 @@ object PartitionViewer {
 		val min = partition_sizes.min().toInt
 		// Printing summary...
 		logger.info("Printing summary...")
-		logger.info("||,%s,%d,%s,%d,%s,%.1f,%d,%.3f,%.3f,%.3f,%.3f,%d,%d".
-			format(dataset, nfilteredCandidates, partitions, new_partitions, entries, epsilon, mu, time, avg, sd, variance, min, max))			
-		// Writing Geojson...
-		logger.info("Writing Geojson...")
+		logger.info("%5s,%8s,%6s,%6s,%4s,%4s,%4s,%6s,%3s,%9s,%9s,%9s,%6s,%6s,%5s,%5s".
+			format("Data", "# Cands", "# In", "# Out", 
+				"Par1", "Par2", "Ent", "Eps", "Mu", 
+				"TimeIn", "TimeOut", "Avg", "SD", "Var", "Min", "Max"
+			)
+		)
+		logger.info("%5s,%8d,%6d,%6d,%4s,%4d,%4s,%6.1f,%3d,%9.2f,%9.2f,%9.2f,%6.2f,%6.2f,%5d,%5d".
+			format(dataset, nFilteredCandidates, nMaximalInside, nMaximalFrame,
+				partitions, new_partitions, entries, epsilon, mu, 
+				timeI, timeF, avg, sd, variance, min, max
+			)
+		)
+		// Writing Geojsons...
+		logger.info("Writing Geojsons...")
 		val mbrs = filteredCandidates.rdd.mapPartitionsWithIndex{ (index, iterator) =>
 			var min_x: Double = Double.MaxValue
 			var min_y: Double = Double.MaxValue
@@ -124,8 +190,6 @@ object PartitionViewer {
 			}
 			List((min_x, min_y, max_x, max_y, index, size)).iterator
 		}
-		// Writing Geojson...
-		logger.info("Writing Geojsons...")
 		var gson1 = new GeoGSON(EPSG)
 		mbrs.collect().foreach{ row =>
 			gson1.makeMBRs(row._1, row._2, row._3, row._4, row._5, row._6)
@@ -175,5 +239,26 @@ object PartitionViewer {
 		val k1: Double = ((Y - X * root) / 2) + p2.y
 
 		ACenter(0, h1, k1)
+	}
+
+	def isInside(x: Double, y: Double, bbox: BBox, epsilon: Double): Boolean ={
+		x < (bbox.maxx - epsilon) &&
+		x > (bbox.minx + epsilon) &&
+		y < (bbox.maxy - epsilon) &&
+		y > (bbox.miny + epsilon)
+	}
+
+	def getBoundingBox(p: List[(Long, Double, Double, Any)]): BBox = {
+		var minx: Double = Double.MaxValue
+		var miny: Double = Double.MaxValue
+		var maxx: Double = Double.MinValue
+		var maxy: Double = Double.MinValue
+		p.foreach{r =>
+			if(r._2 < minx){ minx = r._2 }
+			if(r._2 > maxx){ maxx = r._2 }
+			if(r._3 < miny){ miny = r._3 }
+			if(r._3 > maxy){ maxy = r._3 }
+		}
+		BBox(minx, miny, maxx, maxy)
 	}	
 }
