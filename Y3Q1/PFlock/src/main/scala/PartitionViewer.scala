@@ -8,8 +8,6 @@ import org.apache.spark.sql.Row
 import org.apache.spark.sql.catalyst.ScalaReflection
 import org.apache.spark.sql.simba.SimbaSession
 import org.apache.spark.sql.types.StructType
-import org.apache.spark.sql.simba.index.RTreeType
-import org.apache.spark.sql.simba.SimbaSession
 import org.apache.spark.sql.simba.index._
 import org.slf4j.{Logger, LoggerFactory}
 
@@ -24,6 +22,7 @@ object PartitionViewer {
 	case class SP_Point(id: Int, x: Double, y: Double)
     case class APoint(id: Int, x: Double, y: Double)
 	case class ACenter(id: Long, x: Double, y: Double)
+	case class Candidate(id: Long, x: Double, y: Double, items: String)	
 	case class BBox(minx: Double, miny: Double, maxx: Double, maxy: Double)
 
 	def main(args: Array[String]): Unit = {
@@ -40,7 +39,7 @@ object PartitionViewer {
 		logger.info("Setting session...")
         val simba = SimbaSession.builder().
 			master(master).
-			appName("Optimizer").
+			appName("PartitionViewer").
 			config("simba.rtree.maxEntriesPerNode", entries).
 			config("simba.index.partitions", partitions).
 			config("spark.cores.max", cores).
@@ -83,94 +82,132 @@ object PartitionViewer {
 		logger.info("Filtering less-than-mu disks...")
 		val filteredCandidates = candidates.
 			filter(row => row.getList(3).size() >= mu).
-			map(d => (d.getLong(0), d.getDouble(1), d.getDouble(2), d.getList[Integer](3).toString))
+			map(d => (d.getLong(0), d.getDouble(1), d.getDouble(2), d.getList[Integer](3).asScala.mkString(",")))
 		val nFilteredCandidates = filteredCandidates.count()
+		// Setting final containers...
+		var maximals: RDD[List[Int]] = simba.sparkContext.emptyRDD
+		var nmaximals: Long = 0
 		// Candidate indexing...
 		logger.info("Candidate indexing...")
 		filteredCandidates.index(RTreeType, "candidatesRT", Array("_2", "_3"))
 		// Getting maximal disks inside partitions...
 		logger.info("Getting maximal disks inside partitions...")
 		var time1 = System.currentTimeMillis()
-		val maximalInside = filteredCandidates
+		val maximalsInside = filteredCandidates
 			.rdd
-			.mapPartitions { partition =>
-				val transactions = partition
-				.map { disk =>
-					disk._4
-					.replace("[","")
-					.replace("]","")
-					.split(",")
-					.map{ id =>
-						new Integer(id.trim)
-					}
-					.sorted
-					.toList
-					.asJava
-				}.toList.asJava
+			.mapPartitionsWithIndex { (index, partition) =>
+				val transactions = partition.
+					map { disk =>
+						disk._4.
+						split(",").
+						map { id =>
+							new Integer(id.trim)
+						}.
+						sorted.toList.asJava
+					}.toList.asJava
 				val fpMax = new AlgoFPMax
 				val itemsets = fpMax.runAlgorithm(transactions, 1)
 				itemsets.getItemsets(mu).asScala.toIterator
 			}
-		val nMaximalInside = maximalInside.count()
+		val nMaximalsInside = maximalsInside.count()
 		var time2 = System.currentTimeMillis()
 		val timeI = (time2 - time1) / 1000.0
 		// Getting maximal disks on frame partitions...
 		logger.info("Getting maximal disks on frame partitions...")
 		time1 = System.currentTimeMillis()
-		val maximalFrame = filteredCandidates
+		val candidatesFrame = filteredCandidates
 			.rdd
 			.mapPartitions { partition =>
 				val pList = partition.toList
 				val bbox = getBoundingBox(pList)
-				val transactions = pList
-				.map(disk => (disk._1, disk._2, disk._3, disk._4, !isInside(disk._2, disk._3, bbox, epsilon)))
-				.filter(_._5)
-				.map { disk =>
-					disk._4
-					.replace("[","")
-					.replace("]","")
-					.split(",")
-					.map{ id =>
-						new Integer(id.trim)
+				val frame = pList.
+					map{ disk => 
+						(disk._1, disk._2, disk._3, disk._4, !isInside(disk._2, disk._3, bbox, epsilon))
+					}.
+					filter(_._5).
+					map { disk =>
+						Candidate(disk._1, disk._2, disk._3, disk._4)
 					}
-					.sorted
-					.toList
-					.asJava
-				}.asJava
-			val fpMax = new AlgoFPMax
-			val itemsets = fpMax.runAlgorithm(transactions, 1)
-			itemsets.getItemsets(mu).asScala.toIterator
-		}
-		val nMaximalFrame = maximalFrame.count()
+				frame.toIterator
+			}.toDS()
+		val nCandidatesFrame = candidatesFrame.count()
+		logger.info("Re-indexing candidate disks in frames...")
+		candidatesFrame.index(RTreeType, "candidatesFrameRT", Array("x", "y"))
+		val maximalsFrame = candidatesFrame.rdd
+			.mapPartitionsWithIndex { (index, partition) =>
+				val transactions = partition.
+					map { disk =>
+						disk.items.
+						split(",").
+						map { id =>
+							new Integer(id.trim)
+						}.
+						sorted.toList.asJava
+					}.toList.asJava
+				val fpMax = new AlgoFPMax
+				val itemsets = fpMax.runAlgorithm(transactions, 1)
+				itemsets.getItemsets(mu).asScala.toIterator
+			}
+		val nMaximalsFrame = maximalsFrame.count()
 		time2 = System.currentTimeMillis()
 		val timeF = (time2 - time1) / 1000.0
-		// Collecting stats...
-		logger.info("Collecting stats...")
-		val partition_sizes = filteredCandidates.rdd.
+		// Prunning duplicates...
+		logger.info("Prunning duplicates...")
+		maximals = maximalsInside.union(maximalsFrame).distinct().map(_.asScala.toList.map(_.intValue()))
+		nmaximals = maximals.count()
+		// Collecting candidate disks inside stats...
+		logger.info("Collecting candidate disks inside stats...")
+		var partition_sizes = filteredCandidates.rdd.
 			mapPartitions{ it =>
 				List(it.size.toDouble).iterator
 			}
-		val new_partitions = filteredCandidates.rdd.getNumPartitions
-		val sizes = new DoubleRDDFunctions(partition_sizes)
-		val avg = sizes.mean()
-		val sd = sizes.stdev()
-		val variance = sizes.variance()
-		val max = partition_sizes.max().toInt
-		val min = partition_sizes.min().toInt
-		// Printing summary...
-		logger.info("Printing summary...")
-		logger.info("%5s,%8s,%6s,%6s,%4s,%4s,%4s,%6s,%3s,%9s,%9s,%9s,%6s,%6s,%5s,%5s".
-			format("Data", "# Cands", "# In", "# Out", 
+		var new_partitions = filteredCandidates.rdd.getNumPartitions
+		var sizes = new DoubleRDDFunctions(partition_sizes)
+		var avg = sizes.mean()
+		var sd = sizes.stdev()
+		var variance = sizes.variance()
+		var max = partition_sizes.max().toInt
+		var min = partition_sizes.min().toInt
+		// Printing candidate disks inside summary ...
+		logger.info("%6s,%8s,%5s,%5s,%6s,%5s,%5s,%4s,%5s,%3s,%8s,%8s,%8s,%5s,%5s,%4s,%4s".
+			format("Inside", "# Cands", "# In", "# Out", "# Max", 
 				"Par1", "Par2", "Ent", "Eps", "Mu", 
 				"TimeIn", "TimeOut", "Avg", "SD", "Var", "Min", "Max"
 			)
 		)
-		logger.info("%5s,%8d,%6d,%6d,%4s,%4d,%4s,%6.1f,%3d,%9.2f,%9.2f,%9.2f,%6.2f,%6.2f,%5d,%5d".
-			format(dataset, nFilteredCandidates, nMaximalInside, nMaximalFrame,
+		logger.info("%6s,%8d,%5d,%5d,%6d,%5s,%5d,%4s,%5.1f,%3d,%8.2f,%8.2f,%8.2f,%5.2f,%5.2f,%4d,%4d".
+			format(dataset, nFilteredCandidates, nMaximalsInside, nMaximalsFrame, nmaximals,
 				partitions, new_partitions, entries, epsilon, mu, 
 				timeI, timeF, avg, sd, variance, min, max
 			)
 		)
+		// Collecting candidate disks frame stats...
+		logger.info("Collecting candidate disks frame stats...")
+		partition_sizes = candidatesFrame.rdd.
+			mapPartitions{ it =>
+				List(it.size.toDouble).iterator
+			}
+		new_partitions = candidatesFrame.rdd.getNumPartitions
+		sizes = new DoubleRDDFunctions(partition_sizes)
+		avg = sizes.mean()
+		sd = sizes.stdev()
+		variance = sizes.variance()
+		max = partition_sizes.max().toInt
+		min = partition_sizes.min().toInt
+		// Printing candidate disks frame summary ...
+		logger.info("%6s,%8s,%5s,%5s,%6s,%5s,%5s,%4s,%5s,%3s,%8s,%8s,%8s,%5s,%5s,%4s,%4s".
+			format("Frame", "# Cands", "# In", "# Out", "# Max",
+				"Par1", "Par2", "Ent", "Eps", "Mu", 
+				"TimeIn", "TimeOut", "Avg", "SD", "Var", "Min", "Max"
+			)
+		)
+		logger.info("%6s,%8d,%5d,%5d,%6d,%5s,%5d,%4s,%5.1f,%3d,%8.2f,%8.2f,%8.2f,%5.2f,%5.2f,%4d,%4d".
+			format(dataset, nFilteredCandidates, nMaximalsInside, nMaximalsFrame, nmaximals,
+				partitions, new_partitions, entries, epsilon, mu, 
+				timeI, timeF, avg, sd, variance, min, max
+			)
+		)
+		/***
 		// Writing Geojsons...
 		logger.info("Writing Geojsons...")
 		val mbrs = filteredCandidates.rdd.mapPartitionsWithIndex{ (index, iterator) =>
@@ -204,11 +241,12 @@ object PartitionViewer {
 		geojson = "%s%sViz/Points_%s_E%.1f_M%d_P%s.geojson".format(phd_home, path, dataset, epsilon, mu, partitions)
 		gson2.saveGeoJSON(geojson)
 		logger.info("%s has been written...".format(geojson))
-
+		***/
 		// Dropping indices...
 		logger.info("Dropping indices...")
 		centers.dropIndexByName("centersRT")
-		filteredCandidates.dropIndexByName("candidatesRT")			
+		filteredCandidates.dropIndexByName("candidatesRT")		
+		candidatesFrame.dropIndexByName("candidatesFrameRT")
 		p1.dropIndexByName("p1RT")
 		p2.dropIndexByName("p2RT")
 		// Closing app...
