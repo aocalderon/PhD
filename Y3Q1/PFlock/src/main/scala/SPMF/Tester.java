@@ -128,7 +128,8 @@ public class Tester {
         itemsets.printItemsets();
 
         int transactionCount = 0;
-        String input = fileToPath("input.txt");
+        String input = "/home/and/Documents/PhD/Code/Y3Q1/Datasets/input.txt";
+        System.out.println(input);
         BufferedReader reader = new BufferedReader(new FileReader(input));
         String line;
         // for each line (transaction) until the end of file
