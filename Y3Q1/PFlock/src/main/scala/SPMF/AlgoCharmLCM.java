@@ -57,7 +57,7 @@ public class AlgoCharmLCM {
     /**
      * Default constructor
      */
-    AlgoCharmLCM() {
+    public AlgoCharmLCM() {
     }
 
     /**

@@ -41,7 +41,6 @@ public class Transactions {
         transactions = new ArrayList<Transaction>();
 
         for (List<Integer> t: ts) {
-            Collections.sort(t);
             getTransactions().add(createTransaction(t));
         }
         /// sort transactions by increasing last item (optimization)

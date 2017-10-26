@@ -58,7 +58,7 @@ public class Tester {
 
 			if(arg[1].equals("LCM")){
 				AlgoLCM algoLCM = new AlgoLCM();
-				Dataset data = new Dataset(transactions);
+				Transactions data = new Transactions(transactions);
 				Itemsets closedLCM = algoLCM.runAlgorithm(minsup, data);
 				// algoLCM.printStats();
 				AlgoCharmLCM algoCharmLCM = new AlgoCharmLCM();

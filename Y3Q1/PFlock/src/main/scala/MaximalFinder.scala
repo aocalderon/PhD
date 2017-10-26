@@ -1,7 +1,7 @@
 import java.io.{BufferedWriter, FileOutputStream, OutputStreamWriter}
 
 import Misc.GeoGSON
-import SPMF.{AlgoCharmLCM, AlgoFPMax, AlgoLCM, Transactions}
+import SPMF.{AlgoCharmLCM, AlgoLCM, Transactions}
 
 import scala.collection.JavaConverters._
 import org.apache.spark.rdd.DoubleRDDFunctions
@@ -99,9 +99,12 @@ object MaximalFinder {
 							}.
 							sorted.toList.asJava
 					}.toList.asJava
-				val fpMax = new AlgoFPMax
-				val itemsets = fpMax.runAlgorithm(transactions, 1)
-				itemsets.getItemsets(MU).asScala.toIterator
+                                val LCM = new AlgoLCM
+                                val data = new Transactions(transactions)
+                                val closed = LCM.runAlgorithm(1, data)
+                                val MFI = new AlgoCharmLCM
+                                val maximals = MFI.runAlgorithm(null, closed)
+                                maximals.getItemsets(MU).asScala.toIterator
 			}
 		val nMaximalsInside = maximalsInside.count()
 		var time2 = System.currentTimeMillis()
@@ -138,9 +141,12 @@ object MaximalFinder {
 							}.
 							sorted.toList.asJava
 					}.toList.asJava
-				val fpMax = new AlgoFPMax
-				val itemsets = fpMax.runAlgorithm(transactions, 1)
-				itemsets.getItemsets(MU).asScala.toIterator
+                                val LCM = new AlgoLCM
+                                val data = new Transactions(transactions)
+                                val closed = LCM.runAlgorithm(1, data)
+                                val MFI = new AlgoCharmLCM
+                                val maximals = MFI.runAlgorithm(null, closed)
+                                maximals.getItemsets(MU).asScala.toIterator
 			}
 		val nMaximalsFrame = maximalsFrame.count()
 		time2 = System.currentTimeMillis()
@@ -242,7 +248,7 @@ object MaximalFinder {
 		logger.info("Setting session...")
 		val simba = SimbaSession.builder().
 			master(MASTER).
-			appName("PartitionViewer").
+			appName("MaximalFinder").
 			config("simba.rtree.maxEntriesPerNode", ENTRIES).
 			config("simba.index.partitions", PARTITIONS).
 			config("spark.cores.max", CORES).
@@ -251,7 +257,7 @@ object MaximalFinder {
 		import simba.simbaImplicits._
         // Reading...
 		val phd_home = scala.util.Properties.envOrElse("PHD_HOME", "/home/acald013/PhD/")
-		val path = "Y3Q1/DATASETs/"
+		val path = "Y3Q1/Datasets/"
 		val extension = "csv"
 		val filename = "%s%s%s.%s".format(phd_home, path, DATASET, extension)
 		logger.info("Reading %s...".format(filename))
@@ -309,11 +315,10 @@ object MaximalFinder {
 						sorted.toList.asJava
 					}.toList.asJava
 				val LCM = new AlgoLCM
-				val closed = LCM.runAlgorithm(1, new Transactions(transactions))
+				val data = new Transactions(transactions)
+				val closed = LCM.runAlgorithm(1, data)
 				val MFI = new AlgoCharmLCM
 				val maximals = MFI.runAlgorithm(null, closed)
-				//val fpMax = new AlgoFPMax
-				//val itemsets = fpMax.runAlgorithm(transactions, 1)
 				maximals.getItemsets(MU).asScala.toIterator
 			}
 		val nMaximalsInside = maximalsInside.count()
@@ -351,9 +356,12 @@ object MaximalFinder {
 						}.
 						sorted.toList.asJava
 					}.toList.asJava
-				val fpMax = new AlgoFPMax
-				val itemsets = fpMax.runAlgorithm(transactions, 1)
-				itemsets.getItemsets(MU).asScala.toIterator
+                                val LCM = new AlgoLCM
+                                val data = new Transactions(transactions)
+                                val closed = LCM.runAlgorithm(1, data)
+                                val MFI = new AlgoCharmLCM
+                                val maximals = MFI.runAlgorithm(null, closed)
+                                maximals.getItemsets(MU).asScala.toIterator
 			}
 		val nMaximalsFrame = maximalsFrame.count()
 		time2 = System.currentTimeMillis()
