@@ -405,8 +405,8 @@ public class AlgoLCM {
      * @return true if it is a PPC extension
      */
     private boolean isPPCExtension(List<Integer> p, List<Transaction> transactionsPe, Integer e) {
-
     	// We do a loop on each item i of the first transaction 
+    	if(transactionsPe.size() == 0) { return false; }
     	Transaction firstTrans = transactionsPe.get(0);
     	Integer[] firstTransaction = firstTrans.getItems();
         for (int i = 0; i < firstTrans.offset; i++) {

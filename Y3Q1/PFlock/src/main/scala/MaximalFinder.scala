@@ -1,8 +1,6 @@
 import java.io.{BufferedWriter, FileOutputStream, OutputStreamWriter}
-
 import Misc.GeoGSON
 import SPMF.{AlgoCharmLCM, AlgoLCM, Transactions}
-
 import scala.collection.JavaConverters._
 import org.apache.spark.rdd.DoubleRDDFunctions
 import org.apache.spark.rdd.RDD
@@ -13,6 +11,7 @@ import org.apache.spark.sql.simba.{Dataset, SimbaSession}
 import org.apache.spark.sql.types.StructType
 import org.apache.spark.sql.simba.index._
 import org.slf4j.{Logger, LoggerFactory}
+import org.rogach.scallop.{ScallopConf, ScallopOption}
 
 /*******************************
 *                              *
@@ -34,6 +33,7 @@ object MaximalFinder {
 	var CORES: Int = 0
 	var PARTITIONS: Int = 0
 	var ENTRIES: Int = 25
+	var PRECISION: Double = 0.01
 	var LOG: List[String] = List("")
 	var OUTPUT: List[String] = List.empty[String]
 	private val DELTA: Double = 0.01
@@ -68,7 +68,7 @@ object MaximalFinder {
 		// Mapping disks and points...
 		logger.info("Mapping disks and points...")
 		val candidates = centers
-			.distanceJoin(p1, Array("x", "y"), Array("x1", "y1"), (EPSILON / 2) + DELTA)
+			.distanceJoin(p1, Array("x", "y"), Array("x1", "y1"), (EPSILON / 2) + PRECISION)
 			.groupBy("id", "x", "y")
 			.agg(collect_list("id1").alias("IDs"))
 		val ncandidates = candidates.count()
@@ -99,12 +99,12 @@ object MaximalFinder {
 							}.
 							sorted.toList.asJava
 					}.toList.asJava
-                                val LCM = new AlgoLCM
-                                val data = new Transactions(transactions)
-                                val closed = LCM.runAlgorithm(1, data)
-                                val MFI = new AlgoCharmLCM
-                                val maximals = MFI.runAlgorithm(null, closed)
-                                maximals.getItemsets(MU).asScala.toIterator
+					val LCM = new AlgoLCM
+					val data = new Transactions(transactions)
+					val closed = LCM.runAlgorithm(1, data)
+					val MFI = new AlgoCharmLCM
+					val maximals = MFI.runAlgorithm(null, closed)
+					maximals.getItemsets(MU).asScala.toIterator
 			}
 		val nMaximalsInside = maximalsInside.count()
 		var time2 = System.currentTimeMillis()
@@ -141,12 +141,12 @@ object MaximalFinder {
 							}.
 							sorted.toList.asJava
 					}.toList.asJava
-                                val LCM = new AlgoLCM
-                                val data = new Transactions(transactions)
-                                val closed = LCM.runAlgorithm(1, data)
-                                val MFI = new AlgoCharmLCM
-                                val maximals = MFI.runAlgorithm(null, closed)
-                                maximals.getItemsets(MU).asScala.toIterator
+					val LCM = new AlgoLCM
+					val data = new Transactions(transactions)
+					val closed = LCM.runAlgorithm(1, data)
+					val MFI = new AlgoCharmLCM
+					val maximals = MFI.runAlgorithm(null, closed)
+					maximals.getItemsets(MU).asScala.toIterator
 			}
 		val nMaximalsFrame = maximalsFrame.count()
 		time2 = System.currentTimeMillis()
@@ -233,7 +233,7 @@ object MaximalFinder {
 		writer.close()
 	}
 
-	def main(args: Array[String]): Unit = {
+	def drawGeoJSONs(args: Array[String]): Unit = {
 		val DATASET = args(0)
 		val ENTRIES = args(1)
 		val PARTITIONS = args(2)
@@ -356,12 +356,12 @@ object MaximalFinder {
 						}.
 						sorted.toList.asJava
 					}.toList.asJava
-                                val LCM = new AlgoLCM
-                                val data = new Transactions(transactions)
-                                val closed = LCM.runAlgorithm(1, data)
-                                val MFI = new AlgoCharmLCM
-                                val maximals = MFI.runAlgorithm(null, closed)
-                                maximals.getItemsets(MU).asScala.toIterator
+					val LCM = new AlgoLCM
+					val data = new Transactions(transactions)
+					val closed = LCM.runAlgorithm(1, data)
+					val MFI = new AlgoCharmLCM
+					val maximals = MFI.runAlgorithm(null, closed)
+					maximals.getItemsets(MU).asScala.toIterator
 			}
 		val nMaximalsFrame = maximalsFrame.count()
 		time2 = System.currentTimeMillis()
@@ -465,5 +465,57 @@ object MaximalFinder {
 		// Closing app...
 		logger.info("Closing app...")
 		simba.stop()
+	}
+
+	class Conf(arguments: Seq[String]) extends ScallopConf(arguments) {
+		val epsilon:				ScallopOption[Double] = opt[Double](default = Some(10.0))
+		val mu:						ScallopOption[Int]	  = opt[Int]   (default = Some(5))
+		val entries:				ScallopOption[Int]	  = opt[Int]   (default = Some(25))
+		val partitions:				ScallopOption[Int]	  = opt[Int]   (default = Some(256))
+		val cores:					ScallopOption[Int]	  = opt[Int]   (default = Some(3))
+		val master:					ScallopOption[String] = opt[String](default = Some("local[*]"))
+		val path:					ScallopOption[String] = opt[String](default = Some("Y3Q1/Datasets/"))
+		val dataset:				ScallopOption[String] = opt[String](default = Some("B20K"))
+		val extension:				ScallopOption[String] = opt[String](default = Some("csv"))
+		verify()
+	}
+/*
+	def main(args: Array[String]): Unit = {
+		// Starting app...
+		logger.info("Starting app...")
+		// Reading arguments from command line...
+		val conf = new Conf(args)
+		// Setting global variables...
+		MaximalFinder.DATASET = conf.dataset()
+		MaximalFinder.ENTRIES = conf.entries()
+		MaximalFinder.PARTITIONS = conf.partitions()
+		MaximalFinder.EPSILON = conf.epsilon()
+		MaximalFinder.MU = conf.mu()
+		MaximalFinder.CORES = conf.cores()
+		// Setting local variables...
+		val POINT_SCHEMA = ScalaReflection.schemaFor[SP_Point].dataType.asInstanceOf[StructType]
+		val MASTER = conf.master()
+		// Starting session...
+		logger.info("Starting session...")
+		val simba = SimbaSession.builder().
+			master(MASTER).
+			appName("MaximalFinder").
+			config("simba.rtree.maxEntriesPerNode", MaximalFinder.ENTRIES).
+			config("simba.index.partitions", MaximalFinder.PARTITIONS).
+			config("spark.cores.max", MaximalFinder.CORES).
+			getOrCreate()
+		import simba.implicits._
+		import simba.simbaImplicits._
+        // Reading...
+		val phd_home = scala.util.Properties.envOrElse("PHD_HOME", "/home/acald013/PhD/")
+		val filename = "%s%s%s.%s".format(phd_home, conf.path(), MaximalFinder.DATASET, conf.extension())
+		logger.info("Reading %s...".format(filename))
+		val points = simba.read.option("header", "false").schema(POINT_SCHEMA).csv(filename).as[SP_Point]
+		val timestamp = 0
+		MaximalFinder.run(points, timestamp, simba)
+	}	
+*/
+	def main(args: Array[String]): Unit = {
+		MaximalFinder.drawGeoJSONs(args)
 	}
 }
