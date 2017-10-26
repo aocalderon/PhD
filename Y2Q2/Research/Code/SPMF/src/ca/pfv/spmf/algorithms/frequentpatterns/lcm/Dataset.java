@@ -42,10 +42,10 @@ public class Dataset {
 
 	private int maxItem = 0;
 
-    public Dataset(ArrayList<ArrayList<Integer>> ts){
+    public Dataset(List<List<Integer>> ts){
         transactions = new ArrayList<Transaction>();
 
-        for (ArrayList<Integer> t: ts) {
+        for (List<Integer> t: ts) {
             Collections.sort(t);
             getTransactions().add(createTransaction(t));
         }
@@ -64,7 +64,7 @@ public class Dataset {
         Arrays.sort(transactionsItems);
     }
 
-    private Transaction createTransaction(ArrayList<Integer> t) {
+    private Transaction createTransaction(List<Integer> t) {
         Integer[] itemsSorted = new  Integer[t.size()];
         int i = 0;
         for (Integer item: t) {

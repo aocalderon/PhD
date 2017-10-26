@@ -210,7 +210,7 @@ public class AlgoFPMax {
 		return patterns;
 	}
 
-	public Itemsets runAlgorithm(ArrayList<ArrayList<Integer>> input, int minsup) throws IOException {
+	public Itemsets runAlgorithm(List<List<Integer>> input, int minsup) throws IOException {
 		// record start time
 		startTimestamp = System.currentTimeMillis();
 		// number of itemsets found
@@ -656,7 +656,7 @@ public class AlgoFPMax {
 		return mapSupport;
 	}
 
-	private  Map<Integer, Integer> scanDatabaseToDetermineFrequencyOfSingleItems(ArrayList<ArrayList<Integer>> input){
+	private  Map<Integer, Integer> scanDatabaseToDetermineFrequencyOfSingleItems(List<List<Integer>> input){
 		Map<Integer, Integer> mapSupport = new HashMap<Integer, Integer>();
 
 		for( List<Integer> t: input){
@@ -710,42 +710,5 @@ public class AlgoFPMax {
 	 */
 	public int getDatabaseSize() {
 		return transactionCount;
-	}
-
-	public static void main(String [] arg) throws IOException{
-        int transactionCount = 0;
-		String input = fileToPath("contextPasquier99.txt");
-        BufferedReader reader = new BufferedReader(new FileReader(input));
-        String line;
-        // for each line (transaction) until the end of file
-        List<List<Integer>> transactions = new ArrayList<>();
-        while( ((line = reader.readLine())!= null)){
-            // split the line into items
-            String[] lineSplited = line.split(" ");
-            // for each item
-            List<Integer> transaction = new ArrayList<>();
-            for(String itemString : lineSplited){
-                // increase the support count of the item
-                Integer item = Integer.parseInt(itemString);
-                transaction.add(item);
-            }
-            // increase the transaction count
-            transactions.add(transaction);
-            transactionCount++;
-        }
-		int minsup = 2;
-		Dataset ts = new Dataset(input);
-
-		// Applying the algorithm
-		AlgoFPMax fpMax = new AlgoFPMax();
-		itemsets = fpMax.runAlgorithm(transactions, minsup);
-		fpMax.printStats();
-
-		itemsets.printItemsets();
-	}
-
-	public static String fileToPath(String filename) throws UnsupportedEncodingException {
-		URL url = MainTestLCMFreq_saveToMemory.class.getResource(filename);
-		return java.net.URLDecoder.decode(url.getPath(),"UTF-8");
 	}
 }

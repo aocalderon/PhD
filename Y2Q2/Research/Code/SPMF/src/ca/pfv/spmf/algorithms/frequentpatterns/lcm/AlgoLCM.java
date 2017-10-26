@@ -103,8 +103,9 @@ public class AlgoLCM {
 		
 		// convert from an absolute minsup to a relative minsup by multiplying
 		// by the database size
+		// this.minsupRelative = (int) Math.ceil(minimumSupport * dataset.getTransactions().size());
 		this.minsupRelative = (int) Math.ceil(minimumSupport * dataset.getTransactions().size());
-    	
+
         // Create the initial occurrence array for the dataset
         performFirstOccurenceDelivery(dataset);
         

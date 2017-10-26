@@ -1,5 +1,7 @@
 package ca.pfv.spmf.algorithms.frequentpatterns.lcm;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
@@ -7,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import ca.pfv.spmf.algorithms.frequentpatterns.charm.AlgoCharmLCM;
 import ca.pfv.spmf.algorithms.frequentpatterns.fpgrowth.AlgoFPMax;
 import ca.pfv.spmf.patterns.itemset_array_integers_with_count.Itemsets;
 /* This file is copyright (c) 2012-2014 Alan Souza
@@ -29,114 +32,44 @@ import ca.pfv.spmf.patterns.itemset_array_integers_with_count.Itemsets;
  * @author Alan Souza <apsouza@inf.ufrgs.br> 
  */
 public class MainTestLCM_saveToMemory {
-
 	public static void main(String [] arg) throws IOException{
+		int transactionCount = 0;
+		String input = "/home/and/Documents/PhD/Code/Y3Q1/PFlock/src/main/scala/SPMF/input3.txt";
+		BufferedReader reader = new BufferedReader(new FileReader(input));
+		String line;
+		// for each line (transaction) until the end of file
+		List<List<Integer>> transactions = new ArrayList<>();
+		while (((line = reader.readLine()) != null)) {
+			// split the line into items
+			String[] lineSplited = line.split(",");
+			// for each item
+			List<Integer> transaction = new ArrayList<>();
+			for (String itemString : lineSplited) {
+				// increase the support count of the item
+				Integer item = Integer.parseInt(itemString);
+				transaction.add(item);
+			}
+			// increase the transaction count
+			transactions.add(transaction);
+			transactionCount++;
+		}
+		int support = 1;
+		Dataset dataset = new Dataset(transactions);
 
-		String input = fileToPath("test.dat");
-		
-		double minsup = 0.1; // means a minsup of 2 transaction (we used a relative support)
-		Dataset dataset = new Dataset(input);
-		
-		// Applying the algorithm
-		AlgoLCM algo = new AlgoLCM();
-		// if true in next line it will find only closed itemsets, otherwise, all frequent itemsets
-		Itemsets itemsets = algo.runAlgorithm(minsup, dataset, null);
-		algo.printStats();
-		
-		itemsets.printItemsets(dataset.getTransactions().size());
+		AlgoLCM algoLCM = new AlgoLCM();
+		Itemsets closed = algoLCM.runAlgorithm(support, dataset);
+		algoLCM.printStats();
+		//closed.printItemsets();
+		AlgoCharmLCM algoCharmLCM  = new AlgoCharmLCM();
+		algoCharmLCM.runAlgorithm(null, closed);
+		algoCharmLCM.printStats();
+		Itemsets maximals = algoCharmLCM.getItemsets();
+		maximals.printItemsets();
 
-		ArrayList<Integer> t1 = new ArrayList<Integer>();
-		t1.add(1);
-		t1.add(2);
-		t1.add(5);
-		t1.add(7);
-		t1.add(9);
-		Collections.sort(t1);
-		ArrayList<Integer> t2 = new ArrayList<Integer>();
-		t2.add(Integer.valueOf(1));
-		t2.add(Integer.valueOf(3));
-		t2.add(Integer.valueOf(5));
-		t2.add(Integer.valueOf(7));
-		t2.add(Integer.valueOf(9));
-		Collections.sort(t2);
-		ArrayList<Integer> t3 = new ArrayList<Integer>();
-		t3.add(Integer.valueOf(2));
-		t3.add(Integer.valueOf(4));
-		t3.add(Integer.valueOf(1));
-		t3.add(Integer.valueOf(3));
-		Collections.sort(t3);
-		ArrayList<Integer> t4 = new ArrayList<Integer>();
-		t4.add(Integer.valueOf(1));
-		t4.add(Integer.valueOf(3));
-		t4.add(Integer.valueOf(4));
-		t4.add(Integer.valueOf(5));
-		t4.add(Integer.valueOf(6));
-		Collections.sort(t4);
-		ArrayList<Integer> t5 = new ArrayList<Integer>();
-		t5.add(Integer.valueOf(1));
-		t5.add(Integer.valueOf(2));
-		Collections.sort(t5);
-		ArrayList<Integer> t6 = new ArrayList<Integer>();
-		t6.add(Integer.valueOf(2));
-		t6.add(Integer.valueOf(1));
-		Collections.sort(t6);
-		ArrayList<Integer> t7 = new ArrayList<Integer>();
-		t7.add(Integer.valueOf(1));
-		t7.add(Integer.valueOf(7));
-		t7.add(Integer.valueOf(2));
-		t7.add(Integer.valueOf(3));
-		t7.add(Integer.valueOf(4));
-		t7.add(Integer.valueOf(5));
-		t7.add(Integer.valueOf(8));
-		t7.add(Integer.valueOf(9));
-		Collections.sort(t7);
-		ArrayList<Integer> t8 = new ArrayList<Integer>();
-		t8.add(Integer.valueOf(6));
-		t8.add(Integer.valueOf(1));
-		t8.add(Integer.valueOf(2));
-		Collections.sort(t8);
-		ArrayList<Integer> t9 = new ArrayList<Integer>();
-		t9.add(Integer.valueOf(4));
-		t9.add(Integer.valueOf(5));
-		t9.add(Integer.valueOf(6));
-		Collections.sort(t9);
-		ArrayList<Integer> t10 = new ArrayList<Integer>();
-		t10.add(Integer.valueOf(8));
-		t10.add(Integer.valueOf(2));
-		t10.add(Integer.valueOf(5));
-		Collections.sort(t10);
-		ArrayList<Integer> t11 = new ArrayList<Integer>();
-		t11.add(Integer.valueOf(9));
-		t11.add(Integer.valueOf(2));
-		t11.add(Integer.valueOf(1));
-		Collections.sort(t11);
-		ArrayList<Integer> t12 = new ArrayList<Integer>();
-		t12.add(Integer.valueOf(1));
-		t12.add(Integer.valueOf(2));
-		t12.add(Integer.valueOf(4));
-		t12.add(Integer.valueOf(8));
-		t12.add(Integer.valueOf(9));
-		Collections.sort(t12);
-
-		ArrayList<ArrayList<Integer>> ts = new ArrayList<ArrayList<Integer>>();
-		ts.add(t1);
-		ts.add(t2);
-		ts.add(t3);
-		ts.add(t4);
-		ts.add(t5);
-		ts.add(t6);
-		ts.add(t7);
-		ts.add(t8);
-		ts.add(t9);
-		ts.add(t10);
-		ts.add(t11);
-		ts.add(t12);
-		AlgoFPMax fpMax = new AlgoFPMax();
-		itemsets = fpMax.runAlgorithm(ts, 2);
-		fpMax.printStats();
-
+		AlgoFPMax fpMax2 = new AlgoFPMax();
+		Itemsets itemsets = fpMax2.runAlgorithm(transactions, support);
+		fpMax2.printStats();
 		itemsets.printItemsets();
-
 	}
 	
 	public static String fileToPath(String filename) throws UnsupportedEncodingException{

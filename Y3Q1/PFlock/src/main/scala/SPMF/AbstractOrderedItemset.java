@@ -89,5 +89,46 @@ public abstract class AbstractOrderedItemset extends AbstractItemset {
         return false;
     }
 
+    /**
+     * This methods checks if another itemset is contained in this one.
+     * The method assumed that items are lexically ordered in itemsets.
+     *
+     * @param itemset2 the other itemset
+     * @return true if it is contained
+     */
+    public boolean containsAll(AbstractOrderedItemset itemset2){
+        // first we check the size
+        if(size() < itemset2.size()){
+            return false;
+        }
+
+        // we will use this variable to remember where we are in this itemset
+        int i = 0;
+
+        // for each item in itemset2, we will try to find it in this itemset
+        for(int j =0; j < itemset2.size(); j++){
+            boolean found = false; // flag to remember if we have find the item at position j
+
+            // we search in this itemset starting from the current position i
+            while(!found && i< size()){
+                // if we found the current item from itemset2, we stop searching
+                if(get(i).equals(itemset2.get(j))){
+                    found = true;
+                }// if the current item in this itemset is larger than
+                // the current item from itemset2, we return false
+                // because the itemsets are assumed to be lexically ordered.
+                else if(get(i) > itemset2.get(j)){
+                    return false;
+                }
+
+                i++; // continue searching from position  i++
+            }
+            // if the item was not found in the previous loop, return false
+            if(!found){
+                return false;
+            }
+        }
+        return true; // if all items were found, return true
+    }
 
 }

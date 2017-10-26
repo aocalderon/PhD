@@ -4,9 +4,11 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 
+import ca.pfv.spmf.algorithms.frequentpatterns.charm.AlgoCharmLCM;
 import ca.pfv.spmf.algorithms.frequentpatterns.lcm.AlgoLCM;
 import ca.pfv.spmf.algorithms.frequentpatterns.lcm.Dataset;
 import ca.pfv.spmf.patterns.itemset_array_integers_with_count.Itemsets;
+
 /* This file is copyright (c) 2012-2014 Alan Souza
 * 
 * This file is part of the SPMF DATA MINING SOFTWARE
@@ -32,16 +34,22 @@ public class MainTestLCM_saveToMemory {
 
 		String input = fileToPath("contextPasquier99.txt");
 		
-		double minsup = 0.1; // means a minsup of 2 transaction (we used a relative support)
+		int minsup = 1;
 		Dataset dataset = new Dataset(input);
 		
 		// Applying the algorithm
 		AlgoLCM algo = new AlgoLCM();
 		// if true in next line it will find only closed itemsets, otherwise, all frequent itemsets
-		Itemsets itemsets = algo.runAlgorithm(minsup, dataset, null);
+		Itemsets closed = algo.runAlgorithm(minsup, dataset);
 		algo.printStats();
 		
-		itemsets.printItemsets(dataset.getTransactions().size());
+		//itemsets.printItemsets(dataset.getTransactions().size());
+
+		AlgoCharmLCM algo2 = new AlgoCharmLCM();
+		algo2.runAlgorithm(null, closed);
+		algo2.printStats();
+		Itemsets maximals = algo2.getItemsets();
+		maximals.printItemsets();
 	}
 	
 	public static String fileToPath(String filename) throws UnsupportedEncodingException{

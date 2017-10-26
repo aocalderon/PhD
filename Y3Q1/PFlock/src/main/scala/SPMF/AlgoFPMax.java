@@ -687,6 +687,20 @@ public class AlgoFPMax {
         System.out.println(" Total time ~ " + temps + " ms");
         System.out.println("===================================================");
     }
+    
+    /**
+     * Return execution time.
+     */
+    public String getTime() {
+        return String.format("%.2f s",(endTime - startTimestamp)/1000.0);
+    }    
+
+    /**
+     * Return statistics about the algorithm execution.
+     */
+    public String getStats() {
+        return String.format("%d, %.2fmb, %d", transactionCount, MemoryLogger.getInstance().getMaxMemory(), itemsetCount);
+    }      
 
     /**
      * Get the number of transactions in the last transaction database read.

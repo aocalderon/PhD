@@ -78,8 +78,8 @@ public class AlgoLCMMax {
      * @param minimumSupport  the minimum support threshold as percentage value between 0 and 1
      * @param dataset  the dataset
      * @param outputPath  the output file path to save the result or null if to be kept in memory
-     * @param mineAllFrequentItemsets mine all frequent itemsets
-     * @param mineAllMaximalItemsets mine only maximal itemsets
+     * //@param mineAllFrequentItemset mine all frequent itemsets
+     * //@param mineAllMaximalItemset mine only maximal itemsets
          * @return the itemsets or null if the user choose to save to file
      * @throws IOException if exception while reading/writing to file
      */

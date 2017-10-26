@@ -52,9 +52,9 @@ public class MainTestCharmMFI_saveToMemory {
 		for(List<Itemset> level : itemsets.getLevels()) {
 			 for(Itemset itemset : level) {
 				 for(Integer item : itemset.itemset) {
-					 System.out.print(item );
+					 System.out.print(item + " " );
 				 }
-				 System.out.println( "  support " + itemset.getAbsoluteSupport());
+				 System.out.println( " (" + itemset.getAbsoluteSupport() + ")");
 			 }
 		}
 		

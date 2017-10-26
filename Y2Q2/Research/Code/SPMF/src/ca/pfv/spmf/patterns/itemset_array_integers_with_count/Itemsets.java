@@ -50,6 +50,7 @@ public class Itemsets{
 	/* (non-Javadoc)
 	 * @see ca.pfv.spmf.patterns.itemset_array_integers_with_count.AbstractItemsets#printItemsets(int)
 	 */
+
 	public void printItemsets(int nbObject) {
 		System.out.println(" ------- " + name + " -------");
 		int patternCount = 0;
