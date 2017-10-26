@@ -28,7 +28,7 @@ import java.util.regex.Pattern;
  * @see AlgoLCM
  * @author Alan Souza <apsouza@inf.ufrgs.br>
  */
-public class Dataset {
+public class Transactions {
 
     private List<Transaction> transactions;
     private Integer[] transactionsItems;
@@ -37,7 +37,7 @@ public class Dataset {
 
 	private int maxItem = 0;
 
-    public Dataset(List<List<Integer>> ts){
+    public Transactions(List<List<Integer>> ts){
         transactions = new ArrayList<Transaction>();
 
         for (List<Integer> t: ts) {
@@ -75,7 +75,7 @@ public class Dataset {
         return new Transaction(itemsSorted);
     }
 
-    public Dataset(String datasetPath) throws IOException {
+    public Transactions(String datasetPath) throws IOException {
 
         transactions = new ArrayList<Transaction>();
         

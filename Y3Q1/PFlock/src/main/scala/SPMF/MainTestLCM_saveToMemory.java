@@ -46,7 +46,7 @@ public class MainTestLCM_saveToMemory {
 			transactions.add(transaction);
 		}
 		int support = 1;
-		Dataset dataset = new Dataset(transactions);
+		Transactions dataset = new Transactions(transactions);
 
 		AlgoLCM algoLCM = new AlgoLCM();
 		Itemsets closed = algoLCM.runAlgorithm(support, dataset);

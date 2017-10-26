@@ -75,7 +75,7 @@ public class AlgoLCM {
      * @return the itemsets or null if the user choose to save to file
      * @throws IOException if exception while reading/writing to file
      */
-    public Itemsets runAlgorithm(double minimumSupport, Dataset dataset, String outputPath) throws IOException {
+    public Itemsets runAlgorithm(double minimumSupport, Transactions dataset, String outputPath) throws IOException {
 		// record the start time
 		startTimestamp = System.currentTimeMillis();
 
@@ -139,7 +139,7 @@ public class AlgoLCM {
         return closedFrequentItemsets;
     }
 
-	public Itemsets runAlgorithm(int minimumSupport, Dataset dataset) throws IOException {
+	public Itemsets runAlgorithm(int minimumSupport, Transactions dataset) throws IOException {
 		// record the start time
 		startTimestamp = System.currentTimeMillis();
 
@@ -277,7 +277,7 @@ public class AlgoLCM {
 	 * @param dataset
 	 */
 	@SuppressWarnings("unchecked")
-	public void performFirstOccurenceDelivery(Dataset dataset) {
+	public void performFirstOccurenceDelivery(Transactions dataset) {
 
 		buckets = new List[dataset.getMaxItem() + 1]; 
 
