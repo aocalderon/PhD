@@ -691,15 +691,15 @@ public class AlgoFPMax {
     /**
      * Return execution time.
      */
-    public String getTime() {
-        return String.format("%.2f s",(endTime - startTimestamp)/1000.0);
+    public double getTime() {
+        return (endTime - startTimestamp)/1000.0;
     }    
 
     /**
      * Return statistics about the algorithm execution.
      */
     public String getStats() {
-        return String.format("%d, %.2fmb, %d", transactionCount, MemoryLogger.getInstance().getMaxMemory(), itemsetCount);
+        return String.format("%d, %.2f, %d", transactionCount, MemoryLogger.getInstance().getMaxMemory(), itemsetCount);
     }      
 
     /**

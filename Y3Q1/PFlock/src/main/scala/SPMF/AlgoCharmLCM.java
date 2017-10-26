@@ -57,7 +57,7 @@ public class AlgoCharmLCM {
     /**
      * Default constructor
      */
-    public AlgoCharmLCM() {
+    AlgoCharmLCM() {
     }
 
     /**
@@ -157,6 +157,14 @@ public class AlgoCharmLCM {
                 }
             }
         }
+    }
+
+    public double getTime() {
+        return (endTimestamp - startTimestamp)/1000.0;
+    }
+
+    public String getStats() {
+        return String.format("%d, %.2f", maximalItemsets.getItemsetsCount(), MemoryLogger.getInstance().getMaxMemory());
     }
 
     /**

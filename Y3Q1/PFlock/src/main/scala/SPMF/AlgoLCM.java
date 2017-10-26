@@ -492,7 +492,14 @@ public class AlgoLCM {
         }
     }
 
-    /**
+	public double getTime() {
+		return (endTimestamp - startTimestamp)/1000.0;
+	}
+
+	public String getStats() {
+		return String.format("%d, %.2f", frequentCount, MemoryLogger.getInstance().getMaxMemory());
+	}
+	/**
      * Print statistics about the latest execution of the algorithm.
      */
 	public void printStats() {
