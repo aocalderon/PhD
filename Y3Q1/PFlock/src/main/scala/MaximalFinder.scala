@@ -42,51 +42,57 @@ object MaximalFinder {
 	def run(points: Dataset[SP_Point]
 			, timestamp: Int
 			, simba: SimbaSession): RDD[List[Int]] = {
+		var timer = System.currentTimeMillis()
 		import simba.implicits._
 		import simba.simbaImplicits._
 		// Getting number of points...
-		val n = points.count()
-		logger.info("Getting %d points...".format(n))
+		val n = points.count() 
+		logger.info("Getting %d points... [%.3fms]".format(n, (System.currentTimeMillis() - timer)/1000.0))
 		// Indexing...
-		logger.info("Indexing...")
+		timer = System.currentTimeMillis()
 		val p1 = points.toDF("id1", "x1", "y1")
 		p1.index(RTreeType, "p1RT", Array("x1", "y1"))
 		val p2 = points.toDF("id2", "x2", "y2")
 		p2.index(RTreeType, "p2RT", Array("x2", "y2"))
-		// Self-join...
-		logger.info("Self-join...")
+		logger.info("Indexing... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
 		// Setting final containers...
 		var maximals: RDD[List[Int]] = simba.sparkContext.emptyRDD
 		var nmaximals: Long = 0
 		for( epsilon <- ESTART to EEND by ESTEP ){
 			var startTime = System.currentTimeMillis()
+			// Self-join...
+			timer = System.currentTimeMillis()
 			val pairsRDD = p1.distanceJoin(p2, Array("x1", "y1"), Array("x2", "y2"), epsilon).rdd
+			logger.info("Self-join... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
 			// Computing disks...
-			logger.info("Computing disks...")
+			timer = System.currentTimeMillis()
 			val centers = findDisks(pairsRDD, epsilon)
 				.distinct()
 				.toDS()
 				.index(RTreeType, "centersRT", Array("x", "y"))
 				.withColumn("id", monotonically_increasing_id())
 				.as[ACenter]
+			logger.info("Computing disks... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
 			// Mapping disks and points...
-			logger.info("Mapping disks and points...")
+			timer = System.currentTimeMillis()
 			val candidates = centers
 				.distanceJoin(p1, Array("x", "y"), Array("x1", "y1"), (epsilon / 2) + PRECISION)
 				.groupBy("id", "x", "y")
 				.agg(collect_list("id1").alias("IDs"))
 			val ncandidates = candidates.count()
+			logger.info("Mapping disks and points... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
 			// Filtering less-than-mu disks...
-			logger.info("Filtering less-than-mu disks...")
+			timer = System.currentTimeMillis()
 			val filteredCandidates = candidates.
 				filter(row => row.getList(3).size() >= MU).
 				map(d => (d.getLong(0), d.getDouble(1), d.getDouble(2), d.getList[Integer](3).asScala.mkString(",")))
 			val nFilteredCandidates = filteredCandidates.count()
+			logger.info("Filtering less-than-mu disks... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
 			// Indexing candidates...
-			logger.info("Indexing candidates...")
+			timer = System.currentTimeMillis()
 			filteredCandidates.index(RTreeType, "candidatesRT", Array("_2", "_3"))
+			logger.info("Indexing candidates... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
 			// Finding maximal disks inside partitions...
-			logger.info("Finding maximal disks inside partitions...")
 			var time1 = System.currentTimeMillis()
 			val maximalsInside = filteredCandidates
 				.rdd
@@ -110,8 +116,8 @@ object MaximalFinder {
 			val nMaximalsInside = maximalsInside.count()
 			var time2 = System.currentTimeMillis()
 			val timeI = (time2 - time1) / 1000.0
+			logger.info("Finding maximal disks inside partitions... [%.3fms]".format(timeI)
 			// Filtering candidate disks on frame partitions...
-			logger.info("Filtering candidate disks on frame partitions...")
 			time1 = System.currentTimeMillis()
 			val candidatesFrame = filteredCandidates
 				.rdd
@@ -129,9 +135,11 @@ object MaximalFinder {
 					frame.toIterator
 				}.toDS()
 			candidatesFrame.count()
-			logger.info("Re-indexing candidate disks in frame partitions...")
+			logger.info("Filtering candidate disks on frame partitions... [%.3fms]".format((System.currentTimeMillis() - time1)/1000.0))
+			timer = System.currentTimeMillis()
 			candidatesFrame.index(RTreeType, "candidatesFrameRT", Array("x", "y"))
-			logger.info("Finding maximal disks in frame partitions...")
+			logger.info("Re-indexing candidate disks in frame partitions... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
+			timer = System.currentTimeMillis()
 			val maximalsFrame = candidatesFrame.rdd
 				.mapPartitions { partition =>
 					val transactions = partition.
@@ -153,12 +161,14 @@ object MaximalFinder {
 			val nMaximalsFrame = maximalsFrame.count()
 			time2 = System.currentTimeMillis()
 			val timeF = (time2 - time1) / 1000.0
+			logger.info("Finding maximal disks in frame partitions... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
 			// Prunning duplicates...
-			logger.info("Prunning duplicates...")
+			timer = System.currentTimeMillis()
 			maximals = maximalsInside.union(maximalsFrame).distinct().map(_.asScala.toList.map(_.intValue()))
 			nmaximals = maximals.count()
 			var endTime = System.currentTimeMillis()
 			val totalTime = (endTime - startTime) / 1000.0
+			logger.info("Prunning duplicates... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
 			// Printing info summary ...
 			logger.info("%6s,%8s,%6s,%6s,%6s,%5s,%4s,%6s,%3s,%8s,%8s".
 				format("Data", "# Cands", "# In", "# Fr", "# Max",
@@ -173,15 +183,17 @@ object MaximalFinder {
 			// Saving info summary to write on disk...
 			OUTPUT = OUTPUT :+ s"PFLOCK,$epsilon,$MU,$timestamp,$timeI,$timeF,$totalTime,$ncandidates,$nmaximals,$CORES,$PARTITIONS,${org.joda.time.DateTime.now.toLocalTime}\n"
 			// Dropping center and candidate indices...
-			logger.info("Dropping center and candidate indices...")
+			timer = System.currentTimeMillis()
 			centers.dropIndexByName("centersRT")
 			filteredCandidates.dropIndexByName("candidatesRT")
 			candidatesFrame.dropIndexByName("candidatesFrameRT")
+			logger.info("Dropping center and candidate indices... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
 		}
 		// Dropping point indices...
-		logger.info("Dropping point indices...")
+		timer = System.currentTimeMillis()
 		p1.dropIndexByName("p1RT")
 		p2.dropIndexByName("p2RT")
+		logger.info("Dropping point indices... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
 
 		maximals
 	}
