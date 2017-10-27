@@ -27,148 +27,150 @@ object MaximalFinder {
 	case class Candidate(id: Long, x: Double, y: Double, items: String)	
 	case class BBox(minx: Double, miny: Double, maxx: Double, maxy: Double)
 
-	var EPSILON: Double = 10.0
+	var ESTART: Double = 10.0
+	var EEND: Double = 10.0
+	var ESTEP: Double = 10.0
 	var MU: Int = 3
 	var DATASET: String = "Berlin"
 	var CORES: Int = 0
 	var PARTITIONS: Int = 0
 	var ENTRIES: Int = 25
-	var PRECISION: Double = 0.01
 	var LOG: List[String] = List("")
 	var OUTPUT: List[String] = List.empty[String]
-	private val DELTA: Double = 0.01
+	private val PRECISION: Double = 0.01
 	
 	def run(points: Dataset[SP_Point]
 			, timestamp: Int
-			, simba: SimbaSession
-			, epsilon: Double = MaximalFinder.EPSILON
-			, mu: Int = MaximalFinder.MU): RDD[List[Int]] = {
+			, simba: SimbaSession): RDD[List[Int]] = {
 		import simba.implicits._
 		import simba.simbaImplicits._
 		// Getting number of points...
 		val n = points.count()
 		logger.info("Getting %d points...".format(n))
 		// Indexing...
-		logger.info("Point indexing...")
+		logger.info("Indexing...")
 		val p1 = points.toDF("id1", "x1", "y1")
 		p1.index(RTreeType, "p1RT", Array("x1", "y1"))
 		val p2 = points.toDF("id2", "x2", "y2")
 		p2.index(RTreeType, "p2RT", Array("x2", "y2"))
 		// Self-join...
 		logger.info("Self-join...")
-		val pairsRDD = p1.distanceJoin(p2, Array("x1", "y1"), Array("x2", "y2"), EPSILON).rdd
-		// Computing disks...
-		logger.info("Computing disks...")
-		val centers = findDisks(pairsRDD, EPSILON)
-			.distinct()
-			.toDS()
-			.index(RTreeType, "centersRT", Array("x", "y"))
-			.withColumn("id", monotonically_increasing_id())
-			.as[ACenter]
-		// Mapping disks and points...
-		logger.info("Mapping disks and points...")
-		val candidates = centers
-			.distanceJoin(p1, Array("x", "y"), Array("x1", "y1"), (EPSILON / 2) + PRECISION)
-			.groupBy("id", "x", "y")
-			.agg(collect_list("id1").alias("IDs"))
-		val ncandidates = candidates.count()
-		// Filtering less-than-mu disks...
-		logger.info("Filtering less-than-mu disks...")
-		val filteredCandidates = candidates.
-			filter(row => row.getList(3).size() >= MU).
-			map(d => (d.getLong(0), d.getDouble(1), d.getDouble(2), d.getList[Integer](3).asScala.mkString(",")))
-		val nFilteredCandidates = filteredCandidates.count()
-		// Setting final containers...
-		var maximals: RDD[List[Int]] = simba.sparkContext.emptyRDD
-		var nmaximals: Long = 0
-		// Candidate indexing...
-		logger.info("Candidate indexing...")
-		filteredCandidates.index(RTreeType, "candidatesRT", Array("_2", "_3"))
-		// Getting maximal disks inside partitions...
-		logger.info("Getting maximal disks inside partitions...")
-		var time1 = System.currentTimeMillis()
-		val maximalsInside = filteredCandidates
-			.rdd
-			.mapPartitions { partition =>
-				val transactions = partition.
-					map { disk =>
-						disk._4.
+		for( epsilon <- conf.estart() to conf.eend() by conf.estep() ){
+			val pairsRDD = p1.distanceJoin(p2, Array("x1", "y1"), Array("x2", "y2"), epsilon).rdd
+			// Computing disks...
+			logger.info("Computing disks...")
+			val centers = findDisks(pairsRDD, epsilon)
+				.distinct()
+				.toDS()
+				.index(RTreeType, "centersRT", Array("x", "y"))
+				.withColumn("id", monotonically_increasing_id())
+				.as[ACenter]
+			// Mapping disks and points...
+			logger.info("Mapping disks and points...")
+			val candidates = centers
+				.distanceJoin(p1, Array("x", "y"), Array("x1", "y1"), (epsilon / 2) + PRECISION)
+				.groupBy("id", "x", "y")
+				.agg(collect_list("id1").alias("IDs"))
+			val ncandidates = candidates.count()
+			// Filtering less-than-mu disks...
+			logger.info("Filtering less-than-mu disks...")
+			val filteredCandidates = candidates.
+				filter(row => row.getList(3).size() >= MU).
+				map(d => (d.getLong(0), d.getDouble(1), d.getDouble(2), d.getList[Integer](3).asScala.mkString(",")))
+			val nFilteredCandidates = filteredCandidates.count()
+			// Setting final containers...
+			var maximals: RDD[List[Int]] = simba.sparkContext.emptyRDD
+			var nmaximals: Long = 0
+			// Indexing candidates...
+			logger.info("Indexing candidates...")
+			filteredCandidates.index(RTreeType, "candidatesRT", Array("_2", "_3"))
+			// Finding maximal disks inside partitions...
+			logger.info("Finding maximal disks inside partitions...")
+			var time1 = System.currentTimeMillis()
+			val maximalsInside = filteredCandidates
+				.rdd
+				.mapPartitions { partition =>
+					val transactions = partition.
+						map { disk =>
+							disk._4.
 							split(",").
 							map { id =>
 								new Integer(id.trim)
 							}.
 							sorted.toList.asJava
-					}.toList.asJava
+						}.toList.asJava
 					val LCM = new AlgoLCM
 					val data = new Transactions(transactions)
 					val closed = LCM.runAlgorithm(1, data)
 					val MFI = new AlgoCharmLCM
 					val maximals = MFI.runAlgorithm(null, closed)
 					maximals.getItemsets(MU).asScala.toIterator
-			}
-		val nMaximalsInside = maximalsInside.count()
-		var time2 = System.currentTimeMillis()
-		val timeI = (time2 - time1) / 1000.0
-		// Getting maximal disks on frame partitions...
-		logger.info("Getting maximal disks on frame partitions...")
-		time1 = System.currentTimeMillis()
-		val candidatesFrame = filteredCandidates
-			.rdd
-			.mapPartitions { partition =>
-				val pList = partition.toList
-				val bbox = getBoundingBox(pList)
-				val frame = pList.
-					map{ disk =>
-						(disk._1, disk._2, disk._3, disk._4, !isInside(disk._2, disk._3, bbox, EPSILON))
-					}.
-					filter(_._5).
-					map { disk =>
-						Candidate(disk._1, disk._2, disk._3, disk._4)
-					}
-				frame.toIterator
-			}.toDS()
-		candidatesFrame.count()
-		logger.info("Re-indexing candidate disks in frames...")
-		candidatesFrame.index(RTreeType, "candidatesFrameRT", Array("x", "y"))
-		val maximalsFrame = candidatesFrame.rdd
-			.mapPartitions { partition =>
-				val transactions = partition.
-					map { disk =>
-						disk.items.
+				}
+			val nMaximalsInside = maximalsInside.count()
+			var time2 = System.currentTimeMillis()
+			val timeI = (time2 - time1) / 1000.0
+			// Filtering candidate disks on frame partitions...
+			logger.info("Filtering candidate disks on frame partitions...")
+			time1 = System.currentTimeMillis()
+			val candidatesFrame = filteredCandidates
+				.rdd
+				.mapPartitions { partition =>
+					val pList = partition.toList
+					val bbox = getBoundingBox(pList)
+					val frame = pList.
+						map{ disk =>
+							(disk._1, disk._2, disk._3, disk._4, !isInside(disk._2, disk._3, bbox, epsilon))
+						}.
+						filter(_._5).
+						map { disk =>
+							Candidate(disk._1, disk._2, disk._3, disk._4)
+						}
+					frame.toIterator
+				}.toDS()
+			candidatesFrame.count()
+			logger.info("Re-indexing candidate disks in frame partitions...")
+			candidatesFrame.index(RTreeType, "candidatesFrameRT", Array("x", "y"))
+			logger.info("Finding maximal disks in frame partitions...")
+			val maximalsFrame = candidatesFrame.rdd
+				.mapPartitions { partition =>
+					val transactions = partition.
+						map { disk =>
+							disk.items.
 							split(",").
 							map { id =>
 								new Integer(id.trim)
 							}.
 							sorted.toList.asJava
-					}.toList.asJava
+						}.toList.asJava
 					val LCM = new AlgoLCM
 					val data = new Transactions(transactions)
 					val closed = LCM.runAlgorithm(1, data)
 					val MFI = new AlgoCharmLCM
 					val maximals = MFI.runAlgorithm(null, closed)
 					maximals.getItemsets(MU).asScala.toIterator
-			}
-		val nMaximalsFrame = maximalsFrame.count()
-		time2 = System.currentTimeMillis()
-		val timeF = (time2 - time1) / 1000.0
-		// Prunning duplicates...
-		logger.info("Prunning duplicates...")
-		maximals = maximalsInside.union(maximalsFrame).distinct().map(_.asScala.toList.map(_.intValue()))
-		nmaximals = maximals.count()
-		// Printing candidate disks inside summary ...
-		logger.info("%6s,%8s,%5s,%5s,%6s,%5s,%4s,%5s,%3s,%8s,%8s".
-			format("Data", "# Cands", "# In", "# Out", "# Max",
-				"Par1", "Ent", "Eps", "Mu",	"TimeIn", "TimeOut"
+				}
+			val nMaximalsFrame = maximalsFrame.count()
+			time2 = System.currentTimeMillis()
+			val timeF = (time2 - time1) / 1000.0
+			// Prunning duplicates...
+			logger.info("Prunning duplicates...")
+			maximals = maximalsInside.union(maximalsFrame).distinct().map(_.asScala.toList.map(_.intValue()))
+			nmaximals = maximals.count()
+			// Printing info summary ...
+			logger.info("%6s,%8s,%6s,%6s,%6s,%5s,%4s,%6s,%3s,%8s,%8s".
+				format("Data", "# Cands", "# In", "# Fr", "# Max",
+					"Part", "Ent", "Eps", "Mu", "TimeI", "TimeF"
+				)
 			)
-		)
-		logger.info("%6s,%8d,%5d,%5d,%6d,%5d,%4d,%5.1f,%3d,%8.2f,%8.2f".
-			format(DATASET, nFilteredCandidates, nMaximalsInside, nMaximalsFrame, nmaximals,
-				PARTITIONS, ENTRIES, EPSILON, MU, timeI, timeF
+			logger.info("%6s,%8d,%6d,%6d,%6d,%5d,%4d,%6.1f,%3d,%8.2f,%8.2f".
+				format(DATASET, nFilteredCandidates, nMaximalsInside, nMaximalsFrame, nmaximals,
+					PARTITIONS, ENTRIES, epsilon, MU, timeI, timeF
+				)
 			)
-		)
-		// Print summary...
-		val time: Double = BigDecimal(timeI + timeF).setScale(3, BigDecimal.RoundingMode.HALF_DOWN).toDouble
-		OUTPUT = OUTPUT :+ s"PFLOCK,$epsilon,$mu,$timestamp,$timeI,$timeF,$time,$ncandidates,$nmaximals,$CORES,$PARTITIONS,${org.joda.time.DateTime.now.toLocalTime}\n"
+			// Saving info summary to write on disk...
+			val time: Double = BigDecimal(timeI + timeF).setScale(3, BigDecimal.RoundingMode.HALF_DOWN).toDouble
+			OUTPUT = OUTPUT :+ s"PFLOCK,$epsilon,$mu,$timestamp,$timeI,$timeF,$time,$ncandidates,$nmaximals,$CORES,$PARTITIONS,${org.joda.time.DateTime.now.toLocalTime}\n"
+		}
 		// Dropping indices...
 		logger.info("Dropping indices...")
 		centers.dropIndexByName("centersRT")
@@ -255,7 +257,7 @@ object MaximalFinder {
 			getOrCreate()
 		import simba.implicits._
 		import simba.simbaImplicits._
-        // Reading...
+		// Reading...
 		val phd_home = scala.util.Properties.envOrElse("PHD_HOME", "/home/acald013/PhD/")
 		val path = "Y3Q1/Datasets/"
 		val extension = "csv"
@@ -263,7 +265,7 @@ object MaximalFinder {
 		logger.info("Reading %s...".format(filename))
 		val points = simba.read.option("header", "false").schema(POINT_SCHEMA).csv(filename).as[SP_Point]
 		val n = points.count()
-        // Indexing...
+		// Indexing...
 		logger.info("Indexing %d points...".format(n))
 		val p1 = points.toDF("id1", "x1", "y1")
 		p1.index(RTreeType, "p1RT", Array("x1", "y1"))
@@ -468,18 +470,20 @@ object MaximalFinder {
 	}
 
 	class Conf(arguments: Seq[String]) extends ScallopConf(arguments) {
-		val epsilon:				ScallopOption[Double] = opt[Double](default = Some(10.0))
-		val mu:						ScallopOption[Int]	  = opt[Int]   (default = Some(5))
-		val entries:				ScallopOption[Int]	  = opt[Int]   (default = Some(25))
-		val partitions:				ScallopOption[Int]	  = opt[Int]   (default = Some(256))
-		val cores:					ScallopOption[Int]	  = opt[Int]   (default = Some(3))
-		val master:					ScallopOption[String] = opt[String](default = Some("local[*]"))
-		val path:					ScallopOption[String] = opt[String](default = Some("Y3Q1/Datasets/"))
-		val dataset:				ScallopOption[String] = opt[String](default = Some("B20K"))
-		val extension:				ScallopOption[String] = opt[String](default = Some("csv"))
+		val estart:	ScallopOption[Double]	= opt[Double](default = Some(10.0))
+		val eend:	ScallopOption[Double]	= opt[Double](default = Some(10.0))
+		val estep:	ScallopOption[Double]	= opt[Double](default = Some(10.0))
+		val mu:		ScallopOption[Int}	= opt[Int]   (default = Some(5))
+		val entries:	ScallopOption[Int]	= opt[Int]   (default = Some(25))
+		val partitions:	ScallopOption[Int]	= opt[Int]   (default = Some(256))
+		val cores:	ScallopOption[Int]	= opt[Int]   (default = Some(3))
+		val master:	ScallopOption[String]	= opt[String](default = Some("local[*]"))
+		val path:	ScallopOption[String]	= opt[String](default = Some("Y3Q1/Datasets/"))
+		val dataset:	ScallopOption[String]	= opt[String](default = Some("B20K"))
+		val extension:	ScallopOption[String]	= opt[String](default = Some("csv"))
 		verify()
 	}
-/*
+	
 	def main(args: Array[String]): Unit = {
 		// Starting app...
 		logger.info("Starting app...")
@@ -489,7 +493,9 @@ object MaximalFinder {
 		MaximalFinder.DATASET = conf.dataset()
 		MaximalFinder.ENTRIES = conf.entries()
 		MaximalFinder.PARTITIONS = conf.partitions()
-		MaximalFinder.EPSILON = conf.epsilon()
+		MaximalFinder.ESTART = conf.estart()
+		MaximalFinder.EEND = conf.eend()
+		MaximalFinder.ESTEP = conf.estep()
 		MaximalFinder.MU = conf.mu()
 		MaximalFinder.CORES = conf.cores()
 		// Setting local variables...
@@ -506,16 +512,14 @@ object MaximalFinder {
 			getOrCreate()
 		import simba.implicits._
 		import simba.simbaImplicits._
-        // Reading...
+        	// Reading...
 		val phd_home = scala.util.Properties.envOrElse("PHD_HOME", "/home/acald013/PhD/")
 		val filename = "%s%s%s.%s".format(phd_home, conf.path(), MaximalFinder.DATASET, conf.extension())
 		logger.info("Reading %s...".format(filename))
 		val points = simba.read.option("header", "false").schema(POINT_SCHEMA).csv(filename).as[SP_Point]
 		val timestamp = 0
 		MaximalFinder.run(points, timestamp, simba)
+		logger.info("Closing app...")
+		simba.close
 	}	
-*/
-	def main(args: Array[String]): Unit = {
-		MaximalFinder.drawGeoJSONs(args)
-	}
 }
