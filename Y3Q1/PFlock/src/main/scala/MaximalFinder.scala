@@ -55,7 +55,11 @@ object MaximalFinder {
 		p2.index(RTreeType, "p2RT", Array("x2", "y2"))
 		// Self-join...
 		logger.info("Self-join...")
-		for( epsilon <- conf.estart() to conf.eend() by conf.estep() ){
+		// Setting final containers...
+		var maximals: RDD[List[Int]] = simba.sparkContext.emptyRDD
+		var nmaximals: Long = 0
+		for( epsilon <- ESTART to EEND by ESTEP ){
+			var startTime = System.currentTimeMillis()
 			val pairsRDD = p1.distanceJoin(p2, Array("x1", "y1"), Array("x2", "y2"), epsilon).rdd
 			// Computing disks...
 			logger.info("Computing disks...")
@@ -78,9 +82,6 @@ object MaximalFinder {
 				filter(row => row.getList(3).size() >= MU).
 				map(d => (d.getLong(0), d.getDouble(1), d.getDouble(2), d.getList[Integer](3).asScala.mkString(",")))
 			val nFilteredCandidates = filteredCandidates.count()
-			// Setting final containers...
-			var maximals: RDD[List[Int]] = simba.sparkContext.emptyRDD
-			var nmaximals: Long = 0
 			// Indexing candidates...
 			logger.info("Indexing candidates...")
 			filteredCandidates.index(RTreeType, "candidatesRT", Array("_2", "_3"))
@@ -156,26 +157,29 @@ object MaximalFinder {
 			logger.info("Prunning duplicates...")
 			maximals = maximalsInside.union(maximalsFrame).distinct().map(_.asScala.toList.map(_.intValue()))
 			nmaximals = maximals.count()
+			var endTime = System.currentTimeMillis()
+			val totalTime = (endTime - startTime) / 1000.0
 			// Printing info summary ...
 			logger.info("%6s,%8s,%6s,%6s,%6s,%5s,%4s,%6s,%3s,%8s,%8s".
 				format("Data", "# Cands", "# In", "# Fr", "# Max",
-					"Part", "Ent", "Eps", "Mu", "TimeI", "TimeF"
+					"Part", "Ent", "Eps", "Mu", "TimeI", "TimeF", "Time"
 				)
 			)
-			logger.info("%6s,%8d,%6d,%6d,%6d,%5d,%4d,%6.1f,%3d,%8.2f,%8.2f".
+			logger.info("%6s,%8d,%6d,%6d,%6d,%5d,%4d,%6.1f,%3d,%8.2f,%8.2f,%8.2f".
 				format(DATASET, nFilteredCandidates, nMaximalsInside, nMaximalsFrame, nmaximals,
-					PARTITIONS, ENTRIES, epsilon, MU, timeI, timeF
+					PARTITIONS, ENTRIES, epsilon, MU, timeI, timeF, totalTime
 				)
 			)
 			// Saving info summary to write on disk...
-			val time: Double = BigDecimal(timeI + timeF).setScale(3, BigDecimal.RoundingMode.HALF_DOWN).toDouble
-			OUTPUT = OUTPUT :+ s"PFLOCK,$epsilon,$mu,$timestamp,$timeI,$timeF,$time,$ncandidates,$nmaximals,$CORES,$PARTITIONS,${org.joda.time.DateTime.now.toLocalTime}\n"
+			OUTPUT = OUTPUT :+ s"PFLOCK,$epsilon,$MU,$timestamp,$timeI,$timeF,$totalTime,$ncandidates,$nmaximals,$CORES,$PARTITIONS,${org.joda.time.DateTime.now.toLocalTime}\n"
+			// Dropping center and candidate indices...
+			logger.info("Dropping center and candidate indices...")
+			centers.dropIndexByName("centersRT")
+			filteredCandidates.dropIndexByName("candidatesRT")
+			candidatesFrame.dropIndexByName("candidatesFrameRT")
 		}
-		// Dropping indices...
-		logger.info("Dropping indices...")
-		centers.dropIndexByName("centersRT")
-		filteredCandidates.dropIndexByName("candidatesRT")
-		candidatesFrame.dropIndexByName("candidatesFrameRT")
+		// Dropping point indices...
+		logger.info("Dropping point indices...")
 		p1.dropIndexByName("p1RT")
 		p2.dropIndexByName("p2RT")
 
@@ -229,7 +233,7 @@ object MaximalFinder {
 	}
 
 	def saveOutput(): Unit ={
-		val output = s"${DATASET}_E${EPSILON}_M${MU}_C${CORES}_P${PARTITIONS}_${System.currentTimeMillis()}.csv"
+		val output = "${%s}_E%.1f%.1f-_M%d_C%d_P%d_%d.csv".format(DATASET, ESTART, EEND, MU, CORES, PARTITIONS, System.currentTimeMillis())
 		val writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(output)))
 		OUTPUT.foreach(writer.write)
 		writer.close()
@@ -473,7 +477,7 @@ object MaximalFinder {
 		val estart:	ScallopOption[Double]	= opt[Double](default = Some(10.0))
 		val eend:	ScallopOption[Double]	= opt[Double](default = Some(10.0))
 		val estep:	ScallopOption[Double]	= opt[Double](default = Some(10.0))
-		val mu:		ScallopOption[Int}	= opt[Int]   (default = Some(5))
+		val mu:		ScallopOption[Int]	= opt[Int]   (default = Some(5))
 		val entries:	ScallopOption[Int]	= opt[Int]   (default = Some(25))
 		val partitions:	ScallopOption[Int]	= opt[Int]   (default = Some(256))
 		val cores:	ScallopOption[Int]	= opt[Int]   (default = Some(3))

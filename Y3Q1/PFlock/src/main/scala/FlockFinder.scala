@@ -82,7 +82,8 @@ object FlockFinder {
     // Running experiment with different values of epsilon and mu...
     for( epsilon <- conf.estart() to conf.eend() by conf.estep();
          mu <- conf.mstart() to conf.mend() by conf.mstep()){
-        MaximalFinder.EPSILON = epsilon
+        MaximalFinder.ESTART = epsilon
+        MaximalFinder.EEND = epsilon
         MaximalFinder.MU = mu
         log.info("Epsilon = %.1f Mu = %d iteration...".format(epsilon, mu))
         // Running MaximalFinder...
