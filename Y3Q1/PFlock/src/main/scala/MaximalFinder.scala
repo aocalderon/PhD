@@ -116,7 +116,7 @@ object MaximalFinder {
 			val nMaximalsInside = maximalsInside.count()
 			var time2 = System.currentTimeMillis()
 			val timeI = (time2 - time1) / 1000.0
-			logger.info("Finding maximal disks inside partitions... [%.3fms]".format(timeI)
+			logger.info("Finding maximal disks inside partitions... [%.3fms]".format(timeI))
 			// Filtering candidate disks on frame partitions...
 			time1 = System.currentTimeMillis()
 			val candidatesFrame = filteredCandidates
