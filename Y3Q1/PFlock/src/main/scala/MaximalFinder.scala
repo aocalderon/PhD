@@ -12,6 +12,7 @@ import org.apache.spark.sql.types.StructType
 import org.apache.spark.sql.simba.index._
 import org.slf4j.{Logger, LoggerFactory}
 import org.rogach.scallop.{ScallopConf, ScallopOption}
+import org.joda.time.DateTime
 
 /*******************************
 *                              *
@@ -502,8 +503,9 @@ object MaximalFinder {
 	
 	def main(args: Array[String]): Unit = {
 		// Starting app...
-		logger.info("Starting app...")
+		logger.info("Starting app at %s...".format(DateTime.now.toLocalDateTime.toString))
 		// Reading arguments from command line...
+		var timer = System.currentTimeMillis()
 		val conf = new Conf(args)
 		// Setting global variables...
 		MaximalFinder.DATASET = conf.dataset()
@@ -517,8 +519,9 @@ object MaximalFinder {
 		// Setting local variables...
 		val POINT_SCHEMA = ScalaReflection.schemaFor[SP_Point].dataType.asInstanceOf[StructType]
 		val MASTER = conf.master()
+		logger.info("Setting variables... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
 		// Starting session...
-		logger.info("Starting session...")
+		timer = System.currentTimeMillis()
 		val simba = SimbaSession.builder().
 			master(MASTER).
 			appName("MaximalFinder").
@@ -528,14 +531,24 @@ object MaximalFinder {
 			getOrCreate()
 		import simba.implicits._
 		import simba.simbaImplicits._
+		logger.info("Starting session... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
         	// Reading...
+		timer = System.currentTimeMillis()
 		val phd_home = scala.util.Properties.envOrElse("PHD_HOME", "/home/acald013/PhD/")
 		val filename = "%s%s%s.%s".format(phd_home, conf.path(), MaximalFinder.DATASET, conf.extension())
-		logger.info("Reading %s...".format(filename))
 		val points = simba.read.option("header", "false").schema(POINT_SCHEMA).csv(filename).as[SP_Point]
-		val timestamp = 0
-		MaximalFinder.run(points, timestamp, simba)
-		logger.info("Closing app...")
+		logger.info("Reading %s... [%.3fms]".format(filename, (System.currentTimeMillis() - timer)/1000.0))
+		// Running MaximalFinder...
+		logger.info("Lauching MaximalFinder at %s...".format(DateTime.now.toLocalTime.toString))
+		timer = System.currentTimeMillis()
+		MaximalFinder.run(points, 0, simba)
+		logger.info("Finishing MaximalFinder at %s...]".format(DateTime.now.toLocalTime.toString))
+		logger.info("Total time for MaximalFinder: %.3fms...".format((System.currentTimeMillis() - timer)/1000.0))
+		// Closing session...
+		timer = System.currentTimeMillis()
 		simba.close
+		logger.info("Closing session... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
+		// Ending app...
+		logger.info("Ending app at %s...".format(DateTime.now.toLocalDateTime.toString))
 	}	
 }
