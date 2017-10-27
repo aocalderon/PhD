@@ -160,7 +160,7 @@ object MaximalFinder {
 			var endTime = System.currentTimeMillis()
 			val totalTime = (endTime - startTime) / 1000.0
 			// Printing info summary ...
-			logger.info("%6s,%8s,%6s,%6s,%6s,%5s,%4s,%6s,%3s,%8s,%8s".
+			logger.info("%6s,%8s,%6s,%6s,%6s,%5s,%4s,%6s,%3s,%8s,%8s,%8s".
 				format("Data", "# Cands", "# In", "# Fr", "# Max",
 					"Part", "Ent", "Eps", "Mu", "TimeI", "TimeF", "Time"
 				)
