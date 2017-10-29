@@ -1,6 +1,6 @@
 #!/bin/bash
 
-N=1
+N=5
 MU=12
 PARTITIONS=1024
 ESTART=10
