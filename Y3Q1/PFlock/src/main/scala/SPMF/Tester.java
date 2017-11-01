@@ -8,7 +8,7 @@ import java.util.*;
 public class Tester {
     public static void main(String[] arg) throws IOException {
 		// Setting variables...
-		Map< Integer, List<List<Integer>> > map = new TreeMap<>();
+		Map< Integer, Set<List<Integer>> > map = new TreeMap<>();
         // Reading file...
         String input = "/home/and/Documents/PhD/Code/Y3Q1/Datasets/TI568.dat";
         //String input = arg[0];
@@ -23,7 +23,7 @@ public class Tester {
 			String[] KeyAndTransaction = line.split(";");
 			Integer key = Integer.parseInt(KeyAndTransaction[0]);
 			// Looking for previous transaction set...
-			List<List<Integer>> transactions = map.computeIfAbsent(key, k -> new ArrayList<>());
+			Set<List<Integer>> transactions = map.computeIfAbsent(key, k -> new HashSet<>());
 			// Extracting transaction string...
 			String transactionString  = KeyAndTransaction[1]; 
 			// Splitting the transaction into items...
@@ -40,7 +40,7 @@ public class Tester {
 		int minsup = 1;
 		int mu = 12;
 		for(Integer key : map.keySet()){
-			List<List<Integer>> transactions = map.get(key);
+			Set<List<Integer>> transactions = map.get(key);
 			Integer size = transactions.size();
 			HashSet<List<Integer>> transactionsSet = new HashSet<>(transactions);
 			transactions.clear();
@@ -64,7 +64,7 @@ public class Tester {
 				Itemsets closedLCM = algoLCM.runAlgorithm(minsup, data);
 				// algoLCM.printStats();
 				AlgoCharmLCM algoCharmLCM = new AlgoCharmLCM();
-				Itemsets maximalsLCM = algoCharmLCM.runAlgorithm(null, closedLCM);
+				Itemsets maximalsLCM = algoCharmLCM.runAlgorithm(closedLCM);
 				// algoCharmLCM.printStats();
 				ArrayList<ArrayList<Integer>> maximalsLCMPruned = maximalsLCM.getItemsets(mu);
 				String reportLCM = String.format("%5d, %5.2f, %3d, %3d, %.3f, %s, %s, %4d",
@@ -72,21 +72,6 @@ public class Tester {
 						algoLCM.getStats(), algoCharmLCM.getStats(), maximalsLCMPruned.size());
 				System.out.println(reportLCM);
 				for(List<Integer> pattern : maximalsLCMPruned){
-					System.out.println(pattern.toString());
-				}
-			}
-
-			if(algorithm.equals("FPMax")){
-				AlgoFPMax fpMax = new AlgoFPMax();
-				Itemsets maximalsFPMax = fpMax.runAlgorithm(transactions, minsup);
-				// fpMax.printStats();
-				// maximalsFPMax.printItemsets();
-				ArrayList<ArrayList<Integer>> maximalsFPMaxPruned = maximalsFPMax.getItemsets(mu);
-				String reportFPMax = String.format("%5d, %5.2f, %3d, %3d, %.3f, %s, %4d",
-						key, avg, min, max, fpMax.getTime(), fpMax.getStats(),
-						maximalsFPMaxPruned.size());
-				System.out.println(reportFPMax);
-				for(List<Integer> pattern : maximalsFPMaxPruned){
 					System.out.println(pattern.toString());
 				}
 			}

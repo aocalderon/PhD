@@ -58,7 +58,7 @@ object MaximalFinder {
 		var nmaximals: Long = 0
 		for( epsilon <- ESTART to EEND by ESTEP ){
 			logger.info("Running epsilon = %.1f iteration...".format(epsilon))
-			var startTime = System.currentTimeMillis()
+			val startTime = System.currentTimeMillis()
 			// Self-join...
 			timer = System.currentTimeMillis()
 			val pairsRDD = p1.distanceJoin(p2, Array("x1", "y1"), Array("x2", "y2"), epsilon).rdd
@@ -109,13 +109,14 @@ object MaximalFinder {
 								new Integer(id.trim)
 							}.
 							sorted.toList.asJava
-						}.toList.asJava
+						}.toSet.asJava
 					val LCM = new AlgoLCM
 					val data = new Transactions(transactions)
 					val closed = LCM.runAlgorithm(1, data)
-					val MFI = new AlgoCharmLCM
-					val maximals = MFI.runAlgorithm(null, closed)
-					maximals.getItemsets(MU).asScala.toIterator
+					//val MFI = new AlgoCharmLCM
+					//val maximals = MFI.runAlgorithm(closed)
+					//maximals.getItemsets(MU).asScala.toIterator
+					closed.getMaximalItemsets1(MU).asScala.toIterator
 				}
 			maximalsInside.cache()
 			val nMaximalsInside = maximalsInside.count()
@@ -156,12 +157,12 @@ object MaximalFinder {
 								new Integer(id.trim)
 							}.
 							sorted.toList.asJava
-						}.toList.asJava
+						}.toSet.asJava
 					val LCM = new AlgoLCM
 					val data = new Transactions(transactions)
 					val closed = LCM.runAlgorithm(1, data)
 					val MFI = new AlgoCharmLCM
-					val maximals = MFI.runAlgorithm(null, closed)
+					val maximals = MFI.runAlgorithm(closed)
 					maximals.getItemsets(MU).asScala.toIterator
 				}
 			maximalsFrame.cache()
@@ -174,7 +175,7 @@ object MaximalFinder {
 			maximals = maximalsInside.union(maximalsFrame).distinct().map(_.asScala.toList.map(_.intValue()))
 			maximals.cache()
 			nmaximals = maximals.count()
-			var endTime = System.currentTimeMillis()
+			val endTime = System.currentTimeMillis()
 			val totalTime = (endTime - startTime) / 1000.0
 			logger.info("Prunning duplicates... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
 			// Printing info summary ...
@@ -339,12 +340,12 @@ object MaximalFinder {
 							new Integer(id.trim)
 						}.
 						sorted.toList.asJava
-					}.toList.asJava
+					}.toSet.asJava
 				val LCM = new AlgoLCM
 				val data = new Transactions(transactions)
 				val closed = LCM.runAlgorithm(1, data)
 				val MFI = new AlgoCharmLCM
-				val maximals = MFI.runAlgorithm(null, closed)
+				val maximals = MFI.runAlgorithm(closed)
 				maximals.getItemsets(MU).asScala.toIterator
 			}
 		val nMaximalsInside = maximalsInside.count()
@@ -381,12 +382,12 @@ object MaximalFinder {
 							new Integer(id.trim)
 						}.
 						sorted.toList.asJava
-					}.toList.asJava
+					}.toSet.asJava
 					val LCM = new AlgoLCM
 					val data = new Transactions(transactions)
 					val closed = LCM.runAlgorithm(1, data)
 					val MFI = new AlgoCharmLCM
-					val maximals = MFI.runAlgorithm(null, closed)
+					val maximals = MFI.runAlgorithm(closed)
 					maximals.getItemsets(MU).asScala.toIterator
 			}
 		val nMaximalsFrame = maximalsFrame.count()

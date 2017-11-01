@@ -92,7 +92,6 @@ public class AlgoFPGrowth {
         // if the user want to keep the result into memory
         if (output == null) {
             writer = null;
-            patterns = new Itemsets("FREQUENT ITEMSETS");
         } else { // if the user want to save the result to a file
             patterns = null;
             writer = new BufferedWriter(new FileWriter(output));

@@ -18,65 +18,12 @@ package SPMF;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * This class represents a set of itemsets, where an itemset is an array of integers
- * with an associated support count. SPMF.Itemsets are ordered by size. For
- * example, level 1 means itemsets of size 1 (that contains 1 item).
- *
- * @author Philippe Fournier-Viger
- */
 public class Itemsets {
-    /**
-     * We store the itemsets in a list named "levels".
-     * Position i in "levels" contains the list of itemsets of size i
-     */
-    private final List<List<Itemset>> levels = new ArrayList<List<Itemset>>();
-    /**
-     * the total number of itemsets
-     **/
+    private final List<List<Itemset>> levels = new ArrayList<>();
     private int itemsetsCount = 0;
-    /**
-     * a name that we give to these itemsets (e.g. "frequent itemsets")
-     */
-    private String name;
 
-    /**
-     * Constructor
-     *
-     * @param name the name of these itemsets
-     */
-    public Itemsets(String name) {
-        this.name = name;
-        levels.add(new ArrayList<Itemset>()); // We create an empty level 0 by
-        // default.
-    }
-
-    /* (non-Javadoc)
-     * @see ca.pfv.spmf.patterns.itemset_array_integers_with_count.AbstractItemsets#printItemsets(int)
-     */
-    public void printItemsets(int nbObject) {
-        System.out.println(" ------- " + name + " -------");
-        int patternCount = 0;
-        int levelCount = 0;
-        // for each level (a level is a set of itemsets having the same number of items)
-        for (List<Itemset> level : levels) {
-            // print how many items are contained in this level
-            System.out.println("  L" + levelCount + " ");
-            // for each itemset
-            for (Itemset itemset : level) {
-//				Arrays.sort(itemset.getItems());
-                // print the itemset
-                System.out.print("  pattern " + patternCount + ":  ");
-                itemset.print();
-                // print the support of this itemset
-                System.out.print("support :  " + itemset.getAbsoluteSupport());
-//						+ itemset.getRelativeSupportAsString(nbObject));
-                patternCount++;
-                System.out.println("");
-            }
-            levelCount++;
-        }
-        System.out.println(" --------------------------------");
+    Itemsets() {
+        levels.add(new ArrayList<>()); // We create an empty level 0 by default.
     }
 
     public void printItemsets() {
@@ -87,28 +34,15 @@ public class Itemsets {
         }
     }
 
-    public Integer countItemsets(int mu) {
-        int count = 0;
-        for (List<Itemset> level : levels) {
-            if (level.size() != 0) {
-                if (level.get(0).size() >= mu) {
-                    count += level.size();
-                }
-            }
-        }
-        return count;
-    }
-
     public ArrayList<ArrayList<Integer>> getItemsets(int mu) {
-        ArrayList<ArrayList<Integer>> itemsets = new ArrayList<ArrayList<Integer>>();
+        ArrayList<ArrayList<Integer>> itemsets = new ArrayList<>();
         for (List<Itemset> level : levels) {
             if (level.size() != 0) {
                 if (level.get(0).size() >= mu) {
-                    for (int i = 0; i < level.size(); i++) {
-                        int[] array = level.get(i).getItems();
-                        ArrayList<Integer> list = new ArrayList<Integer>(array.length);
-                        for (int j = 0; j < array.length; j++)
-                            list.add(Integer.valueOf(array[j]));
+                    for (Itemset aLevel : level) {
+                        int[] array = aLevel.getItems();
+                        ArrayList<Integer> list = new ArrayList<>(array.length);
+                        for (int anArray : array) list.add(anArray);
                         itemsets.add(list);
                     }
                 }
@@ -117,41 +51,43 @@ public class Itemsets {
         return itemsets;
     }
 
-    /* (non-Javadoc)
-     * @see ca.pfv.spmf.patterns.itemset_array_integers_with_count.AbstractItemsets#addItemset(ca.pfv.spmf.patterns.itemset_array_integers_with_count.SPMF.Itemset, int)
-     */
+    public ArrayList<ArrayList<Integer>> getMaximalItemsets1(int mu) {
+        ArrayList<ArrayList<Integer>> itemsets = new ArrayList<>();
+        for (List<Itemset> level : levels) {
+            if (level.size() != 0) {
+                if (level.get(0).size() >= mu) {
+                    for (Itemset aLevel : level) {
+                        if (aLevel.support == 1) {
+                            int[] array = aLevel.getItems();
+                            ArrayList<Integer> list = new ArrayList<>(array.length);
+                            for (int anArray : array) {
+                                list.add(anArray);
+                            }
+                            itemsets.add(list);
+                        }
+                    }
+                }
+            }
+        }
+        return itemsets;
+    }
+
     public void addItemset(Itemset itemset, int k) {
         while (levels.size() <= k) {
-            levels.add(new ArrayList<Itemset>());
+            levels.add(new ArrayList<>());
         }
         levels.get(k).add(itemset);
         itemsetsCount++;
     }
 
-    /* (non-Javadoc)
-     * @see ca.pfv.spmf.patterns.itemset_array_integers_with_count.AbstractItemsets#getLevels()
-     */
     public List<List<Itemset>> getLevels() {
         return levels;
     }
 
-    /* (non-Javadoc)
-     * @see ca.pfv.spmf.patterns.itemset_array_integers_with_count.AbstractItemsets#getItemsetsCount()
-     */
     public int getItemsetsCount() {
         return itemsetsCount;
     }
 
-    /* (non-Javadoc)
-     * @see ca.pfv.spmf.patterns.itemset_array_integers_with_count.AbstractItemsets#setName(java.lang.String)
-     */
-    public void setName(String newName) {
-        name = newName;
-    }
-
-    /* (non-Javadoc)
-     * @see ca.pfv.spmf.patterns.itemset_array_integers_with_count.AbstractItemsets#decreaseItemsetCount()
-     */
     public void decreaseItemsetCount() {
         itemsetsCount--;
     }

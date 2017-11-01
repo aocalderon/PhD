@@ -29,8 +29,8 @@ import java.util.Set;
  */
 public class MainTestLCM_saveToMemory {
 	public static void main(String [] arg) throws IOException{
-		String input = "/opt/LCM/retail.dat";
-		String separator = " ";
+		String input = "/opt/LCM/T568.dat";
+		String separator = ",";
 		BufferedReader reader = new BufferedReader(new FileReader(input));
 		String line;
 		Set<List<Integer>> transactions = new HashSet<>();
@@ -48,11 +48,8 @@ public class MainTestLCM_saveToMemory {
 
 		AlgoLCM algoLCM = new AlgoLCM();
 		Itemsets closed = algoLCM.runAlgorithm(support, dataset);
-		algoLCM.printStats();
-		closed.printItemsets();
-		AlgoCharmLCM algoCharmLCM  = new AlgoCharmLCM();
-		Itemsets maximals = algoCharmLCM.runAlgorithm(closed);
-		algoCharmLCM.printStats();
-		maximals.printItemsets();
+		for(List<Integer> maximal : closed.getMaximalItemsets1(1)){
+			System.out.println(maximal.toString().replace("[", "").replace("]", "").replace(",", "") + " (1)");
+		}
 	}
 }

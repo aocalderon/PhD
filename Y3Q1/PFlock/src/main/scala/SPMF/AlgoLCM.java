@@ -16,7 +16,7 @@ package SPMF;
  * For example, transaction merging is not performed yet and
  * items in transactions are not sorted in descending order of frequency.
  *
- * @author Alan Souza <apsouza@inf.ufrgs.br>
+ * This file is copyright (c) 2012-2014 Alan Souza
  */
 
 import java.util.ArrayList;
@@ -40,7 +40,7 @@ public class AlgoLCM {
 	public Itemsets runAlgorithm(int minimumSupport, Transactions dataset){
 		// record the start time
 		startTimestamp = System.currentTimeMillis();
-		this.closedFrequentItemsets = new Itemsets("Itemsets");
+		this.closedFrequentItemsets = new Itemsets();
 		// reset the number of itemset found
 		frequentCount = 0;
 		// reset the memory usage checking utility

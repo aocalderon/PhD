@@ -106,7 +106,6 @@ public class AlgoFPMax {
         // if the user want to keep the result into memory
         if (output == null) {
             writer = null;
-            patterns = new Itemsets("FREQUENT ITEMSETS");
         } else { // if the user want to save the result to a file
             patterns = null;
             writer = new BufferedWriter(new FileWriter(output));
@@ -203,7 +202,6 @@ public class AlgoFPMax {
         MemoryLogger.getInstance().checkMemory();
 
         writer = null;
-        patterns = new Itemsets("Maximal Patterns");
 
         // (1) PREPROCESSING: Initial database scan to determine the frequency of each item
         // The frequency is stored in a map:
@@ -269,7 +267,6 @@ public class AlgoFPMax {
         MemoryLogger.getInstance().checkMemory();
 
         writer = null;
-        patterns = new Itemsets("Maximal Patterns");
 
         // (1) PREPROCESSING: Initial database scan to determine the frequency of each item
         // The frequency is stored in a map:
