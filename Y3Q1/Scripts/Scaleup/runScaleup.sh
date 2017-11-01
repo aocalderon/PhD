@@ -1,10 +1,10 @@
 #!/bin/bash
 
 N=10
-MU=12
+MU=25
 PARTITIONS=1024
-ESTART=10
-EEND=50
+ESTART=50
+EEND=100
 ESTEP=10
 
 # Running Scaleup on 1 Node with 20K dataset...
