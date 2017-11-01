@@ -3,20 +3,19 @@ package SPMF;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.TreeMap;
-import java.util.Map;
+import java.util.*;
 
 public class Tester {
     public static void main(String[] arg) throws IOException {
 		// Setting variables...
 		Map< Integer, List<List<Integer>> > map = new TreeMap<>();
         // Reading file...
-        // String input = "/home/and/Documents/PhD/Code/Y3Q1/Datasets/CandidatesFrame_B60K_E40.0_M12_P1024.csv";
-        String input = arg[0];
+        String input = "/home/and/Documents/PhD/Code/Y3Q1/Datasets/TI568.dat";
+        //String input = arg[0];
         System.out.println(input);
-        System.out.println(arg[1]);
+        //String algorithm = arg[1];
+		String algorithm = "LCM";
+        System.out.println(algorithm);
         BufferedReader reader = new BufferedReader(new FileReader(input));
         String line;
         while (((line = reader.readLine()) != null)) {
@@ -43,6 +42,9 @@ public class Tester {
 		for(Integer key : map.keySet()){
 			List<List<Integer>> transactions = map.get(key);
 			Integer size = transactions.size();
+			HashSet<List<Integer>> transactionsSet = new HashSet<>(transactions);
+			transactions.clear();
+			transactions.addAll(transactionsSet);
 			Integer n;
 			Double sum = 0.0;
 			Integer max = 0;
@@ -56,7 +58,7 @@ public class Tester {
 			}
 			Double avg = sum / size;
 
-			if(arg[1].equals("LCM")){
+			if(algorithm.equals("LCM")){
 				AlgoLCM algoLCM = new AlgoLCM();
 				Transactions data = new Transactions(transactions);
 				Itemsets closedLCM = algoLCM.runAlgorithm(minsup, data);
@@ -69,9 +71,12 @@ public class Tester {
 						key, avg, min, max, algoLCM.getTime() + algoCharmLCM.getTime(),
 						algoLCM.getStats(), algoCharmLCM.getStats(), maximalsLCMPruned.size());
 				System.out.println(reportLCM);
+				for(List<Integer> pattern : maximalsLCMPruned){
+					System.out.println(pattern.toString());
+				}
 			}
 
-			if(arg[1].equals("FPMax")){
+			if(algorithm.equals("FPMax")){
 				AlgoFPMax fpMax = new AlgoFPMax();
 				Itemsets maximalsFPMax = fpMax.runAlgorithm(transactions, minsup);
 				// fpMax.printStats();
@@ -81,6 +86,9 @@ public class Tester {
 						key, avg, min, max, fpMax.getTime(), fpMax.getStats(),
 						maximalsFPMaxPruned.size());
 				System.out.println(reportFPMax);
+				for(List<Integer> pattern : maximalsFPMaxPruned){
+					System.out.println(pattern.toString());
+				}
 			}
 		}
     }
