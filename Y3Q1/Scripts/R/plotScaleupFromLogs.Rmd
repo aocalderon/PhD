@@ -14,7 +14,7 @@ if (!require("pacman")) install.packages("pacman")
 pacman::p_load(ggplot2, data.table, foreach, sqldf, tidyr, stringr, dplyr)
 
 PATH = "Y3Q1/Scripts/Scaleup/"
-filename ="Berlin_N20K-80K_E10.0-50.0_M12_P1024_201710290820"
+filename ="Berlin_N20K-80K_E50.0-100.0_M25_P1024_20171031"
 PHD_HOME = Sys.getenv(c("PHD_HOME"))
 
 files = system(paste0("ls ",PHD_HOME,PATH,filename,"*.csv"), intern = T)
