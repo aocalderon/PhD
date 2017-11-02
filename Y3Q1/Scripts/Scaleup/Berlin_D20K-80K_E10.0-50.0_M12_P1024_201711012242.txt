@@ -1,0 +1,1222 @@
+acald013@dblab-rack12: no org.apache.spark.deploy.worker.Worker to stop
+acald013@dblab-rack15: no org.apache.spark.deploy.worker.Worker to stop
+acald013@dblab-rack14: no org.apache.spark.deploy.worker.Worker to stop
+acald013@dblab-rack11: no org.apache.spark.deploy.worker.Worker to stop
+no org.apache.spark.deploy.master.Master to stop
+starting org.apache.spark.deploy.master.Master, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.master.Master-1-dblab-rack15.out
+acald013@dblab-rack11: starting org.apache.spark.deploy.worker.Worker, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.worker.Worker-1-dblab-rack11.cs.ucr.edu.out
+Running iteration 1/3 ...
+2017-11-01 21:42:10,924 -> Starting app at 2017-11-01T21:42:10.836...
+2017-11-01 21:42:13,602 -> Setting variables... [2.674ms]
+2017-11-01 21:42:16,811 -> Starting session... [3.208ms]
+2017-11-01 21:42:19,717 -> Reading /home/acald013/PhD/Y3Q1/Datasets/B20K.csv... [2.905ms]
+2017-11-01 21:42:19,720 -> Lauching MaximalFinder at 21:42:19.717...
+2017-11-01 21:42:22,040 -> Running with mu = 12, cores = 7, partitions = 1024 over 19709 points...
+2017-11-01 21:42:27,136 -> Indexing... [5.095ms]
+2017-11-01 21:42:27,153 -> Running epsilon = 10.0 iteration...
+2017-11-01 21:42:28,273 -> Self-join... [1.120ms]
+2017-11-01 21:42:42,369 -> Computing disks... [14.095ms]
+2017-11-01 21:42:52,600 -> Mapping disks and points... [10.231ms]
+2017-11-01 21:42:53,949 -> Filtering less-than-mu disks... [1.348ms]
+2017-11-01 21:42:57,190 -> Indexing candidates... [3.241ms]
+2017-11-01 21:42:57,999 -> Finding maximal disks inside partitions... [0.809ms]
+2017-11-01 21:42:58,095 -> Filtering candidate disks on frame partitions... [0.096ms]
+2017-11-01 21:43:00,414 -> Re-indexing candidate disks in frame partitions... [2.319ms]
+2017-11-01 21:43:00,928 -> Finding maximal disks in frame partitions... [0.514ms]
+2017-11-01 21:43:00,954 -> Prunning duplicates... [0.026ms]
+2017-11-01 21:43:02,230 -> Loading distincts... [1.276ms]
+2017-11-01 21:43:02,623 -> Running jLCM... [0.393ms]
+2017-11-01 21:43:02,636 -> Collecting final maximal disks... [0.013ms]
+2017-11-01 21:43:02,636 ->   Data, # Cands,    # In,   # Fr,   # Max, Part, Ent,   Eps, Mu,   TimeI,   TimeF,    Time
+2017-11-01 21:43:02,637 ->   B20K,   13586,   12882,    851,    1814, 1024,  25,  10.0, 12,    0.81,    2.93,   35.48
+2017-11-01 21:43:02,802 -> Dropping center and candidate indices... [0.165ms]
+2017-11-01 21:43:02,803 -> Running epsilon = 20.0 iteration...
+2017-11-01 21:43:03,536 -> Self-join... [0.733ms]
+2017-11-01 21:43:15,347 -> Computing disks... [11.811ms]
+2017-11-01 21:43:24,371 -> Mapping disks and points... [9.024ms]
+2017-11-01 21:43:25,608 -> Filtering less-than-mu disks... [1.237ms]
+2017-11-01 21:43:29,098 -> Indexing candidates... [3.490ms]
+2017-11-01 21:43:30,066 -> Finding maximal disks inside partitions... [0.967ms]
+2017-11-01 21:43:30,107 -> Filtering candidate disks on frame partitions... [0.041ms]
+2017-11-01 21:43:31,702 -> Re-indexing candidate disks in frame partitions... [1.595ms]
+2017-11-01 21:43:32,250 -> Finding maximal disks in frame partitions... [0.548ms]
+2017-11-01 21:43:32,262 -> Prunning duplicates... [0.012ms]
+2017-11-01 21:43:33,951 -> Loading distincts... [1.689ms]
+2017-11-01 21:43:34,284 -> Running jLCM... [0.333ms]
+2017-11-01 21:43:34,290 -> Collecting final maximal disks... [0.006ms]
+2017-11-01 21:43:34,290 ->   Data, # Cands,    # In,   # Fr,   # Max, Part, Ent,   Eps, Mu,   TimeI,   TimeF,    Time
+2017-11-01 21:43:34,291 ->   B20K,   35123,   33112,    998,    3345, 1024,  25,  20.0, 12,    0.97,    2.18,   31.49
+2017-11-01 21:43:34,397 -> Dropping center and candidate indices... [0.106ms]
+2017-11-01 21:43:34,397 -> Running epsilon = 30.0 iteration...
+2017-11-01 21:43:35,146 -> Self-join... [0.749ms]
+2017-11-01 21:43:48,304 -> Computing disks... [13.158ms]
+2017-11-01 21:43:58,948 -> Mapping disks and points... [10.643ms]
+2017-11-01 21:44:00,417 -> Filtering less-than-mu disks... [1.468ms]
+2017-11-01 21:44:04,258 -> Indexing candidates... [3.841ms]
+2017-11-01 21:44:06,020 -> Finding maximal disks inside partitions... [1.762ms]
+2017-11-01 21:44:06,056 -> Filtering candidate disks on frame partitions... [0.036ms]
+2017-11-01 21:44:07,987 -> Re-indexing candidate disks in frame partitions... [1.931ms]
+2017-11-01 21:44:08,570 -> Finding maximal disks in frame partitions... [0.583ms]
+2017-11-01 21:44:08,581 -> Prunning duplicates... [0.011ms]
+2017-11-01 21:44:10,937 -> Loading distincts... [2.356ms]
+2017-11-01 21:44:11,641 -> Running jLCM... [0.704ms]
+2017-11-01 21:44:11,649 -> Collecting final maximal disks... [0.008ms]
+2017-11-01 21:44:11,649 ->   Data, # Cands,    # In,   # Fr,   # Max, Part, Ent,   Eps, Mu,   TimeI,   TimeF,    Time
+2017-11-01 21:44:11,649 ->   B20K,   58999,   54776,   1279,    4681, 1024,  25,  30.0, 12,    1.76,    2.55,   37.25
+2017-11-01 21:44:11,768 -> Dropping center and candidate indices... [0.119ms]
+2017-11-01 21:44:11,768 -> Running epsilon = 40.0 iteration...
+2017-11-01 21:44:12,509 -> Self-join... [0.740ms]
+2017-11-01 21:44:27,397 -> Computing disks... [14.888ms]
+2017-11-01 21:44:38,550 -> Mapping disks and points... [11.153ms]
+2017-11-01 21:44:40,386 -> Filtering less-than-mu disks... [1.836ms]
+2017-11-01 21:44:44,846 -> Indexing candidates... [4.460ms]
+2017-11-01 21:44:47,880 -> Finding maximal disks inside partitions... [3.034ms]
+2017-11-01 21:44:47,914 -> Filtering candidate disks on frame partitions... [0.034ms]
+2017-11-01 21:44:50,259 -> Re-indexing candidate disks in frame partitions... [2.345ms]
+2017-11-01 21:44:50,885 -> Finding maximal disks in frame partitions... [0.625ms]
+2017-11-01 21:44:50,895 -> Prunning duplicates... [0.010ms]
+2017-11-01 21:44:54,211 -> Loading distincts... [3.315ms]
+2017-11-01 21:44:56,014 -> Running jLCM... [1.803ms]
+2017-11-01 21:44:56,023 -> Collecting final maximal disks... [0.008ms]
+2017-11-01 21:44:56,024 ->   Data, # Cands,    # In,   # Fr,   # Max, Part, Ent,   Eps, Mu,   TimeI,   TimeF,    Time
+2017-11-01 21:44:56,024 ->   B20K,   85285,   77989,   1773,    5770, 1024,  25,  40.0, 12,    3.03,    3.01,   44.26
+2017-11-01 21:44:56,148 -> Dropping center and candidate indices... [0.124ms]
+2017-11-01 21:44:56,148 -> Running epsilon = 50.0 iteration...
+2017-11-01 21:44:56,820 -> Self-join... [0.672ms]
+2017-11-01 21:45:13,558 -> Computing disks... [16.738ms]
+2017-11-01 21:45:25,393 -> Mapping disks and points... [11.835ms]
+2017-11-01 21:45:27,692 -> Filtering less-than-mu disks... [2.299ms]
+2017-11-01 21:45:32,680 -> Indexing candidates... [4.988ms]
+2017-11-01 21:45:38,528 -> Finding maximal disks inside partitions... [5.847ms]
+2017-11-01 21:45:38,561 -> Filtering candidate disks on frame partitions... [0.033ms]
+2017-11-01 21:45:40,693 -> Re-indexing candidate disks in frame partitions... [2.132ms]
+2017-11-01 21:45:41,366 -> Finding maximal disks in frame partitions... [0.673ms]
+2017-11-01 21:45:41,377 -> Prunning duplicates... [0.011ms]
+2017-11-01 21:45:45,703 -> Loading distincts... [4.326ms]
+2017-11-01 21:45:53,830 -> Running jLCM... [8.127ms]
+2017-11-01 21:45:53,840 -> Collecting final maximal disks... [0.008ms]
+2017-11-01 21:45:53,840 ->   Data, # Cands,    # In,   # Fr,   # Max, Part, Ent,   Eps, Mu,   TimeI,   TimeF,    Time
+2017-11-01 21:45:53,840 ->   B20K,  112997,  100864,   2290,    6666, 1024,  25,  50.0, 12,    5.85,    2.84,   57.69
+2017-11-01 21:45:53,972 -> Dropping center and candidate indices... [0.132ms]
+2017-11-01 21:45:54,019 -> Dropping point indices... [0.046ms]
+2017-11-01 21:45:54,019 -> Finishing MaximalFinder at 21:45:54.019...]
+2017-11-01 21:45:54,109 -> Closing session... [0.090ms]
+2017-11-01 21:45:54,109 -> Total time for session: 220.506ms...
+2017-11-01 21:45:54,109 -> Ending app at 2017-11-01T21:45:54.109...
+Done!!! Wed Nov  1 21:45:54 PDT 2017
+Running iteration 2/3 ...
+2017-11-01 21:45:55,977 -> Starting app at 2017-11-01T21:45:55.889...
+2017-11-01 21:45:58,593 -> Setting variables... [2.612ms]
+2017-11-01 21:46:01,698 -> Starting session... [3.104ms]
+2017-11-01 21:46:04,556 -> Reading /home/acald013/PhD/Y3Q1/Datasets/B20K.csv... [2.857ms]
+2017-11-01 21:46:04,560 -> Lauching MaximalFinder at 21:46:04.556...
+2017-11-01 21:46:07,060 -> Running with mu = 12, cores = 7, partitions = 1024 over 19709 points...
+2017-11-01 21:46:11,655 -> Indexing... [4.595ms]
+2017-11-01 21:46:11,673 -> Running epsilon = 10.0 iteration...
+2017-11-01 21:46:12,843 -> Self-join... [1.170ms]
+2017-11-01 21:46:26,440 -> Computing disks... [13.596ms]
+2017-11-01 21:46:36,219 -> Mapping disks and points... [9.778ms]
+2017-11-01 21:46:37,622 -> Filtering less-than-mu disks... [1.403ms]
+2017-11-01 21:46:40,592 -> Indexing candidates... [2.970ms]
+2017-11-01 21:46:41,573 -> Finding maximal disks inside partitions... [0.981ms]
+2017-11-01 21:46:41,672 -> Filtering candidate disks on frame partitions... [0.098ms]
+2017-11-01 21:46:43,876 -> Re-indexing candidate disks in frame partitions... [2.204ms]
+2017-11-01 21:46:44,400 -> Finding maximal disks in frame partitions... [0.524ms]
+2017-11-01 21:46:44,427 -> Prunning duplicates... [0.027ms]
+2017-11-01 21:46:45,705 -> Loading distincts... [1.278ms]
+2017-11-01 21:46:46,172 -> Running jLCM... [0.466ms]
+2017-11-01 21:46:46,188 -> Collecting final maximal disks... [0.016ms]
+2017-11-01 21:46:46,188 ->   Data, # Cands,    # In,   # Fr,   # Max, Part, Ent,   Eps, Mu,   TimeI,   TimeF,    Time
+2017-11-01 21:46:46,189 ->   B20K,   13586,   12774,    853,    1814, 1024,  25,  10.0, 12,    0.98,    2.83,   34.52
+2017-11-01 21:46:46,361 -> Dropping center and candidate indices... [0.172ms]
+2017-11-01 21:46:46,361 -> Running epsilon = 20.0 iteration...
+2017-11-01 21:46:47,168 -> Self-join... [0.806ms]
+2017-11-01 21:46:58,646 -> Computing disks... [11.478ms]
+2017-11-01 21:47:07,607 -> Mapping disks and points... [8.961ms]
+2017-11-01 21:47:08,856 -> Filtering less-than-mu disks... [1.249ms]
+2017-11-01 21:47:12,275 -> Indexing candidates... [3.419ms]
+2017-11-01 21:47:13,293 -> Finding maximal disks inside partitions... [1.018ms]
+2017-11-01 21:47:13,333 -> Filtering candidate disks on frame partitions... [0.040ms]
+2017-11-01 21:47:14,886 -> Re-indexing candidate disks in frame partitions... [1.553ms]
+2017-11-01 21:47:15,414 -> Finding maximal disks in frame partitions... [0.527ms]
+2017-11-01 21:47:15,426 -> Prunning duplicates... [0.011ms]
+2017-11-01 21:47:17,108 -> Loading distincts... [1.681ms]
+2017-11-01 21:47:17,556 -> Running jLCM... [0.447ms]
+2017-11-01 21:47:17,562 -> Collecting final maximal disks... [0.006ms]
+2017-11-01 21:47:17,563 ->   Data, # Cands,    # In,   # Fr,   # Max, Part, Ent,   Eps, Mu,   TimeI,   TimeF,    Time
+2017-11-01 21:47:17,563 ->   B20K,   35123,   33253,    998,    3334, 1024,  25,  20.0, 12,    1.02,    2.12,   31.20
+2017-11-01 21:47:17,673 -> Dropping center and candidate indices... [0.110ms]
+2017-11-01 21:47:17,673 -> Running epsilon = 30.0 iteration...
+2017-11-01 21:47:18,430 -> Self-join... [0.757ms]
+2017-11-01 21:47:31,383 -> Computing disks... [12.952ms]
+2017-11-01 21:47:41,714 -> Mapping disks and points... [10.331ms]
+2017-11-01 21:47:43,239 -> Filtering less-than-mu disks... [1.525ms]
+2017-11-01 21:47:47,039 -> Indexing candidates... [3.800ms]
+2017-11-01 21:47:48,761 -> Finding maximal disks inside partitions... [1.722ms]
+2017-11-01 21:47:48,796 -> Filtering candidate disks on frame partitions... [0.035ms]
+2017-11-01 21:47:50,544 -> Re-indexing candidate disks in frame partitions... [1.747ms]
+2017-11-01 21:47:51,141 -> Finding maximal disks in frame partitions... [0.597ms]
+2017-11-01 21:47:51,153 -> Prunning duplicates... [0.011ms]
+2017-11-01 21:47:53,516 -> Loading distincts... [2.363ms]
+2017-11-01 21:47:54,275 -> Running jLCM... [0.759ms]
+2017-11-01 21:47:54,283 -> Collecting final maximal disks... [0.008ms]
+2017-11-01 21:47:54,283 ->   Data, # Cands,    # In,   # Fr,   # Max, Part, Ent,   Eps, Mu,   TimeI,   TimeF,    Time
+2017-11-01 21:47:54,283 ->   B20K,   58999,   54641,   1280,    4697, 1024,  25,  30.0, 12,    1.72,    2.38,   36.61
+2017-11-01 21:47:54,401 -> Dropping center and candidate indices... [0.118ms]
+2017-11-01 21:47:54,436 -> Running epsilon = 40.0 iteration...
+2017-11-01 21:47:55,238 -> Self-join... [0.802ms]
+2017-11-01 21:48:09,993 -> Computing disks... [14.754ms]
+2017-11-01 21:48:21,208 -> Mapping disks and points... [11.215ms]
+2017-11-01 21:48:23,120 -> Filtering less-than-mu disks... [1.912ms]
+2017-11-01 21:48:27,371 -> Indexing candidates... [4.250ms]
+2017-11-01 21:48:30,577 -> Finding maximal disks inside partitions... [3.205ms]
+2017-11-01 21:48:30,611 -> Filtering candidate disks on frame partitions... [0.033ms]
+2017-11-01 21:48:32,846 -> Re-indexing candidate disks in frame partitions... [2.235ms]
+2017-11-01 21:48:33,475 -> Finding maximal disks in frame partitions... [0.629ms]
+2017-11-01 21:48:33,486 -> Prunning duplicates... [0.011ms]
+2017-11-01 21:48:36,719 -> Loading distincts... [3.233ms]
+2017-11-01 21:48:38,773 -> Running jLCM... [2.053ms]
+2017-11-01 21:48:38,781 -> Collecting final maximal disks... [0.008ms]
+2017-11-01 21:48:38,782 ->   Data, # Cands,    # In,   # Fr,   # Max, Part, Ent,   Eps, Mu,   TimeI,   TimeF,    Time
+2017-11-01 21:48:38,782 ->   B20K,   85285,   77144,   1769,    5991, 1024,  25,  40.0, 12,    3.21,    2.90,   44.35
+2017-11-01 21:48:38,903 -> Dropping center and candidate indices... [0.121ms]
+2017-11-01 21:48:38,903 -> Running epsilon = 50.0 iteration...
+2017-11-01 21:48:39,644 -> Self-join... [0.741ms]
+2017-11-01 21:48:56,124 -> Computing disks... [16.480ms]
+2017-11-01 21:49:07,854 -> Mapping disks and points... [11.730ms]
+2017-11-01 21:49:09,957 -> Filtering less-than-mu disks... [2.103ms]
+2017-11-01 21:49:15,072 -> Indexing candidates... [5.115ms]
+2017-11-01 21:49:21,154 -> Finding maximal disks inside partitions... [6.082ms]
+2017-11-01 21:49:21,187 -> Filtering candidate disks on frame partitions... [0.032ms]
+2017-11-01 21:49:23,187 -> Re-indexing candidate disks in frame partitions... [2.000ms]
+2017-11-01 21:49:23,826 -> Finding maximal disks in frame partitions... [0.639ms]
+2017-11-01 21:49:23,837 -> Prunning duplicates... [0.011ms]
+2017-11-01 21:49:28,272 -> Loading distincts... [4.435ms]
+2017-11-01 21:49:35,200 -> Running jLCM... [6.928ms]
+2017-11-01 21:49:35,210 -> Collecting final maximal disks... [0.009ms]
+2017-11-01 21:49:35,243 ->   Data, # Cands,    # In,   # Fr,   # Max, Part, Ent,   Eps, Mu,   TimeI,   TimeF,    Time
+2017-11-01 21:49:35,244 ->   B20K,  112997,  101420,   2280,    6496, 1024,  25,  50.0, 12,    6.08,    2.67,   56.34
+2017-11-01 21:49:35,379 -> Dropping center and candidate indices... [0.134ms]
+2017-11-01 21:49:35,422 -> Dropping point indices... [0.043ms]
+2017-11-01 21:49:35,422 -> Finishing MaximalFinder at 21:49:35.422...]
+2017-11-01 21:49:35,509 -> Closing session... [0.087ms]
+2017-11-01 21:49:35,509 -> Total time for session: 216.915ms...
+2017-11-01 21:49:35,509 -> Ending app at 2017-11-01T21:49:35.509...
+Done!!! Wed Nov  1 21:49:35 PDT 2017
+Running iteration 3/3 ...
+2017-11-01 21:49:37,347 -> Starting app at 2017-11-01T21:49:37.259...
+2017-11-01 21:49:39,931 -> Setting variables... [2.579ms]
+2017-11-01 21:49:42,986 -> Starting session... [3.054ms]
+2017-11-01 21:49:45,808 -> Reading /home/acald013/PhD/Y3Q1/Datasets/B20K.csv... [2.821ms]
+2017-11-01 21:49:45,811 -> Lauching MaximalFinder at 21:49:45.809...
+2017-11-01 21:49:48,190 -> Running with mu = 12, cores = 7, partitions = 1024 over 19709 points...
+2017-11-01 21:49:52,610 -> Indexing... [4.419ms]
+2017-11-01 21:49:52,626 -> Running epsilon = 10.0 iteration...
+2017-11-01 21:49:53,775 -> Self-join... [1.148ms]
+2017-11-01 21:50:06,574 -> Computing disks... [12.798ms]
+2017-11-01 21:50:16,159 -> Mapping disks and points... [9.585ms]
+2017-11-01 21:50:17,575 -> Filtering less-than-mu disks... [1.416ms]
+2017-11-01 21:50:20,651 -> Indexing candidates... [3.076ms]
+2017-11-01 21:50:21,561 -> Finding maximal disks inside partitions... [0.910ms]
+2017-11-01 21:50:21,659 -> Filtering candidate disks on frame partitions... [0.097ms]
+2017-11-01 21:50:23,937 -> Re-indexing candidate disks in frame partitions... [2.278ms]
+2017-11-01 21:50:24,449 -> Finding maximal disks in frame partitions... [0.512ms]
+2017-11-01 21:50:24,476 -> Prunning duplicates... [0.027ms]
+2017-11-01 21:50:25,785 -> Loading distincts... [1.309ms]
+2017-11-01 21:50:26,101 -> Running jLCM... [0.316ms]
+2017-11-01 21:50:26,113 -> Collecting final maximal disks... [0.012ms]
+2017-11-01 21:50:26,114 ->   Data, # Cands,    # In,   # Fr,   # Max, Part, Ent,   Eps, Mu,   TimeI,   TimeF,    Time
+2017-11-01 21:50:26,114 ->   B20K,   13586,   12867,    856,    1808, 1024,  25,  10.0, 12,    0.91,    2.89,   33.49
+2017-11-01 21:50:26,273 -> Dropping center and candidate indices... [0.158ms]
+2017-11-01 21:50:26,273 -> Running epsilon = 20.0 iteration...
+2017-11-01 21:50:27,021 -> Self-join... [0.748ms]
+2017-11-01 21:50:38,953 -> Computing disks... [11.932ms]
+2017-11-01 21:50:48,343 -> Mapping disks and points... [9.390ms]
+2017-11-01 21:50:49,656 -> Filtering less-than-mu disks... [1.313ms]
+2017-11-01 21:50:52,932 -> Indexing candidates... [3.276ms]
+2017-11-01 21:50:53,946 -> Finding maximal disks inside partitions... [1.014ms]
+2017-11-01 21:50:53,986 -> Filtering candidate disks on frame partitions... [0.040ms]
+2017-11-01 21:50:55,659 -> Re-indexing candidate disks in frame partitions... [1.673ms]
+2017-11-01 21:50:56,191 -> Finding maximal disks in frame partitions... [0.532ms]
+2017-11-01 21:50:56,203 -> Prunning duplicates... [0.012ms]
+2017-11-01 21:50:57,807 -> Loading distincts... [1.604ms]
+2017-11-01 21:50:58,116 -> Running jLCM... [0.308ms]
+2017-11-01 21:50:58,123 -> Collecting final maximal disks... [0.006ms]
+2017-11-01 21:50:58,123 ->   Data, # Cands,    # In,   # Fr,   # Max, Part, Ent,   Eps, Mu,   TimeI,   TimeF,    Time
+2017-11-01 21:50:58,123 ->   B20K,   35123,   33256,    998,    3337, 1024,  25,  20.0, 12,    1.01,    2.25,   31.85
+2017-11-01 21:50:58,236 -> Dropping center and candidate indices... [0.113ms]
+2017-11-01 21:50:58,237 -> Running epsilon = 30.0 iteration...
+2017-11-01 21:50:58,991 -> Self-join... [0.754ms]
+2017-11-01 21:51:12,034 -> Computing disks... [13.043ms]
+2017-11-01 21:51:22,238 -> Mapping disks and points... [10.204ms]
+2017-11-01 21:51:23,658 -> Filtering less-than-mu disks... [1.420ms]
+2017-11-01 21:51:27,352 -> Indexing candidates... [3.694ms]
+2017-11-01 21:51:29,120 -> Finding maximal disks inside partitions... [1.768ms]
+2017-11-01 21:51:29,156 -> Filtering candidate disks on frame partitions... [0.036ms]
+2017-11-01 21:51:31,035 -> Re-indexing candidate disks in frame partitions... [1.879ms]
+2017-11-01 21:51:31,599 -> Finding maximal disks in frame partitions... [0.564ms]
+2017-11-01 21:51:31,610 -> Prunning duplicates... [0.011ms]
+2017-11-01 21:51:33,863 -> Loading distincts... [2.252ms]
+2017-11-01 21:51:34,566 -> Running jLCM... [0.703ms]
+2017-11-01 21:51:34,575 -> Collecting final maximal disks... [0.008ms]
+2017-11-01 21:51:34,575 ->   Data, # Cands,    # In,   # Fr,   # Max, Part, Ent,   Eps, Mu,   TimeI,   TimeF,    Time
+2017-11-01 21:51:34,575 ->   B20K,   58999,   54596,   1279,    4733, 1024,  25,  30.0, 12,    1.77,    2.48,   36.34
+2017-11-01 21:51:34,688 -> Dropping center and candidate indices... [0.113ms]
+2017-11-01 21:51:34,689 -> Running epsilon = 40.0 iteration...
+2017-11-01 21:51:35,456 -> Self-join... [0.767ms]
+2017-11-01 21:51:49,940 -> Computing disks... [14.483ms]
+2017-11-01 21:52:00,594 -> Mapping disks and points... [10.654ms]
+2017-11-01 21:52:02,386 -> Filtering less-than-mu disks... [1.792ms]
+2017-11-01 21:52:06,858 -> Indexing candidates... [4.472ms]
+2017-11-01 21:52:09,940 -> Finding maximal disks inside partitions... [3.082ms]
+2017-11-01 21:52:09,974 -> Filtering candidate disks on frame partitions... [0.034ms]
+2017-11-01 21:52:12,172 -> Re-indexing candidate disks in frame partitions... [2.198ms]
+2017-11-01 21:52:12,781 -> Finding maximal disks in frame partitions... [0.608ms]
+2017-11-01 21:52:12,792 -> Prunning duplicates... [0.011ms]
+2017-11-01 21:52:15,948 -> Loading distincts... [3.156ms]
+2017-11-01 21:52:17,536 -> Running jLCM... [1.588ms]
+2017-11-01 21:52:17,545 -> Collecting final maximal disks... [0.009ms]
+2017-11-01 21:52:17,545 ->   Data, # Cands,    # In,   # Fr,   # Max, Part, Ent,   Eps, Mu,   TimeI,   TimeF,    Time
+2017-11-01 21:52:17,545 ->   B20K,   85285,   78499,   1773,    5668, 1024,  25,  40.0, 12,    3.08,    2.84,   42.86
+2017-11-01 21:52:17,665 -> Dropping center and candidate indices... [0.120ms]
+2017-11-01 21:52:17,666 -> Running epsilon = 50.0 iteration...
+2017-11-01 21:52:18,371 -> Self-join... [0.705ms]
+2017-11-01 21:52:34,598 -> Computing disks... [16.227ms]
+2017-11-01 21:52:45,930 -> Mapping disks and points... [11.332ms]
+2017-11-01 21:52:48,085 -> Filtering less-than-mu disks... [2.154ms]
+2017-11-01 21:52:53,350 -> Indexing candidates... [5.264ms]
+2017-11-01 21:52:59,458 -> Finding maximal disks inside partitions... [6.108ms]
+2017-11-01 21:52:59,490 -> Filtering candidate disks on frame partitions... [0.032ms]
+2017-11-01 21:53:01,544 -> Re-indexing candidate disks in frame partitions... [2.054ms]
+2017-11-01 21:53:02,219 -> Finding maximal disks in frame partitions... [0.675ms]
+2017-11-01 21:53:02,229 -> Prunning duplicates... [0.010ms]
+2017-11-01 21:53:06,269 -> Loading distincts... [4.040ms]
+2017-11-01 21:53:14,471 -> Running jLCM... [8.202ms]
+2017-11-01 21:53:14,481 -> Collecting final maximal disks... [0.010ms]
+2017-11-01 21:53:14,481 ->   Data, # Cands,    # In,   # Fr,   # Max, Part, Ent,   Eps, Mu,   TimeI,   TimeF,    Time
+2017-11-01 21:53:14,481 ->   B20K,  112997,  101515,   2289,    6500, 1024,  25,  50.0, 12,    6.11,    2.76,   56.82
+2017-11-01 21:53:14,662 -> Dropping center and candidate indices... [0.181ms]
+2017-11-01 21:53:14,703 -> Dropping point indices... [0.041ms]
+2017-11-01 21:53:14,703 -> Finishing MaximalFinder at 21:53:14.703...]
+2017-11-01 21:53:14,790 -> Closing session... [0.087ms]
+2017-11-01 21:53:14,790 -> Total time for session: 214.858ms...
+2017-11-01 21:53:14,790 -> Ending app at 2017-11-01T21:53:14.790...
+Done!!! Wed Nov  1 21:53:15 PDT 2017
+acald013@dblab-rack11: stopping org.apache.spark.deploy.worker.Worker
+stopping org.apache.spark.deploy.master.Master
+starting org.apache.spark.deploy.master.Master, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.master.Master-1-dblab-rack15.out
+acald013@dblab-rack12: starting org.apache.spark.deploy.worker.Worker, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.worker.Worker-1-dblab-rack12.out
+acald013@dblab-rack11: starting org.apache.spark.deploy.worker.Worker, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.worker.Worker-1-dblab-rack11.cs.ucr.edu.out
+Running iteration 1/3 ...
+2017-11-01 21:53:27,202 -> Starting app at 2017-11-01T21:53:27.116...
+2017-11-01 21:53:29,808 -> Setting variables... [2.601ms]
+2017-11-01 21:53:32,969 -> Starting session... [3.159ms]
+2017-11-01 21:53:35,859 -> Reading /home/acald013/PhD/Y3Q1/Datasets/B40K.csv... [2.889ms]
+2017-11-01 21:53:35,862 -> Lauching MaximalFinder at 21:53:35.859...
+2017-11-01 21:53:38,327 -> Running with mu = 12, cores = 14, partitions = 1024 over 39442 points...
+2017-11-01 21:53:42,944 -> Indexing... [4.616ms]
+2017-11-01 21:53:42,961 -> Running epsilon = 10.0 iteration...
+2017-11-01 21:53:44,682 -> Self-join... [1.720ms]
+2017-11-01 21:53:58,131 -> Computing disks... [13.448ms]
+2017-11-01 21:54:07,045 -> Mapping disks and points... [8.914ms]
+2017-11-01 21:54:08,476 -> Filtering less-than-mu disks... [1.430ms]
+2017-11-01 21:54:11,230 -> Indexing candidates... [2.753ms]
+2017-11-01 21:54:12,455 -> Finding maximal disks inside partitions... [1.225ms]
+2017-11-01 21:54:12,553 -> Filtering candidate disks on frame partitions... [0.098ms]
+2017-11-01 21:54:14,271 -> Re-indexing candidate disks in frame partitions... [1.718ms]
+2017-11-01 21:54:14,764 -> Finding maximal disks in frame partitions... [0.493ms]
+2017-11-01 21:54:14,790 -> Prunning duplicates... [0.025ms]
+2017-11-01 21:54:16,132 -> Loading distincts... [1.342ms]
+2017-11-01 21:54:17,514 -> Running jLCM... [1.381ms]
+2017-11-01 21:54:17,531 -> Collecting final maximal disks... [0.017ms]
+2017-11-01 21:54:17,531 ->   Data, # Cands,    # In,   # Fr,   # Max, Part, Ent,   Eps, Mu,   TimeI,   TimeF,    Time
+2017-11-01 21:54:17,532 ->   B40K,   34417,   32101,    854,    4126, 1024,  25,  10.0, 12,    1.23,    2.31,   34.57
+2017-11-01 21:54:17,694 -> Dropping center and candidate indices... [0.162ms]
+2017-11-01 21:54:17,694 -> Running epsilon = 20.0 iteration...
+2017-11-01 21:54:18,970 -> Self-join... [1.276ms]
+2017-11-01 21:54:31,316 -> Computing disks... [12.346ms]
+2017-11-01 21:54:39,258 -> Mapping disks and points... [7.941ms]
+2017-11-01 21:54:40,910 -> Filtering less-than-mu disks... [1.652ms]
+2017-11-01 21:54:44,367 -> Indexing candidates... [3.457ms]
+2017-11-01 21:54:46,639 -> Finding maximal disks inside partitions... [2.272ms]
+2017-11-01 21:54:46,680 -> Filtering candidate disks on frame partitions... [0.040ms]
+2017-11-01 21:54:48,684 -> Re-indexing candidate disks in frame partitions... [2.004ms]
+2017-11-01 21:54:49,245 -> Finding maximal disks in frame partitions... [0.561ms]
+2017-11-01 21:54:49,257 -> Prunning duplicates... [0.012ms]
+2017-11-01 21:54:51,455 -> Loading distincts... [2.198ms]
+2017-11-01 21:54:53,113 -> Running jLCM... [1.658ms]
+2017-11-01 21:54:53,125 -> Collecting final maximal disks... [0.012ms]
+2017-11-01 21:54:53,125 ->   Data, # Cands,    # In,   # Fr,   # Max, Part, Ent,   Eps, Mu,   TimeI,   TimeF,    Time
+2017-11-01 21:54:53,125 ->   B40K,   86375,   79446,    973,    7665, 1024,  25,  20.0, 12,    2.27,    2.61,   35.43
+2017-11-01 21:54:53,242 -> Dropping center and candidate indices... [0.116ms]
+2017-11-01 21:54:53,242 -> Running epsilon = 30.0 iteration...
+2017-11-01 21:54:54,472 -> Self-join... [1.229ms]
+2017-11-01 21:55:09,448 -> Computing disks... [14.976ms]
+2017-11-01 21:55:18,040 -> Mapping disks and points... [8.592ms]
+2017-11-01 21:55:19,655 -> Filtering less-than-mu disks... [1.615ms]
+2017-11-01 21:55:23,718 -> Indexing candidates... [4.063ms]
+2017-11-01 21:55:27,909 -> Finding maximal disks inside partitions... [4.190ms]
+2017-11-01 21:55:27,945 -> Filtering candidate disks on frame partitions... [0.035ms]
+2017-11-01 21:55:29,152 -> Re-indexing candidate disks in frame partitions... [1.207ms]
+2017-11-01 21:55:29,747 -> Finding maximal disks in frame partitions... [0.595ms]
+2017-11-01 21:55:29,759 -> Prunning duplicates... [0.010ms]
+2017-11-01 21:55:32,574 -> Loading distincts... [2.815ms]
+2017-11-01 21:55:36,934 -> Running jLCM... [4.360ms]
+2017-11-01 21:55:36,947 -> Collecting final maximal disks... [0.012ms]
+2017-11-01 21:55:36,947 ->   Data, # Cands,    # In,   # Fr,   # Max, Part, Ent,   Eps, Mu,   TimeI,   TimeF,    Time
+2017-11-01 21:55:36,947 ->   B40K,  141483,  127542,   1184,   10055, 1024,  25,  30.0, 12,    4.19,    1.84,   43.70
+2017-11-01 21:55:37,062 -> Dropping center and candidate indices... [0.114ms]
+2017-11-01 21:55:37,062 -> Running epsilon = 40.0 iteration...
+2017-11-01 21:55:38,252 -> Self-join... [1.189ms]
+2017-11-01 21:55:55,311 -> Computing disks... [17.059ms]
+2017-11-01 21:56:05,043 -> Mapping disks and points... [9.732ms]
+2017-11-01 21:56:06,988 -> Filtering less-than-mu disks... [1.944ms]
+2017-11-01 21:56:11,575 -> Indexing candidates... [4.587ms]
+2017-11-01 21:56:19,991 -> Finding maximal disks inside partitions... [8.416ms]
+2017-11-01 21:56:20,025 -> Filtering candidate disks on frame partitions... [0.034ms]
+2017-11-01 21:56:21,340 -> Re-indexing candidate disks in frame partitions... [1.315ms]
+2017-11-01 21:56:21,995 -> Finding maximal disks in frame partitions... [0.655ms]
+2017-11-01 21:56:22,005 -> Prunning duplicates... [0.010ms]
+2017-11-01 21:56:25,601 -> Loading distincts... [3.596ms]
+2017-11-01 21:56:32,307 -> Running jLCM... [6.706ms]
+2017-11-01 21:56:32,323 -> Collecting final maximal disks... [0.016ms]
+2017-11-01 21:56:32,323 ->   Data, # Cands,    # In,   # Fr,   # Max, Part, Ent,   Eps, Mu,   TimeI,   TimeF,    Time
+2017-11-01 21:56:32,323 ->   B40K,  200113,  176766,   1499,   12678, 1024,  25,  40.0, 12,    8.42,    2.00,   55.26
+2017-11-01 21:56:32,445 -> Dropping center and candidate indices... [0.121ms]
+2017-11-01 21:56:32,445 -> Running epsilon = 50.0 iteration...
+2017-11-01 21:56:33,595 -> Self-join... [1.150ms]
+2017-11-01 21:56:52,919 -> Computing disks... [19.324ms]
+2017-11-01 21:57:03,600 -> Mapping disks and points... [10.681ms]
+2017-11-01 21:57:06,199 -> Filtering less-than-mu disks... [2.599ms]
+2017-11-01 21:57:11,544 -> Indexing candidates... [5.345ms]
+2017-11-01 21:57:29,966 -> Finding maximal disks inside partitions... [18.422ms]
+2017-11-01 21:57:29,999 -> Filtering candidate disks on frame partitions... [0.033ms]
+2017-11-01 21:57:31,679 -> Re-indexing candidate disks in frame partitions... [1.680ms]
+2017-11-01 21:57:32,389 -> Finding maximal disks in frame partitions... [0.710ms]
+2017-11-01 21:57:32,400 -> Prunning duplicates... [0.010ms]
+2017-11-01 21:57:36,777 -> Loading distincts... [4.377ms]
+2017-11-01 21:57:56,492 -> Running jLCM... [19.715ms]
+2017-11-01 21:57:56,512 -> Collecting final maximal disks... [0.020ms]
+2017-11-01 21:57:56,512 ->   Data, # Cands,    # In,   # Fr,   # Max, Part, Ent,   Eps, Mu,   TimeI,   TimeF,    Time
+2017-11-01 21:57:56,512 ->   B40K,  260146,  225374,   1823,   14904, 1024,  25,  50.0, 12,   18.42,    2.42,   84.07
+2017-11-01 21:57:56,647 -> Dropping center and candidate indices... [0.134ms]
+2017-11-01 21:57:56,694 -> Dropping point indices... [0.046ms]
+2017-11-01 21:57:56,694 -> Finishing MaximalFinder at 21:57:56.694...]
+2017-11-01 21:57:56,782 -> Closing session... [0.088ms]
+2017-11-01 21:57:56,782 -> Total time for session: 266.973ms...
+2017-11-01 21:57:56,783 -> Ending app at 2017-11-01T21:57:56.782...
+Done!!! Wed Nov  1 21:57:57 PDT 2017
+Running iteration 2/3 ...
+2017-11-01 21:57:58,654 -> Starting app at 2017-11-01T21:57:58.567...
+2017-11-01 21:58:01,258 -> Setting variables... [2.600ms]
+2017-11-01 21:58:04,390 -> Starting session... [3.131ms]
+2017-11-01 21:58:07,292 -> Reading /home/acald013/PhD/Y3Q1/Datasets/B40K.csv... [2.894ms]
+2017-11-01 21:58:07,295 -> Lauching MaximalFinder at 21:58:07.293...
+2017-11-01 21:58:09,618 -> Running with mu = 12, cores = 14, partitions = 1024 over 39442 points...
+2017-11-01 21:58:14,004 -> Indexing... [4.385ms]
+2017-11-01 21:58:14,024 -> Running epsilon = 10.0 iteration...
+2017-11-01 21:58:15,591 -> Self-join... [1.567ms]
+2017-11-01 21:58:28,917 -> Computing disks... [13.326ms]
+2017-11-01 21:58:38,862 -> Mapping disks and points... [9.945ms]
+2017-11-01 21:58:40,445 -> Filtering less-than-mu disks... [1.583ms]
+2017-11-01 21:58:43,145 -> Indexing candidates... [2.700ms]
+2017-11-01 21:58:44,883 -> Finding maximal disks inside partitions... [1.738ms]
+2017-11-01 21:58:44,982 -> Filtering candidate disks on frame partitions... [0.098ms]
+2017-11-01 21:58:46,724 -> Re-indexing candidate disks in frame partitions... [1.742ms]
+2017-11-01 21:58:47,230 -> Finding maximal disks in frame partitions... [0.506ms]
+2017-11-01 21:58:47,258 -> Prunning duplicates... [0.028ms]
+2017-11-01 21:58:48,609 -> Loading distincts... [1.351ms]
+2017-11-01 21:58:50,021 -> Running jLCM... [1.412ms]
+2017-11-01 21:58:50,045 -> Collecting final maximal disks... [0.023ms]
+2017-11-01 21:58:50,046 ->   Data, # Cands,    # In,   # Fr,   # Max, Part, Ent,   Eps, Mu,   TimeI,   TimeF,    Time
+2017-11-01 21:58:50,047 ->   B40K,   34417,   31919,    849,    4118, 1024,  25,  10.0, 12,    1.74,    2.35,   36.02
+2017-11-01 21:58:50,217 -> Dropping center and candidate indices... [0.170ms]
+2017-11-01 21:58:50,218 -> Running epsilon = 20.0 iteration...
+2017-11-01 21:58:51,433 -> Self-join... [1.215ms]
+2017-11-01 21:59:04,273 -> Computing disks... [12.840ms]
+2017-11-01 21:59:12,268 -> Mapping disks and points... [7.994ms]
+2017-11-01 21:59:13,928 -> Filtering less-than-mu disks... [1.660ms]
+2017-11-01 21:59:17,379 -> Indexing candidates... [3.451ms]
+2017-11-01 21:59:19,644 -> Finding maximal disks inside partitions... [2.265ms]
+2017-11-01 21:59:19,686 -> Filtering candidate disks on frame partitions... [0.041ms]
+2017-11-01 21:59:21,370 -> Re-indexing candidate disks in frame partitions... [1.684ms]
+2017-11-01 21:59:21,931 -> Finding maximal disks in frame partitions... [0.561ms]
+2017-11-01 21:59:21,943 -> Prunning duplicates... [0.012ms]
+2017-11-01 21:59:24,143 -> Loading distincts... [2.199ms]
+2017-11-01 21:59:25,964 -> Running jLCM... [1.820ms]
+2017-11-01 21:59:25,975 -> Collecting final maximal disks... [0.011ms]
+2017-11-01 21:59:25,975 ->   Data, # Cands,    # In,   # Fr,   # Max, Part, Ent,   Eps, Mu,   TimeI,   TimeF,    Time
+2017-11-01 21:59:25,975 ->   B40K,   86375,   79740,    995,    7538, 1024,  25,  20.0, 12,    2.27,    2.29,   35.76
+2017-11-01 21:59:26,091 -> Dropping center and candidate indices... [0.115ms]
+2017-11-01 21:59:26,091 -> Running epsilon = 30.0 iteration...
+2017-11-01 21:59:27,221 -> Self-join... [1.130ms]
+2017-11-01 21:59:42,135 -> Computing disks... [14.913ms]
+2017-11-01 21:59:51,026 -> Mapping disks and points... [8.890ms]
+2017-11-01 21:59:52,912 -> Filtering less-than-mu disks... [1.886ms]
+2017-11-01 21:59:56,767 -> Indexing candidates... [3.855ms]
+2017-11-01 22:00:01,796 -> Finding maximal disks inside partitions... [5.029ms]
+2017-11-01 22:00:01,832 -> Filtering candidate disks on frame partitions... [0.036ms]
+2017-11-01 22:00:03,118 -> Re-indexing candidate disks in frame partitions... [1.285ms]
+2017-11-01 22:00:03,721 -> Finding maximal disks in frame partitions... [0.603ms]
+2017-11-01 22:00:03,733 -> Prunning duplicates... [0.012ms]
+2017-11-01 22:00:06,740 -> Loading distincts... [3.007ms]
+2017-11-01 22:00:11,114 -> Running jLCM... [4.373ms]
+2017-11-01 22:00:11,127 -> Collecting final maximal disks... [0.012ms]
+2017-11-01 22:00:11,127 ->   Data, # Cands,    # In,   # Fr,   # Max, Part, Ent,   Eps, Mu,   TimeI,   TimeF,    Time
+2017-11-01 22:00:11,128 ->   B40K,  141483,  125230,   1257,   10510, 1024,  25,  30.0, 12,    5.03,    1.93,   45.04
+2017-11-01 22:00:11,243 -> Dropping center and candidate indices... [0.115ms]
+2017-11-01 22:00:11,243 -> Running epsilon = 40.0 iteration...
+2017-11-01 22:00:12,370 -> Self-join... [1.127ms]
+2017-11-01 22:00:29,047 -> Computing disks... [16.676ms]
+2017-11-01 22:00:38,906 -> Mapping disks and points... [9.859ms]
+2017-11-01 22:00:41,600 -> Filtering less-than-mu disks... [2.694ms]
+2017-11-01 22:00:46,661 -> Indexing candidates... [5.061ms]
+2017-11-01 22:00:59,319 -> Finding maximal disks inside partitions... [12.657ms]
+2017-11-01 22:00:59,354 -> Filtering candidate disks on frame partitions... [0.035ms]
+2017-11-01 22:01:00,831 -> Re-indexing candidate disks in frame partitions... [1.477ms]
+2017-11-01 22:01:01,523 -> Finding maximal disks in frame partitions... [0.692ms]
+2017-11-01 22:01:01,534 -> Prunning duplicates... [0.011ms]
+2017-11-01 22:01:05,629 -> Loading distincts... [4.095ms]
+2017-11-01 22:01:12,719 -> Running jLCM... [7.089ms]
+2017-11-01 22:01:12,735 -> Collecting final maximal disks... [0.016ms]
+2017-11-01 22:01:12,735 ->   Data, # Cands,    # In,   # Fr,   # Max, Part, Ent,   Eps, Mu,   TimeI,   TimeF,    Time
+2017-11-01 22:01:12,735 ->   B40K,  200113,  177111,   1513,   12788, 1024,  25,  40.0, 12,   12.66,    2.20,   61.49
+2017-11-01 22:01:12,862 -> Dropping center and candidate indices... [0.126ms]
+2017-11-01 22:01:12,862 -> Running epsilon = 50.0 iteration...
+2017-11-01 22:01:13,976 -> Self-join... [1.114ms]
+2017-11-01 22:01:33,634 -> Computing disks... [19.658ms]
+2017-11-01 22:01:43,481 -> Mapping disks and points... [9.847ms]
+2017-11-01 22:01:45,865 -> Filtering less-than-mu disks... [2.384ms]
+2017-11-01 22:01:51,147 -> Indexing candidates... [5.282ms]
+2017-11-01 22:02:08,642 -> Finding maximal disks inside partitions... [17.495ms]
+2017-11-01 22:02:08,675 -> Filtering candidate disks on frame partitions... [0.033ms]
+2017-11-01 22:02:10,218 -> Re-indexing candidate disks in frame partitions... [1.542ms]
+2017-11-01 22:02:10,909 -> Finding maximal disks in frame partitions... [0.691ms]
+2017-11-01 22:02:10,920 -> Prunning duplicates... [0.011ms]
+2017-11-01 22:02:15,317 -> Loading distincts... [4.397ms]
+2017-11-01 22:02:32,400 -> Running jLCM... [17.083ms]
+2017-11-01 22:02:32,419 -> Collecting final maximal disks... [0.019ms]
+2017-11-01 22:02:32,420 ->   Data, # Cands,    # In,   # Fr,   # Max, Part, Ent,   Eps, Mu,   TimeI,   TimeF,    Time
+2017-11-01 22:02:32,420 ->   B40K,  260146,  225957,   1828,   14717, 1024,  25,  50.0, 12,   17.50,    2.27,   79.56
+2017-11-01 22:02:32,562 -> Dropping center and candidate indices... [0.142ms]
+2017-11-01 22:02:32,609 -> Dropping point indices... [0.046ms]
+2017-11-01 22:02:32,609 -> Finishing MaximalFinder at 22:02:32.609...]
+2017-11-01 22:02:32,701 -> Closing session... [0.092ms]
+2017-11-01 22:02:32,701 -> Total time for session: 271.442ms...
+2017-11-01 22:02:32,701 -> Ending app at 2017-11-01T22:02:32.701...
+Done!!! Wed Nov  1 22:02:33 PDT 2017
+Running iteration 3/3 ...
+2017-11-01 22:02:34,627 -> Starting app at 2017-11-01T22:02:34.539...
+2017-11-01 22:02:37,199 -> Setting variables... [2.567ms]
+2017-11-01 22:02:40,220 -> Starting session... [3.019ms]
+2017-11-01 22:02:43,095 -> Reading /home/acald013/PhD/Y3Q1/Datasets/B40K.csv... [2.874ms]
+2017-11-01 22:02:43,098 -> Lauching MaximalFinder at 22:02:43.095...
+2017-11-01 22:02:45,468 -> Running with mu = 12, cores = 14, partitions = 1024 over 39442 points...
+2017-11-01 22:02:50,398 -> Indexing... [4.930ms]
+2017-11-01 22:02:50,417 -> Running epsilon = 10.0 iteration...
+2017-11-01 22:02:52,084 -> Self-join... [1.666ms]
+2017-11-01 22:03:05,147 -> Computing disks... [13.063ms]
+2017-11-01 22:03:14,251 -> Mapping disks and points... [9.104ms]
+2017-11-01 22:03:15,825 -> Filtering less-than-mu disks... [1.574ms]
+2017-11-01 22:03:18,649 -> Indexing candidates... [2.824ms]
+2017-11-01 22:03:19,782 -> Finding maximal disks inside partitions... [1.133ms]
+2017-11-01 22:03:19,877 -> Filtering candidate disks on frame partitions... [0.095ms]
+2017-11-01 22:03:21,594 -> Re-indexing candidate disks in frame partitions... [1.717ms]
+2017-11-01 22:03:22,089 -> Finding maximal disks in frame partitions... [0.495ms]
+2017-11-01 22:03:22,114 -> Prunning duplicates... [0.025ms]
+2017-11-01 22:03:23,405 -> Loading distincts... [1.290ms]
+2017-11-01 22:03:24,502 -> Running jLCM... [1.097ms]
+2017-11-01 22:03:24,523 -> Collecting final maximal disks... [0.020ms]
+2017-11-01 22:03:24,523 ->   Data, # Cands,    # In,   # Fr,   # Max, Part, Ent,   Eps, Mu,   TimeI,   TimeF,    Time
+2017-11-01 22:03:24,524 ->   B40K,   34417,   31994,    872,    4139, 1024,  25,  10.0, 12,    1.13,    2.31,   34.11
+2017-11-01 22:03:24,694 -> Dropping center and candidate indices... [0.170ms]
+2017-11-01 22:03:24,694 -> Running epsilon = 20.0 iteration...
+2017-11-01 22:03:26,004 -> Self-join... [1.309ms]
+2017-11-01 22:03:38,929 -> Computing disks... [12.925ms]
+2017-11-01 22:03:46,806 -> Mapping disks and points... [7.876ms]
+2017-11-01 22:03:48,309 -> Filtering less-than-mu disks... [1.502ms]
+2017-11-01 22:03:51,675 -> Indexing candidates... [3.365ms]
+2017-11-01 22:03:53,574 -> Finding maximal disks inside partitions... [1.899ms]
+2017-11-01 22:03:53,615 -> Filtering candidate disks on frame partitions... [0.041ms]
+2017-11-01 22:03:55,192 -> Re-indexing candidate disks in frame partitions... [1.577ms]
+2017-11-01 22:03:55,731 -> Finding maximal disks in frame partitions... [0.539ms]
+2017-11-01 22:03:55,744 -> Prunning duplicates... [0.013ms]
+2017-11-01 22:03:57,771 -> Loading distincts... [2.027ms]
+2017-11-01 22:03:59,646 -> Running jLCM... [1.875ms]
+2017-11-01 22:03:59,657 -> Collecting final maximal disks... [0.011ms]
+2017-11-01 22:03:59,657 ->   Data, # Cands,    # In,   # Fr,   # Max, Part, Ent,   Eps, Mu,   TimeI,   TimeF,    Time
+2017-11-01 22:03:59,657 ->   B40K,   86375,   79426,    976,    7544, 1024,  25,  20.0, 12,    1.90,    2.16,   34.96
+2017-11-01 22:03:59,773 -> Dropping center and candidate indices... [0.115ms]
+2017-11-01 22:03:59,774 -> Running epsilon = 30.0 iteration...
+2017-11-01 22:04:01,042 -> Self-join... [1.268ms]
+2017-11-01 22:04:15,185 -> Computing disks... [14.143ms]
+2017-11-01 22:04:24,555 -> Mapping disks and points... [9.370ms]
+2017-11-01 22:04:26,540 -> Filtering less-than-mu disks... [1.985ms]
+2017-11-01 22:04:30,602 -> Indexing candidates... [4.062ms]
+2017-11-01 22:04:35,614 -> Finding maximal disks inside partitions... [5.012ms]
+2017-11-01 22:04:35,651 -> Filtering candidate disks on frame partitions... [0.037ms]
+2017-11-01 22:04:36,922 -> Re-indexing candidate disks in frame partitions... [1.271ms]
+2017-11-01 22:04:37,528 -> Finding maximal disks in frame partitions... [0.606ms]
+2017-11-01 22:04:37,539 -> Prunning duplicates... [0.011ms]
+2017-11-01 22:04:40,664 -> Loading distincts... [3.124ms]
+2017-11-01 22:04:44,860 -> Running jLCM... [4.196ms]
+2017-11-01 22:04:44,873 -> Collecting final maximal disks... [0.013ms]
+2017-11-01 22:04:44,874 ->   Data, # Cands,    # In,   # Fr,   # Max, Part, Ent,   Eps, Mu,   TimeI,   TimeF,    Time
+2017-11-01 22:04:44,874 ->   B40K,  141483,  126418,   1191,   10273, 1024,  25,  30.0, 12,    5.01,    1.91,   45.10
+2017-11-01 22:04:44,991 -> Dropping center and candidate indices... [0.117ms]
+2017-11-01 22:04:44,992 -> Running epsilon = 40.0 iteration...
+2017-11-01 22:04:46,236 -> Self-join... [1.244ms]
+2017-11-01 22:05:02,683 -> Computing disks... [16.446ms]
+2017-11-01 22:05:11,898 -> Mapping disks and points... [9.215ms]
+2017-11-01 22:05:14,000 -> Filtering less-than-mu disks... [2.102ms]
+2017-11-01 22:05:18,887 -> Indexing candidates... [4.887ms]
+2017-11-01 22:05:28,128 -> Finding maximal disks inside partitions... [9.241ms]
+2017-11-01 22:05:28,163 -> Filtering candidate disks on frame partitions... [0.035ms]
+2017-11-01 22:05:29,613 -> Re-indexing candidate disks in frame partitions... [1.450ms]
+2017-11-01 22:05:30,256 -> Finding maximal disks in frame partitions... [0.643ms]
+2017-11-01 22:05:30,266 -> Prunning duplicates... [0.010ms]
+2017-11-01 22:05:33,917 -> Loading distincts... [3.650ms]
+2017-11-01 22:05:40,646 -> Running jLCM... [6.729ms]
+2017-11-01 22:05:40,664 -> Collecting final maximal disks... [0.018ms]
+2017-11-01 22:05:40,664 ->   Data, # Cands,    # In,   # Fr,   # Max, Part, Ent,   Eps, Mu,   TimeI,   TimeF,    Time
+2017-11-01 22:05:40,664 ->   B40K,  200113,  175253,   1466,   13111, 1024,  25,  40.0, 12,    9.24,    2.13,   55.67
+2017-11-01 22:05:40,789 -> Dropping center and candidate indices... [0.124ms]
+2017-11-01 22:05:40,789 -> Running epsilon = 50.0 iteration...
+2017-11-01 22:05:42,053 -> Self-join... [1.263ms]
+2017-11-01 22:06:01,445 -> Computing disks... [19.391ms]
+2017-11-01 22:06:12,449 -> Mapping disks and points... [11.004ms]
+2017-11-01 22:06:14,818 -> Filtering less-than-mu disks... [2.369ms]
+2017-11-01 22:06:20,072 -> Indexing candidates... [5.254ms]
+2017-11-01 22:06:38,032 -> Finding maximal disks inside partitions... [17.960ms]
+2017-11-01 22:06:38,065 -> Filtering candidate disks on frame partitions... [0.033ms]
+2017-11-01 22:06:39,611 -> Re-indexing candidate disks in frame partitions... [1.546ms]
+2017-11-01 22:06:40,310 -> Finding maximal disks in frame partitions... [0.699ms]
+2017-11-01 22:06:40,321 -> Prunning duplicates... [0.011ms]
+2017-11-01 22:06:44,626 -> Loading distincts... [4.305ms]
+2017-11-01 22:07:04,855 -> Running jLCM... [20.229ms]
+2017-11-01 22:07:04,876 -> Collecting final maximal disks... [0.021ms]
+2017-11-01 22:07:04,876 ->   Data, # Cands,    # In,   # Fr,   # Max, Part, Ent,   Eps, Mu,   TimeI,   TimeF,    Time
+2017-11-01 22:07:04,877 ->   B40K,  260146,  225378,   1842,   15081, 1024,  25,  50.0, 12,   17.96,    2.28,   84.09
+2017-11-01 22:07:05,014 -> Dropping center and candidate indices... [0.137ms]
+2017-11-01 22:07:05,059 -> Dropping point indices... [0.045ms]
+2017-11-01 22:07:05,060 -> Finishing MaximalFinder at 22:07:05.060...]
+2017-11-01 22:07:05,150 -> Closing session... [0.090ms]
+2017-11-01 22:07:05,150 -> Total time for session: 267.949ms...
+2017-11-01 22:07:05,151 -> Ending app at 2017-11-01T22:07:05.151...
+Done!!! Wed Nov  1 22:07:05 PDT 2017
+acald013@dblab-rack12: stopping org.apache.spark.deploy.worker.Worker
+acald013@dblab-rack11: stopping org.apache.spark.deploy.worker.Worker
+stopping org.apache.spark.deploy.master.Master
+starting org.apache.spark.deploy.master.Master, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.master.Master-1-dblab-rack15.out
+acald013@dblab-rack12: starting org.apache.spark.deploy.worker.Worker, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.worker.Worker-1-dblab-rack12.out
+acald013@dblab-rack14: starting org.apache.spark.deploy.worker.Worker, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.worker.Worker-1-dblab-rack14.cs.ucr.edu.out
+acald013@dblab-rack11: starting org.apache.spark.deploy.worker.Worker, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.worker.Worker-1-dblab-rack11.cs.ucr.edu.out
+Running iteration 1/3 ...
+2017-11-01 22:07:12,555 -> Starting app at 2017-11-01T22:07:12.467...
+2017-11-01 22:07:15,174 -> Setting variables... [2.615ms]
+2017-11-01 22:07:18,296 -> Starting session... [3.119ms]
+2017-11-01 22:07:21,189 -> Reading /home/acald013/PhD/Y3Q1/Datasets/B60K.csv... [2.893ms]
+2017-11-01 22:07:21,193 -> Lauching MaximalFinder at 22:07:21.190...
+2017-11-01 22:07:23,380 -> Running with mu = 12, cores = 21, partitions = 1024 over 59142 points...
+2017-11-01 22:07:27,837 -> Indexing... [4.456ms]
+2017-11-01 22:07:27,855 -> Running epsilon = 10.0 iteration...
+2017-11-01 22:07:29,841 -> Self-join... [1.986ms]
+2017-11-01 22:07:42,911 -> Computing disks... [13.069ms]
+2017-11-01 22:07:51,035 -> Mapping disks and points... [8.124ms]
+2017-11-01 22:07:52,590 -> Filtering less-than-mu disks... [1.555ms]
+2017-11-01 22:07:55,002 -> Indexing candidates... [2.412ms]
+2017-11-01 22:07:56,054 -> Finding maximal disks inside partitions... [1.052ms]
+2017-11-01 22:07:56,154 -> Filtering candidate disks on frame partitions... [0.093ms]
+2017-11-01 22:07:57,603 -> Re-indexing candidate disks in frame partitions... [1.449ms]
+2017-11-01 22:07:58,138 -> Finding maximal disks in frame partitions... [0.535ms]
+2017-11-01 22:07:58,164 -> Prunning duplicates... [0.026ms]
+2017-11-01 22:07:59,683 -> Loading distincts... [1.518ms]
+2017-11-01 22:08:01,410 -> Running jLCM... [1.727ms]
+2017-11-01 22:08:01,439 -> Collecting final maximal disks... [0.029ms]
+2017-11-01 22:08:01,440 ->   Data, # Cands,    # In,   # Fr,   # Max, Part, Ent,   Eps, Mu,   TimeI,   TimeF,    Time
+2017-11-01 22:08:01,440 ->   B60K,   44947,   41580,    831,    5801, 1024,  25,  10.0, 12,    1.05,    2.08,   33.58
+2017-11-01 22:08:01,600 -> Dropping center and candidate indices... [0.159ms]
+2017-11-01 22:08:01,601 -> Running epsilon = 20.0 iteration...
+2017-11-01 22:08:03,357 -> Self-join... [1.756ms]
+2017-11-01 22:08:15,560 -> Computing disks... [12.201ms]
+2017-11-01 22:08:23,390 -> Mapping disks and points... [7.830ms]
+2017-11-01 22:08:25,224 -> Filtering less-than-mu disks... [1.834ms]
+2017-11-01 22:08:28,317 -> Indexing candidates... [3.093ms]
+2017-11-01 22:08:30,998 -> Finding maximal disks inside partitions... [2.681ms]
+2017-11-01 22:08:31,038 -> Filtering candidate disks on frame partitions... [0.040ms]
+2017-11-01 22:08:32,516 -> Re-indexing candidate disks in frame partitions... [1.478ms]
+2017-11-01 22:08:33,113 -> Finding maximal disks in frame partitions... [0.597ms]
+2017-11-01 22:08:33,125 -> Prunning duplicates... [0.012ms]
+2017-11-01 22:08:35,496 -> Loading distincts... [2.371ms]
+2017-11-01 22:08:38,750 -> Running jLCM... [3.254ms]
+2017-11-01 22:08:38,765 -> Collecting final maximal disks... [0.015ms]
+2017-11-01 22:08:38,765 ->   Data, # Cands,    # In,   # Fr,   # Max, Part, Ent,   Eps, Mu,   TimeI,   TimeF,    Time
+2017-11-01 22:08:38,765 ->   B60K,  116585,  108455,    914,   10982, 1024,  25,  20.0, 12,    2.68,    2.12,   37.16
+2017-11-01 22:08:38,876 -> Dropping center and candidate indices... [0.110ms]
+2017-11-01 22:08:38,876 -> Running epsilon = 30.0 iteration...
+2017-11-01 22:08:40,629 -> Self-join... [1.753ms]
+2017-11-01 22:08:53,683 -> Computing disks... [13.054ms]
+2017-11-01 22:09:02,204 -> Mapping disks and points... [8.520ms]
+2017-11-01 22:09:04,693 -> Filtering less-than-mu disks... [2.489ms]
+2017-11-01 22:09:08,663 -> Indexing candidates... [3.970ms]
+2017-11-01 22:09:16,909 -> Finding maximal disks inside partitions... [8.246ms]
+2017-11-01 22:09:16,945 -> Filtering candidate disks on frame partitions... [0.036ms]
+2017-11-01 22:09:18,438 -> Re-indexing candidate disks in frame partitions... [1.493ms]
+2017-11-01 22:09:19,105 -> Finding maximal disks in frame partitions... [0.667ms]
+2017-11-01 22:09:19,116 -> Prunning duplicates... [0.011ms]
+2017-11-01 22:09:22,538 -> Loading distincts... [3.422ms]
+2017-11-01 22:09:27,955 -> Running jLCM... [5.417ms]
+2017-11-01 22:09:27,974 -> Collecting final maximal disks... [0.019ms]
+2017-11-01 22:09:27,974 ->   Data, # Cands,    # In,   # Fr,   # Max, Part, Ent,   Eps, Mu,   TimeI,   TimeF,    Time
+2017-11-01 22:09:27,974 ->   B60K,  193606,  174410,    973,   15262, 1024,  25,  30.0, 12,    8.25,    2.20,   49.10
+2017-11-01 22:09:28,093 -> Dropping center and candidate indices... [0.118ms]
+2017-11-01 22:09:28,093 -> Running epsilon = 40.0 iteration...
+2017-11-01 22:09:29,827 -> Self-join... [1.734ms]
+2017-11-01 22:09:45,026 -> Computing disks... [15.199ms]
+2017-11-01 22:09:53,688 -> Mapping disks and points... [8.662ms]
+2017-11-01 22:09:56,512 -> Filtering less-than-mu disks... [2.823ms]
+2017-11-01 22:10:01,387 -> Indexing candidates... [4.875ms]
+2017-11-01 22:10:21,072 -> Finding maximal disks inside partitions... [19.685ms]
+2017-11-01 22:10:21,106 -> Filtering candidate disks on frame partitions... [0.033ms]
+2017-11-01 22:10:22,307 -> Re-indexing candidate disks in frame partitions... [1.201ms]
+2017-11-01 22:10:23,050 -> Finding maximal disks in frame partitions... [0.742ms]
+2017-11-01 22:10:23,060 -> Prunning duplicates... [0.010ms]
+2017-11-01 22:10:27,248 -> Loading distincts... [4.188ms]
+2017-11-01 22:10:36,701 -> Running jLCM... [9.453ms]
+2017-11-01 22:10:36,725 -> Collecting final maximal disks... [0.023ms]
+2017-11-01 22:10:36,725 ->   Data, # Cands,    # In,   # Fr,   # Max, Part, Ent,   Eps, Mu,   TimeI,   TimeF,    Time
+2017-11-01 22:10:36,725 ->   B60K,  277359,  246793,   1031,   19054, 1024,  25,  40.0, 12,   19.69,    1.98,   68.63
+2017-11-01 22:10:36,851 -> Dropping center and candidate indices... [0.125ms]
+2017-11-01 22:10:36,851 -> Running epsilon = 50.0 iteration...
+2017-11-01 22:10:38,571 -> Self-join... [1.720ms]
+2017-11-01 22:10:55,952 -> Computing disks... [17.381ms]
+2017-11-01 22:11:05,749 -> Mapping disks and points... [9.797ms]
+2017-11-01 22:11:08,615 -> Filtering less-than-mu disks... [2.866ms]
+2017-11-01 22:11:13,313 -> Indexing candidates... [4.698ms]
+2017-11-01 22:11:37,033 -> Finding maximal disks inside partitions... [23.720ms]
+2017-11-01 22:11:37,067 -> Filtering candidate disks on frame partitions... [0.034ms]
+2017-11-01 22:11:38,290 -> Re-indexing candidate disks in frame partitions... [1.223ms]
+2017-11-01 22:11:39,055 -> Finding maximal disks in frame partitions... [0.764ms]
+2017-11-01 22:11:39,065 -> Prunning duplicates... [0.010ms]
+2017-11-01 22:11:42,839 -> Loading distincts... [3.774ms]
+2017-11-01 22:12:07,437 -> Running jLCM... [24.598ms]
+2017-11-01 22:12:07,465 -> Collecting final maximal disks... [0.028ms]
+2017-11-01 22:12:07,466 ->   Data, # Cands,    # In,   # Fr,   # Max, Part, Ent,   Eps, Mu,   TimeI,   TimeF,    Time
+2017-11-01 22:12:07,466 ->   B60K,  363622,  319359,   1119,   22366, 1024,  25,  50.0, 12,   23.72,    2.02,   90.62
+2017-11-01 22:12:07,604 -> Dropping center and candidate indices... [0.138ms]
+2017-11-01 22:12:07,649 -> Dropping point indices... [0.045ms]
+2017-11-01 22:12:07,650 -> Finishing MaximalFinder at 22:12:07.650...]
+2017-11-01 22:12:07,736 -> Closing session... [0.086ms]
+2017-11-01 22:12:07,736 -> Total time for session: 292.560ms...
+2017-11-01 22:12:07,736 -> Ending app at 2017-11-01T22:12:07.736...
+Done!!! Wed Nov  1 22:12:08 PDT 2017
+Running iteration 2/3 ...
+2017-11-01 22:12:09,592 -> Starting app at 2017-11-01T22:12:09.504...
+2017-11-01 22:12:12,269 -> Setting variables... [2.671ms]
+2017-11-01 22:12:15,410 -> Starting session... [3.139ms]
+2017-11-01 22:12:18,322 -> Reading /home/acald013/PhD/Y3Q1/Datasets/B60K.csv... [2.912ms]
+2017-11-01 22:12:18,325 -> Lauching MaximalFinder at 22:12:18.323...
+2017-11-01 22:12:20,706 -> Running with mu = 12, cores = 21, partitions = 1024 over 59142 points...
+2017-11-01 22:12:25,683 -> Indexing... [4.977ms]
+2017-11-01 22:12:25,701 -> Running epsilon = 10.0 iteration...
+2017-11-01 22:12:27,719 -> Self-join... [2.018ms]
+2017-11-01 22:12:40,563 -> Computing disks... [12.844ms]
+2017-11-01 22:12:48,955 -> Mapping disks and points... [8.391ms]
+2017-11-01 22:12:50,469 -> Filtering less-than-mu disks... [1.513ms]
+2017-11-01 22:12:52,905 -> Indexing candidates... [2.436ms]
+2017-11-01 22:12:53,979 -> Finding maximal disks inside partitions... [1.074ms]
+2017-11-01 22:12:54,073 -> Filtering candidate disks on frame partitions... [0.094ms]
+2017-11-01 22:12:55,544 -> Re-indexing candidate disks in frame partitions... [1.471ms]
+2017-11-01 22:12:56,050 -> Finding maximal disks in frame partitions... [0.505ms]
+2017-11-01 22:12:56,076 -> Prunning duplicates... [0.026ms]
+2017-11-01 22:12:57,383 -> Loading distincts... [1.307ms]
+2017-11-01 22:12:58,982 -> Running jLCM... [1.598ms]
+2017-11-01 22:12:59,001 -> Collecting final maximal disks... [0.019ms]
+2017-11-01 22:12:59,001 ->   Data, # Cands,    # In,   # Fr,   # Max, Part, Ent,   Eps, Mu,   TimeI,   TimeF,    Time
+2017-11-01 22:12:59,002 ->   B60K,   44947,   41369,    861,    5758, 1024,  25,  10.0, 12,    1.07,    2.07,   33.30
+2017-11-01 22:12:59,176 -> Dropping center and candidate indices... [0.174ms]
+2017-11-01 22:12:59,177 -> Running epsilon = 20.0 iteration...
+2017-11-01 22:13:00,847 -> Self-join... [1.670ms]
+2017-11-01 22:13:12,857 -> Computing disks... [12.010ms]
+2017-11-01 22:13:21,328 -> Mapping disks and points... [8.471ms]
+2017-11-01 22:13:22,961 -> Filtering less-than-mu disks... [1.633ms]
+2017-11-01 22:13:26,163 -> Indexing candidates... [3.202ms]
+2017-11-01 22:13:28,601 -> Finding maximal disks inside partitions... [2.438ms]
+2017-11-01 22:13:28,642 -> Filtering candidate disks on frame partitions... [0.041ms]
+2017-11-01 22:13:30,107 -> Re-indexing candidate disks in frame partitions... [1.465ms]
+2017-11-01 22:13:30,683 -> Finding maximal disks in frame partitions... [0.576ms]
+2017-11-01 22:13:30,695 -> Prunning duplicates... [0.012ms]
+2017-11-01 22:13:33,099 -> Loading distincts... [2.404ms]
+2017-11-01 22:13:36,669 -> Running jLCM... [3.570ms]
+2017-11-01 22:13:36,682 -> Collecting final maximal disks... [0.013ms]
+2017-11-01 22:13:36,683 ->   Data, # Cands,    # In,   # Fr,   # Max, Part, Ent,   Eps, Mu,   TimeI,   TimeF,    Time
+2017-11-01 22:13:36,683 ->   B60K,  116585,  108334,    918,   11006, 1024,  25,  20.0, 12,    2.44,    2.08,   37.51
+2017-11-01 22:13:36,798 -> Dropping center and candidate indices... [0.115ms]
+2017-11-01 22:13:36,798 -> Running epsilon = 30.0 iteration...
+2017-11-01 22:13:38,461 -> Self-join... [1.663ms]
+2017-11-01 22:13:51,650 -> Computing disks... [13.189ms]
+2017-11-01 22:14:00,139 -> Mapping disks and points... [8.489ms]
+2017-11-01 22:14:02,148 -> Filtering less-than-mu disks... [2.008ms]
+2017-11-01 22:14:06,099 -> Indexing candidates... [3.951ms]
+2017-11-01 22:14:12,547 -> Finding maximal disks inside partitions... [6.448ms]
+2017-11-01 22:14:12,583 -> Filtering candidate disks on frame partitions... [0.035ms]
+2017-11-01 22:14:13,735 -> Re-indexing candidate disks in frame partitions... [1.152ms]
+2017-11-01 22:14:14,374 -> Finding maximal disks in frame partitions... [0.639ms]
+2017-11-01 22:14:14,385 -> Prunning duplicates... [0.011ms]
+2017-11-01 22:14:17,718 -> Loading distincts... [3.333ms]
+2017-11-01 22:14:23,185 -> Running jLCM... [5.466ms]
+2017-11-01 22:14:23,203 -> Collecting final maximal disks... [0.018ms]
+2017-11-01 22:14:23,203 ->   Data, # Cands,    # In,   # Fr,   # Max, Part, Ent,   Eps, Mu,   TimeI,   TimeF,    Time
+2017-11-01 22:14:23,204 ->   B60K,  193606,  173180,   1006,   15724, 1024,  25,  30.0, 12,    6.45,    1.83,   46.41
+2017-11-01 22:14:23,326 -> Dropping center and candidate indices... [0.122ms]
+2017-11-01 22:14:23,326 -> Running epsilon = 40.0 iteration...
+2017-11-01 22:14:24,986 -> Self-join... [1.660ms]
+2017-11-01 22:14:39,728 -> Computing disks... [14.742ms]
+2017-11-01 22:14:48,522 -> Mapping disks and points... [8.794ms]
+2017-11-01 22:14:51,424 -> Filtering less-than-mu disks... [2.901ms]
+2017-11-01 22:14:56,059 -> Indexing candidates... [4.635ms]
+2017-11-01 22:15:10,682 -> Finding maximal disks inside partitions... [14.622ms]
+2017-11-01 22:15:10,716 -> Filtering candidate disks on frame partitions... [0.034ms]
+2017-11-01 22:15:11,858 -> Re-indexing candidate disks in frame partitions... [1.142ms]
+2017-11-01 22:15:12,558 -> Finding maximal disks in frame partitions... [0.699ms]
+2017-11-01 22:15:12,569 -> Prunning duplicates... [0.011ms]
+2017-11-01 22:15:16,716 -> Loading distincts... [4.147ms]
+2017-11-01 22:15:26,420 -> Running jLCM... [9.703ms]
+2017-11-01 22:15:26,445 -> Collecting final maximal disks... [0.024ms]
+2017-11-01 22:15:26,445 ->   Data, # Cands,    # In,   # Fr,   # Max, Part, Ent,   Eps, Mu,   TimeI,   TimeF,    Time
+2017-11-01 22:15:26,445 ->   B60K,  277359,  244322,   1029,   19610, 1024,  25,  40.0, 12,   14.62,    1.88,   63.12
+2017-11-01 22:15:26,601 -> Dropping center and candidate indices... [0.156ms]
+2017-11-01 22:15:26,601 -> Running epsilon = 50.0 iteration...
+2017-11-01 22:15:28,257 -> Self-join... [1.656ms]
+2017-11-01 22:15:46,300 -> Computing disks... [18.043ms]
+2017-11-01 22:15:56,313 -> Mapping disks and points... [10.013ms]
+2017-11-01 22:15:59,315 -> Filtering less-than-mu disks... [3.001ms]
+2017-11-01 22:16:04,609 -> Indexing candidates... [5.292ms]
+2017-11-01 22:16:30,645 -> Finding maximal disks inside partitions... [26.036ms]
+2017-11-01 22:16:30,678 -> Filtering candidate disks on frame partitions... [0.033ms]
+2017-11-01 22:16:31,892 -> Re-indexing candidate disks in frame partitions... [1.214ms]
+2017-11-01 22:16:32,662 -> Finding maximal disks in frame partitions... [0.770ms]
+2017-11-01 22:16:32,673 -> Prunning duplicates... [0.011ms]
+2017-11-01 22:16:37,759 -> Loading distincts... [5.086ms]
+2017-11-01 22:17:00,364 -> Running jLCM... [22.572ms]
+2017-11-01 22:17:00,395 -> Collecting final maximal disks... [0.030ms]
+2017-11-01 22:17:00,396 ->   Data, # Cands,    # In,   # Fr,   # Max, Part, Ent,   Eps, Mu,   TimeI,   TimeF,    Time
+2017-11-01 22:17:00,396 ->   B60K,  363622,  316074,   1101,   23272, 1024,  25,  50.0, 12,   26.04,    2.02,   93.80
+2017-11-01 22:17:00,539 -> Dropping center and candidate indices... [0.143ms]
+2017-11-01 22:17:00,585 -> Dropping point indices... [0.046ms]
+2017-11-01 22:17:00,585 -> Finishing MaximalFinder at 22:17:00.585...]
+2017-11-01 22:17:00,676 -> Closing session... [0.090ms]
+2017-11-01 22:17:00,676 -> Total time for session: 288.406ms...
+2017-11-01 22:17:00,676 -> Ending app at 2017-11-01T22:17:00.676...
+Done!!! Wed Nov  1 22:17:01 PDT 2017
+Running iteration 3/3 ...
+2017-11-01 22:17:02,529 -> Starting app at 2017-11-01T22:17:02.443...
+2017-11-01 22:17:05,192 -> Setting variables... [2.658ms]
+2017-11-01 22:17:08,370 -> Starting session... [3.176ms]
+2017-11-01 22:17:11,391 -> Reading /home/acald013/PhD/Y3Q1/Datasets/B60K.csv... [3.021ms]
+2017-11-01 22:17:11,395 -> Lauching MaximalFinder at 22:17:11.391...
+2017-11-01 22:17:13,582 -> Running with mu = 12, cores = 21, partitions = 1024 over 59142 points...
+2017-11-01 22:17:18,152 -> Indexing... [4.570ms]
+2017-11-01 22:17:18,170 -> Running epsilon = 10.0 iteration...
+2017-11-01 22:17:20,219 -> Self-join... [2.049ms]
+2017-11-01 22:17:33,335 -> Computing disks... [13.116ms]
+2017-11-01 22:17:41,385 -> Mapping disks and points... [8.049ms]
+2017-11-01 22:17:43,064 -> Filtering less-than-mu disks... [1.679ms]
+2017-11-01 22:17:45,982 -> Indexing candidates... [2.918ms]
+2017-11-01 22:17:47,054 -> Finding maximal disks inside partitions... [1.072ms]
+2017-11-01 22:17:47,154 -> Filtering candidate disks on frame partitions... [0.100ms]
+2017-11-01 22:17:48,679 -> Re-indexing candidate disks in frame partitions... [1.524ms]
+2017-11-01 22:17:49,198 -> Finding maximal disks in frame partitions... [0.519ms]
+2017-11-01 22:17:49,226 -> Prunning duplicates... [0.027ms]
+2017-11-01 22:17:50,635 -> Loading distincts... [1.409ms]
+2017-11-01 22:17:52,300 -> Running jLCM... [1.665ms]
+2017-11-01 22:17:52,326 -> Collecting final maximal disks... [0.025ms]
+2017-11-01 22:17:52,326 ->   Data, # Cands,    # In,   # Fr,   # Max, Part, Ent,   Eps, Mu,   TimeI,   TimeF,    Time
+2017-11-01 22:17:52,327 ->   B60K,   44947,   41970,    859,    5760, 1024,  25,  10.0, 12,    1.07,    2.14,   34.16
+2017-11-01 22:17:52,493 -> Dropping center and candidate indices... [0.166ms]
+2017-11-01 22:17:52,493 -> Running epsilon = 20.0 iteration...
+2017-11-01 22:17:54,191 -> Self-join... [1.697ms]
+2017-11-01 22:18:06,623 -> Computing disks... [12.432ms]
+2017-11-01 22:18:13,894 -> Mapping disks and points... [7.270ms]
+2017-11-01 22:18:15,291 -> Filtering less-than-mu disks... [1.397ms]
+2017-11-01 22:18:18,240 -> Indexing candidates... [2.949ms]
+2017-11-01 22:18:20,368 -> Finding maximal disks inside partitions... [2.128ms]
+2017-11-01 22:18:20,409 -> Filtering candidate disks on frame partitions... [0.041ms]
+2017-11-01 22:18:21,919 -> Re-indexing candidate disks in frame partitions... [1.510ms]
+2017-11-01 22:18:22,497 -> Finding maximal disks in frame partitions... [0.577ms]
+2017-11-01 22:18:22,509 -> Prunning duplicates... [0.012ms]
+2017-11-01 22:18:24,313 -> Loading distincts... [1.804ms]
+2017-11-01 22:18:27,815 -> Running jLCM... [3.502ms]
+2017-11-01 22:18:27,831 -> Collecting final maximal disks... [0.016ms]
+2017-11-01 22:18:27,831 ->   Data, # Cands,    # In,   # Fr,   # Max, Part, Ent,   Eps, Mu,   TimeI,   TimeF,    Time
+2017-11-01 22:18:27,831 ->   B60K,  116585,  107705,    944,   11072, 1024,  25,  20.0, 12,    2.13,    2.13,   35.34
+2017-11-01 22:18:27,944 -> Dropping center and candidate indices... [0.112ms]
+2017-11-01 22:18:27,945 -> Running epsilon = 30.0 iteration...
+2017-11-01 22:18:29,625 -> Self-join... [1.680ms]
+2017-11-01 22:18:42,707 -> Computing disks... [13.082ms]
+2017-11-01 22:18:51,069 -> Mapping disks and points... [8.362ms]
+2017-11-01 22:18:52,728 -> Filtering less-than-mu disks... [1.659ms]
+2017-11-01 22:18:56,241 -> Indexing candidates... [3.513ms]
+2017-11-01 22:19:01,497 -> Finding maximal disks inside partitions... [5.256ms]
+2017-11-01 22:19:01,534 -> Filtering candidate disks on frame partitions... [0.037ms]
+2017-11-01 22:19:02,929 -> Re-indexing candidate disks in frame partitions... [1.395ms]
+2017-11-01 22:19:03,572 -> Finding maximal disks in frame partitions... [0.643ms]
+2017-11-01 22:19:03,583 -> Prunning duplicates... [0.011ms]
+2017-11-01 22:19:06,083 -> Loading distincts... [2.500ms]
+2017-11-01 22:19:11,636 -> Running jLCM... [5.552ms]
+2017-11-01 22:19:11,655 -> Collecting final maximal disks... [0.018ms]
+2017-11-01 22:19:11,655 ->   Data, # Cands,    # In,   # Fr,   # Max, Part, Ent,   Eps, Mu,   TimeI,   TimeF,    Time
+2017-11-01 22:19:11,655 ->   B60K,  193606,  173897,    967,   15502, 1024,  25,  30.0, 12,    5.26,    2.08,   43.71
+2017-11-01 22:19:11,777 -> Dropping center and candidate indices... [0.121ms]
+2017-11-01 22:19:11,777 -> Running epsilon = 40.0 iteration...
+2017-11-01 22:19:13,446 -> Self-join... [1.669ms]
+2017-11-01 22:19:28,670 -> Computing disks... [15.224ms]
+2017-11-01 22:19:37,935 -> Mapping disks and points... [9.264ms]
+2017-11-01 22:19:40,665 -> Filtering less-than-mu disks... [2.730ms]
+2017-11-01 22:19:45,284 -> Indexing candidates... [4.619ms]
+2017-11-01 22:20:00,115 -> Finding maximal disks inside partitions... [14.831ms]
+2017-11-01 22:20:00,150 -> Filtering candidate disks on frame partitions... [0.035ms]
+2017-11-01 22:20:01,416 -> Re-indexing candidate disks in frame partitions... [1.266ms]
+2017-11-01 22:20:02,155 -> Finding maximal disks in frame partitions... [0.739ms]
+2017-11-01 22:20:02,166 -> Prunning duplicates... [0.011ms]
+2017-11-01 22:20:06,265 -> Loading distincts... [4.099ms]
+2017-11-01 22:20:17,230 -> Running jLCM... [10.949ms]
+2017-11-01 22:20:17,255 -> Collecting final maximal disks... [0.025ms]
+2017-11-01 22:20:17,255 ->   Data, # Cands,    # In,   # Fr,   # Max, Part, Ent,   Eps, Mu,   TimeI,   TimeF,    Time
+2017-11-01 22:20:17,255 ->   B60K,  277359,  245542,   1035,   19361, 1024,  25,  40.0, 12,   14.83,    2.04,   65.48
+2017-11-01 22:20:17,379 -> Dropping center and candidate indices... [0.123ms]
+2017-11-01 22:20:17,379 -> Running epsilon = 50.0 iteration...
+2017-11-01 22:20:19,044 -> Self-join... [1.665ms]
+2017-11-01 22:20:36,919 -> Computing disks... [17.874ms]
+2017-11-01 22:20:46,864 -> Mapping disks and points... [9.944ms]
+2017-11-01 22:20:49,873 -> Filtering less-than-mu disks... [3.009ms]
+2017-11-01 22:20:55,122 -> Indexing candidates... [5.249ms]
+2017-11-01 22:21:31,494 -> Finding maximal disks inside partitions... [36.372ms]
+2017-11-01 22:21:31,528 -> Filtering candidate disks on frame partitions... [0.033ms]
+2017-11-01 22:21:32,759 -> Re-indexing candidate disks in frame partitions... [1.231ms]
+2017-11-01 22:21:33,544 -> Finding maximal disks in frame partitions... [0.785ms]
+2017-11-01 22:21:33,555 -> Prunning duplicates... [0.011ms]
+2017-11-01 22:21:38,355 -> Loading distincts... [4.800ms]
+2017-11-01 22:22:01,294 -> Running jLCM... [22.939ms]
+2017-11-01 22:22:01,323 -> Collecting final maximal disks... [0.029ms]
+2017-11-01 22:22:01,323 ->   Data, # Cands,    # In,   # Fr,   # Max, Part, Ent,   Eps, Mu,   TimeI,   TimeF,    Time
+2017-11-01 22:22:01,323 ->   B60K,  363622,  317867,   1112,   22538, 1024,  25,  50.0, 12,   36.37,    2.05,  103.94
+2017-11-01 22:22:01,462 -> Dropping center and candidate indices... [0.139ms]
+2017-11-01 22:22:01,509 -> Dropping point indices... [0.046ms]
+2017-11-01 22:22:01,509 -> Finishing MaximalFinder at 22:22:01.509...]
+2017-11-01 22:22:01,599 -> Closing session... [0.090ms]
+2017-11-01 22:22:01,600 -> Total time for session: 296.407ms...
+2017-11-01 22:22:01,600 -> Ending app at 2017-11-01T22:22:01.600...
+Done!!! Wed Nov  1 22:22:01 PDT 2017
+acald013@dblab-rack12: stopping org.apache.spark.deploy.worker.Worker
+acald013@dblab-rack14: stopping org.apache.spark.deploy.worker.Worker
+acald013@dblab-rack11: stopping org.apache.spark.deploy.worker.Worker
+stopping org.apache.spark.deploy.master.Master
+starting org.apache.spark.deploy.master.Master, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.master.Master-1-dblab-rack15.out
+acald013@dblab-rack12: starting org.apache.spark.deploy.worker.Worker, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.worker.Worker-1-dblab-rack12.out
+acald013@dblab-rack15: starting org.apache.spark.deploy.worker.Worker, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.worker.Worker-1-dblab-rack15.out
+acald013@dblab-rack14: starting org.apache.spark.deploy.worker.Worker, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.worker.Worker-1-dblab-rack14.cs.ucr.edu.out
+acald013@dblab-rack11: starting org.apache.spark.deploy.worker.Worker, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.worker.Worker-1-dblab-rack11.cs.ucr.edu.out
+Running iteration 1/3 ...
+2017-11-01 22:22:09,024 -> Starting app at 2017-11-01T22:22:08.935...
+2017-11-01 22:22:11,598 -> Setting variables... [2.570ms]
+2017-11-01 22:22:14,696 -> Starting session... [3.096ms]
+2017-11-01 22:22:17,606 -> Reading /home/acald013/PhD/Y3Q1/Datasets/B80K.csv... [2.909ms]
+2017-11-01 22:22:17,610 -> Lauching MaximalFinder at 22:22:17.607...
+2017-11-01 22:22:19,931 -> Running with mu = 12, cores = 28, partitions = 1024 over 78857 points...
+2017-11-01 22:22:25,496 -> Indexing... [5.565ms]
+2017-11-01 22:22:25,516 -> Running epsilon = 10.0 iteration...
+2017-11-01 22:22:27,936 -> Self-join... [2.420ms]
+2017-11-01 22:22:42,916 -> Computing disks... [14.979ms]
+2017-11-01 22:22:52,072 -> Mapping disks and points... [9.156ms]
+2017-11-01 22:22:54,031 -> Filtering less-than-mu disks... [1.959ms]
+2017-11-01 22:22:56,981 -> Indexing candidates... [2.950ms]
+2017-11-01 22:22:58,350 -> Finding maximal disks inside partitions... [1.369ms]
+2017-11-01 22:22:58,445 -> Filtering candidate disks on frame partitions... [0.095ms]
+2017-11-01 22:23:00,196 -> Re-indexing candidate disks in frame partitions... [1.751ms]
+2017-11-01 22:23:00,774 -> Finding maximal disks in frame partitions... [0.577ms]
+2017-11-01 22:23:00,801 -> Prunning duplicates... [0.026ms]
+2017-11-01 22:23:02,504 -> Loading distincts... [1.703ms]
+2017-11-01 22:23:04,726 -> Running jLCM... [2.222ms]
+2017-11-01 22:23:04,757 -> Collecting final maximal disks... [0.030ms]
+2017-11-01 22:23:04,758 ->   Data, # Cands,    # In,   # Fr,   # Max, Part, Ent,   Eps, Mu,   TimeI,   TimeF,    Time
+2017-11-01 22:23:04,758 ->   B80K,   58615,   52322,    871,    7566, 1024,  25,  10.0, 12,    1.37,    2.42,   39.24
+2017-11-01 22:23:04,919 -> Dropping center and candidate indices... [0.160ms]
+2017-11-01 22:23:04,919 -> Running epsilon = 20.0 iteration...
+2017-11-01 22:23:06,780 -> Self-join... [1.860ms]
+2017-11-01 22:23:19,168 -> Computing disks... [12.388ms]
+2017-11-01 22:23:26,976 -> Mapping disks and points... [7.808ms]
+2017-11-01 22:23:28,618 -> Filtering less-than-mu disks... [1.642ms]
+2017-11-01 22:23:31,733 -> Indexing candidates... [3.115ms]
+2017-11-01 22:23:34,849 -> Finding maximal disks inside partitions... [3.115ms]
+2017-11-01 22:23:34,888 -> Filtering candidate disks on frame partitions... [0.039ms]
+2017-11-01 22:23:36,412 -> Re-indexing candidate disks in frame partitions... [1.524ms]
+2017-11-01 22:23:37,032 -> Finding maximal disks in frame partitions... [0.620ms]
+2017-11-01 22:23:37,044 -> Prunning duplicates... [0.012ms]
+2017-11-01 22:23:39,209 -> Loading distincts... [2.165ms]
+2017-11-01 22:23:44,334 -> Running jLCM... [5.125ms]
+2017-11-01 22:23:44,354 -> Collecting final maximal disks... [0.020ms]
+2017-11-01 22:23:44,354 ->   Data, # Cands,    # In,   # Fr,   # Max, Part, Ent,   Eps, Mu,   TimeI,   TimeF,    Time
+2017-11-01 22:23:44,354 ->   B80K,  151519,  137581,    925,   14865, 1024,  25,  20.0, 12,    3.12,    2.18,   39.43
+2017-11-01 22:23:44,470 -> Dropping center and candidate indices... [0.116ms]
+2017-11-01 22:23:44,470 -> Running epsilon = 30.0 iteration...
+2017-11-01 22:23:46,439 -> Self-join... [1.969ms]
+2017-11-01 22:24:00,798 -> Computing disks... [14.358ms]
+2017-11-01 22:24:08,906 -> Mapping disks and points... [8.107ms]
+2017-11-01 22:24:11,480 -> Filtering less-than-mu disks... [2.574ms]
+2017-11-01 22:24:15,885 -> Indexing candidates... [4.405ms]
+2017-11-01 22:24:28,124 -> Finding maximal disks inside partitions... [12.239ms]
+2017-11-01 22:24:28,160 -> Filtering candidate disks on frame partitions... [0.035ms]
+2017-11-01 22:24:29,765 -> Re-indexing candidate disks in frame partitions... [1.604ms]
+2017-11-01 22:24:30,482 -> Finding maximal disks in frame partitions... [0.716ms]
+2017-11-01 22:24:30,494 -> Prunning duplicates... [0.011ms]
+2017-11-01 22:24:33,950 -> Loading distincts... [3.456ms]
+2017-11-01 22:24:42,802 -> Running jLCM... [8.852ms]
+2017-11-01 22:24:42,830 -> Collecting final maximal disks... [0.027ms]
+2017-11-01 22:24:42,830 ->   Data, # Cands,    # In,   # Fr,   # Max, Part, Ent,   Eps, Mu,   TimeI,   TimeF,    Time
+2017-11-01 22:24:42,830 ->   B80K,  252010,  226239,    974,   20552, 1024,  25,  30.0, 12,   12.24,    2.36,   58.36
+2017-11-01 22:24:42,952 -> Dropping center and candidate indices... [0.122ms]
+2017-11-01 22:24:42,952 -> Running epsilon = 40.0 iteration...
+2017-11-01 22:24:44,885 -> Self-join... [1.933ms]
+2017-11-01 22:25:00,688 -> Computing disks... [15.802ms]
+2017-11-01 22:25:09,514 -> Mapping disks and points... [8.826ms]
+2017-11-01 22:25:13,003 -> Filtering less-than-mu disks... [3.489ms]
+2017-11-01 22:25:17,951 -> Indexing candidates... [4.948ms]
+2017-11-01 22:25:50,411 -> Finding maximal disks inside partitions... [32.460ms]
+2017-11-01 22:25:50,444 -> Filtering candidate disks on frame partitions... [0.033ms]
+2017-11-01 22:25:51,687 -> Re-indexing candidate disks in frame partitions... [1.243ms]
+2017-11-01 22:25:52,469 -> Finding maximal disks in frame partitions... [0.782ms]
+2017-11-01 22:25:52,479 -> Prunning duplicates... [0.010ms]
+2017-11-01 22:25:57,166 -> Loading distincts... [4.687ms]
+2017-11-01 22:26:16,162 -> Running jLCM... [18.995ms]
+2017-11-01 22:26:16,202 -> Collecting final maximal disks... [0.040ms]
+2017-11-01 22:26:16,202 ->   Data, # Cands,    # In,   # Fr,   # Max, Part, Ent,   Eps, Mu,   TimeI,   TimeF,    Time
+2017-11-01 22:26:16,202 ->   B80K,  363071,  314551,   1085,   28244, 1024,  25,  40.0, 12,   32.46,    2.06,   93.25
+2017-11-01 22:26:16,328 -> Dropping center and candidate indices... [0.126ms]
+2017-11-01 22:26:16,328 -> Running epsilon = 50.0 iteration...
+2017-11-01 22:26:18,177 -> Self-join... [1.849ms]
+2017-11-01 22:26:36,895 -> Computing disks... [18.718ms]
+2017-11-01 22:26:46,696 -> Mapping disks and points... [9.801ms]
+2017-11-01 22:26:49,597 -> Filtering less-than-mu disks... [2.901ms]
+2017-11-01 22:26:54,637 -> Indexing candidates... [5.040ms]
+2017-11-01 22:27:33,423 -> Finding maximal disks inside partitions... [38.786ms]
+2017-11-01 22:27:33,456 -> Filtering candidate disks on frame partitions... [0.032ms]
+2017-11-01 22:27:34,698 -> Re-indexing candidate disks in frame partitions... [1.241ms]
+2017-11-01 22:27:35,585 -> Finding maximal disks in frame partitions... [0.887ms]
+2017-11-01 22:27:35,596 -> Prunning duplicates... [0.011ms]
+2017-11-01 22:27:40,012 -> Loading distincts... [4.416ms]
+2017-11-01 22:28:20,798 -> Running jLCM... [40.786ms]
+2017-11-01 22:28:20,844 -> Collecting final maximal disks... [0.046ms]
+2017-11-01 22:28:20,844 ->   Data, # Cands,    # In,   # Fr,   # Max, Part, Ent,   Eps, Mu,   TimeI,   TimeF,    Time
+2017-11-01 22:28:20,845 ->   B80K,  478716,  412765,   1192,   32174, 1024,  25,  50.0, 12,   38.79,    2.16,  124.52
+2017-11-01 22:28:20,995 -> Dropping center and candidate indices... [0.150ms]
+2017-11-01 22:28:21,048 -> Dropping point indices... [0.053ms]
+2017-11-01 22:28:21,049 -> Finishing MaximalFinder at 22:28:21.048...]
+2017-11-01 22:28:21,142 -> Closing session... [0.093ms]
+2017-11-01 22:28:21,142 -> Total time for session: 369.542ms...
+2017-11-01 22:28:21,142 -> Ending app at 2017-11-01T22:28:21.142...
+Done!!! Wed Nov  1 22:28:22 PDT 2017
+Running iteration 2/3 ...
+2017-11-01 22:28:23,828 -> Starting app at 2017-11-01T22:28:23.740...
+2017-11-01 22:28:26,478 -> Setting variables... [2.645ms]
+2017-11-01 22:28:29,617 -> Starting session... [3.137ms]
+2017-11-01 22:28:32,619 -> Reading /home/acald013/PhD/Y3Q1/Datasets/B80K.csv... [3.002ms]
+2017-11-01 22:28:32,623 -> Lauching MaximalFinder at 22:28:32.619...
+2017-11-01 22:28:34,954 -> Running with mu = 12, cores = 28, partitions = 1024 over 78857 points...
+2017-11-01 22:28:40,691 -> Indexing... [5.737ms]
+2017-11-01 22:28:40,710 -> Running epsilon = 10.0 iteration...
+2017-11-01 22:28:42,948 -> Self-join... [2.238ms]
+2017-11-01 22:28:57,620 -> Computing disks... [14.672ms]
+2017-11-01 22:29:06,665 -> Mapping disks and points... [9.044ms]
+2017-11-01 22:29:08,573 -> Filtering less-than-mu disks... [1.908ms]
+2017-11-01 22:29:11,580 -> Indexing candidates... [3.007ms]
+2017-11-01 22:29:12,998 -> Finding maximal disks inside partitions... [1.418ms]
+2017-11-01 22:29:13,094 -> Filtering candidate disks on frame partitions... [0.096ms]
+2017-11-01 22:29:14,731 -> Re-indexing candidate disks in frame partitions... [1.636ms]
+2017-11-01 22:29:15,288 -> Finding maximal disks in frame partitions... [0.557ms]
+2017-11-01 22:29:15,315 -> Prunning duplicates... [0.026ms]
+2017-11-01 22:29:16,878 -> Loading distincts... [1.563ms]
+2017-11-01 22:29:19,059 -> Running jLCM... [2.180ms]
+2017-11-01 22:29:19,090 -> Collecting final maximal disks... [0.031ms]
+2017-11-01 22:29:19,090 ->   Data, # Cands,    # In,   # Fr,   # Max, Part, Ent,   Eps, Mu,   TimeI,   TimeF,    Time
+2017-11-01 22:29:19,091 ->   B80K,   58615,   53624,    849,    7409, 1024,  25,  10.0, 12,    1.42,    2.29,   38.38
+2017-11-01 22:29:19,253 -> Dropping center and candidate indices... [0.161ms]
+2017-11-01 22:29:19,253 -> Running epsilon = 20.0 iteration...
+2017-11-01 22:29:21,422 -> Self-join... [2.169ms]
+2017-11-01 22:29:34,261 -> Computing disks... [12.839ms]
+2017-11-01 22:29:42,459 -> Mapping disks and points... [8.196ms]
+2017-11-01 22:29:44,982 -> Filtering less-than-mu disks... [2.523ms]
+2017-11-01 22:29:48,501 -> Indexing candidates... [3.519ms]
+2017-11-01 22:29:53,030 -> Finding maximal disks inside partitions... [4.529ms]
+2017-11-01 22:29:53,071 -> Filtering candidate disks on frame partitions... [0.041ms]
+2017-11-01 22:29:54,696 -> Re-indexing candidate disks in frame partitions... [1.625ms]
+2017-11-01 22:29:55,326 -> Finding maximal disks in frame partitions... [0.630ms]
+2017-11-01 22:29:55,338 -> Prunning duplicates... [0.012ms]
+2017-11-01 22:29:57,933 -> Loading distincts... [2.595ms]
+2017-11-01 22:30:03,295 -> Running jLCM... [5.361ms]
+2017-11-01 22:30:03,311 -> Collecting final maximal disks... [0.016ms]
+2017-11-01 22:30:03,311 ->   Data, # Cands,    # In,   # Fr,   # Max, Part, Ent,   Eps, Mu,   TimeI,   TimeF,    Time
+2017-11-01 22:30:03,311 ->   B80K,  151519,  138829,    922,   14605, 1024,  25,  20.0, 12,    4.53,    2.30,   44.06
+2017-11-01 22:30:03,427 -> Dropping center and candidate indices... [0.116ms]
+2017-11-01 22:30:03,427 -> Running epsilon = 30.0 iteration...
+2017-11-01 22:30:05,527 -> Self-join... [2.100ms]
+2017-11-01 22:30:19,399 -> Computing disks... [13.872ms]
+2017-11-01 22:30:28,038 -> Mapping disks and points... [8.639ms]
+2017-11-01 22:30:30,961 -> Filtering less-than-mu disks... [2.923ms]
+2017-11-01 22:30:35,290 -> Indexing candidates... [4.329ms]
+2017-11-01 22:30:47,333 -> Finding maximal disks inside partitions... [12.043ms]
+2017-11-01 22:30:47,369 -> Filtering candidate disks on frame partitions... [0.036ms]
+2017-11-01 22:30:48,948 -> Re-indexing candidate disks in frame partitions... [1.578ms]
+2017-11-01 22:30:49,658 -> Finding maximal disks in frame partitions... [0.710ms]
+2017-11-01 22:30:49,669 -> Prunning duplicates... [0.011ms]
+2017-11-01 22:30:53,377 -> Loading distincts... [3.707ms]
+2017-11-01 22:31:02,117 -> Running jLCM... [8.740ms]
+2017-11-01 22:31:02,142 -> Collecting final maximal disks... [0.025ms]
+2017-11-01 22:31:02,142 ->   Data, # Cands,    # In,   # Fr,   # Max, Part, Ent,   Eps, Mu,   TimeI,   TimeF,    Time
+2017-11-01 22:31:02,142 ->   B80K,  252010,  223615,    987,   21613, 1024,  25,  30.0, 12,   12.04,    2.33,   58.72
+2017-11-01 22:31:02,263 -> Dropping center and candidate indices... [0.121ms]
+2017-11-01 22:31:02,263 -> Running epsilon = 40.0 iteration...
+2017-11-01 22:31:04,316 -> Self-join... [2.053ms]
+2017-11-01 22:31:20,857 -> Computing disks... [16.540ms]
+2017-11-01 22:31:30,523 -> Mapping disks and points... [9.666ms]
+2017-11-01 22:31:33,843 -> Filtering less-than-mu disks... [3.320ms]
+2017-11-01 22:31:38,936 -> Indexing candidates... [5.093ms]
+2017-11-01 22:32:05,947 -> Finding maximal disks inside partitions... [27.011ms]
+2017-11-01 22:32:05,981 -> Filtering candidate disks on frame partitions... [0.034ms]
+2017-11-01 22:32:07,202 -> Re-indexing candidate disks in frame partitions... [1.221ms]
+2017-11-01 22:32:07,983 -> Finding maximal disks in frame partitions... [0.781ms]
+2017-11-01 22:32:07,994 -> Prunning duplicates... [0.011ms]
+2017-11-01 22:32:12,667 -> Loading distincts... [4.673ms]
+2017-11-01 22:32:29,412 -> Running jLCM... [16.744ms]
+2017-11-01 22:32:29,445 -> Collecting final maximal disks... [0.033ms]
+2017-11-01 22:32:29,445 ->   Data, # Cands,    # In,   # Fr,   # Max, Part, Ent,   Eps, Mu,   TimeI,   TimeF,    Time
+2017-11-01 22:32:29,446 ->   B80K,  363071,  317884,   1077,   26957, 1024,  25,  40.0, 12,   27.01,    2.04,   87.18
+2017-11-01 22:32:29,573 -> Dropping center and candidate indices... [0.127ms]
+2017-11-01 22:32:29,574 -> Running epsilon = 50.0 iteration...
+2017-11-01 22:32:31,586 -> Self-join... [2.012ms]
+2017-11-01 22:32:49,582 -> Computing disks... [17.996ms]
+2017-11-01 22:32:59,426 -> Mapping disks and points... [9.844ms]
+2017-11-01 22:33:02,658 -> Filtering less-than-mu disks... [3.232ms]
+2017-11-01 22:33:07,919 -> Indexing candidates... [5.261ms]
+2017-11-01 22:33:58,995 -> Finding maximal disks inside partitions... [51.075ms]
+2017-11-01 22:33:59,029 -> Filtering candidate disks on frame partitions... [0.033ms]
+2017-11-01 22:34:00,250 -> Re-indexing candidate disks in frame partitions... [1.221ms]
+2017-11-01 22:34:01,081 -> Finding maximal disks in frame partitions... [0.831ms]
+2017-11-01 22:34:01,092 -> Prunning duplicates... [0.011ms]
+2017-11-01 22:34:06,452 -> Loading distincts... [5.360ms]
+2017-11-01 22:34:45,011 -> Running jLCM... [38.559ms]
+2017-11-01 22:34:45,051 -> Collecting final maximal disks... [0.040ms]
+2017-11-01 22:34:45,051 ->   Data, # Cands,    # In,   # Fr,   # Max, Part, Ent,   Eps, Mu,   TimeI,   TimeF,    Time
+2017-11-01 22:34:45,051 ->   B80K,  478716,  413911,   1148,   31705, 1024,  25,  50.0, 12,   51.08,    2.09,  135.48
+2017-11-01 22:34:45,198 -> Dropping center and candidate indices... [0.147ms]
+2017-11-01 22:34:45,248 -> Dropping point indices... [0.050ms]
+2017-11-01 22:34:45,249 -> Finishing MaximalFinder at 22:34:45.249...]
+2017-11-01 22:34:45,335 -> Closing session... [0.086ms]
+2017-11-01 22:34:45,335 -> Total time for session: 378.856ms...
+2017-11-01 22:34:45,336 -> Ending app at 2017-11-01T22:34:45.336...
+Done!!! Wed Nov  1 22:34:45 PDT 2017
+Running iteration 3/3 ...
+2017-11-01 22:34:47,216 -> Starting app at 2017-11-01T22:34:47.128...
+2017-11-01 22:34:49,791 -> Setting variables... [2.570ms]
+2017-11-01 22:34:52,833 -> Starting session... [3.040ms]
+2017-11-01 22:34:55,799 -> Reading /home/acald013/PhD/Y3Q1/Datasets/B80K.csv... [2.966ms]
+2017-11-01 22:34:55,803 -> Lauching MaximalFinder at 22:34:55.800...
+2017-11-01 22:34:58,289 -> Running with mu = 12, cores = 28, partitions = 1024 over 78857 points...
+2017-11-01 22:35:03,920 -> Indexing... [5.631ms]
+2017-11-01 22:35:03,938 -> Running epsilon = 10.0 iteration...
+2017-11-01 22:35:06,645 -> Self-join... [2.705ms]
+2017-11-01 22:35:21,882 -> Computing disks... [15.237ms]
+2017-11-01 22:35:30,894 -> Mapping disks and points... [9.012ms]
+2017-11-01 22:35:32,561 -> Filtering less-than-mu disks... [1.666ms]
+2017-11-01 22:35:35,342 -> Indexing candidates... [2.779ms]
+2017-11-01 22:35:36,595 -> Finding maximal disks inside partitions... [1.253ms]
+2017-11-01 22:35:36,697 -> Filtering candidate disks on frame partitions... [0.102ms]
+2017-11-01 22:35:38,334 -> Re-indexing candidate disks in frame partitions... [1.637ms]
+2017-11-01 22:35:38,869 -> Finding maximal disks in frame partitions... [0.535ms]
+2017-11-01 22:35:38,897 -> Prunning duplicates... [0.028ms]
+2017-11-01 22:35:40,257 -> Loading distincts... [1.360ms]
+2017-11-01 22:35:42,372 -> Running jLCM... [2.115ms]
+2017-11-01 22:35:42,405 -> Collecting final maximal disks... [0.032ms]
+2017-11-01 22:35:42,405 ->   Data, # Cands,    # In,   # Fr,   # Max, Part, Ent,   Eps, Mu,   TimeI,   TimeF,    Time
+2017-11-01 22:35:42,406 ->   B80K,   58615,   53843,    851,    7401, 1024,  25,  10.0, 12,    1.25,    2.27,   38.47
+2017-11-01 22:35:42,578 -> Dropping center and candidate indices... [0.172ms]
+2017-11-01 22:35:42,578 -> Running epsilon = 20.0 iteration...
+2017-11-01 22:35:44,542 -> Self-join... [1.964ms]
+2017-11-01 22:35:57,384 -> Computing disks... [12.842ms]
+2017-11-01 22:36:04,913 -> Mapping disks and points... [7.529ms]
+2017-11-01 22:36:06,484 -> Filtering less-than-mu disks... [1.571ms]
+2017-11-01 22:36:09,577 -> Indexing candidates... [3.093ms]
+2017-11-01 22:36:12,557 -> Finding maximal disks inside partitions... [2.980ms]
+2017-11-01 22:36:12,599 -> Filtering candidate disks on frame partitions... [0.042ms]
+2017-11-01 22:36:14,049 -> Re-indexing candidate disks in frame partitions... [1.450ms]
+2017-11-01 22:36:14,661 -> Finding maximal disks in frame partitions... [0.612ms]
+2017-11-01 22:36:14,674 -> Prunning duplicates... [0.012ms]
+2017-11-01 22:36:16,787 -> Loading distincts... [2.113ms]
+2017-11-01 22:36:22,057 -> Running jLCM... [5.270ms]
+2017-11-01 22:36:22,074 -> Collecting final maximal disks... [0.016ms]
+2017-11-01 22:36:22,074 ->   Data, # Cands,    # In,   # Fr,   # Max, Part, Ent,   Eps, Mu,   TimeI,   TimeF,    Time
+2017-11-01 22:36:22,074 ->   B80K,  151519,  138658,    937,   14604, 1024,  25,  20.0, 12,    2.98,    2.10,   39.50
+2017-11-01 22:36:22,188 -> Dropping center and candidate indices... [0.113ms]
+2017-11-01 22:36:22,188 -> Running epsilon = 30.0 iteration...
+2017-11-01 22:36:24,194 -> Self-join... [2.006ms]
+2017-11-01 22:36:38,233 -> Computing disks... [14.039ms]
+2017-11-01 22:36:46,653 -> Mapping disks and points... [8.420ms]
+2017-11-01 22:36:49,043 -> Filtering less-than-mu disks... [2.389ms]
+2017-11-01 22:36:53,366 -> Indexing candidates... [4.323ms]
+2017-11-01 22:37:03,815 -> Finding maximal disks inside partitions... [10.448ms]
+2017-11-01 22:37:03,850 -> Filtering candidate disks on frame partitions... [0.035ms]
+2017-11-01 22:37:05,422 -> Re-indexing candidate disks in frame partitions... [1.572ms]
+2017-11-01 22:37:06,357 -> Finding maximal disks in frame partitions... [0.935ms]
+2017-11-01 22:37:06,368 -> Prunning duplicates... [0.011ms]
+2017-11-01 22:37:10,021 -> Loading distincts... [3.653ms]
+2017-11-01 22:37:18,550 -> Running jLCM... [8.528ms]
+2017-11-01 22:37:18,574 -> Collecting final maximal disks... [0.023ms]
+2017-11-01 22:37:18,575 ->   Data, # Cands,    # In,   # Fr,   # Max, Part, Ent,   Eps, Mu,   TimeI,   TimeF,    Time
+2017-11-01 22:37:18,575 ->   B80K,  252010,  223758,    978,   21201, 1024,  25,  30.0, 12,   10.45,    2.54,   56.39
+2017-11-01 22:37:18,696 -> Dropping center and candidate indices... [0.121ms]
+2017-11-01 22:37:18,696 -> Running epsilon = 40.0 iteration...
+2017-11-01 22:37:20,645 -> Self-join... [1.949ms]
+2017-11-01 22:37:35,871 -> Computing disks... [15.226ms]
+2017-11-01 22:37:45,057 -> Mapping disks and points... [9.186ms]
+2017-11-01 22:37:47,511 -> Filtering less-than-mu disks... [2.454ms]
+2017-11-01 22:37:51,781 -> Indexing candidates... [4.270ms]
+2017-11-01 22:38:12,935 -> Finding maximal disks inside partitions... [21.154ms]
+2017-11-01 22:38:12,969 -> Filtering candidate disks on frame partitions... [0.034ms]
+2017-11-01 22:38:14,116 -> Re-indexing candidate disks in frame partitions... [1.147ms]
+2017-11-01 22:38:14,867 -> Finding maximal disks in frame partitions... [0.751ms]
+2017-11-01 22:38:14,878 -> Prunning duplicates... [0.010ms]
+2017-11-01 22:38:18,417 -> Loading distincts... [3.539ms]
+2017-11-01 22:38:35,373 -> Running jLCM... [16.955ms]
+2017-11-01 22:38:35,405 -> Collecting final maximal disks... [0.031ms]
+2017-11-01 22:38:35,406 ->   Data, # Cands,    # In,   # Fr,   # Max, Part, Ent,   Eps, Mu,   TimeI,   TimeF,    Time
+2017-11-01 22:38:35,406 ->   B80K,  363071,  316629,   1052,   26874, 1024,  25,  40.0, 12,   21.15,    1.93,   76.71
+2017-11-01 22:38:35,536 -> Dropping center and candidate indices... [0.130ms]
+2017-11-01 22:38:35,536 -> Running epsilon = 50.0 iteration...
+2017-11-01 22:38:37,662 -> Self-join... [2.126ms]
+2017-11-01 22:38:55,681 -> Computing disks... [18.019ms]
+2017-11-01 22:39:06,082 -> Mapping disks and points... [10.401ms]
+2017-11-01 22:39:08,985 -> Filtering less-than-mu disks... [2.903ms]
+2017-11-01 22:39:13,931 -> Indexing candidates... [4.945ms]
+2017-11-01 22:39:49,902 -> Finding maximal disks inside partitions... [35.971ms]
+2017-11-01 22:39:49,936 -> Filtering candidate disks on frame partitions... [0.033ms]
+2017-11-01 22:39:51,202 -> Re-indexing candidate disks in frame partitions... [1.265ms]
+2017-11-01 22:39:52,015 -> Finding maximal disks in frame partitions... [0.813ms]
+2017-11-01 22:39:52,026 -> Prunning duplicates... [0.011ms]
+2017-11-01 22:39:56,357 -> Loading distincts... [4.330ms]
+2017-11-01 22:40:38,763 -> Running jLCM... [42.342ms]
+2017-11-01 22:40:38,806 -> Collecting final maximal disks... [0.043ms]
+2017-11-01 22:40:38,806 ->   Data, # Cands,    # In,   # Fr,   # Max, Part, Ent,   Eps, Mu,   TimeI,   TimeF,    Time
+2017-11-01 22:40:38,806 ->   B80K,  478716,  407886,   1154,   33798, 1024,  25,  50.0, 12,   35.97,    2.11,  123.27
+2017-11-01 22:40:38,949 -> Dropping center and candidate indices... [0.143ms]
+2017-11-01 22:40:38,997 -> Dropping point indices... [0.047ms]
+2017-11-01 22:40:38,997 -> Finishing MaximalFinder at 22:40:38.997...]
+2017-11-01 22:40:39,088 -> Closing session... [0.090ms]
+2017-11-01 22:40:39,088 -> Total time for session: 349.295ms...
+2017-11-01 22:40:39,088 -> Ending app at 2017-11-01T22:40:39.088...
+Done!!! Wed Nov  1 22:40:40 PDT 2017
+acald013@dblab-rack12: stopping org.apache.spark.deploy.worker.Worker
+acald013@dblab-rack15: stopping org.apache.spark.deploy.worker.Worker
+acald013@dblab-rack14: stopping org.apache.spark.deploy.worker.Worker
+acald013@dblab-rack11: stopping org.apache.spark.deploy.worker.Worker
+stopping org.apache.spark.deploy.master.Master
+Done!!!

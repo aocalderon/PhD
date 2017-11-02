@@ -1,10 +1,10 @@
 #!/bin/bash
 
-N=10
-MU=25
-PARTITIONS=1024
-ESTART=50
-EEND=100
+N=1
+MU=12
+PARTITIONS=256
+ESTART=10
+EEND=50
 ESTEP=10
 
 # Running Scaleup on 1 Node with 20K dataset...
@@ -25,6 +25,7 @@ echo "acald013@dblab-rack11" >> $SPARK_HOME/conf/slaves
 echo "acald013@dblab-rack12" >> $SPARK_HOME/conf/slaves
 $SPARK_HOME/sbin/start-all.sh
 
+PARTITIONS=512
 for i in `seq 1 $N`
 do
 	echo "Running iteration $i/$N ..."
@@ -39,6 +40,7 @@ echo "acald013@dblab-rack12" >> $SPARK_HOME/conf/slaves
 echo "acald013@dblab-rack14" >> $SPARK_HOME/conf/slaves
 $SPARK_HOME/sbin/start-all.sh
 
+PARTITIONS=768
 for i in `seq 1 $N`
 do
 	echo "Running iteration $i/$N ..."
@@ -54,6 +56,7 @@ echo "acald013@dblab-rack14" >> $SPARK_HOME/conf/slaves
 echo "acald013@dblab-rack15" >> $SPARK_HOME/conf/slaves
 $SPARK_HOME/sbin/start-all.sh
 
+PARTITIONS=1024
 for i in `seq 1 $N`
 do
 	echo "Running iteration $i/$N ..."
