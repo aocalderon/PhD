@@ -100,14 +100,33 @@ object MaximalFinder {
 			filteredCandidates.index(RTreeType, "candidatesRT", Array("_2", "_3"))
 			filteredCandidates.cache()
 			logger.info("Indexing candidates... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
-			// Finding maximal disks inside partitions...
+			// Filtering candidate disks on inside partitions...
 			var time1 = System.currentTimeMillis()
-			val maximalsInside = filteredCandidates
+			val candidatesInside = filteredCandidates
 				.rdd
 				.mapPartitions { partition =>
+					val pList = partition.toList
+					val bbox = getBoundingBox(pList)
+					val inside = pList.
+						map{ disk =>
+							(disk._1, disk._2, disk._3, disk._4, isInside(disk._2, disk._3, bbox, epsilon))
+						}.
+						filter(_._5).
+						map { disk =>
+							Candidate(disk._1, disk._2, disk._3, disk._4)
+						}
+					inside.toIterator
+				}
+			candidatesInside.cache()
+			logger.info("Filtering candidate disks on inside partitions... [%.3fms]".format((System.currentTimeMillis() - time1)/1000.0))
+			// Finding maximal disks inside partitions...
+			timer = System.currentTimeMillis()
+			val maximalsInside = candidatesInside.
+				//rdd.
+				mapPartitions { partition =>
 					val transactions = partition.
 						map { disk =>
-							disk._4.
+							disk.items.
 							split(",").
 							map { id =>
 								new Integer(id.trim)
@@ -124,14 +143,14 @@ object MaximalFinder {
 				}
 			maximalsInside.cache()
 			val nMaximalsInside = maximalsInside.count()
+			logger.info("Finding maximal disks inside partitions... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
 			var time2 = System.currentTimeMillis()
 			val timeI = (time2 - time1) / 1000.0
-			logger.info("Finding maximal disks inside partitions... [%.3fms]".format(timeI))
 			// Filtering candidate disks on frame partitions...
 			time1 = System.currentTimeMillis()
-			val candidatesFrame = filteredCandidates
-				.rdd
-				.mapPartitions { partition =>
+			val candidatesFrame = filteredCandidates.
+				rdd.
+				mapPartitions { partition =>
 					val pList = partition.toList
 					val bbox = getBoundingBox(pList)
 					val frame = pList.
@@ -143,7 +162,8 @@ object MaximalFinder {
 							Candidate(disk._1, disk._2, disk._3, disk._4)
 						}
 					frame.toIterator
-				}.toDS()
+				}.
+				toDS()
 			candidatesFrame.cache()
 			logger.info("Filtering candidate disks on frame partitions... [%.3fms]".format((System.currentTimeMillis() - time1)/1000.0))
 			timer = System.currentTimeMillis()
@@ -151,8 +171,9 @@ object MaximalFinder {
 			candidatesFrame.cache()
 			logger.info("Re-indexing candidate disks in frame partitions... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
 			timer = System.currentTimeMillis()
-			val maximalsFrame = candidatesFrame.rdd
-				.mapPartitions { partition =>
+			val maximalsFrame = candidatesFrame.
+				rdd.
+				mapPartitions { partition =>
 					val transactions = partition.
 						map { disk =>
 							disk.items.
@@ -169,17 +190,18 @@ object MaximalFinder {
 				}
 			maximalsFrame.cache()
 			val nMaximalsFrame = maximalsFrame.count()
+			logger.info("Finding maximal disks in frame partitions... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
 			time2 = System.currentTimeMillis()
 			val timeF = (time2 - time1) / 1000.0
-			logger.info("Finding maximal disks in frame partitions... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
 			// Prunning duplicates...
 			timer = System.currentTimeMillis()
-			val distinct = maximalsInside.union(maximalsFrame).map(_.asScala.toList.map(_.intValue())).distinct()
-			distinct.cache()
+			val distinctInsideFrame = maximalsInside.union(maximalsFrame).map(_.asScala.toList.map(_.intValue())).distinct()
+			distinctInsideFrame.cache()
 			logger.info("Prunning duplicates... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
+			val endTime = System.currentTimeMillis()
 			
 			timer = System.currentTimeMillis();
-			val transactionsBuffer: String = distinct.map(_.mkString(" ")).collect.mkString("\n")
+			val transactionsBuffer: String = distinctInsideFrame.map(_.mkString(" ")).collect.mkString("\n")
 			val minsup = 1;
 			val transactions = new TransactionsReader(transactionsBuffer + "\n");
 			val initState = new ExplorationStep(minsup, transactions);
@@ -221,7 +243,6 @@ object MaximalFinder {
 			writer.close()
 			*/
 			
-			val endTime = System.currentTimeMillis()
 			val totalTime = (endTime - startTime) / 1000.0
 			// Printing info summary ...
 			logger.info("%6s,%8s,%8s,%7s,%8s,%5s,%4s,%6s,%3s,%8s,%8s,%8s".
