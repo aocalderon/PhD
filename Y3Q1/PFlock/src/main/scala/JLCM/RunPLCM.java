@@ -28,7 +28,7 @@ public class RunPLCM {
 	public static void main(String[] args) {
 		long chrono = System.currentTimeMillis();
 		int minsup = 5;
-		StringBuilder transactionsBuffer = new StringBuilder("1 2 5 7 9\n1 3 5 7 9\n1 2 3 4\n1 3 4 5 6\n1 2\n1 2\n1 2 3 4 5 7 8 9\n1 2 6\n4 5 6\n2 5 8\n1 2 9\n1 2 4 8 9\n");
+		String transactionsBuffer = new String("1 2 5 7 9\n1 3 5 7 9\n1 2 3 4\n1 3 4 5 6\n1 2\n1 2\n1 2 3 4 5 7 8 9\n1 2 6\n4 5 6\n2 5 8\n1 2 9\n1 2 4 8 9\n");
 		TransactionsReader transactions = new TransactionsReader(transactionsBuffer);
 		ExplorationStep initState;
 		initState = new ExplorationStep(minsup, transactions);
@@ -39,8 +39,8 @@ public class RunPLCM {
 		chrono = System.currentTimeMillis();
 		miner.lcm(initState);
 		chrono = System.currentTimeMillis() - chrono;
-		final ArrayList<ArrayList<Integer>> closed = ((ListCollector)collector).getClosed();
-		for(ArrayList<Integer> pattern : closed){
+		final ArrayList<ArrayList<Integer>> maximals1 = ((ListCollector)collector).getMaximals1();
+		for(ArrayList<Integer> pattern : maximals1){
 			System.out.println(pattern);
 		}
 		System.out.println(String.format("Done in %dms", chrono));
