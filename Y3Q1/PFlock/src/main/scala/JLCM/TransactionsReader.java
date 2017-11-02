@@ -1,4 +1,4 @@
-package Misc;
+package JLCM;
 /*
 	This file is part of jLCM - see https://github.com/martinkirch/jlcm/
 
@@ -28,26 +28,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 
-/**
- * Reads transactions from a String variable (must be \n-separated)
- * Each line is a transaction, containing space-separated item IDs as integers
- * (it does not read custom transaction IDs or weights)
- *
- * It directly implements the transactions iterator and copies transactions to memory.
- *
- * Once loaded, call close() and it will be available for another iteration over copied
- * transactions. This second iteration may be done with a rebasing map.
- *
- * Base on FileReader from original jLCM...
- */
  final class TransactionsIterator implements Iterator<TransactionReader> {
-
-    /**
-     * We avoid small allocations by using megabyte pages. Transactions are stored in pages
-     * as in ConcatenatedTransactionsList, although lastest indexes may not be used.
-     */
     private static final int COPY_PAGES_SIZE = 1024*1024;
-
     private final ArrayList<int[]> pages = new ArrayList<>();
     private Iterator<int[]> pagesIterator;
     private int[] currentPage;
@@ -57,21 +39,14 @@ import java.util.Iterator;
     private int[] renaming = null;
     private final CopyReader copyReader = new CopyReader();
     private CopyReader nextCopyReader = new CopyReader();
-
     private BufferedReader inBuffer;
-    private final LineReader lineReader;
-
-    {
-        lineReader = new LineReader();
-    }
-
+    private final LineReader lineReader = new LineReader();
     private int nextChar = 0;
 
-    TransactionsIterator(StringBuilder transactionsBuffer) {
+    TransactionsIterator(String transactionsBuffer) {
         try {
-            inBuffer = new BufferedReader(new StringReader(transactionsBuffer.toString()));
+            inBuffer = new BufferedReader(new StringReader(transactionsBuffer));
             nextChar = inBuffer.read();
-
             newPage();
         } catch (Exception e) {
             e.printStackTrace();
@@ -82,7 +57,6 @@ import java.util.Iterator;
     private void newPage() {
         currentPage = new int[COPY_PAGES_SIZE];
         pages.add(currentPage);
-
         currentPageIndex = 1;
         currentTransIdx = 0;
         currentTransLen = 0;
@@ -91,22 +65,16 @@ import java.util.Iterator;
     private void writeNewTransactionToNextPage() {
         if (currentTransLen+1 >= COPY_PAGES_SIZE) {
             if (currentTransIdx == 0) {
-                throw new RuntimeException("Out of buffer bounds - please check the input file "
-                        + "format: only LF line terminators are expected, even at EOF.");
+                throw new RuntimeException("Out of buffer bounds - please check the input file format: only LF line terminators are expected, even at EOF.");
             } else {
-                throw new RuntimeException("Inputted transactions are too long ! Try increasing " +
-                        "FileReader.COPY_PAGES_SIZE");
+                throw new RuntimeException("Inputted transactions are too long ! Try increasing FileReader.COPY_PAGES_SIZE");
             }
         }
-
         int[] previousPage = currentPage;
-
         currentPage = new int[COPY_PAGES_SIZE];
         pages.add(currentPage);
-
         previousPage[currentTransIdx] = -1;
         System.arraycopy(previousPage, currentTransIdx+1, currentPage, 1, currentTransLen);
-
         currentTransIdx = 0;
         currentPageIndex = currentTransLen+1;
     }
@@ -121,14 +89,10 @@ import java.util.Iterator;
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         inBuffer = null;
         renaming = renamingMap;
-
-        // last char should have been a '\n' so currentPageIndex was ready to write a new one
         currentPageIndex--;
         currentPage[currentPageIndex] = -1;
-
         pagesIterator = pages.iterator();
         currentPage = null;
         prepareNextCopyReader();
@@ -137,11 +101,9 @@ import java.util.Iterator;
     private void prepareNextCopyReader() {
         if (currentPage == null || currentPageIndex == COPY_PAGES_SIZE ||
                 currentPage[currentPageIndex] == -1) {
-
             if (pagesIterator.hasNext()) {
                 currentPage = pagesIterator.next();
                 currentPageIndex = 0;
-
                 if (currentPage[currentPageIndex] == -1) { // yes, it may happen !
                     nextCopyReader = null;
                     return;
@@ -152,12 +114,9 @@ import java.util.Iterator;
                 return;
             }
         }
-
         currentTransIdx = currentPageIndex;
-
         currentTransLen = currentPage[currentTransIdx];
         currentTransIdx++;
-
         if (renaming != null) {
             int filteredI = currentTransIdx;
             for (int i = currentTransIdx; i < currentTransIdx + currentTransLen; i++) {
@@ -166,13 +125,11 @@ import java.util.Iterator;
                     currentPage[filteredI++] = renamed;
                 }
             }
-
             Arrays.sort(currentPage, currentTransIdx, filteredI);
             this.nextCopyReader.setup(currentPage, currentTransIdx, filteredI);
         } else {
             this.nextCopyReader.setup(currentPage, currentTransIdx, currentTransIdx + currentTransLen);
         }
-
         currentPageIndex = currentTransIdx + currentTransLen;
     }
 
@@ -212,15 +169,11 @@ import java.util.Iterator;
         }
     }
 
-
-
     private final class LineReader implements TransactionReader {
-
         @Override
         public int getTransactionSupport() {
             return 1;
         }
-
         @Override
         public int next() {
             int nextInt = -1;
@@ -236,24 +189,18 @@ import java.util.Iterator;
                     }
                     nextChar = inBuffer.read();
                 }
-
                 while (nextChar == ' ')
                     nextChar = inBuffer.read();
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
             if (currentPageIndex == COPY_PAGES_SIZE) {
                 writeNewTransactionToNextPage();
             }
-
             currentPage[currentPageIndex++] = nextInt;
             currentTransLen++;
-
             if (nextChar == '\n') {
                 currentPage[currentTransIdx] = currentTransLen;
-
                 if (currentPageIndex == COPY_PAGES_SIZE) {
                     newPage();
                 } else {
@@ -261,10 +208,8 @@ import java.util.Iterator;
                     currentTransLen = 0;
                 }
             }
-
             return nextInt;
         }
-
         @Override
         public boolean hasNext() {
             return (nextChar != '\n');
@@ -272,45 +217,36 @@ import java.util.Iterator;
     }
 
     private final class CopyReader implements TransactionReader {
-
         private int[] source;
         private int i;
         private int end;
 
-        /**
-         * read currentPage[currentPageIndex, to[
-         */
         private void setup(int[] array, int from, int to){
             source = array;
             i = from;
             end = to;
         }
-
         @Override
         public int getTransactionSupport() {
             return 1;
         }
-
         @Override
         public int next() {
             return source[i++];
         }
-
         @Override
         public boolean hasNext() {
             return i < end;
         }
-
     }
 }
 
-public final class Transactions implements Iterable<TransactionReader> {
-    private StringBuilder transactionsBuffer;
+public final class TransactionsReader implements Iterable<TransactionReader> {
+    private String transactionsBuffer;
 
-    Transactions(StringBuilder transactionsBuffer) {
+    public TransactionsReader(String transactionsBuffer) {
         this.transactionsBuffer = transactionsBuffer;
     }
-
     @Override
     public Iterator<TransactionReader> iterator() {
         return new TransactionsIterator(this.transactionsBuffer);

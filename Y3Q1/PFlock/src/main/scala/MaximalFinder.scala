@@ -1,6 +1,10 @@
 import java.io.{BufferedWriter, FileOutputStream, OutputStreamWriter}
 import Misc.GeoGSON
-import SPMF.{AlgoCharmLCM, AlgoLCM, Transactions}
+import SPMF.{AlgoLCM, Transactions}
+import JLCM.{ListCollector, TransactionsReader}
+import fr.liglab.jlcm.internals.ExplorationStep;
+import fr.liglab.jlcm.io.PatternsCollector;
+import fr.liglab.jlcm.PLCM;
 import scala.collection.JavaConverters._
 import org.apache.spark.rdd.DoubleRDDFunctions
 import org.apache.spark.rdd.RDD
@@ -161,9 +165,7 @@ object MaximalFinder {
 					val LCM = new AlgoLCM
 					val data = new Transactions(transactions)
 					val closed = LCM.runAlgorithm(1, data)
-					val MFI = new AlgoCharmLCM
-					val maximals = MFI.runAlgorithm(closed)
-					maximals.getItemsets(MU).asScala.toIterator
+					closed.getMaximalItemsets1(MU).asScala.toIterator
 				}
 			maximalsFrame.cache()
 			val nMaximalsFrame = maximalsFrame.count()
@@ -172,12 +174,55 @@ object MaximalFinder {
 			logger.info("Finding maximal disks in frame partitions... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
 			// Prunning duplicates...
 			timer = System.currentTimeMillis()
-			maximals = maximalsInside.union(maximalsFrame).distinct().map(_.asScala.toList.map(_.intValue()))
+			maximals = maximalsInside.union(maximalsFrame).map(_.asScala.toList.map(_.intValue())).distinct()
 			maximals.cache()
 			nmaximals = maximals.count()
+			logger.info("Prunning duplicates... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
+			
+			timer = System.currentTimeMillis();
+			val transactionsBuffer: String = maximals.map(_.mkString(" ")).collect.mkString("\n")
+			val minsup = 1;
+			val transactions = new TransactionsReader(transactionsBuffer + "\n");
+			val initState = new ExplorationStep(minsup, transactions);
+			logger.info("Loading maximals... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
+			timer = System.currentTimeMillis();
+			val nbThreads = Runtime.getRuntime().availableProcessors() - 1;
+			val collector = new ListCollector();
+			val miner = new PLCM(collector, nbThreads);
+			miner.lcm(initState);
+			logger.info("Running jLCM... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
+			timer = System.currentTimeMillis();
+			val closed = collector.getClosed().asScala.map(_.asScala.map(_.intValue()));
+			logger.info("Collecting final maximal disks... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
+			logger.info("Number of closed disks: %d.".format(closed.length))
+			
+			
+			var outputFile = "/tmp/M%d_1.csv".format(MU)
+			var writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile)))
+			maximalsInside.union(maximalsFrame).
+				map(_.asScala.toList.map(_.intValue())).
+				map{ pattern =>
+					"%s\n".format(pattern.mkString(" "))
+				}.
+				collect().
+				foreach(writer.write)
+			writer.close()
+			
+			outputFile = "/tmp/M%d_2.csv".format(MU)
+			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile)))
+			maximalsInside.union(maximalsFrame).
+				map(_.asScala.toList.map(_.intValue())).
+				distinct().
+				map{ pattern =>
+					"%s\n".format(pattern.mkString(" "))
+				}.
+				collect().
+				foreach(writer.write)
+			writer.close()
+			
+			
 			val endTime = System.currentTimeMillis()
 			val totalTime = (endTime - startTime) / 1000.0
-			logger.info("Prunning duplicates... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
 			// Printing info summary ...
 			logger.info("%6s,%8s,%8s,%7s,%8s,%5s,%4s,%6s,%3s,%8s,%8s,%8s".
 				format("Data", "# Cands", "# In", "# Fr", "# Max",
@@ -254,8 +299,8 @@ object MaximalFinder {
 	}
 
 	def saveOutput(): Unit ={
-		val output = "${%s}_E%.1f%.1f-_M%d_C%d_P%d_%d.csv".format(DATASET, ESTART, EEND, MU, CORES, PARTITIONS, System.currentTimeMillis())
-		val writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(output)))
+		val outputFile = "%s_E%.1f%.1f-_M%d_C%d_P%d_%d.csv".format(DATASET, ESTART, EEND, MU, CORES, PARTITIONS, System.currentTimeMillis())
+		val writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile)))
 		OUTPUT.foreach(writer.write)
 		writer.close()
 	}
@@ -344,9 +389,7 @@ object MaximalFinder {
 				val LCM = new AlgoLCM
 				val data = new Transactions(transactions)
 				val closed = LCM.runAlgorithm(1, data)
-				val MFI = new AlgoCharmLCM
-				val maximals = MFI.runAlgorithm(closed)
-				maximals.getItemsets(MU).asScala.toIterator
+				closed.getMaximalItemsets1(MU).asScala.toIterator
 			}
 		val nMaximalsInside = maximalsInside.count()
 		var time2 = System.currentTimeMillis()
@@ -386,9 +429,7 @@ object MaximalFinder {
 					val LCM = new AlgoLCM
 					val data = new Transactions(transactions)
 					val closed = LCM.runAlgorithm(1, data)
-					val MFI = new AlgoCharmLCM
-					val maximals = MFI.runAlgorithm(closed)
-					maximals.getItemsets(MU).asScala.toIterator
+					closed.getMaximalItemsets1(MU).asScala.toIterator
 			}
 		val nMaximalsFrame = maximalsFrame.count()
 		time2 = System.currentTimeMillis()
