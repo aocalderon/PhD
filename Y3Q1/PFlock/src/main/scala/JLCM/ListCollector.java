@@ -23,12 +23,12 @@ import fr.liglab.jlcm.io.PatternsWriter;
 import java.util.ArrayList;
 
 public class ListCollector extends PatternsWriter {
-    private ArrayList<ArrayList<Integer>> closed;
+    private ArrayList<ArrayList<Integer>> maximals1;
     private long collected = 0;
     private long collectedLength = 0;
 
     public ListCollector(){
-        closed =  new ArrayList<>();
+        maximals1 =  new ArrayList<>();
     }
 
     @Override
@@ -39,18 +39,18 @@ public class ListCollector extends PatternsWriter {
 			for (int i = 0; i < length; i++) {
 				p.add(pattern[i]);
 			}
-			closed.add(p);
+			maximals1.add(p);
 			this.collected++;
 			this.collectedLength += pattern.length;
 		}
     }
 
-    public ArrayList<ArrayList<Integer>> getClosed() {
-        return closed;
+    public ArrayList<ArrayList<Integer>> getMaximals1() {
+        return maximals1;
     }
 
     public long close() {
-        closed.clear();
+        maximals1.clear();
         return this.collected;
     }
 
@@ -62,4 +62,3 @@ public class ListCollector extends PatternsWriter {
         }
     }
 }
-

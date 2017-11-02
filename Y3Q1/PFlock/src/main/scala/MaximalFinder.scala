@@ -174,17 +174,16 @@ object MaximalFinder {
 			logger.info("Finding maximal disks in frame partitions... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
 			// Prunning duplicates...
 			timer = System.currentTimeMillis()
-			maximals = maximalsInside.union(maximalsFrame).map(_.asScala.toList.map(_.intValue())).distinct()
-			maximals.cache()
-			nmaximals = maximals.count()
+			val distinct = maximalsInside.union(maximalsFrame).map(_.asScala.toList.map(_.intValue())).distinct()
+			distinct.cache()
 			logger.info("Prunning duplicates... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
 			
 			timer = System.currentTimeMillis();
-			val transactionsBuffer: String = maximals.map(_.mkString(" ")).collect.mkString("\n")
+			val transactionsBuffer: String = distinct.map(_.mkString(" ")).collect.mkString("\n")
 			val minsup = 1;
 			val transactions = new TransactionsReader(transactionsBuffer + "\n");
 			val initState = new ExplorationStep(minsup, transactions);
-			logger.info("Loading maximals... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
+			logger.info("Loading distincts... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
 			timer = System.currentTimeMillis();
 			val nbThreads = Runtime.getRuntime().availableProcessors() - 1;
 			val collector = new ListCollector();
@@ -192,11 +191,12 @@ object MaximalFinder {
 			miner.lcm(initState);
 			logger.info("Running jLCM... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
 			timer = System.currentTimeMillis();
-			val closed = collector.getClosed().asScala.map(_.asScala.map(_.intValue()));
+			val maximalsArray = collector.getMaximals1().asScala.toList.map(_.asScala.toList.map(_.intValue()));
+			nmaximals = maximalsArray.length
+			maximals = simba.sparkContext.parallelize(maximalsArray)
 			logger.info("Collecting final maximal disks... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
-			logger.info("Number of closed disks: %d.".format(closed.length))
 			
-			
+			/*
 			var outputFile = "/tmp/M%d_1.csv".format(MU)
 			var writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile)))
 			maximalsInside.union(maximalsFrame).
@@ -219,7 +219,7 @@ object MaximalFinder {
 				collect().
 				foreach(writer.write)
 			writer.close()
-			
+			*/
 			
 			val endTime = System.currentTimeMillis()
 			val totalTime = (endTime - startTime) / 1000.0

@@ -39,8 +39,8 @@ public class RunPLCM {
 		chrono = System.currentTimeMillis();
 		miner.lcm(initState);
 		chrono = System.currentTimeMillis() - chrono;
-		final ArrayList<ArrayList<Integer>> closed = ((ListCollector)collector).getClosed();
-		for(ArrayList<Integer> pattern : closed){
+		final ArrayList<ArrayList<Integer>> maximals1 = ((ListCollector)collector).getMaximals1();
+		for(ArrayList<Integer> pattern : maximals1){
 			System.out.println(pattern);
 		}
 		System.out.println(String.format("Done in %dms", chrono));
