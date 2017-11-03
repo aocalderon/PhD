@@ -65,18 +65,22 @@ object MaximalFinder {
 			val startTime = System.currentTimeMillis()
 			// Self-join...
 			timer = System.currentTimeMillis()
-			val pairsRDD = p1.distanceJoin(p2, Array("x1", "y1"), Array("x2", "y2"), epsilon).rdd
+			val pairsRDD = p1.distanceJoin(p2, Array("x1", "y1"), Array("x2", "y2"), epsilon).
+				filter((row: Row) => row.getInt(0) < row.getInt(3)).
+				rdd
 			pairsRDD.cache()
+			val npairs = pairsRDD.count()
 			logger.info("Self-join... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
 			// Computing disks...
 			timer = System.currentTimeMillis()
-			val centers = findDisks(pairsRDD, epsilon)
-				.distinct()
-				.toDS()
-				.index(RTreeType, "centersRT", Array("x", "y"))
-				.withColumn("id", monotonically_increasing_id())
-				.as[ACenter]
+			val centers = findDisks(pairsRDD, epsilon).
+				distinct().
+				toDS().
+				index(RTreeType, "centersRT", Array("x", "y")).
+				withColumn("id", monotonically_increasing_id()).
+				as[ACenter]
 			centers.cache()
+			val ncenters = centers.count()
 			logger.info("Computing disks... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
 			// Mapping disks and points...
 			timer = System.currentTimeMillis()
@@ -93,7 +97,7 @@ object MaximalFinder {
 				filter(row => row.getList(3).size() >= MU).
 				map(d => (d.getLong(0), d.getDouble(1), d.getDouble(2), d.getList[Integer](3).asScala.mkString(",")))
 			filteredCandidates.cache()
-			val nFilteredCandidates = filteredCandidates.count()
+			/* val nFilteredCandidates = filteredCandidates.count() */
 			logger.info("Filtering less-than-mu disks... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
 			// Indexing candidates...
 			timer = System.currentTimeMillis()
@@ -245,13 +249,13 @@ object MaximalFinder {
 			
 			val totalTime = (endTime - startTime) / 1000.0
 			// Printing info summary ...
-			logger.info("%6s,%8s,%8s,%7s,%8s,%5s,%4s,%6s,%3s,%8s,%8s,%8s".
-				format("Data", "# Cands", "# In", "# Fr", "# Max",
+			logger.info("%10s,%8s,%8s,%8s,%7s,%8s,%5s,%4s,%6s,%3s,%8s,%8s,%8s".
+				format("Data", "#Pairs", "#Candis", "# In", "# Fr", "# Max",
 					"Part", "Ent", "Eps", "Mu", "TimeI", "TimeF", "Time"
 				)
 			)
-			logger.info("%6s,%8d,%8d,%7d,%8d,%5d,%4d,%6.1f,%3d,%8.2f,%8.2f,%8.2f".
-				format(DATASET, nFilteredCandidates, nMaximalsInside, nMaximalsFrame, nmaximals,
+			logger.info("%10s,%8d,%8d,%8d,%7d,%8d,%5d,%4d,%6.1f,%3d,%8.2f,%8.2f,%8.2f".
+				format(DATASET, npairs, ncenters, nMaximalsInside, nMaximalsFrame, nmaximals,
 					PARTITIONS, ENTRIES, epsilon, MU, timeI, timeF, totalTime
 				)
 			)
@@ -275,9 +279,8 @@ object MaximalFinder {
 
 	def findDisks(pairsRDD: RDD[Row], epsilon: Double): RDD[ACenter] = {
 		val r2: Double = math.pow(epsilon / 2, 2)
-		val centers = pairsRDD
-			.filter((row: Row) => row.getInt(0) != row.getInt(3))
-			.map { (row: Row) =>
+		val centers = pairsRDD.
+			map { (row: Row) =>
 				val p1 = SP_Point(row.getInt(0), row.getDouble(1), row.getDouble(2))
 				val p2 = SP_Point(row.getInt(3), row.getDouble(4), row.getDouble(5))
 				calculateDiskCenterCoordinates(p1, p2, r2)
@@ -289,13 +292,16 @@ object MaximalFinder {
 		val X: Double = p1.x - p2.x
 		val Y: Double = p1.y - p2.y
 		var D2: Double = math.pow(X, 2) + math.pow(Y, 2)
-		if (D2 == 0)
-			D2 = 0.01
-		val root: Double = math.sqrt(math.abs(4.0 * (r2 / D2) - 1.0))
-		val h1: Double = ((X + Y * root) / 2) + p2.x
-		val k1: Double = ((Y - X * root) / 2) + p2.y
+		//var aCenter: ACenter = new ACenter(0, 0, 0)
+		if (D2 != 0){
+			val root: Double = math.sqrt(math.abs(4.0 * (r2 / D2) - 1.0))
+			val h1: Double = ((X + Y * root) / 2) + p2.x
+			val k1: Double = ((Y - X * root) / 2) + p2.y
 
-		ACenter(0, h1, k1)
+			ACenter(0, h1, k1)
+		} else {
+			ACenter(0, 0, 0)
+		}
 	}
 
 	def isInside(x: Double, y: Double, bbox: BBox, epsilon: Double): Boolean ={
@@ -327,13 +333,20 @@ object MaximalFinder {
 	}
 
 	def drawGeoJSONs(args: Array[String]): Unit = {
-		val DATASET = args(0)
-		val ENTRIES = args(1)
-		val PARTITIONS = args(2)
-		val EPSILON = args(3).toDouble
-		val MU = args(4).toInt
-		val MASTER = args(5)
-		val CORES = args(6)
+		val DATASET = "B5K_Tester"
+		val ENTRIES = "10"
+		val PARTITIONS = "10"
+		val EPSILON = 20.0
+		val MU = 5
+		val MASTER = "local[10]"
+		val CORES = "10"
+//		val DATASET = args(0)
+//		val ENTRIES = args(1)
+//		val PARTITIONS = args(2)
+//		val EPSILON = args(3).toDouble
+//		val MU = args(4).toInt
+//		val MASTER = args(5)
+//		val CORES = args(6)
 		val POINT_SCHEMA = ScalaReflection.schemaFor[SP_Point].dataType.asInstanceOf[StructType]
 		val DELTA = 0.01
 		val EPSG = "3068"
@@ -379,7 +392,7 @@ object MaximalFinder {
 			.distanceJoin(p1, Array("x", "y"), Array("x1", "y1"), (EPSILON / 2) + DELTA)
 			.groupBy("id", "x", "y")
 			.agg(collect_list("id1").alias("IDs"))
-		candidates.count()
+		val nCandidates = candidates.count()
 		// Filtering less-than-mu disks...
 		logger.info("Filtering less-than-mu disks...")
 		val filteredCandidates = candidates.
