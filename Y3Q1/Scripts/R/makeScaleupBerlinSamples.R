@@ -4,7 +4,7 @@ PHD_HOME = Sys.getenv(c("PHD_HOME"))
 PATH = "Y3Q1/Datasets/"
 filename = paste0(PHD_HOME,PATH,'B80K.csv')
 B80K = read.csv(filename, header = F)
-N =nrow(B80K)
+N = nrow(B80K)
 i1 = seq(1,N,4)
 i2 = seq(2,N,4)
 i3 = seq(3,N,4)
