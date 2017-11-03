@@ -42,7 +42,7 @@ object MaximalFinder {
 	var ENTRIES: Int = 25
 	var LOG: List[String] = List("")
 	var OUTPUT: List[String] = List.empty[String]
-	private val PRECISION: Double = 0.01
+	private val PRECISION: Double = 0.001
 	
 	def run(points: Dataset[SP_Point]
 			, timestamp: Int
