@@ -18,16 +18,18 @@ data = read.table(filename, header = F, sep = ',')
 ###################
 
 data = as.data.table(data)
-names(data) = c('id', 'x', 'y', 't')
+names(data) = c('x', 'y', 't', 'id')
+data = data[ , c('id', 'x', 'y', 't')]
 
 ###################
 # Prunning possible duplicates...
 ###################
 
 data = data[ , list(id = min(id)), by = c('x', 'y', 't')]
+data = data[ , c('id', 'x', 'y', 't')]
 
 ###################
-# Prunning possible duplicates...
+# Writing back...
 ###################
 
 write.table(data
