@@ -1,19 +1,28 @@
-private val logger: Logger = LoggerFactory.getLogger("myLogger")
+import java.io.{BufferedWriter, FileOutputStream, OutputStreamWriter}
+import Misc.GeoGSON
+import SPMF.{AlgoLCM, Transactions}
+import JLCM.{ListCollector, TransactionsReader}
+import fr.liglab.jlcm.internals.ExplorationStep;
+import fr.liglab.jlcm.io.PatternsCollector;
+import fr.liglab.jlcm.PLCM;
+import scala.collection.JavaConverters._
+import org.apache.spark.rdd.DoubleRDDFunctions
+import org.apache.spark.rdd.RDD
+import org.apache.spark.sql.functions._
+import org.apache.spark.sql.Row
+import org.apache.spark.sql.catalyst.ScalaReflection
+import org.apache.spark.sql.simba.{Dataset, SimbaSession}
+import org.apache.spark.sql.types.StructType
+import org.apache.spark.sql.simba.index._
+import org.slf4j.{Logger, LoggerFactory}
+import org.rogach.scallop.{ScallopConf, ScallopOption}
+import org.joda.time.DateTime
+
+val logger: Logger = LoggerFactory.getLogger("myLogger")
 case class SP_Point(id: Int, x: Double, y: Double)
 case class ACenter(id: Long, x: Double, y: Double)
 case class Candidate(id: Long, x: Double, y: Double, items: String)
 case class BBox(minx: Double, miny: Double, maxx: Double, maxy: Double)
-
-  def findDisks(pairsRDD: RDD[Row], epsilon: Double): RDD[ACenter] = {
-    val r2: Double = math.pow(epsilon / 2, 2)
-    val centers = pairsRDD.
-      map { (row: Row) =>
-        val p1 = SP_Point(row.getInt(0), row.getDouble(1), row.getDouble(2))
-        val p2 = SP_Point(row.getInt(3), row.getDouble(4), row.getDouble(5))
-        calculateDiskCenterCoordinates(p1, p2, r2)
-      }
-    centers
-  }
 
   def calculateDiskCenterCoordinates(p1: SP_Point, p2: SP_Point, r2: Double): ACenter = {
     val X: Double = p1.x - p2.x
@@ -29,6 +38,17 @@ case class BBox(minx: Double, miny: Double, maxx: Double, maxy: Double)
     } else {
       ACenter(0, 0, 0)
     }
+  }
+
+  def findDisks(pairsRDD: RDD[Row], epsilon: Double): RDD[ACenter] = {
+    val r2: Double = math.pow(epsilon / 2, 2)
+    val centers = pairsRDD.
+      map { (row: Row) =>
+        val p1 = SP_Point(row.getInt(0), row.getDouble(1), row.getDouble(2))
+        val p2 = SP_Point(row.getInt(3), row.getDouble(4), row.getDouble(5))
+        calculateDiskCenterCoordinates(p1, p2, r2)
+      }
+    centers
   }
 
     val DATASET = "B5K_Tester"
@@ -65,20 +85,15 @@ case class BBox(minx: Double, miny: Double, maxx: Double, maxy: Double)
     val p1 = points.toDF("id1", "x1", "y1")
     p1.index(RTreeType, "p1RT", Array("x1", "y1"))
     val p2 = points.toDF("id2", "x2", "y2")
-      logger.info("Running epsilon = %.1f iteration...".format(epsilon))
-      val startTime = System.currentTimeMillis()
-      // Self-join...
-      timer = System.currentTimeMillis()
+    val epsilon = EPSILON
       val pairsRDD = p1.distanceJoin(p2, Array("x1", "y1"), Array("x2", "y2"), epsilon).
         filter((row: Row) => row.getInt(0) < row.getInt(3)).
         rdd
       pairsRDD.cache()
       val npairs = pairsRDD.count()
-      logger.info("Self-join... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
       // Computing disks...
       timer = System.currentTimeMillis()
       val centers = findDisks(pairsRDD, epsilon).
-        distinct().
         toDS().
         index(RTreeType, "centersRT", Array("x", "y")).
         withColumn("id", monotonically_increasing_id()).
