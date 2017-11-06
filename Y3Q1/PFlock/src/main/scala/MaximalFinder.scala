@@ -66,7 +66,7 @@ object MaximalFinder {
 			// Self-join...
 			timer = System.currentTimeMillis()
 			val pairsRDD = p1.distanceJoin(p2, Array("x1", "y1"), Array("x2", "y2"), epsilon).
-				filter((row: Row) => row.getInt(0) < row.getInt(3)).
+				filter((row: Row) => row.getInt(0) != row.getInt(3)).
 				rdd
 			pairsRDD.cache()
 			val npairs = pairsRDD.count()
@@ -106,31 +106,12 @@ object MaximalFinder {
 			logger.info("Indexing candidates... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
 			// Filtering candidate disks on inside partitions...
 			var time1 = System.currentTimeMillis()
-			val candidatesInside = filteredCandidates
-				.rdd
-				.mapPartitions { partition =>
-					val pList = partition.toList
-					val bbox = getBoundingBox(pList)
-					val inside = pList.
-						map{ disk =>
-							(disk._1, disk._2, disk._3, disk._4, isInside(disk._2, disk._3, bbox, epsilon))
-						}.
-						filter(_._5).
-						map { disk =>
-							Candidate(disk._1, disk._2, disk._3, disk._4)
-						}
-					inside.toIterator
-				}
-			candidatesInside.cache()
-			logger.info("Filtering candidate disks on inside partitions... [%.3fms]".format((System.currentTimeMillis() - time1)/1000.0))
-			// Finding maximal disks inside partitions...
-			timer = System.currentTimeMillis()
-			val maximalsInside = candidatesInside.
-				//rdd.
+			val maximalsInside = filteredCandidates.
+				rdd.
 				mapPartitions { partition =>
 					val transactions = partition.
 						map { disk =>
-							disk.items.
+							disk._4.
 							split(",").
 							map { id =>
 								new Integer(id.trim)
@@ -147,7 +128,7 @@ object MaximalFinder {
 				}
 			maximalsInside.cache()
 			val nMaximalsInside = maximalsInside.count()
-			logger.info("Finding maximal disks inside partitions... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
+			logger.info("Finding maximal disks inside partitions... [%.3fms]".format((System.currentTimeMillis() - time1)/1000.0))
 			var time2 = System.currentTimeMillis()
 			val timeI = (time2 - time1) / 1000.0
 			// Filtering candidate disks on frame partitions...
@@ -222,7 +203,7 @@ object MaximalFinder {
 			maximals = simba.sparkContext.parallelize(maximalsArray)
 			logger.info("Collecting final maximal disks... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
 			
-			/*
+			
 			var outputFile = "/tmp/M%d_1.csv".format(MU)
 			var writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile)))
 			maximalsInside.union(maximalsFrame).
@@ -233,7 +214,7 @@ object MaximalFinder {
 				collect().
 				foreach(writer.write)
 			writer.close()
-			
+						
 			outputFile = "/tmp/M%d_2.csv".format(MU)
 			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile)))
 			maximalsInside.union(maximalsFrame).
@@ -245,7 +226,7 @@ object MaximalFinder {
 				collect().
 				foreach(writer.write)
 			writer.close()
-			*/
+						
 			
 			val totalTime = (endTime - startTime) / 1000.0
 			// Printing info summary ...
@@ -255,7 +236,7 @@ object MaximalFinder {
 				)
 			)
 			logger.info("%10s,%8d,%8d,%8d,%7d,%8d,%5d,%4d,%6.1f,%3d,%8.2f,%8.2f,%8.2f".
-				format(DATASET, npairs, ncenters, nMaximalsInside, nMaximalsFrame, nmaximals,
+				format(DATASET, npairs/2, ncenters, nMaximalsInside, nMaximalsFrame, nmaximals,
 					PARTITIONS, ENTRIES, epsilon, MU, timeI, timeF, totalTime
 				)
 			)
@@ -294,7 +275,7 @@ object MaximalFinder {
 		var D2: Double = math.pow(X, 2) + math.pow(Y, 2)
 		//var aCenter: ACenter = new ACenter(0, 0, 0)
 		if (D2 != 0){
-			val root: Double = math.sqrt(math.abs(4.0 * (r2 / D2) - 1.0))
+			val root: Double = = math.pow(math.abs(4.0 * (r2 / D2) - 1.0), 0.5)
 			val h1: Double = ((X + Y * root) / 2) + p2.x
 			val k1: Double = ((Y - X * root) / 2) + p2.y
 
