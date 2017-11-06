@@ -233,9 +233,9 @@ object MaximalFinder {
 				collect().
 				foreach(writer.write)
 			writer.close()
-			
-			outputFile = "/tmp/M%d_2.csv".format(MU)
-			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile)))
+			*/
+			val outputFile = "/tmp/MaximalDisks_PFlocks.csv".format(MU)
+			val writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile)))
 			maximalsInside.union(maximalsFrame).
 				map(_.asScala.toList.map(_.intValue())).
 				distinct().
@@ -245,7 +245,7 @@ object MaximalFinder {
 				collect().
 				foreach(writer.write)
 			writer.close()
-			*/
+			
 			
 			val totalTime = (endTime - startTime) / 1000.0
 			// Printing info summary ...

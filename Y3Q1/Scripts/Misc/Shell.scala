@@ -51,13 +51,13 @@ case class BBox(minx: Double, miny: Double, maxx: Double, maxy: Double)
     centers
   }
 
-    val DATASET = "B5K_Tester"
+    val DATASET = "Porto10K"
     val ENTRIES = "10"
     val PARTITIONS = "10"
-    val EPSILON = 10.0
+    val EPSILON = 30.0
     val MU = 5
-    val MASTER = "local[10]"
-    val CORES = "10"
+    val MASTER = "local[*]"
+    val CORES = "12"
     val POINT_SCHEMA = ScalaReflection.schemaFor[SP_Point].dataType.asInstanceOf[StructType]
     val PRECISION = 0.01
     // Setting session...
