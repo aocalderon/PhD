@@ -54,14 +54,44 @@ class Itemset(val line: String) extends Ordered [Itemset]  {
 		}
 		file.close()
 	}
-		
-	def main(args: Array[String]): Unit = {
-		var dataset = "MaximalDisks_PFlocks"
-		var extension = "txt"
-		Checker.readFile(dataset)
 
-		dataset = "MaximalDisks_FPFlocks"
-		Checker.readFile(dataset)
+	def compareFiles(filename1: String, filename2: String): Unit = {
+		val file1 = Source.fromFile(filename1)
+		var temp: ListBuffer[Array[Int]] = ListBuffer.empty
+		for (line <- file1.getLines)
+			temp += line.substring(1, line.indexOf(":")).split(",").map(_.toInt)
+		val itemsets1 = temp.toList
+		file1.close()
+		val file2 = Source.fromFile(filename2)
+		temp = ListBuffer.empty
+		for (line <- file2.getLines)
+			temp += line.substring(1, line.indexOf(":")).split(",").map(_.toInt)
+		val itemsets2 = temp.toList
+		file2.close()
+		for(itemset1 <- itemsets1){
+			var found = false
+			for(itemset2 <- itemsets2){
+				if(!found && itemset2.intersect(itemset1).sameElements(itemset1)){
+					found = true
+					if(itemset1.size != itemset2.size)
+						println("%s has been found in %s ...".format(itemset1.mkString(" "), itemset2.mkString(" ")))
+				}
+			}
+			if(!found)
+				println("%s has not been found...".format(itemset1.mkString(" ")))
+		}
+	}
+			
+	def main(args: Array[String]): Unit = {
+		var extension = "txt"
+		var dataset = ""
+		//dataset = "MaximalDisks_PFlocks"
+		//Checker.readFile(dataset)
+
+		//dataset = "MaximalDisks_PFlocks"
+		//Checker.readFile(dataset)
+		
+		Checker.compareFiles("MaximalDisks_PFlocks_sorted.txt","MaximalDisks_FPFlocks_sorted.txt")
 
 	}
 }	

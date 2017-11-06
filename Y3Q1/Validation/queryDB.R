@@ -13,6 +13,6 @@ DATASET = "olden_PFlock"
 filename = paste0(PHD_HOME,PATH,DATASET,EXTENSION)
 points = read.csv(filename, header = F)
 names(points) = c("id", "x", "y")
-itemset = sqldf("SELECT * FROM points WHERE id IN (25,61,175,361,725,886,996)")
+itemset = sqldf("SELECT * FROM points WHERE id IN (488, 494, 707, 815)")
 x = as.matrix(itemset[,c("x","y")])
 dist(x)
