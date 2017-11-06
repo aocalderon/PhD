@@ -137,11 +137,11 @@ class BFEFlock(object):
         # db.insertTest(filename,self.epsilon,mu, delta, t2, flocks, tag)
         
 def main():
-    bfe = BFEFlock(100,2,3)
-    bfe.flockFinder('/opt/Datasets/Beijing/P10K.csv')
+    #bfe = BFEFlock(100,2,3)
+    #bfe.flockFinder('/opt/Datasets/Beijing/P10K.csv')
     
-    #bfe = BFEFlock(int(sys.argv[1]),int(sys.argv[2]),int(sys.argv[3]))
-    #bfe.flockFinder(str(sys.argv[4]))
+    bfe = BFEFlock(int(sys.argv[1]),int(sys.argv[2]),int(sys.argv[3]))
+    bfe.flockFinder(str(sys.argv[4]))
     
 
 if __name__ == '__main__':
