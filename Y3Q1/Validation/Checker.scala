@@ -55,6 +55,24 @@ class Itemset(val line: String) extends Ordered [Itemset]  {
 		file.close()
 	}
 
+	def findItemsetInFile(filename: String, the_itemset: List[Int]): Unit = {
+		logger.info("Reading %s".format(filename))
+		var temp: ListBuffer[Array[Int]] = ListBuffer.empty
+		val file = Source.fromFile(filename)
+		for (line <- file.getLines) {
+			temp += line.split(" ").map(_.toInt)
+		}
+		val itemsets = temp.toList
+		file.close()
+		var found = false
+		for(itemset <- itemsets){
+			if(!found && itemset.intersect(the_itemset).sameElements(the_itemset)){
+				found = true
+				println("%s has been found in %s ...".format(the_itemset.mkString(" "), itemset.mkString(" ")))
+			}
+		}
+	}
+
 	def compareFiles(filename1: String, filename2: String): Unit = {
 		val file1 = Source.fromFile(filename1)
 		var temp: ListBuffer[Array[Int]] = ListBuffer.empty
@@ -85,13 +103,17 @@ class Itemset(val line: String) extends Ordered [Itemset]  {
 	def main(args: Array[String]): Unit = {
 		var extension = "txt"
 		var dataset = ""
-		//dataset = "MaximalDisks_PFlocks"
-		//Checker.readFile(dataset)
 
 		//dataset = "MaximalDisks_PFlocks"
 		//Checker.readFile(dataset)
-		
-		Checker.compareFiles("MaximalDisks_PFlocks_sorted.txt","MaximalDisks_FPFlocks_sorted.txt")
+
+		//dataset = "MaximalDisks_FPFlocks"
+		//Checker.readFile(dataset)
+
+		//Checker.compareFiles("MaximalDisks_PFlocks_sorted.txt","MaximalDisks_FPFlocks_sorted.txt")
+
+		val the_itemset = List(94, 226, 505)
+		Checker.findItemsetInFile("/tmp/BeforeLCM.csv", the_itemset)
 
 	}
 }	

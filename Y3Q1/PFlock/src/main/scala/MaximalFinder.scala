@@ -1,22 +1,22 @@
-import java.io.{PrintWriter, BufferedWriter, FileOutputStream, OutputStreamWriter}
-import Misc.GeoGSON
-import SPMF.{AlgoLCM, Transactions}
+import java.io.{BufferedWriter, FileOutputStream, OutputStreamWriter, PrintWriter}
+
 import JLCM.{ListCollector, TransactionsReader}
-import fr.liglab.jlcm.internals.ExplorationStep;
-import fr.liglab.jlcm.io.PatternsCollector;
-import fr.liglab.jlcm.PLCM;
-import scala.collection.JavaConverters._
-import org.apache.spark.rdd.DoubleRDDFunctions
-import org.apache.spark.rdd.RDD
-import org.apache.spark.sql.functions._
+import Misc.GeoGSON
+import SPMF.{AlgoCharmLCM, AlgoLCM, Transactions}
+import fr.liglab.jlcm.PLCM
+import fr.liglab.jlcm.internals.ExplorationStep
+import org.apache.spark.rdd.{DoubleRDDFunctions, RDD}
 import org.apache.spark.sql.Row
 import org.apache.spark.sql.catalyst.ScalaReflection
+import org.apache.spark.sql.functions._
+import org.apache.spark.sql.simba.index._
 import org.apache.spark.sql.simba.{Dataset, SimbaSession}
 import org.apache.spark.sql.types.StructType
-import org.apache.spark.sql.simba.index._
-import org.slf4j.{Logger, LoggerFactory}
-import org.rogach.scallop.{ScallopConf, ScallopOption}
 import org.joda.time.DateTime
+import org.rogach.scallop.{ScallopConf, ScallopOption}
+import org.slf4j.{Logger, LoggerFactory}
+
+import scala.collection.JavaConverters._
 
 /*******************************
 *                              *
@@ -89,15 +89,15 @@ object MaximalFinder {
 				.groupBy("id", "x", "y")
 				.agg(collect_list("id1").alias("IDs"))
 			candidates.cache()
-			
-			/////////////////////////////
+
+			///////////////////////////////////////////////////////////
 			var to_file = candidates.
 				map{ d =>
 					"%d,%f,%f,%s".format(d.getLong(0), d.getDouble(1), d.getDouble(2), d.getList[Integer](3).asScala.sorted.mkString(" "))
 				}.
 				collect()
 			new PrintWriter("/tmp/AfterDistanceJoin.csv") { write(to_file.mkString("\n")); close }
-			/////////////////////////////
+			///////////////////////////////////////////////////////////
 			
 			val ncandidates = candidates.count()
 			logger.info("Mapping disks and points... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
@@ -114,33 +114,36 @@ object MaximalFinder {
 			filteredCandidates.index(RTreeType, "candidatesRT", Array("_2", "_3"))
 			filteredCandidates.cache()
 			logger.info("Indexing candidates... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
-			// Filtering candidate disks on inside partitions...
-			var time1 = System.currentTimeMillis()
-			val candidatesInside = filteredCandidates
-				.rdd
-				.mapPartitions { partition =>
-					val pList = partition.toList
-					val bbox = getBoundingBox(pList)
-					val inside = pList.
-						map{ disk =>
-							(disk._1, disk._2, disk._3, disk._4, isInside(disk._2, disk._3, bbox, epsilon))
-						}.
-						filter(_._5).
+
+			///////////////////////////////////////////////////////////
+			to_file = filteredCandidates.
+				rdd.
+				mapPartitionsWithIndex { (index, partition) =>
+					val transactions = partition.
 						map { disk =>
-							Candidate(disk._1, disk._2, disk._3, disk._4)
-						}
-					inside.toIterator
-				}
-			candidatesInside.cache()
-			logger.info("Filtering candidate disks on inside partitions... [%.3fms]".format((System.currentTimeMillis() - time1)/1000.0))
+							disk._4.
+								split(",").
+								map { id =>
+									new Integer(id.trim)
+								}.
+								sorted.toList.asJava
+						}.toSet.asJava
+					transactions.asScala.toIterator
+				}.
+				map{t => t.toString().replace(", "," ").substring(1, t.toString.length -1)}.
+				collect()
+			new PrintWriter("/tmp/BeforeLCM.csv") { write(to_file.mkString("\n")); close }
+			///////////////////////////////////////////////////////////
+
+
 			// Finding maximal disks inside partitions...
-			timer = System.currentTimeMillis()
-			val maximalsInside = candidatesInside.
-				//rdd.
+			var time1 = System.currentTimeMillis()
+			val maximalsInside = filteredCandidates.
+				rdd.
 				mapPartitions { partition =>
 					val transactions = partition.
 						map { disk =>
-							disk.items.
+							disk._4.
 							split(",").
 							map { id =>
 								new Integer(id.trim)
@@ -150,14 +153,22 @@ object MaximalFinder {
 					val LCM = new AlgoLCM
 					val data = new Transactions(transactions)
 					val closed = LCM.runAlgorithm(1, data)
-					//val MFI = new AlgoCharmLCM
-					//val maximals = MFI.runAlgorithm(closed)
-					//maximals.getItemsets(MU).asScala.toIterator
-					closed.getMaximalItemsets1(MU).asScala.toIterator
+					val MFI = new AlgoCharmLCM
+					val maximals = MFI.runAlgorithm(closed)
+					maximals.getItemsets(MU).asScala.toIterator
+					//closed.getMaximalItemsets1(MU).asScala.toIterator
 				}
 			maximalsInside.cache()
+
+			///////////////////////////////////////////////////////////
+			to_file = maximalsInside.
+				map{t => t.toString().replace(", "," ").substring(1, t.toString.length -1)}.
+				collect()
+			new PrintWriter("/tmp/AfterLCM.csv") { write(to_file.mkString("\n")); close }
+			///////////////////////////////////////////////////////////
+
 			val nMaximalsInside = maximalsInside.count()
-			logger.info("Finding maximal disks inside partitions... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
+			logger.info("Finding maximal disks inside partitions... [%.3fms]".format((System.currentTimeMillis() - time1)/1000.0))
 			var time2 = System.currentTimeMillis()
 			val timeI = (time2 - time1) / 1000.0
 			// Filtering candidate disks on frame partitions...
@@ -200,7 +211,10 @@ object MaximalFinder {
 					val LCM = new AlgoLCM
 					val data = new Transactions(transactions)
 					val closed = LCM.runAlgorithm(1, data)
-					closed.getMaximalItemsets1(MU).asScala.toIterator
+					val MFI = new AlgoCharmLCM
+					val maximals = MFI.runAlgorithm(closed)
+					maximals.getItemsets(MU).asScala.toIterator
+					//closed.getMaximalItemsets1(MU).asScala.toIterator
 				}
 			maximalsFrame.cache()
 			val nMaximalsFrame = maximalsFrame.count()
@@ -214,37 +228,26 @@ object MaximalFinder {
 			logger.info("Prunning duplicates... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
 			val endTime = System.currentTimeMillis()
 			
-			timer = System.currentTimeMillis();
+			timer = System.currentTimeMillis()
 			val transactionsBuffer: String = distinctInsideFrame.map(_.mkString(" ")).collect.mkString("\n")
-			val minsup = 1;
-			val transactions = new TransactionsReader(transactionsBuffer + "\n");
-			val initState = new ExplorationStep(minsup, transactions);
+			val minsup = 1
+			val transactions = new TransactionsReader(transactionsBuffer + "\n")
+			val initState = new ExplorationStep(minsup, transactions)
 			logger.info("Loading distincts... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
-			timer = System.currentTimeMillis();
-			val nbThreads = Runtime.getRuntime().availableProcessors() - 1;
-			val collector = new ListCollector();
-			val miner = new PLCM(collector, nbThreads);
-			miner.lcm(initState);
+			timer = System.currentTimeMillis()
+			val nbThreads = Runtime.getRuntime().availableProcessors() - 1
+			val collector = new ListCollector()
+			val miner = new PLCM(collector, nbThreads)
+			miner.lcm(initState)
 			logger.info("Running jLCM... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
-			timer = System.currentTimeMillis();
-			val maximalsArray = collector.getMaximals1().asScala.toList.map(_.asScala.toList.map(_.intValue()));
+			timer = System.currentTimeMillis()
+			val maximalsArray = collector.getMaximals1().asScala.toList.map(_.asScala.toList.map(_.intValue()))
 			nmaximals = maximalsArray.length
 			maximals = simba.sparkContext.parallelize(maximalsArray)
 			logger.info("Collecting final maximal disks... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
-			
-			/*
-			var outputFile = "/tmp/M%d_1.csv".format(MU)
-			var writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile)))
-			maximalsInside.union(maximalsFrame).
-				map(_.asScala.toList.map(_.intValue())).
-				map{ pattern =>
-					"%s\n".format(pattern.mkString(" "))
-				}.
-				collect().
-				foreach(writer.write)
-			writer.close()
-			*/
-			val outputFile = "/tmp/MaximalDisks_PFlocks_BeforeLCM.csv".format(MU)
+
+			///////////////////////////////////////////////////////////
+			val outputFile = "/tmp/MaximalDisks_PFlocks_BeforeFinalLCM.csv"
 			val writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile)))
 			maximalsInside.union(maximalsFrame).
 				map(_.asScala.toList.map(_.intValue())).
@@ -255,8 +258,8 @@ object MaximalFinder {
 				collect().
 				foreach(writer.write)
 			writer.close()
-			
-			
+			///////////////////////////////////////////////////////////
+
 			val totalTime = (endTime - startTime) / 1000.0
 			// Printing info summary ...
 			logger.info("%10s,%8s,%8s,%8s,%7s,%8s,%5s,%4s,%6s,%3s,%8s,%8s,%8s".
@@ -301,7 +304,7 @@ object MaximalFinder {
 	def calculateDiskCenterCoordinates(p1: SP_Point, p2: SP_Point, r2: Double): ACenter = {
 		val X: Double = p1.x - p2.x
 		val Y: Double = p1.y - p2.y
-		var D2: Double = math.pow(X, 2) + math.pow(Y, 2)
+		val D2: Double = math.pow(X, 2) + math.pow(Y, 2)
 		//var aCenter: ACenter = new ACenter(0, 0, 0)
 		if (D2 != 0){
 			val root: Double = math.sqrt(math.abs(4.0 * (r2 / D2) - 1.0))
