@@ -197,7 +197,7 @@ public class AlgoFPMax {
 		return patterns;
 	}
 
-	public Itemsets runAlgorithm(Set<List<Integer>> input, int minsup) throws IOException {
+	public Itemsets runAlgorithm(List<List<Integer>> input, int minsup) throws IOException {
 		// record start time
 		startTimestamp = System.currentTimeMillis();
 		// number of itemsets found
@@ -611,7 +611,7 @@ public class AlgoFPMax {
 		return mapSupport;
 	}
 
-	private  Map<Integer, Integer> scanDatabaseToDetermineFrequencyOfSingleItems(Set<List<Integer>> input){
+	private  Map<Integer, Integer> scanDatabaseToDetermineFrequencyOfSingleItems(List<List<Integer>> input){
 		Map<Integer, Integer> mapSupport = new HashMap<>();
 
 		for( List<Integer> t: input){

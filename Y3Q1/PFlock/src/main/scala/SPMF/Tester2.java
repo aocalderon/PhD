@@ -35,7 +35,7 @@ public class Tester2 {
         BufferedReader reader = new BufferedReader(new FileReader(input));
         String line;
         // for each line (transaction) until the end of file
-        Set<List<Integer>> transactions = new HashSet<>();
+        List<List<Integer>> transactions = new ArrayList<>();
         while (((line = reader.readLine()) != null)) {
             // split the line into items
             String[] lineSplited = line.split(" ");

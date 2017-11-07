@@ -91,31 +91,40 @@ object MaximalFinder {
 			candidates.cache()
 
 			///////////////////////////////////////////////////////////
+			/*
 			var to_file = candidates.
 				map{ d =>
 					"%d,%f,%f,%s".format(d.getLong(0), d.getDouble(1), d.getDouble(2), d.getList[Integer](3).asScala.sorted.mkString(" "))
 				}.
 				collect()
 			new PrintWriter("/tmp/AfterDistanceJoin.csv") { write(to_file.mkString("\n")); close }
+			*/
 			///////////////////////////////////////////////////////////
 			
 			val ncandidates = candidates.count()
 			logger.info("Mapping disks and points... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
 			// Filtering less-than-mu disks...
 			timer = System.currentTimeMillis()
+			logger.info("MU=%d".format(MU))
+			simba.sparkContext.broadcast(MU)
 			val filteredCandidates = candidates.
-				filter(row => row.getList(3).size() >= MU).
+				filter{ row => 
+					
+					row.getList[Integer](3).size() >= MU
+				}.
 				map(d => (d.getLong(0), d.getDouble(1), d.getDouble(2), d.getList[Integer](3).asScala.mkString(",")))
 			filteredCandidates.cache()
+			filteredCandidates.show()
 			/* val nFilteredCandidates = filteredCandidates.count() */
 			logger.info("Filtering less-than-mu disks... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
 			// Indexing candidates...
 			timer = System.currentTimeMillis()
 			filteredCandidates.index(RTreeType, "candidatesRT", Array("_2", "_3"))
-			filteredCandidates.cache()
+			//filteredCandidates.cache()
 			logger.info("Indexing candidates... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
 
 			///////////////////////////////////////////////////////////
+			/*
 			to_file = filteredCandidates.
 				rdd.
 				mapPartitionsWithIndex { (index, partition) =>
@@ -133,6 +142,7 @@ object MaximalFinder {
 				map{t => t.toString().trim().substring(1, t.toString.trim().length -1).replace(", "," ")}.
 				collect()
 			new PrintWriter("/tmp/BeforeLCM.csv") { write(to_file.mkString("\n")); close }
+			*/
 			///////////////////////////////////////////////////////////
 
 
@@ -149,7 +159,7 @@ object MaximalFinder {
 								new Integer(id.trim)
 							}.
 							sorted.toList.asJava
-						}.toSet.asJava
+						}.toList.asJava
 					val fpMax = new AlgoFPMax
 					val itemsets = fpMax.runAlgorithm(transactions, 1)
 					itemsets.getItemsets(MU).asScala.toIterator
@@ -164,10 +174,12 @@ object MaximalFinder {
 			maximalsInside.cache()
 
 			///////////////////////////////////////////////////////////
+			/*
 			to_file = maximalsInside.
 				map{t => t.toString().trim().substring(1, t.toString.trim().length -1).replace(", "," ")}.
 				collect()
 			new PrintWriter("/tmp/AfterLCM.csv") { write(to_file.mkString("\n")); close }
+			*/
 			///////////////////////////////////////////////////////////
 
 			val nMaximalsInside = maximalsInside.count()
@@ -210,7 +222,7 @@ object MaximalFinder {
 								new Integer(id.trim)
 							}.
 							sorted.toList.asJava
-						}.toSet.asJava
+						}.toList.asJava
 					val fpMax = new AlgoFPMax
 					val itemsets = fpMax.runAlgorithm(transactions, 1)
 					itemsets.getItemsets(MU).asScala.toIterator
@@ -230,10 +242,12 @@ object MaximalFinder {
 			// Prunning duplicates...
 			timer = System.currentTimeMillis()
 			val distinctInsideFrame = maximalsInside.union(maximalsFrame).map(_.asScala.toList.map(_.intValue())).distinct()
-			distinctInsideFrame.cache()
+			maximals = distinctInsideFrame.cache()
+			nmaximals = maximals.count() 
 			logger.info("Prunning duplicates... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
 			val endTime = System.currentTimeMillis()
 			
+			/*
 			timer = System.currentTimeMillis()
 			val transactionsBuffer: String = distinctInsideFrame.map(_.mkString(" ")).collect.mkString("\n")
 			val minsup = 1
@@ -251,6 +265,7 @@ object MaximalFinder {
 			nmaximals = maximalsArray.length
 			maximals = simba.sparkContext.parallelize(maximalsArray)
 			logger.info("Collecting final maximal disks... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
+			*/
 
 			///////////////////////////////////////////////////////////
 			val outputFile = "/tmp/MaximalDisks_PFlocks_BeforeFinalLCM.csv"
