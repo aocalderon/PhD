@@ -104,16 +104,18 @@ class Itemset(val line: String) extends Ordered [Itemset]  {
 		var extension = "txt"
 		var dataset = ""
 
-		//dataset = "MaximalDisks_PFlocks"
-		//Checker.readFile(dataset)
+		dataset = "MaximalDisks_PFlocks"
+		Checker.readFile(dataset)
 
-		//dataset = "MaximalDisks_FPFlocks"
-		//Checker.readFile(dataset)
+		dataset = "MaximalDisks_FPFlocks"
+		Checker.readFile(dataset)
 
-		//Checker.compareFiles("MaximalDisks_PFlocks_sorted.txt","MaximalDisks_FPFlocks_sorted.txt")
+		Checker.compareFiles("MaximalDisks_PFlocks_sorted.txt","MaximalDisks_FPFlocks_sorted.txt")
 
-		val the_itemset = List(94, 226, 505)
-		Checker.findItemsetInFile("/tmp/BeforeLCM.csv", the_itemset)
+		//var the_itemset = List(37,450,698,914)
+		//Checker.findItemsetInFile("/tmp/BeforeLCM.csv", the_itemset)
+		//the_itemset = List(37,450,698,914)
+		//Checker.findItemsetInFile("/tmp/AfterLCM.csv", the_itemset)
 
 	}
 }	

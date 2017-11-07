@@ -3,11 +3,10 @@ package SPMF;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
         /* This file is copyright (c) 2012-2014 Alan Souza
          *
@@ -32,15 +31,14 @@ import java.util.List;
  */
 public class Tester2 {
     public static void main(String[] arg) throws IOException {
-        int transactionCount = 0;
-        String input = "/home/and/Documents/PhD/Code/Y3Q1/PFlock/src/main/scala/SPMF/input2.txt";
+        String input = "/home/and/Documents/PhD/Code/Y3Q1/PFlock/src/main/scala/SPMF/contextPasquier99.txt";
         BufferedReader reader = new BufferedReader(new FileReader(input));
         String line;
         // for each line (transaction) until the end of file
-        List<List<Integer>> transactions = new ArrayList<>();
+        Set<List<Integer>> transactions = new HashSet<>();
         while (((line = reader.readLine()) != null)) {
             // split the line into items
-            String[] lineSplited = line.split(",");
+            String[] lineSplited = line.split(" ");
             // for each item
             List<Integer> transaction = new ArrayList<>();
             for (String itemString : lineSplited) {
@@ -50,10 +48,9 @@ public class Tester2 {
             }
             // increase the transaction count
             transactions.add(transaction);
-            transactionCount++;
         }
         int minsup = 1;
-        int mu = 12;
+        int mu = 3;
         // Applying the algorithm
         AlgoFPMax fpMax2 = new AlgoFPMax();
         Itemsets itemsets = fpMax2.runAlgorithm(transactions, minsup);

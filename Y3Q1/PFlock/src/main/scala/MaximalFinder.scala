@@ -2,7 +2,7 @@ import java.io.{BufferedWriter, FileOutputStream, OutputStreamWriter, PrintWrite
 
 import JLCM.{ListCollector, TransactionsReader}
 import Misc.GeoGSON
-import SPMF.{AlgoCharmLCM, AlgoLCM, Transactions}
+import SPMF.{AlgoCharmLCM, AlgoLCM, AlgoFPMax, Transactions}
 import fr.liglab.jlcm.PLCM
 import fr.liglab.jlcm.internals.ExplorationStep
 import org.apache.spark.rdd.{DoubleRDDFunctions, RDD}
@@ -130,7 +130,7 @@ object MaximalFinder {
 						}.toSet.asJava
 					transactions.asScala.toIterator
 				}.
-				map{t => t.toString().replace(", "," ").substring(1, t.toString.length -1)}.
+				map{t => t.toString().trim().substring(1, t.toString.trim().length -1).replace(", "," ")}.
 				collect()
 			new PrintWriter("/tmp/BeforeLCM.csv") { write(to_file.mkString("\n")); close }
 			///////////////////////////////////////////////////////////
@@ -150,19 +150,22 @@ object MaximalFinder {
 							}.
 							sorted.toList.asJava
 						}.toSet.asJava
-					val LCM = new AlgoLCM
-					val data = new Transactions(transactions)
-					val closed = LCM.runAlgorithm(1, data)
-					val MFI = new AlgoCharmLCM
-					val maximals = MFI.runAlgorithm(closed)
-					maximals.getItemsets(MU).asScala.toIterator
+					val fpMax = new AlgoFPMax
+					val itemsets = fpMax.runAlgorithm(transactions, 1)
+					itemsets.getItemsets(MU).asScala.toIterator
+					//val LCM = new AlgoLCM
+					//val data = new Transactions(transactions)
+					//val closed = LCM.runAlgorithm(1, data)
+					//val MFI = new AlgoCharmLCM
+					//val maximals = MFI.runAlgorithm(closed)
+					//maximals.getItemsets(MU).asScala.toIterator
 					//closed.getMaximalItemsets1(MU).asScala.toIterator
 				}
 			maximalsInside.cache()
 
 			///////////////////////////////////////////////////////////
 			to_file = maximalsInside.
-				map{t => t.toString().replace(", "," ").substring(1, t.toString.length -1)}.
+				map{t => t.toString().trim().substring(1, t.toString.trim().length -1).replace(", "," ")}.
 				collect()
 			new PrintWriter("/tmp/AfterLCM.csv") { write(to_file.mkString("\n")); close }
 			///////////////////////////////////////////////////////////
@@ -208,12 +211,15 @@ object MaximalFinder {
 							}.
 							sorted.toList.asJava
 						}.toSet.asJava
-					val LCM = new AlgoLCM
-					val data = new Transactions(transactions)
-					val closed = LCM.runAlgorithm(1, data)
-					val MFI = new AlgoCharmLCM
-					val maximals = MFI.runAlgorithm(closed)
-					maximals.getItemsets(MU).asScala.toIterator
+					val fpMax = new AlgoFPMax
+					val itemsets = fpMax.runAlgorithm(transactions, 1)
+					itemsets.getItemsets(MU).asScala.toIterator
+					//val LCM = new AlgoLCM
+					//val data = new Transactions(transactions)
+					//val closed = LCM.runAlgorithm(1, data)
+					//val MFI = new AlgoCharmLCM
+					//val maximals = MFI.runAlgorithm(closed)
+					//maximals.getItemsets(MU).asScala.toIterator
 					//closed.getMaximalItemsets1(MU).asScala.toIterator
 				}
 			maximalsFrame.cache()

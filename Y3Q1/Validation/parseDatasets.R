@@ -18,8 +18,8 @@ data = read.table(filename, header = F, sep = ',')
 ###################
 
 data = as.data.table(data)
-names(data) = c('x', 'y', 't', 'id')
-data = data[ , c('id', 'x', 'y', 't')]
+data$t = 0
+names(data) = c('id', 'x', 'y', 't')
 
 ###################
 # Prunning possible duplicates...
