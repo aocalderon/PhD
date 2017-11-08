@@ -75,8 +75,6 @@ object MaximalFinder {
 				.distanceJoin(p1, Array("x", "y"), Array("x1", "y1"), (epsilon / 2) + PRECISION)
 				.groupBy("id", "x", "y")
 				.agg(collect_list("id1").alias("IDs"))
-<<<<<<< HEAD
-<<<<<<< HEAD
 			candidates.cache()
 
 			///////////////////////////////////////////////////////////
@@ -90,41 +88,27 @@ object MaximalFinder {
 			*/
 			///////////////////////////////////////////////////////////
 			
-=======
->>>>>>> Plotting MaximalFinder by stages...
 			val ncandidates = candidates.count()
 			// Filtering less-than-mu disks...
-<<<<<<< HEAD
 			timer = System.currentTimeMillis()
 			logger.info("MU=%d".format(MU))
 			simba.sparkContext.broadcast(MU)
-=======
-			logger.info("Filtering less-than-mu disks...")
->>>>>>> Plotting MaximalFinder by stages...
-=======
 			val ncandidates = candidates.count()
 			// Filtering less-than-mu disks...
 			logger.info("Filtering less-than-mu disks...")
->>>>>>> master
 			val filteredCandidates = candidates.
 				filter{ row => 
 					
 					row.getList[Integer](3).size() >= MU
 				}.
 				map(d => (d.getLong(0), d.getDouble(1), d.getDouble(2), d.getList[Integer](3).asScala.mkString(",")))
-<<<<<<< HEAD
-<<<<<<< HEAD
 			filteredCandidates.cache()
 			filteredCandidates.show()
 			/* val nFilteredCandidates = filteredCandidates.count() */
 			logger.info("Filtering less-than-mu disks... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
-=======
-			val nFilteredCandidates = filteredCandidates.count()
->>>>>>> Plotting MaximalFinder by stages...
 			// Indexing candidates...
 			logger.info("Indexing candidates...")
 			filteredCandidates.index(RTreeType, "candidatesRT", Array("_2", "_3"))
-<<<<<<< HEAD
 			//filteredCandidates.cache()
 			logger.info("Indexing candidates... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
 
@@ -150,15 +134,10 @@ object MaximalFinder {
 			*/
 			///////////////////////////////////////////////////////////
 
-
-=======
->>>>>>> Plotting MaximalFinder by stages...
-=======
 			val nFilteredCandidates = filteredCandidates.count()
 			// Indexing candidates...
 			logger.info("Indexing candidates...")
 			filteredCandidates.index(RTreeType, "candidatesRT", Array("_2", "_3"))
->>>>>>> master
 			// Finding maximal disks inside partitions...
 			logger.info("Finding maximal disks inside partitions...")
 			var time1 = System.currentTimeMillis()
@@ -174,8 +153,6 @@ object MaximalFinder {
 							}.
 							sorted.toList.asJava
 						}.toList.asJava
-<<<<<<< HEAD
-<<<<<<< HEAD
 					val fpMax = new AlgoFPMax
 					val itemsets = fpMax.runAlgorithm(transactions, 1)
 					itemsets.getItemsets(MU).asScala.toIterator
@@ -198,24 +175,6 @@ object MaximalFinder {
 			*/
 			///////////////////////////////////////////////////////////
 
-=======
-					val LCM = new AlgoLCM
-					val data = new Transactions(transactions)
-					val closed = LCM.runAlgorithm(1, data)
-					val MFI = new AlgoCharmLCM
-					val maximals = MFI.runAlgorithm(null, closed)
-					maximals.getItemsets(MU).asScala.toIterator
-				}
->>>>>>> Plotting MaximalFinder by stages...
-=======
-					val LCM = new AlgoLCM
-					val data = new Transactions(transactions)
-					val closed = LCM.runAlgorithm(1, data)
-					val MFI = new AlgoCharmLCM
-					val maximals = MFI.runAlgorithm(null, closed)
-					maximals.getItemsets(MU).asScala.toIterator
-				}
->>>>>>> master
 			val nMaximalsInside = maximalsInside.count()
 			var time2 = System.currentTimeMillis()
 			val timeI = (time2 - time1) / 1000.0
@@ -252,8 +211,6 @@ object MaximalFinder {
 							}.
 							sorted.toList.asJava
 						}.toList.asJava
-<<<<<<< HEAD
-<<<<<<< HEAD
 					val fpMax = new AlgoFPMax
 					val itemsets = fpMax.runAlgorithm(transactions, 1)
 					itemsets.getItemsets(MU).asScala.toIterator
@@ -264,26 +221,11 @@ object MaximalFinder {
 					//val maximals = MFI.runAlgorithm(closed)
 					//maximals.getItemsets(MU).asScala.toIterator
 					//closed.getMaximalItemsets1(MU).asScala.toIterator
-=======
-=======
->>>>>>> master
-					val LCM = new AlgoLCM
-					val data = new Transactions(transactions)
-					val closed = LCM.runAlgorithm(1, data)
-					val MFI = new AlgoCharmLCM
-					val maximals = MFI.runAlgorithm(null, closed)
-					maximals.getItemsets(MU).asScala.toIterator
-<<<<<<< HEAD
->>>>>>> Plotting MaximalFinder by stages...
-=======
->>>>>>> master
 				}
 			val nMaximalsFrame = maximalsFrame.count()
 			time2 = System.currentTimeMillis()
 			val timeF = (time2 - time1) / 1000.0
 			// Prunning duplicates...
-<<<<<<< HEAD
-<<<<<<< HEAD
 			timer = System.currentTimeMillis()
 			val distinctInsideFrame = maximalsInside.union(maximalsFrame).map(_.asScala.toList.map(_.intValue())).distinct()
 			maximals = distinctInsideFrame.cache()
@@ -325,17 +267,10 @@ object MaximalFinder {
 			writer.close()
 			///////////////////////////////////////////////////////////
 
-=======
-=======
->>>>>>> master
 			logger.info("Prunning duplicates...")
 			maximals = maximalsInside.union(maximalsFrame).distinct().map(_.asScala.toList.map(_.intValue()))
 			nmaximals = maximals.count()
 			var endTime = System.currentTimeMillis()
-<<<<<<< HEAD
->>>>>>> Plotting MaximalFinder by stages...
-=======
->>>>>>> master
 			val totalTime = (endTime - startTime) / 1000.0
 			// Printing info summary ...
 			logger.info("%6s,%8s,%6s,%6s,%6s,%5s,%4s,%6s,%3s,%8s,%8s,%8s".
