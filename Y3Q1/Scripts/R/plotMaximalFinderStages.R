@@ -1,96 +1,6 @@
----
-title: "Scaleup Analysis"
-author: "Andres Calderon"
-date: '`r Sys.Date()`'
-output:
-  html_document: default
-  pdf_document: default
----
-
-<!---  --->
-
-```{r ScaleupSetup, include=FALSE}
 if (!require("pacman")) install.packages("pacman")
 pacman::p_load(ggplot2, data.table, foreach, sqldf, tidyr, stringr, dplyr)
 
-PATH = "Y3Q1/Scripts/Scaleup/A/"
-filename = "Berlin_D20K-80K_E10.0-50.0_M12_P1024_201711052325"
-PHD_HOME = Sys.getenv(c("PHD_HOME"))
-
-files = system(paste0("ls ",PHD_HOME,PATH,filename,"*.csv"), intern = T)
-data = data.frame()
-foreach(f = files) %do% {
-  data = rbind(data, read.table(f, header = F, sep = ">"))
-}
-data = as.data.frame(str_split_fixed(data[,2], ",", 12), stringsAsFactors = F)
-data$V13 = 0
-data$V1 = str_sub(str_trim(data$V1), 2)
-data[data$V1 == "20K",13] = 7
-data[data$V1 == "40K",13] = 14
-data[data$V1 == "60K",13] = 21
-data[data$V1 == "80K",13] = 28
-data = data[, c(8, 1, 12, 13)]
-names(data) = c("Epsilon", "Dataset", "Time", "Cores")
-data$Time = as.numeric(data$Time)
-data$Epsilon = as.numeric(data$Epsilon)
-
-data = sqldf("SELECT Epsilon, Dataset, Cores, avg(Time) AS Time FROM data GROUP BY 1, 2, 3")
-data$Dataset = factor(data$Dataset, levels = paste0(seq(20, 80, 20), "K"))
-data$Cores = factor(data$Cores)
-```
-
-## `r filename`
-
-```{r ScaleupPlot, echo=FALSE, fig.width=10.5, fig.height=7.5, fig.align='center'}
-temp_title = paste("(radius of disk in mts) in Berlin dataset (Partitions = 1024, Mu = 12).")
-title = substitute(paste("Execution time by ", epsilon) ~ temp_title, list(temp_title = temp_title))
-g = ggplot(data=data, aes(x=factor(Epsilon), y=Time, fill=Dataset)) +
-  geom_bar(stat="identity", position=position_dodge(width = 0.75),width = 0.75) +
-  labs(title=title, y="Time(s)", x=expression(paste(epsilon,"(mts)")))
-plot(g)
-```
-
-
-
-```{r ScaleupSetup2, include=FALSE}
-filename = "Berlin_N20K-80K_E50.0-100.0_M25_P1024_201711061836"
-
-files = system(paste0("ls ",PHD_HOME,PATH,filename,"*.csv"), intern = T)
-data = data.frame()
-foreach(f = files) %do% {
-  data = rbind(data, read.table(f, header = F, sep = ">"))
-}
-data = as.data.frame(str_split_fixed(data[,2], ",", 12), stringsAsFactors = F)
-data$V13 = 0
-data$V1 = str_sub(str_trim(data$V1), 2)
-data[data$V1 == "20K",13] = 7
-data[data$V1 == "40K",13] = 14
-data[data$V1 == "60K",13] = 21
-data[data$V1 == "80K",13] = 28
-data = data[, c(8, 1, 12, 13)]
-names(data) = c("Epsilon", "Dataset", "Time", "Cores")
-data$Time = as.numeric(data$Time)
-data$Epsilon = as.numeric(data$Epsilon)
-
-data = sqldf("SELECT Epsilon, Dataset, Cores, avg(Time) AS Time FROM data GROUP BY 1, 2, 3")
-data$Dataset = factor(data$Dataset, levels = paste0(seq(20, 80, 20), "K"))
-data$Cores = factor(data$Cores)
-```
-
-## `r filename`
-
-```{r ScaleupPlot2, echo=FALSE, fig.width=10.5, fig.height=7.5, fig.align='center'}
-temp_title = paste("(radius of disk in mts) in Berlin dataset (Partitions = 1024, Mu = 25).")
-title = substitute(paste("Execution time by ", epsilon) ~ temp_title, list(temp_title = temp_title))
-g = ggplot(data=data, aes(x=factor(Epsilon), y=Time, fill=Dataset)) +
-  geom_bar(stat="identity", position=position_dodge(width = 0.75),width = 0.75) +
-  labs(title=title, y="Time(s)", x=expression(paste(epsilon,"(mts)")))
-plot(g)
-```
-
-## Where is the problem?
-
-```{r ScaleupPlot3, echo=FALSE, fig.width=10.5, fig.height=7.5, fig.align='center'}
 PATH = "Y3Q1/Scripts/Scaleup/A/"
 filename = "Berlin_D20K-80K_E10.0-50.0_M12_P1024_201711052325"
 PHD_HOME = Sys.getenv(c("PHD_HOME"))
@@ -191,4 +101,3 @@ g = ggplot(data=data, aes(x=factor(Epsilon), y=Time, fill=Dataset)) +
   labs(title=title, y="Time(s)", x=expression(paste(epsilon,"(mts)"))) +
   facet_wrap(~Stages)
 plot(g)
-```
