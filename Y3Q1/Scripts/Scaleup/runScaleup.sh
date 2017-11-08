@@ -1,10 +1,18 @@
 #!/bin/bash
 
+<<<<<<< HEAD
 N=4
 MU=25
 PARTITIONS=256
 ESTART=50
 EEND=100
+=======
+N=1
+MU=12
+PARTITIONS=1024
+ESTART=10
+EEND=50
+>>>>>>> parent of 51dd10c... Collecting a new set of experiments...
 ESTEP=10
 
 # Running Scaleup on 1 Node with 20K dataset...

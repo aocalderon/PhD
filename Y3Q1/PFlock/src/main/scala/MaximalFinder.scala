@@ -47,15 +47,18 @@ object MaximalFinder {
 	def run(points: Dataset[SP_Point]
 			, timestamp: Int
 			, simba: SimbaSession): RDD[List[Int]] = {
+		var timer = System.currentTimeMillis()
 		import simba.implicits._
 		import simba.simbaImplicits._
-		val n = points.count()
-		logger.info("Running with mu = %d, cores = %d, partitions = %d over %d points...".format(MU, CORES, PARTITIONS, n))
+		// Getting number of points...
+		val n = points.count() 
+		logger.info("Getting %d points... [%.3fms]".format(n, (System.currentTimeMillis() - timer)/1000.0))
 		// Indexing...
-		var timer = System.currentTimeMillis()
+		timer = System.currentTimeMillis()
 		val p1 = points.toDF("id1", "x1", "y1")
 		p1.index(RTreeType, "p1RT", Array("x1", "y1"))
-		val p2 = p1.toDF("id2", "x2", "y2")
+		val p2 = points.toDF("id2", "x2", "y2")
+		p2.index(RTreeType, "p2RT", Array("x2", "y2"))
 		logger.info("Indexing... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
 		// Setting final containers...
 		var maximals: RDD[List[Int]] = simba.sparkContext.emptyRDD
@@ -89,18 +92,6 @@ object MaximalFinder {
 				.groupBy("id", "x", "y")
 				.agg(collect_list("id1").alias("IDs"))
 			candidates.cache()
-
-			///////////////////////////////////////////////////////////
-			/*
-			var to_file = candidates.
-				map{ d =>
-					"%d,%f,%f,%s".format(d.getLong(0), d.getDouble(1), d.getDouble(2), d.getList[Integer](3).asScala.sorted.mkString(" "))
-				}.
-				collect()
-			new PrintWriter("/tmp/AfterDistanceJoin.csv") { write(to_file.mkString("\n")); close }
-			*/
-			///////////////////////////////////////////////////////////
-			
 			val ncandidates = candidates.count()
 			logger.info("Mapping disks and points... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
 			// Filtering less-than-mu disks...
@@ -113,39 +104,13 @@ object MaximalFinder {
 					row.getList[Integer](3).size() >= MU
 				}.
 				map(d => (d.getLong(0), d.getDouble(1), d.getDouble(2), d.getList[Integer](3).asScala.mkString(",")))
-			filteredCandidates.cache()
-			filteredCandidates.show()
-			/* val nFilteredCandidates = filteredCandidates.count() */
+			val nFilteredCandidates = filteredCandidates.count()
 			logger.info("Filtering less-than-mu disks... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
 			// Indexing candidates...
 			timer = System.currentTimeMillis()
 			filteredCandidates.index(RTreeType, "candidatesRT", Array("_2", "_3"))
-			//filteredCandidates.cache()
+			filteredCandidates.cache()
 			logger.info("Indexing candidates... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
-
-			///////////////////////////////////////////////////////////
-			/*
-			to_file = filteredCandidates.
-				rdd.
-				mapPartitionsWithIndex { (index, partition) =>
-					val transactions = partition.
-						map { disk =>
-							disk._4.
-								split(",").
-								map { id =>
-									new Integer(id.trim)
-								}.
-								sorted.toList.asJava
-						}.toSet.asJava
-					transactions.asScala.toIterator
-				}.
-				map{t => t.toString().trim().substring(1, t.toString.trim().length -1).replace(", "," ")}.
-				collect()
-			new PrintWriter("/tmp/BeforeLCM.csv") { write(to_file.mkString("\n")); close }
-			*/
-			///////////////////////////////////////////////////////////
-
-
 			// Finding maximal disks inside partitions...
 			var time1 = System.currentTimeMillis()
 			val maximalsInside = filteredCandidates.
@@ -172,16 +137,6 @@ object MaximalFinder {
 					//closed.getMaximalItemsets1(MU).asScala.toIterator
 				}
 			maximalsInside.cache()
-
-			///////////////////////////////////////////////////////////
-			/*
-			to_file = maximalsInside.
-				map{t => t.toString().trim().substring(1, t.toString.trim().length -1).replace(", "," ")}.
-				collect()
-			new PrintWriter("/tmp/AfterLCM.csv") { write(to_file.mkString("\n")); close }
-			*/
-			///////////////////////////////////////////////////////////
-
 			val nMaximalsInside = maximalsInside.count()
 			logger.info("Finding maximal disks inside partitions... [%.3fms]".format((System.currentTimeMillis() - time1)/1000.0))
 			var time2 = System.currentTimeMillis()
@@ -208,7 +163,6 @@ object MaximalFinder {
 			logger.info("Filtering candidate disks on frame partitions... [%.3fms]".format((System.currentTimeMillis() - time1)/1000.0))
 			timer = System.currentTimeMillis()
 			candidatesFrame.index(RTreeType, "candidatesFrameRT", Array("x", "y"))
-			candidatesFrame.cache()
 			logger.info("Re-indexing candidate disks in frame partitions... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
 			timer = System.currentTimeMillis()
 			val maximalsFrame = candidatesFrame.
@@ -234,38 +188,17 @@ object MaximalFinder {
 					//maximals.getItemsets(MU).asScala.toIterator
 					//closed.getMaximalItemsets1(MU).asScala.toIterator
 				}
-			maximalsFrame.cache()
 			val nMaximalsFrame = maximalsFrame.count()
 			logger.info("Finding maximal disks in frame partitions... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
 			time2 = System.currentTimeMillis()
 			val timeF = (time2 - time1) / 1000.0
 			// Prunning duplicates...
 			timer = System.currentTimeMillis()
-			val distinctInsideFrame = maximalsInside.union(maximalsFrame).map(_.asScala.toList.map(_.intValue())).distinct()
-			maximals = distinctInsideFrame.cache()
-			nmaximals = maximals.count() 
+			maximals = maximalsInside.union(maximalsFrame).distinct().map(_.asScala.toList.map(_.intValue()))
+			nmaximals = maximals.count()
+			var endTime = System.currentTimeMillis()
+			val totalTime = (endTime - startTime) / 1000.0
 			logger.info("Prunning duplicates... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
-			val endTime = System.currentTimeMillis()
-			
-			/*
-			timer = System.currentTimeMillis()
-			val transactionsBuffer: String = distinctInsideFrame.map(_.mkString(" ")).collect.mkString("\n")
-			val minsup = 1
-			val transactions = new TransactionsReader(transactionsBuffer + "\n")
-			val initState = new ExplorationStep(minsup, transactions)
-			logger.info("Loading distincts... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
-			timer = System.currentTimeMillis()
-			val nbThreads = Runtime.getRuntime().availableProcessors() - 1
-			val collector = new ListCollector()
-			val miner = new PLCM(collector, nbThreads)
-			miner.lcm(initState)
-			logger.info("Running jLCM... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
-			timer = System.currentTimeMillis()
-			val maximalsArray = collector.getMaximals1().asScala.toList.map(_.asScala.toList.map(_.intValue()))
-			nmaximals = maximalsArray.length
-			maximals = simba.sparkContext.parallelize(maximalsArray)
-			logger.info("Collecting final maximal disks... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
-			*/
 
 			///////////////////////////////////////////////////////////
 			val outputFile = "/tmp/MaximalDisks_PFlocks_BeforeFinalLCM.csv"
@@ -281,15 +214,14 @@ object MaximalFinder {
 			writer.close()
 			///////////////////////////////////////////////////////////
 
-			val totalTime = (endTime - startTime) / 1000.0
 			// Printing info summary ...
-			logger.info("%10s,%8s,%8s,%8s,%7s,%8s,%5s,%4s,%6s,%3s,%8s,%8s,%8s".
-				format("Data", "#Pairs", "#Candis", "# In", "# Fr", "# Max",
+			logger.info("%6s,%8s,%6s,%6s,%6s,%5s,%4s,%6s,%3s,%8s,%8s,%8s".
+				format("Data", "# Cands", "# In", "# Fr", "# Max",
 					"Part", "Ent", "Eps", "Mu", "TimeI", "TimeF", "Time"
 				)
 			)
-			logger.info("%10s,%8d,%8d,%8d,%7d,%8d,%5d,%4d,%6.1f,%3d,%8.2f,%8.2f,%8.2f".
-				format(DATASET, npairs, ncenters, nMaximalsInside, nMaximalsFrame, nmaximals,
+			logger.info("%6s,%8d,%6d,%6d,%6d,%5d,%4d,%6.1f,%3d,%8.2f,%8.2f,%8.2f".
+				format(DATASET, nFilteredCandidates, nMaximalsInside, nMaximalsFrame, nmaximals,
 					PARTITIONS, ENTRIES, epsilon, MU, timeI, timeF, totalTime
 				)
 			)
@@ -638,34 +570,33 @@ object MaximalFinder {
 		val MASTER = conf.master()
 		logger.info("Setting variables... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
 		// Starting session...
-		val sessionStart = System.currentTimeMillis()
+		timer = System.currentTimeMillis()
 		val simba = SimbaSession.builder().
 			master(MASTER).
 			appName("MaximalFinder").
 			config("simba.rtree.maxEntriesPerNode", MaximalFinder.ENTRIES).
-			config("simba.index.partitions", MaximalFinder.PARTITIONS).
+			config("simba.index.partitions", "1024").
 			config("spark.cores.max", MaximalFinder.CORES).
 			getOrCreate()
 		import simba.implicits._
 		import simba.simbaImplicits._
-		logger.info("Starting session... [%.3fms]".format((System.currentTimeMillis() - sessionStart)/1000.0))
-		// Reading...
+		logger.info("Starting session... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
+       	// Reading...
 		timer = System.currentTimeMillis()
 		val phd_home = scala.util.Properties.envOrElse("PHD_HOME", "/home/acald013/PhD/")
 		val filename = "%s%s%s.%s".format(phd_home, conf.path(), MaximalFinder.DATASET, conf.extension())
 		val points = simba.read.option("header", "false").schema(POINT_SCHEMA).csv(filename).as[SP_Point]
-		points.cache()
 		logger.info("Reading %s... [%.3fms]".format(filename, (System.currentTimeMillis() - timer)/1000.0))
 		// Running MaximalFinder...
 		logger.info("Lauching MaximalFinder at %s...".format(DateTime.now.toLocalTime.toString))
 		timer = System.currentTimeMillis()
 		MaximalFinder.run(points, 0, simba)
 		logger.info("Finishing MaximalFinder at %s...]".format(DateTime.now.toLocalTime.toString))
+		logger.info("Total time for MaximalFinder: %.3fms...".format((System.currentTimeMillis() - timer)/1000.0))
 		// Closing session...
 		timer = System.currentTimeMillis()
 		simba.close
 		logger.info("Closing session... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
-		logger.info("Total time for session: %.3fms...".format((System.currentTimeMillis() - sessionStart)/1000.0))
 		// Ending app...
 		logger.info("Ending app at %s...".format(DateTime.now.toLocalDateTime.toString))
 	}	
