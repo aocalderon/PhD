@@ -52,10 +52,6 @@ public class GeoGSON {
     public void makePoints(Double lon, Double lat){
         features.add(Feature.of(Point.from(lon, lat)));
     }
-    
-    public void clearFeatures(){
-			this.features.clear();
-	}
 
     public void saveGeoJSON(String filename){
         FeatureCollection collection = new FeatureCollection(features);

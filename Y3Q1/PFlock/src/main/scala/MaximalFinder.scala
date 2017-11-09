@@ -1,6 +1,8 @@
 import java.io.{BufferedWriter, FileOutputStream, OutputStreamWriter}
+
 import Misc.GeoGSON
-import SPMF.{AlgoCharmLCM, AlgoLCM, Transactions}
+import SPMF.{AlgoCharmLCM, AlgoFPMax, AlgoLCM, Transactions}
+
 import scala.collection.JavaConverters._
 import org.apache.spark.rdd.DoubleRDDFunctions
 import org.apache.spark.rdd.RDD
@@ -10,6 +12,7 @@ import org.apache.spark.sql.catalyst.ScalaReflection
 import org.apache.spark.sql.simba.{Dataset, SimbaSession}
 import org.apache.spark.sql.types.StructType
 import org.apache.spark.sql.simba.index._
+import org.joda.time.DateTime
 import org.slf4j.{Logger, LoggerFactory}
 import org.rogach.scallop.{ScallopConf, ScallopOption}
 
@@ -59,7 +62,7 @@ object MaximalFinder {
 		var maximals: RDD[List[Int]] = simba.sparkContext.emptyRDD
 		var nmaximals: Long = 0
 		for( epsilon <- ESTART to EEND by ESTEP ){
-			var startTime = System.currentTimeMillis()
+			val startTime = System.currentTimeMillis()
 			val pairsRDD = p1.distanceJoin(p2, Array("x1", "y1"), Array("x2", "y2"), epsilon).rdd
 			// Computing disks...
 			logger.info("Computing disks...")
@@ -76,7 +79,6 @@ object MaximalFinder {
 				.groupBy("id", "x", "y")
 				.agg(collect_list("id1").alias("IDs"))
 			candidates.cache()
-			val ncandidates = candidates.count()
 			// Filtering less-than-mu disks...
 			timer = System.currentTimeMillis()
 			logger.info("MU=%d".format(MU))
@@ -85,8 +87,7 @@ object MaximalFinder {
 			// Filtering less-than-mu disks...
 			logger.info("Filtering less-than-mu disks...")
 			val filteredCandidates = candidates.
-				filter{ row => 
-					
+				filter{ row =>
 					row.getList[Integer](3).size() >= MU
 				}.
 				map(d => (d.getLong(0), d.getDouble(1), d.getDouble(2), d.getList[Integer](3).asScala.mkString(",")))
@@ -119,17 +120,11 @@ object MaximalFinder {
 			new PrintWriter("/tmp/BeforeLCM.csv") { write(to_file.mkString("\n")); close }
 			*/
 			///////////////////////////////////////////////////////////
-
-			val nFilteredCandidates = filteredCandidates.count()
-			// Indexing candidates...
-			logger.info("Indexing candidates...")
-			filteredCandidates.index(RTreeType, "candidatesRT", Array("_2", "_3"))
 			// Finding maximal disks inside partitions...
 			logger.info("Finding maximal disks inside partitions...")
 			var time1 = System.currentTimeMillis()
-			val maximalsInside = filteredCandidates
-				.rdd
-				.mapPartitions { partition =>
+			val maximalsInside = filteredCandidates.rdd.
+				mapPartitions{ partition =>
 					val transactions = partition.
 						map { disk =>
 							disk._4.
@@ -206,7 +201,7 @@ object MaximalFinder {
 			timer = System.currentTimeMillis()
 			maximals = maximalsInside.union(maximalsFrame).distinct().map(_.asScala.toList.map(_.intValue()))
 			nmaximals = maximals.count()
-			var endTime = System.currentTimeMillis()
+			val endTime = System.currentTimeMillis()
 			val totalTime = (endTime - startTime) / 1000.0
 			logger.info("Prunning duplicates... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
 
@@ -384,12 +379,12 @@ object MaximalFinder {
 							new Integer(id.trim)
 						}.
 						sorted.toList.asJava
-					}.toList.asJava
+					}.toSet.asJava
 				val LCM = new AlgoLCM
 				val data = new Transactions(transactions)
 				val closed = LCM.runAlgorithm(1, data)
 				val MFI = new AlgoCharmLCM
-				val maximals = MFI.runAlgorithm(null, closed)
+				val maximals = MFI.runAlgorithm(closed)
 				maximals.getItemsets(MU).asScala.toIterator
 			}
 		val nMaximalsInside = maximalsInside.count()
@@ -426,12 +421,12 @@ object MaximalFinder {
 							new Integer(id.trim)
 						}.
 						sorted.toList.asJava
-					}.toList.asJava
+					}.toSet.asJava
 					val LCM = new AlgoLCM
 					val data = new Transactions(transactions)
 					val closed = LCM.runAlgorithm(1, data)
 					val MFI = new AlgoCharmLCM
-					val maximals = MFI.runAlgorithm(null, closed)
+					val maximals = MFI.runAlgorithm(closed)
 					maximals.getItemsets(MU).asScala.toIterator
 			}
 		val nMaximalsFrame = maximalsFrame.count()
@@ -571,7 +566,7 @@ object MaximalFinder {
 		val POINT_SCHEMA = ScalaReflection.schemaFor[SP_Point].dataType.asInstanceOf[StructType]
 		val MASTER = conf.master()
 		// Starting session...
-		timer = System.currentTimeMillis()
+		var timer = System.currentTimeMillis()
 		val simba = SimbaSession.builder().
 			master(MASTER).
 			appName("MaximalFinder").

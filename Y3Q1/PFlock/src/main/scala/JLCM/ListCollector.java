@@ -27,7 +27,7 @@ public class ListCollector extends PatternsWriter {
     private long collected = 0;
     private long collectedLength = 0;
 
-    public ListCollector(){
+    ListCollector(){
         maximals1 =  new ArrayList<>();
     }
 
@@ -45,7 +45,7 @@ public class ListCollector extends PatternsWriter {
 		}
     }
 
-    public ArrayList<ArrayList<Integer>> getMaximals1() {
+    ArrayList<ArrayList<Integer>> getMaximals1() {
         return maximals1;
     }
 
