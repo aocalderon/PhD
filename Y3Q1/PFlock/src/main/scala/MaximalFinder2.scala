@@ -14,6 +14,7 @@ import org.rogach.scallop.{ScallopConf, ScallopOption}
 object MaximalFinder2 {
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
   private val precision: Double = 0.001
+  private var n: Long = 0
 
   case class SP_Point(id: Long, x: Double, y: Double)
   case class Center(id: Long, x: Double, y: Double)
@@ -26,33 +27,31 @@ object MaximalFinder2 {
           conf: MaximalFinder2.Conf) = {
     import simba.implicits._
     import simba.simbaImplicits._
-    logger.info("Setting mu=%d,epsilon=%.1f,cores=%d,partitions=%d,dataset=%s".
+    logger.info("0.Setting mu=%d,epsilon=%.1f,cores=%d,partitions=%d,dataset=%s".
       format(conf.mu(),conf.epsilon(),conf.cores(),conf.partitions(),conf.dataset()))
     val startTime = System.currentTimeMillis()
-    // Indexing...
+    // 1.Indexing points...
     var timer = System.currentTimeMillis()
     val p1 = points.toDF("id1", "x1", "y1")
     p1.index(RTreeType, "p1RT", Array("x1", "y1"))
     val p2 = points.toDF("id2", "x2", "y2")
-    logger.info("Indexing... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
-    // Self-join...
+    logger.info("1.Indexing points... [%.3fms] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, n))
+    // 2.Getting pairs...
     timer = System.currentTimeMillis()
-    val pointPairs = p1.distanceJoin(p2, Array("x1", "y1"), Array("x2", "y2"), conf.epsilon())
+    val pairs = p1.distanceJoin(p2, Array("x1", "y1"), Array("x2", "y2"), conf.epsilon())
         .as[Pair]
         .filter(pair => pair.id1 < pair.id2)
         .rdd
-    pointPairs.cache()
-    val nPointPairs = pointPairs.count()
-	logger.info("Getting pairs... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
-    pointPairs.take(10).foreach(println)
-	// Computing disks...
+    pairs.cache()
+    val nPairs = pairs.count()
+	logger.info("2.Getting pairs... [%.3fms] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nPairs))
+	// 3.Computing centers...
     timer = System.currentTimeMillis()
-	val centerPairs = findDisks(pointPairs, conf.epsilon())
+	val centerPairs = findDisks(pairs, conf.epsilon())
         .filter( pair => pair.id1 != -1 )
         .toDS()
         .as[Pair]
     centerPairs.cache()
-    val nCenterPairs = centerPairs.count()
     val leftCenters = centerPairs.select("id1","x1","y1")
     val rightCenters = centerPairs.select("id2","x2","y2")
     val centers = leftCenters.union(rightCenters)
@@ -60,36 +59,52 @@ object MaximalFinder2 {
         .as[SP_Point]
     centers.cache()
     val nCenters = centers.count()
-	logger.info("Computing disks... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
-    centers.show()
+	logger.info("3.Computing centers... [%.3fms] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nCenters))
+	// 4.Indexing centers...
+    timer = System.currentTimeMillis()
+    centers.index(RTreeType, "centersRT", Array("x", "y"))
+	logger.info("4.Indexing centers... [%.3fms] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nCenters))
+	// 5.Getting disks...
+    timer = System.currentTimeMillis()
+	val disks = centers
+        .distanceJoin(p1, Array("x", "y"), Array("x1", "y1"), (conf.epsilon() / 2) + precision)
+        .groupBy("id", "x", "y")
+        .agg(collect_list("id1").alias("ids"))
+	disks.cache()
+    val nDisks = disks.count()
+	logger.info("5.Getting disks... [%.3fms] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nDisks))
+    // 6.Filtering less-than-mu disks...
+    timer = System.currentTimeMillis()
+    val mu = conf.mu()
+    var candidates = disks
+        .filter( row => row.getList[Int](3).size() >= mu )
+        .map(d => Candidate(d.getLong(0), d.getDouble(1), d.getDouble(2), d.getList[Int](3).asScala.mkString(",")))
+    candidates.cache()
+    val nCandidates = candidates.count()
+    logger.info("6.Filtering less-than-mu disks... [%.3fms] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nCandidates))
+    // 7.Indexing candidates...
+    timer = System.currentTimeMillis()
+    candidates.index(RTreeType, "filteredCandidatesRT", Array("x", "y"))
+    logger.info("7.Indexing candidates... [%.3fms] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nCandidates))    
     
     val endTime = System.currentTimeMillis()
     val totalTime = (endTime - startTime)/1000.0
     // Printing info summary ...
-    logger.info("%12s,%6s,%4s,%8s,%10s,%10s".
-        format("Dataset", "Eps", "Cor", "Time",
-            "# Pairs", "# Centers"
+    logger.info("%12s,%6s,%6s,%7s,%8s,%10s,%10s,%13s".
+        format("Dataset", "Eps", "Cores", "Time",
+            "# Pairs", "# Centers", "# Disks", "# Candidates"
         )
     )
-    logger.info("%12s,%6.1f,%4d,%8.2f,%10d,%10d".
+    logger.info("%12s,%6.1f,%6d,%7.2f,%8d,%10d,%10d,%13d".
         format( conf.dataset(), conf.epsilon(), conf.cores(), totalTime,
-            nPointPairs, nCenters
+            nPairs, nCenters, nDisks, nCandidates
         )
     )
     // Dropping point indices...
     timer = System.currentTimeMillis()
     p1.dropIndexByName("p1RT")
+    centers.dropIndexByName("centersRT")
     logger.info("Dropping point indices...[%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
-
-    val test = pointPairs.map{ pair =>
-        val d = math.sqrt(math.pow(pair.x1 - pair.x2, 2) + math.pow(pair.y1 - pair.y2, 2))
-        (pair.id1, pair.id2, d)
-    }
-    .toDF("id1", "id2", "dist")
-    .filter($"dist" < conf.epsilon())
-    test.show()
-    println(test.count())
-    
   }
 
   def findDisks(pairs: RDD[Pair], epsilon: Double): RDD[Pair] = {
@@ -155,7 +170,7 @@ object MaximalFinder2 {
     val phd_home = scala.util.Properties.envOrElse("PHD_HOME", "/home/acald013/PhD/")
     val filename = "%s%s%s.%s".format(phd_home, conf.path(), conf.dataset(), conf.extension())
     val points = simba.read.option("header", "false").schema(POINT_SCHEMA).csv(filename).as[SP_Point]
-    points.count()
+    n = points.count()
     points.cache()
     logger.info("Reading dataset... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
     // Running MaximalFinder...
