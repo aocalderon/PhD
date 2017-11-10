@@ -15,8 +15,9 @@ object MaximalFinder2 {
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
   private val precision: Double = 0.001
 
-  case class SP_Point(id: Int, x: Double, y: Double)
-  case class ACenter(id: Long, x: Double, y: Double)
+  case class SP_Point(id: Long, x: Double, y: Double)
+  case class Center(id: Long, x: Double, y: Double)
+  case class Pair(id1: Long, x1: Double, y1: Double, id2: Long, x2: Double, y2: Double)
   case class Candidate(id: Long, x: Double, y: Double, items: String)
   case class BBox(minx: Double, miny: Double, maxx: Double, maxy: Double)
 
@@ -27,6 +28,7 @@ object MaximalFinder2 {
     import simba.simbaImplicits._
     logger.info("Setting mu=%d,epsilon=%.1f,cores=%d,partitions=%d,dataset=%s".
       format(conf.mu(),conf.epsilon(),conf.cores(),conf.partitions(),conf.dataset()))
+    val startTime = System.currentTimeMillis()
     // Indexing...
     var timer = System.currentTimeMillis()
     val p1 = points.toDF("id1", "x1", "y1")
@@ -35,18 +37,87 @@ object MaximalFinder2 {
     logger.info("Indexing... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
     // Self-join...
     timer = System.currentTimeMillis()
-    val pairs = p1.distanceJoin(p2, Array("x1", "y1"), Array("x2", "y2"), conf.epsilon()).
-      rdd.
-      filter((pair: Row) => pair.getInt(0) < pair.getInt(3))
-    pairs.cache()
-    val nPairs = pairs.count()
-    pairs.take(10).foreach(println)
-    logger.info("Getting pairs... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
-
+    val pointPairs = p1.distanceJoin(p2, Array("x1", "y1"), Array("x2", "y2"), conf.epsilon())
+        .as[Pair]
+        .filter(pair => pair.id1 < pair.id2)
+        .rdd
+    pointPairs.cache()
+    val nPointPairs = pointPairs.count()
+	logger.info("Getting pairs... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
+    pointPairs.take(10).foreach(println)
+	// Computing disks...
+    timer = System.currentTimeMillis()
+	val centerPairs = findDisks(pointPairs, conf.epsilon())
+        .filter( pair => pair.id1 != -1 )
+        .toDS()
+        .as[Pair]
+    centerPairs.cache()
+    val nCenterPairs = centerPairs.count()
+    val leftCenters = centerPairs.select("id1","x1","y1")
+    val rightCenters = centerPairs.select("id2","x2","y2")
+    val centers = leftCenters.union(rightCenters)
+        .toDF("id","x","y")
+        .as[SP_Point]
+    centers.cache()
+    val nCenters = centers.count()
+	logger.info("Computing disks... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
+    centers.show()
+    
+    val endTime = System.currentTimeMillis()
+    val totalTime = (endTime - startTime)/1000.0
+    // Printing info summary ...
+    logger.info("%12s,%6s,%4s,%8s,%10s,%10s".
+        format("Dataset", "Eps", "Cor", "Time",
+            "# Pairs", "# Centers"
+        )
+    )
+    logger.info("%12s,%6.1f,%4d,%8.2f,%10d,%10d".
+        format( conf.dataset(), conf.epsilon(), conf.cores(), totalTime,
+            nPointPairs, nCenters
+        )
+    )
     // Dropping point indices...
     timer = System.currentTimeMillis()
     p1.dropIndexByName("p1RT")
     logger.info("Dropping point indices...[%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
+
+    val test = pointPairs.map{ pair =>
+        val d = math.sqrt(math.pow(pair.x1 - pair.x2, 2) + math.pow(pair.y1 - pair.y2, 2))
+        (pair.id1, pair.id2, d)
+    }
+    .toDF("id1", "id2", "dist")
+    .filter($"dist" < conf.epsilon())
+    test.show()
+    println(test.count())
+    
+  }
+
+  def findDisks(pairs: RDD[Pair], epsilon: Double): RDD[Pair] = {
+    val r2: Double = math.pow(epsilon / 2, 2)
+    val centerPairs = pairs
+      .map { (pair: Pair) =>
+        calculateDiskCenterCoordinates(pair, r2)
+      }
+      
+    centerPairs
+  }
+
+  def calculateDiskCenterCoordinates(pair: Pair, r2: Double): Pair = {
+    var centerPair = Pair(-1, 0, 0, 0, 0, 0) //To be filtered in case of duplicates...
+    val X: Double = pair.x1 - pair.x2
+    val Y: Double = pair.y1 - pair.y2
+    var D2: Double = math.pow(X, 2) + math.pow(Y, 2)
+    if (D2 != 0.0){
+		val root: Double = math.sqrt(math.abs(4.0 * (r2 / D2) - 1.0))
+		val h1: Double = ((X + Y * root) / 2) + pair.x2
+		val k1: Double = ((Y - X * root) / 2) + pair.y2
+		val h2: Double = ((X - Y * root) / 2) + pair.x2
+		val k2: Double = ((Y + X * root) / 2) + pair.y2
+	
+		centerPair = Pair(pair.id1, h1, k1, pair.id2, h2, k2)
+	}
+    
+    centerPair
   }
 
   class Conf(arguments: Seq[String]) extends ScallopConf(arguments) {
