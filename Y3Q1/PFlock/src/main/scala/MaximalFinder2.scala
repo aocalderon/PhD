@@ -13,7 +13,7 @@ import org.rogach.scallop.{ScallopConf, ScallopOption}
 
 object MaximalFinder2 {
     private val logger: Logger = LoggerFactory.getLogger("myLogger")
-    private val precision: Double = 0.01
+    private val precision: Double = 0.001
     private var n: Long = 0
 
     case class SP_Point(id: Long, x: Double, y: Double)
@@ -114,11 +114,18 @@ object MaximalFinder2 {
                         .split(",")
                         .map(new Integer(_))
                         .sorted.toList.asJava
-                    }.toSet.asJava
+                    }.toList.asJava
+                val algorithm = new AlgoFPMax
+                val maximals = algorithm.runAlgorithm(transactions, 1)
+                maximals.getItemsets(mu).asScala.toIterator
+                /*
                 val LCM = new AlgoLCM
                 val data = new Transactions(transactions)
                 val closed = LCM.runAlgorithm(1, data)
-                closed.getMaximalItemsets1(mu).asScala.toIterator
+                val MFI = new AlgoCharmLCM
+                val maximals = MFI.runAlgorithm(closed)
+                maximals.getItemsets(mu).asScala.toIterator
+                */
             }
         maximalsInside.cache()
         val nMaximalsInside = maximalsInside.count()
@@ -152,11 +159,18 @@ object MaximalFinder2 {
                             .split(",")
                             .map(new Integer(_))
                             .sorted.toList.asJava
-                    }.toSet.asJava
+                    }.toList.asJava
+                val algorithm = new AlgoFPMax
+                val maximals = algorithm.runAlgorithm(transactions, 1)
+                maximals.getItemsets(mu).asScala.toIterator
+                /*
                 val LCM = new AlgoLCM
                 val data = new Transactions(transactions)
                 val closed = LCM.runAlgorithm(1, data)
-                closed.getMaximalItemsets1(mu).asScala.toIterator
+                val MFI = new AlgoCharmLCM
+                val maximals = MFI.runAlgorithm(closed)
+                maximals.getItemsets(mu).asScala.toIterator
+                */
             }
         maximalsFrame.cache()
         val nMaximalsFrame = maximalsFrame.count()
@@ -167,12 +181,14 @@ object MaximalFinder2 {
         maximals.cache()
         val nMaximals = maximals.count()
         logger.info("13.Prunning redundants... [%.3fms] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nMaximals))
-        new java.io.PrintWriter("Maximals_%s.txt".format(conf.dataset())) { 
+        ////////////////////////////////////////////////////////////////
+        
+        new java.io.PrintWriter("/home/acald013/PhD/Y3Q1/Validation/D%s_E%.1f_M%d.txt".format(conf.dataset(), epsilon, mu)) { 
 			write(maximals.map(_.asScala.map(_.toInt).mkString(" ")).collect().mkString("\n"))
 			close 
 		}
 
-        ////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////
         val endTime = System.currentTimeMillis()
         val totalTime = (endTime - startTime)/1000.0
         // Printing info summary ...
