@@ -9,7 +9,7 @@ pacman::p_load(data.table, sqldf)
 PHD_HOME = Sys.getenv(c("PHD_HOME"))
 PATH = "Y3Q1/Datasets/"
 EXTENSION = ".csv"
-DATASET = "B20K"
+DATASET = "B60K"
 filename = paste0(PHD_HOME,PATH,DATASET,EXTENSION)
 data = read.table(filename, header = F, sep = ',')
 
@@ -18,8 +18,8 @@ data = read.table(filename, header = F, sep = ',')
 ###################
 
 data = as.data.table(data)
-names(data) = c('x', 'y', 't', 'id')
-data = data[ , c('id', 'x', 'y', 't')]
+names(data) = c('id', 'x', 'y')
+data$t = 0
 
 ###################
 # Prunning possible duplicates...
