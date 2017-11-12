@@ -12,7 +12,7 @@ object Partitioner {
   case class SP_Point(id: Int, x: Double, y: Double)
 
   val master: String = "local[*]"
-  val logs: String = "ERROR"
+  val logs: String = "INFO"
   
   def toWKT(minx: Double, miny: Double, maxx: Double, maxy: Double): String = "POLYGON (( %f %f, %f %f, %f %f, %f %f, %f %f ))".
     format(
@@ -52,7 +52,9 @@ object Partitioner {
         schema(POINT_SCHEMA).csv(filename).
         as[SP_Point]
     println(points.count())
+    println(points.getNumPartitions)
     points.index(RTreeType, "rt", Array("x", "y"))
+    println(points.getNumPartitions)
     
 	val midx = 25241
 	val midy1 = 21078
