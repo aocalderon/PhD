@@ -3,10 +3,10 @@ import scala.collection.JavaConverters._
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.Row
-import org.apache.spark.sql.catalyst.ScalaReflection
 import org.apache.spark.sql.simba.{Dataset, SimbaSession}
+import org.apache.spark.sql.simba.index.RTreeType
+import org.apache.spark.sql.catalyst.ScalaReflection
 import org.apache.spark.sql.types.StructType
-import org.apache.spark.sql.simba.index._
 import org.joda.time.DateTime
 import org.slf4j.{Logger, LoggerFactory}
 import org.rogach.scallop.{ScallopConf, ScallopOption}
@@ -37,7 +37,14 @@ object MaximalFinder2 {
         val p1 = points.toDF("id1", "x1", "y1")
         p1.index(RTreeType, "p1RT", Array("x1", "y1"))
         val p2 = points.toDF("id2", "x2", "y2")
+        p2.index(RTreeType, "p2RT", Array("x2", "y2"))
         logger.info("01.Indexing points... [%.3fms] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, n))
+
+		////////////////////////////////////////////////////////////////
+        logger.info("P1 # of partitions: %d".format(p1.rdd.getNumPartitions))
+        logger.info("P2 # of partitions: %d".format(p2.rdd.getNumPartitions))
+		////////////////////////////////////////////////////////////////
+
         // 02.Getting pairs...
         timer = System.currentTimeMillis()
         val pairs = p1.distanceJoin(p2, Array("x1", "y1"), Array("x2", "y2"), epsilon)
@@ -49,7 +56,7 @@ object MaximalFinder2 {
         logger.info("02.Getting pairs... [%.3fms] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nPairs))
         // 03.Computing centers...
         timer = System.currentTimeMillis()
-        val centerPairs = findDisks(pairs, epsilon)
+        val centerPairs = findCenters(pairs, epsilon)
             .filter( pair => pair.id1 != -1 )
             .toDS()
             .as[Pair]
@@ -58,18 +65,23 @@ object MaximalFinder2 {
         val rightCenters = centerPairs.select("x2","y2")
         val centers = leftCenters.union(rightCenters)
             .toDF("x","y")
-			.withColumn("id", monotonically_increasing_id())
-            .as[SP_Point]
         centers.cache()
         val nCenters = centers.count()
         logger.info("03.Computing centers... [%.3fms] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nCenters))
         // 04.Indexing centers...
         timer = System.currentTimeMillis()
-        centers.index(RTreeType, "centersRT", Array("x", "y"))
+        val centersIndexed = centers.index(RTreeType, "centersRT", Array("x", "y"))
+			.withColumn("id", monotonically_increasing_id())
+            .as[SP_Point]
         logger.info("04.Indexing centers... [%.3fms] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nCenters))
+
+		////////////////////////////////////////////////////////////////
+        logger.info("Centers # of partitions: %d".format(centersIndexed.rdd.getNumPartitions))
+		////////////////////////////////////////////////////////////////
+
         // 05.Getting disks...
         timer = System.currentTimeMillis()
-        val disks = centers
+        val disks = centersIndexed
             .distanceJoin(p1, Array("x", "y"), Array("x1", "y1"), (epsilon / 2) + precision)
             .groupBy("id", "x", "y")
             .agg(collect_list("id1").alias("ids"))
@@ -87,6 +99,7 @@ object MaximalFinder2 {
         // 07.Indexing candidates...
         timer = System.currentTimeMillis()
         candidates.index(RTreeType, "candidatesRT", Array("x", "y"))
+        logger.info("candidates # of partitions: %d".format(candidates.rdd.getNumPartitions))
         logger.info("07.Indexing candidates... [%.3fms] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nCandidates))
         // 08.Filtering candidate disks inside partitions...
         timer = System.currentTimeMillis()
@@ -107,7 +120,7 @@ object MaximalFinder2 {
         // 09.Finding maximal disks inside partitions...
         timer = System.currentTimeMillis()
         val maximalsInside = candidatesInside
-            .mapPartitions{ partition =>
+            .mapPartitionsWithIndex{ (index, partition) =>
                 val transactions = partition
                     .map { candidate =>
                         candidate.items
@@ -115,21 +128,33 @@ object MaximalFinder2 {
                         .map(new Integer(_))
                         .sorted.toList.asJava
                     }.toList.asJava
-                val algorithm = new AlgoFPMax
-                val maximals = algorithm.runAlgorithm(transactions, 1)
-                maximals.getItemsets(mu).asScala.toIterator
-                /*
-                val LCM = new AlgoLCM
-                val data = new Transactions(transactions)
-                val closed = LCM.runAlgorithm(1, data)
-                val MFI = new AlgoCharmLCM
-                val maximals = MFI.runAlgorithm(closed)
-                maximals.getItemsets(mu).asScala.toIterator
-                */
+                    
+                ////////////////////////////////////////////////////////
+                transactions.asScala.map(_.asScala.map(_.toInt))
+					.map(t => "%d, %s".format(index, t.mkString(" "))).toIterator
+                ////////////////////////////////////////////////////////
+
+                //val algorithm = new AlgoFPMax
+                //val maximals = algorithm.runAlgorithm(transactions, 1)
+                //maximals.getItemsets(mu).asScala.toIterator
+                //val LCM = new AlgoLCM
+                //val data = new Transactions(transactions)
+                //val closed = LCM.runAlgorithm(1, data)
+                //val MFI = new AlgoCharmLCM
+                //val maximals = MFI.runAlgorithm(closed)
+                //maximals.getItemsets(mu).asScala.toIterator
             }
         maximalsInside.cache()
         val nMaximalsInside = maximalsInside.count()
         logger.info("09.Finding maximal disks inside partitions... [%.3fms] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nMaximalsInside))
+        
+        ////////////////////////////////////////////////////////////////
+        new java.io.PrintWriter("/home/acald013/PhD/Y3Q1/Validation/Inside_D%s_E%.1f_M%d.txt".format(conf.dataset(), epsilon, mu)) { 
+			write(maximalsInside.collect().mkString("\n"))
+			close 
+		}
+        ////////////////////////////////////////////////////////////////
+
         // 10.Filtering candidate disks on frame partitions...
         timer = System.currentTimeMillis()
         val candidatesFrame = candidates
@@ -144,7 +169,7 @@ object MaximalFinder2 {
                 frame.toIterator
             }.toDS()
         val nCandidatesFrame = candidatesFrame.count()
-        logger.info("10.Filtering candidate disks on frame partitions... [%.3fms] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nCandidatesFrame))
+        logger.info("10.Filtering candidate disks in frame partitions... [%.3fms] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nCandidatesFrame))
         // 11.Re-indexing candidate disks in frame partitions
         timer = System.currentTimeMillis()
         candidatesFrame.index(RTreeType, "candidatesFrameRT", Array("x", "y"))
@@ -152,7 +177,7 @@ object MaximalFinder2 {
         // 12.Finding maximal disks in frame partitions...
         timer = System.currentTimeMillis()
         val maximalsFrame = candidatesFrame.rdd
-            .mapPartitions { partition =>
+            .mapPartitionsWithIndex { (index, partition) =>
                 val transactions = partition
                     .map { candidate =>
                         candidate.items
@@ -160,35 +185,39 @@ object MaximalFinder2 {
                             .map(new Integer(_))
                             .sorted.toList.asJava
                     }.toList.asJava
-                val algorithm = new AlgoFPMax
-                val maximals = algorithm.runAlgorithm(transactions, 1)
-                maximals.getItemsets(mu).asScala.toIterator
-                /*
-                val LCM = new AlgoLCM
-                val data = new Transactions(transactions)
-                val closed = LCM.runAlgorithm(1, data)
-                val MFI = new AlgoCharmLCM
-                val maximals = MFI.runAlgorithm(closed)
-                maximals.getItemsets(mu).asScala.toIterator
-                */
+                    
+                ////////////////////////////////////////////////////////
+                transactions.asScala.map(_.asScala.map(_.toInt))
+					.map(t => "%d, %s".format(index, t.mkString(" "))).toIterator
+                ////////////////////////////////////////////////////////
+
+                //val algorithm = new AlgoFPMax
+                //val maximals = algorithm.runAlgorithm(transactions, 1)
+                //maximals.getItemsets(mu).asScala.toIterator
+                //val LCM = new AlgoLCM
+                //val data = new Transactions(transactions)
+                //val closed = LCM.runAlgorithm(1, data)
+                //val MFI = new AlgoCharmLCM
+                //val maximals = MFI.runAlgorithm(closed)
+                //maximals.getItemsets(mu).asScala.toIterator
             }
         maximalsFrame.cache()
         val nMaximalsFrame = maximalsFrame.count()
         logger.info("12.Finding maximal disks in frame partitions... [%.3fms] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nMaximalsFrame))
+
+        ////////////////////////////////////////////////////////////////
+        new java.io.PrintWriter("/home/acald013/PhD/Y3Q1/Validation/Inframe_D%s_E%.1f_M%d.txt".format(conf.dataset(), epsilon, mu)) { 
+			write(maximalsFrame.collect().mkString("\n"))
+			close 
+		}
+        ////////////////////////////////////////////////////////////////
+
         // 13.Prunning redundants...
         timer = System.currentTimeMillis()
         val maximals = maximalsInside.union(maximalsFrame).distinct()
         maximals.cache()
         val nMaximals = maximals.count()
         logger.info("13.Prunning redundants... [%.3fms] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nMaximals))
-        ////////////////////////////////////////////////////////////////
-        
-        new java.io.PrintWriter("/home/acald013/PhD/Y3Q1/Validation/D%s_E%.1f_M%d.txt".format(conf.dataset(), epsilon, mu)) { 
-			write(maximals.map(_.asScala.map(_.toInt).mkString(" ")).collect().mkString("\n"))
-			close 
-		}
-
-        ////////////////////////////////////////////////////////////////
         val endTime = System.currentTimeMillis()
         val totalTime = (endTime - startTime)/1000.0
         // Printing info summary ...
@@ -206,23 +235,23 @@ object MaximalFinder2 {
         )
         // Dropping indices...
         timer = System.currentTimeMillis()
-        p1.dropIndexByName("p1RT")
-        centers.dropIndexByName("centersRT")
-        candidates.dropIndexByName("candidatesRT")
-        candidatesFrame.dropIndexByName("candidatesFrameRT")
+        p1.dropIndex()
+        centers.dropIndex()
+        candidates.dropIndex()
+        candidatesFrame.dropIndex()
         logger.info("Dropping indices...[%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
     }
 
-    def findDisks(pairs: RDD[Pair], epsilon: Double): RDD[Pair] = {
+    def findCenters(pairs: RDD[Pair], epsilon: Double): RDD[Pair] = {
         val r2: Double = math.pow(epsilon / 2, 2)
         val centerPairs = pairs
             .map { (pair: Pair) =>
-                calculateDiskCenterCoordinates(pair, r2)
+                calculateCenterCoordinates(pair, r2)
             }
         centerPairs
     }
 
-    def calculateDiskCenterCoordinates(pair: Pair, r2: Double): Pair = {
+    def calculateCenterCoordinates(pair: Pair, r2: Double): Pair = {
         var centerPair = Pair(-1, 0, 0, 0, 0, 0) //To be filtered in case of duplicates...
         val X: Double = pair.x1 - pair.x2
         val Y: Double = pair.y1 - pair.y2
@@ -279,20 +308,15 @@ object MaximalFinder2 {
         val MASTER = conf.master()
         // Starting session...
         var timer = System.currentTimeMillis()
-        val simba = SimbaSession.builder().
-            master(MASTER).
-            appName("MaximalFinder2").
-            config("simba.rtree.maxEntriesPerNode", conf.entries().toString).
-            config("simba.index.partitions", conf.partitions().toString).
-            config("spark.cores.max", conf.cores().toString).
-            getOrCreate()
+        val simba = SimbaSession.builder().master("spark://169.235.27.138:7077").appName("MaximalFinder2").config("simba.index.partitions","1024").config("spark.cores.max","28").getOrCreate()
         import simba.implicits._
         import simba.simbaImplicits._
         logger.info("Starting session... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
         // Reading...
         timer = System.currentTimeMillis()
         val phd_home = scala.util.Properties.envOrElse("PHD_HOME", "/home/acald013/PhD/")
-        val filename = "%s%s%s.%s".format(phd_home, conf.path(), conf.dataset(), conf.extension())
+        //val filename = "%s%s%s.%s".format(phd_home, conf.path(), conf.dataset(), conf.extension())
+        val filename = "%s%s%s.%s".format("/home/acald013/PhD/", "Y3Q1/Datasets/", "B60K_PFlock", "csv")
         val points = simba.read.option("header", "false").schema(POINT_SCHEMA).csv(filename).as[SP_Point]
         n = points.count()
         points.cache()

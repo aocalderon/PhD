@@ -104,13 +104,13 @@ object Checker {
 	var extension = "txt"
 	var dataset = ""
 
-	dataset = "BFE_DB60K_BFE_E40.0_M12"
+	dataset = "PFlock_DB20K_PFlock_E40.0_M12"
 	Checker.readFile(dataset)
 
-	dataset = "PFlock_DB60K_PFlock_E40.0_M12"
+	dataset = "BFE_DB20K_BFE_E40.0_M12"
 	Checker.readFile(dataset)
 
-	Checker.compareFiles("BFE_DB60K_BFE_E40.0_M12_sorted.txt","PFlock_DB60K_PFlock_E40.0_M12_sorted.txt")
+	Checker.compareFiles("PFlock_DB20K_PFlock_E40.0_M12_sorted.txt","BFE_DB20K_BFE_E40.0_M12_sorted.txt")
 
 	//var the_itemset = List(37,450,698,914)
 	//Checker.findItemsetInFile("/tmp/BeforeLCM.csv", the_itemset)

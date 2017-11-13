@@ -27,7 +27,7 @@ object Partitioner {
     val dataset: String = "B80K"
     val path: String = "Y3Q1/Datasets/"
     val extension: String = "csv"
-    val partitions: String = "4"
+    val partitions: String = "10"
 
     val simba = SimbaSession
       .builder()
@@ -40,7 +40,7 @@ object Partitioner {
     import simba.simbaImplicits._
     simba.sparkContext.setLogLevel(logs)
     
-    val POINT_SCHEMA = ScalaReflection.schemaFor[SP_Point].
+    val POINT_SCHEMA = ScalaReflection.schemaFor[Partitioner.SP_Point].
         dataType.
         asInstanceOf[StructType]
             
@@ -50,11 +50,9 @@ object Partitioner {
     val points = simba.
         read.option("header", "false").
         schema(POINT_SCHEMA).csv(filename).
-        as[SP_Point]
+        as[Partitioner.SP_Point]
     println(points.count())
-    println(points.getNumPartitions)
     points.index(RTreeType, "rt", Array("x", "y"))
-    println(points.getNumPartitions)
     
 	val midx = 25241
 	val midy1 = 21078
@@ -95,9 +93,9 @@ object Partitioner {
         }
         size += 1
       }
-      List(toWKT(min_x,min_y,max_x,max_y), min_x,min_y,max_x,max_y, index, size).iterator
-    }.
-    foreach(println)	
+      List("%s:%d:%d".format(toWKT(min_x,min_y,max_x,max_y), index, size)).iterator
+    }
+    mbrs.foreach(println)	
     
 	import java.io.{BufferedWriter, FileOutputStream, OutputStreamWriter}
 	var writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("/tmp/B20K_a.csv")))
