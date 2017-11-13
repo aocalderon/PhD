@@ -1,17 +1,15 @@
-import SPMF.{AlgoCharmLCM, AlgoFPMax, AlgoLCM, Transactions}
-import scala.collection.JavaConverters._
+import SPMF.AlgoFPMax
 import org.apache.spark.rdd.RDD
-import org.apache.spark.sql.functions._
-import org.apache.spark.sql.Row
-import org.apache.spark.sql.simba.{Dataset, SimbaSession}
-import org.apache.spark.sql.simba.index.RTreeType
 import org.apache.spark.sql.catalyst.ScalaReflection
+import org.apache.spark.sql.functions._
+import org.apache.spark.sql.simba.index.RTreeType
+import org.apache.spark.sql.simba.spatial.Point
+import org.apache.spark.sql.simba.{Dataset, SimbaSession}
 import org.apache.spark.sql.types.StructType
 import org.joda.time.DateTime
-import org.slf4j.{Logger, LoggerFactory}
 import org.rogach.scallop.{ScallopConf, ScallopOption}
-import org.apache.spark.sql.simba.index.QuadTreeIndexedRelation
-import org.apache.spark.sql.simba.index.RTreeIndexedRelation
+import org.slf4j.{Logger, LoggerFactory}
+import scala.collection.JavaConverters._
 
 object MaximalFinder3 {
     private val logger: Logger = LoggerFactory.getLogger("myLogger")
@@ -26,7 +24,7 @@ object MaximalFinder3 {
 
     def run(points: Dataset[MaximalFinder3.SP_Point],
             simba: SimbaSession,
-            conf: MaximalFinder3.Conf) = {
+            conf: MaximalFinder3.Conf): Unit = {
         
         val mu = conf.mu()
         val epsilon = conf.epsilon()
@@ -74,6 +72,24 @@ object MaximalFinder3 {
         centers.index(RTreeType, "centersRT", Array("x", "y"))
         logger.info("centers # of partitions: %d".format(centers.rdd.getNumPartitions))
         logger.info("04.Indexing centers... [%.3fms] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nCenters))
+
+        ///////////////////////////////////////////////////////////////////
+        timer = System.currentTimeMillis()
+        val centers2 = centers.map(c => (new Point(Array(c.x, c.y)), c.id)).rdd
+        val nCenters2 = centers2.count()
+        val partition_size = 300
+        val est_partition: Int = Math.ceil(nCenters2 / partition_size).toInt
+        val sample_rate: Double = 0.05
+        val dimension: Int = 2
+        val transfer_threshold: Long = 800 * 1024 * 1024
+        val max_entries_per_node: Int = 25
+        logger.info("centers2 # of partitions: %d".format(centers2.getNumPartitions))
+        val centers2Partitioner: STRPartitioner = new STRPartitioner(est_partition, sample_rate, dimension, transfer_threshold
+            , max_entries_per_node, centers2)
+        logger.info("centers2 # of partitions: %d".format(centers2.partitionBy(centers2Partitioner).getNumPartitions))
+        logger.info("04.Indexing centers2... [%.3fms] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nCenters))
+        ///////////////////////////////////////////////////////////////////
+/*
         // 05.Getting disks...
         timer = System.currentTimeMillis()
         val disks = centers
@@ -85,8 +101,8 @@ object MaximalFinder3 {
         logger.info("05.Getting disks... [%.3fms] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nDisks))
         // 06.Filtering less-than-mu disks...
         timer = System.currentTimeMillis()
-        var candidates = disks
-            .filter( row => row.getList[Int](3).size() >= mu )
+        val candidates = disks
+            .filter(row => row.getList[Int](3).size() >= mu)
             .map(d => Candidate(d.getLong(0), d.getDouble(1), d.getDouble(2), d.getList[Int](3).asScala.mkString(",")))
         candidates.cache()
         val nCandidates = candidates.count()
@@ -191,7 +207,7 @@ object MaximalFinder3 {
         
         new java.io.PrintWriter("/home/acald013/PhD/Y3Q1/Validation/D%s_E%.1f_M%d.txt".format(conf.dataset(), epsilon, mu)) { 
 			write(maximals.map(_.asScala.map(_.toInt).mkString(" ")).collect().mkString("\n"))
-			close 
+			close()
 		}
 
         ////////////////////////////////////////////////////////////////
@@ -210,13 +226,13 @@ object MaximalFinder3 {
                 nMaximalsInside, nMaximalsFrame, nMaximals
             )
         )
-        
+*/
         
         // Dropping indices...
         timer = System.currentTimeMillis()
         p1.dropIndexByName("p1RT")
         centers.dropIndexByName("centersRT")
-        candidates.dropIndexByName("candidatesRT")
+        //candidates.dropIndexByName("candidatesRT")
         //candidatesFrame.dropIndexByName("candidatesFrameRT")
         logger.info("Dropping indices...[%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
         
@@ -235,7 +251,7 @@ object MaximalFinder3 {
         var centerPair = Pair(-1, 0, 0, 0, 0, 0) //To be filtered in case of duplicates...
         val X: Double = pair.x1 - pair.x2
         val Y: Double = pair.y1 - pair.y2
-        var D2: Double = math.pow(X, 2) + math.pow(Y, 2)
+        val D2: Double = math.pow(X, 2) + math.pow(Y, 2)
         if (D2 != 0.0){
             val root: Double = math.sqrt(math.abs(4.0 * (r2 / D2) - 1.0))
             val h1: Double = ((X + Y * root) / 2) + pair.x2
@@ -282,8 +298,8 @@ object MaximalFinder3 {
         val mu:		ScallopOption[Int]	= opt[Int]   (default = Some(5))
         val entries:	ScallopOption[Int]	= opt[Int]   (default = Some(25))
         val partitions:	ScallopOption[Int]	= opt[Int]   (default = Some(1024))
-        val cores:	ScallopOption[Int]	= opt[Int]   (default = Some(28))
-        val master:	ScallopOption[String]	= opt[String](default = Some("spark://169.235.27.138:7077"))
+        val cores:	ScallopOption[Int]	= opt[Int]   (default = Some(3))
+        val master:	ScallopOption[String]	= opt[String](default = Some("local[3]"))
         val path:	ScallopOption[String]	= opt[String](default = Some("Y3Q1/Datasets/"))
         val dataset:	ScallopOption[String]	= opt[String](default = Some("B20K"))
         val extension:	ScallopOption[String]	= opt[String](default = Some("csv"))
@@ -294,26 +310,40 @@ object MaximalFinder3 {
         // Reading arguments from command line...
         val conf = new Conf(args)
         val POINT_SCHEMA = ScalaReflection.schemaFor[SP_Point].dataType.asInstanceOf[StructType]
-        val MASTER = conf.master()
+        val master = conf.master()
         // Starting session...
         var timer = System.currentTimeMillis()
-        val simba = SimbaSession.builder().master("spark://169.235.27.138:7077").appName("MaximalFinder3").config("simba.index.partitions","1024").config("spark.cores.max","28").getOrCreate()
+        val simba = SimbaSession.builder().master(master).appName("MaximalFinder3").config("simba.index.partitions","1024").config("spark.cores.max","28").getOrCreate()
         import simba.implicits._
         import simba.simbaImplicits._
         logger.info("Starting session... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
         // Reading...
         timer = System.currentTimeMillis()
-        val phd_home = scala.util.Properties.envOrElse("PHD_HOME", "/home/acald013/PhD/")
+        val phd_home = scala.util.Properties.envOrElse("PHD_HOME", "/home/and/Documents/PhD/Code/")
         val filename = "%s%s%s.%s".format(phd_home, conf.path(), conf.dataset(), conf.extension())
         val points = simba.read.option("header", "false").schema(POINT_SCHEMA).csv(filename).as[SP_Point]
         n = points.count()
         logger.info("Reading dataset... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
 
-//
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         timer = System.currentTimeMillis()
-        points.index(RTreeType, "pointsRT", Array("x", "y"))
+        val points2 = points.map { p =>
+            (new Point(Array(p.x, p.y)), p.id)
+        }.rdd
+        val nPoint2 = points2.count()
+        val partition_size = 200
+        val est_partition: Int = Math.ceil(nPoint2 / partition_size).toInt
+        val sample_rate: Double = 0.05
+        val dimension: Int = 2
+        val transfer_threshold: Long = 800 * 1024 * 1024
+        val max_entries_per_node: Int = 25
+        val partitioner: STRPartitioner = new STRPartitioner(est_partition, sample_rate, dimension, transfer_threshold
+            , max_entries_per_node, points2)
+        logger.info("Number of partitions for Points = %d".format(partitioner.numPartitions))
+        partitioner.mbrBound.foreach(println)
+
         logger.info("Indexing dataset... [%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
-        val mbrs = points.rdd.mapPartitionsWithIndex{ (index, iterator) =>
+        val mbrs = points2.partitionBy(partitioner).mapPartitionsWithIndex{ (index, iterator) =>
           var min_x: Double = Double.MaxValue
           var min_y: Double = Double.MaxValue
           var max_x: Double = Double.MinValue
@@ -322,8 +352,8 @@ object MaximalFinder3 {
           var size: Int = 0
 
           iterator.toList.foreach{row =>
-            val x = row.x
-            val y = row.y
+            val x = row._1.coord(0)
+            val y = row._1.coord(1)
             if(x < min_x){ min_x = x }
             if(y < min_y){ min_y = y }
             if(x > max_x){ max_x = x }
@@ -332,8 +362,9 @@ object MaximalFinder3 {
           }
           List("%s:%d:%d".format(toWKT(min_x,min_y,max_x,max_y), index, size)).iterator
         }
-        //logger.info(mbrs.collect().mkString("\n"))
-//
+        logger.info("\n" + mbrs.collect().mkString("\n"))
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
         // Running MaximalFinder...
         logger.info("Lauching MaximalFinder at %s...".format(DateTime.now.toLocalTime.toString))
         val start = System.currentTimeMillis()
