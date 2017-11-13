@@ -52,7 +52,9 @@ object Partitioner {
         schema(POINT_SCHEMA).csv(filename).
         as[Partitioner.SP_Point]
     println(points.count())
+    println(points.rdd.getNumPartitions)
     points.index(RTreeType, "rt", Array("x", "y"))
+    println(points.rdd.getNumPartitions)
     
 	val midx = 25241
 	val midy1 = 21078
