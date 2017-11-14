@@ -3,6 +3,7 @@ import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.catalyst.ScalaReflection
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.simba.index.RTreeType
+import org.apache.spark.sql.simba.partitioner.STRPartitioner
 import org.apache.spark.sql.simba.spatial.Point
 import org.apache.spark.sql.simba.{Dataset, SimbaSession}
 import org.apache.spark.sql.types.StructType
