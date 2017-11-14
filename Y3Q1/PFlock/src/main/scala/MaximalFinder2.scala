@@ -1,17 +1,16 @@
-import SPMF.{AlgoCharmLCM, AlgoFPMax, AlgoLCM, Transactions}
-import scala.collection.JavaConverters._
 import org.apache.spark.rdd.RDD
-import org.apache.spark.sql.functions._
-import org.apache.spark.sql.Row
-import org.apache.spark.sql.simba.{Dataset, SimbaSession}
-import org.apache.spark.sql.simba.index.RTreeType
-import org.apache.spark.sql.simba.partitioner.STRPartitioner
-import org.apache.spark.sql.simba.spatial.Point
 import org.apache.spark.sql.catalyst.ScalaReflection
+import org.apache.spark.sql.functions._
+import org.apache.spark.sql.simba.index.{RTree, RTreeType}
+import org.apache.spark.sql.simba.partitioner.STRPartitioner
+import org.apache.spark.sql.simba.spatial.{MBR, Point}
+import org.apache.spark.sql.simba.{Dataset, SimbaSession}
 import org.apache.spark.sql.types.StructType
 import org.joda.time.DateTime
-import org.slf4j.{Logger, LoggerFactory}
 import org.rogach.scallop.{ScallopConf, ScallopOption}
+import org.slf4j.{Logger, LoggerFactory}
+
+import scala.collection.JavaConverters._
 
 object MaximalFinder2 {
     private val logger: Logger = LoggerFactory.getLogger("myLogger")
@@ -26,7 +25,7 @@ object MaximalFinder2 {
 
     def run(points: Dataset[MaximalFinder2.SP_Point]
             , simba: SimbaSession
-            , conf: MaximalFinder2.Conf) = {
+            , conf: MaximalFinder2.Conf): Unit = {
         val mu = conf.mu()
         val epsilon = conf.epsilon()
         import simba.implicits._
@@ -84,6 +83,7 @@ object MaximalFinder2 {
             , centeresMaxEntriesPerNode
             , centers)
         centers = centers.partitionBy(centersPartitioner)
+            .cache()
         logger.info("Centers # of partitions: %d".format(centers.getNumPartitions))
         logger.info("04.Indexing centers... [%.3fms] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nCenters))
         // 05.Getting disks...
@@ -131,35 +131,74 @@ object MaximalFinder2 {
             , pointCandidates)
         val candidates = pointCandidates.partitionBy(candidatesPartitioner)
             .map(_._2)
+            .cache()
         logger.info("Candidates # of partitions: %d".format(candidates.getNumPartitions))
         candidates.cache()
         val nCandidates = candidates.count()
         logger.info("07.Indexing candidates... [%.3fms] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nCandidates))
-        
+
+        ////////////////////////////////////////////////////////////////////////////////
+        timer = System.currentTimeMillis()
+        val expandedMBRs = candidatesPartitioner.mbrBound
+            .map{ mbr =>
+                val mins = new Point( Array(mbr._1.low.coord(0) - epsilon,
+                                            mbr._1.low.coord(1) - epsilon) )
+                val maxs = new Point( Array(mbr._1.high.coord(0) + epsilon,
+                                            mbr._1.high.coord(1) + epsilon) )
+                (MBR(mins, maxs), mbr._2, 1)
+            }
+        val expandedRTree = RTree(expandedMBRs, candidatesMaxEntriesPerNode)
+        new java.io.PrintWriter("/tmp/expandedMBRs_D%s_E%.1f_M%d.txt".format(conf.dataset(), epsilon, mu)) {
+            write(expandedMBRs.map(expandedMBR => makeString(expandedMBR._1)).mkString("\n"))
+            close()
+        }
+        val candidatesByMBRId = pointCandidates.map{ candidate =>
+            val candidateByMBRId = expandedRTree.circleRange(candidate._1, 0.0)
+                .map{ t =>
+                    "%d;%f;%f;%d;%s".format(
+                        t._2
+                        , candidate._2.x
+                        , candidate._2.y
+                        , candidate._2.id
+                        , candidate._2.items
+                    )
+                }
+                .mkString("\n")
+            candidateByMBRId
+        }.cache()
+        val nCandidatesByMBRId = candidatesByMBRId.count()
+        logger.info("Getting expansions... [%.3fms] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nCandidatesByMBRId))
+        new java.io.PrintWriter("/tmp/Expansions_D%s_E%.1f_M%d.txt".format(conf.dataset(), epsilon, mu)) {
+            write(candidatesByMBRId.collect().mkString("\n"))
+            close()
+        }
+        ////////////////////////////////////////////////////////////////////////////////
+
+        /*
         ////////////////////////////////////////////////////////////////
         val mbrs = candidates.mapPartitionsWithIndex{ (index, iterator) =>
-          var min_x: Double = Double.MaxValue
-          var min_y: Double = Double.MaxValue
-          var max_x: Double = Double.MinValue
-          var max_y: Double = Double.MinValue
+            var min_x: Double = Double.MaxValue
+            var min_y: Double = Double.MaxValue
+            var max_x: Double = Double.MinValue
+            var max_y: Double = Double.MinValue
 
-          var size: Int = 0
+            var size: Int = 0
 
-          iterator.toList.foreach{row =>
-            val x = row.x
-            val y = row.y
-            if(x < min_x){ min_x = x }
-            if(y < min_y){ min_y = y }
-            if(x > max_x){ max_x = x }
-            if(y > max_y){ max_y = y }
-            size += 1
-          }
-          List("%d;%d;%s".format(index, size, toWKT(min_x,min_y,max_x,max_y))).iterator
+            iterator.toList.foreach{ row =>
+                val x = row.x
+                val y = row.y
+                if(x < min_x){ min_x = x }
+                if(y < min_y){ min_y = y }
+                if(x > max_x){ max_x = x }
+                if(y > max_y){ max_y = y }
+                size += 1
+            }
+            List("%d;%d;%s".format(index, size, toWKT(min_x,min_y,max_x,max_y))).iterator
         }
-        new java.io.PrintWriter("/tmp/MBRs_D%s_E%.1f_M%d.txt".format(conf.dataset(), epsilon, mu)) { 
-			write(mbrs.collect().mkString("\n"))
-			close()
-		}
+        new java.io.PrintWriter("/tmp/MBRs_D%s_E%.1f_M%d.txt".format(conf.dataset(), epsilon, mu)) {
+            write(mbrs.collect().mkString("\n"))
+            close()
+        }
         ////////////////////////////////////////////////////////////////
         
         // 08.Filtering candidate disks inside partitions...
@@ -215,10 +254,10 @@ object MaximalFinder2 {
         logger.info("09.Finding maximal disks inside partitions... [%.3fms] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nMaximalsInside))
         
         ////////////////////////////////////////////////////////////////
-        new java.io.PrintWriter("/tmp/PInside_D%s_E%.1f_M%d.txt".format(conf.dataset(), epsilon, mu)) { 
-			write(maximalsInside.collect().mkString("\n"))
-			close()
-		}
+        new java.io.PrintWriter("/tmp/PInside_D%s_E%.1f_M%d.txt".format(conf.dataset(), epsilon, mu)) {
+            write(maximalsInside.collect().mkString("\n"))
+            close()
+        }
         ////////////////////////////////////////////////////////////////
 
         // 10.Filtering candidate disks on frame partitions...
@@ -300,6 +339,7 @@ object MaximalFinder2 {
                 nMaximalsInside, nMaximalsFrame, nMaximals
             )
         )
+        */
         // Dropping indices...
         timer = System.currentTimeMillis()
         p1.dropIndex()
@@ -320,7 +360,7 @@ object MaximalFinder2 {
         var centerPair = Pair(-1, 0, 0, 0, 0, 0) //To be filtered in case of duplicates...
         val X: Double = pair.x1 - pair.x2
         val Y: Double = pair.y1 - pair.y2
-        var D2: Double = math.pow(X, 2) + math.pow(Y, 2)
+        val D2: Double = math.pow(X, 2) + math.pow(Y, 2)
         if (D2 != 0.0){
             val root: Double = math.sqrt(math.abs(4.0 * (r2 / D2) - 1.0))
             val h1: Double = ((X + Y * root) / 2) + pair.x2
@@ -360,7 +400,9 @@ object MaximalFinder2 {
             maxx, miny,
             minx, miny,
             minx, maxy
-        )    
+        )
+
+    def makeString(mbr: MBR): String = toWKT(mbr.low.coord(0),mbr.low.coord(1),mbr.high.coord(0),mbr.high.coord(0))
 
     class Conf(arguments: Seq[String]) extends ScallopConf(arguments) {
         val epsilon:    ScallopOption[Double]   = opt[Double](default = Some(10.0))
@@ -387,8 +429,8 @@ object MaximalFinder2 {
         val simba = SimbaSession.builder()
             .master(master)
             .appName("MaximalFinder2")
-            .config("simba.index.partitions",conf.partitions().toString())
-            .config("spark.cores.max",conf.cores().toString())
+            .config("simba.index.partitions",conf.partitions().toString)
+            .config("spark.cores.max",conf.cores().toString)
             .getOrCreate()
         import simba.implicits._
         import simba.simbaImplicits._
