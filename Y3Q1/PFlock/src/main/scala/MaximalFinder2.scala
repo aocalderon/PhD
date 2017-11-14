@@ -139,6 +139,14 @@ object MaximalFinder2 {
 
         ////////////////////////////////////////////////////////////////////////////////
         timer = System.currentTimeMillis()
+        val MBRs = candidatesPartitioner.mbrBound
+            .map{ mbr =>
+                "%d;%s".format(mbr._2, makeString(mbr._1))
+            }
+        new java.io.PrintWriter("/tmp/Expansion_D%s_E%.1f_M%d_MBRs.txt".format(conf.dataset(), epsilon, mu)) {
+            write(MBRs.mkString("\n"))
+            close()
+        }
         val expandedMBRs = candidatesPartitioner.mbrBound
             .map{ mbr =>
                 val mins = new Point( Array(mbr._1.low.coord(0) - epsilon,
@@ -148,8 +156,8 @@ object MaximalFinder2 {
                 (MBR(mins, maxs), mbr._2, 1)
             }
         val expandedRTree = RTree(expandedMBRs, candidatesMaxEntriesPerNode)
-        new java.io.PrintWriter("/tmp/expandedMBRs_D%s_E%.1f_M%d.txt".format(conf.dataset(), epsilon, mu)) {
-            write(expandedMBRs.map(expandedMBR => makeString(expandedMBR._1)).mkString("\n"))
+        new java.io.PrintWriter("/tmp/Expansion_D%s_E%.1f_M%d_EMBRs.txt".format(conf.dataset(), epsilon, mu)) {
+            write(expandedMBRs.map(expandedMBR => "%d;%s".format(expandedMBR._2, makeString(expandedMBR._1))).mkString("\n"))
             close()
         }
         val candidatesByMBRId = pointCandidates.map{ candidate =>
@@ -168,7 +176,7 @@ object MaximalFinder2 {
         }.cache()
         val nCandidatesByMBRId = candidatesByMBRId.count()
         logger.info("Getting expansions... [%.3fms] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nCandidatesByMBRId))
-        new java.io.PrintWriter("/tmp/Expansions_D%s_E%.1f_M%d.txt".format(conf.dataset(), epsilon, mu)) {
+        new java.io.PrintWriter("/tmp/Expansion_D%s_E%.1f_M%d_Centers.txt".format(conf.dataset(), epsilon, mu)) {
             write(candidatesByMBRId.collect().mkString("\n"))
             close()
         }
@@ -402,7 +410,7 @@ object MaximalFinder2 {
             minx, maxy
         )
 
-    def makeString(mbr: MBR): String = toWKT(mbr.low.coord(0),mbr.low.coord(1),mbr.high.coord(0),mbr.high.coord(0))
+    def makeString(mbr: MBR): String = toWKT(mbr.low.coord(0),mbr.low.coord(1),mbr.high.coord(0),mbr.high.coord(1))
 
     class Conf(arguments: Seq[String]) extends ScallopConf(arguments) {
         val epsilon:    ScallopOption[Double]   = opt[Double](default = Some(10.0))
