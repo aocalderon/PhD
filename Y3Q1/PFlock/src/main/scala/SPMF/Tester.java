@@ -9,10 +9,6 @@ import java.util.logging.Logger;
 public class Tester {
     private static Logger logger = Logger.getLogger(Tester.class.getName());
 
-    public Tester(){
-
-    }
-
     public static void main(String[] arg) throws IOException {
         //System.setProperty("java.util.logging.SimpleFormatter.format", "%1$tF %1$tT %4$s %2$s %5$s%6$s%n");
         System.setProperty("java.util.logging.SimpleFormatter.format", "%1$tF_%1$tT -> %5$s%6$s%n");
