@@ -150,6 +150,7 @@ object MaximalFinderExpansion {
         timer = System.currentTimeMillis()
         var maximals = candidatesByMBRId 
             .mapPartitionsWithIndex{ (index, partition) =>
+                /*
                 val transactions = partition
                     .map { candidate =>
                         candidate._2.items
@@ -157,31 +158,37 @@ object MaximalFinderExpansion {
                         .map(new Integer(_))
                         .sorted.toList.asJava
                     }.toSet.asJava
+                */
 
                 ////////////////////////////////////////////////////////
-                /*
+
                 val transactions = partition
                     .map { candidate =>
-                        "%f;%f;%s".format(candidate._2.x, candidate._2.y, candidate._2.items)
-                    }.toList
-                transactions.map(t => "%d;%s".format(index, t)).toIterator
-                */
+                        "%s".format(candidate._2.items.split(",").sorted.mkString(" "))
+                    }
+                transactions.map(t => "%d;%s".format(index, t))
+
                 ////////////////////////////////////////////////////////
 
                 //val algorithm = new AlgoFPMax
                 //val maximals = algorithm.runAlgorithm(transactions, 1)
                 //maximals.getItemsets(mu).asScala.toIterator
-                val LCM = new AlgoLCM
-                val data = new Transactions(transactions)
-                val closed = LCM.runAlgorithm(1, data)
-                closed.getMaximalItemsets1(mu).asScala.toIterator
+                //val LCM = new AlgoLCM
+                //val data = new Transactions(transactions)
+                //val closed = LCM.runAlgorithm(1, data)
+                //closed.getMaximalItemsets1(mu).asScala.toIterator
                 //val MFI = new AlgoCharmLCM
                 //val maximals = MFI.runAlgorithm(closed)
                 //maximals.getItemsets(mu).asScala.toIterator
             }
-        maximals.cache()
+            .cache()
         var nMaximals = maximals.count()
         logger.info("09.Finding maximal disks... [%.3fms] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nMaximals))
+
+        ////////////////////////////////////////////////////////////////
+        saveStringArray(maximals.collect(), "Maximals", conf)
+        ////////////////////////////////////////////////////////////////
+
         // 10.Prunning duplicates...
         timer = System.currentTimeMillis()
         maximals = maximals.distinct().cache()
@@ -206,11 +213,6 @@ object MaximalFinderExpansion {
         p2.dropIndex()
         centers.dropIndex()
         logger.info("Dropping indices...[%.3fms]".format((System.currentTimeMillis() - timer)/1000.0))
-
-        ////////////////////////////////////////////////////////////////
-        saveStringArray(maximals.map(m => m.asScala.sorted.mkString(" ")).distinct().collect(), "Maximals", conf)
-        ////////////////////////////////////////////////////////////////
-
     }
 
     import org.apache.spark.Partitioner
