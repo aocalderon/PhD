@@ -1,7 +1,6 @@
 package SPMF
 
 import org.slf4j.{Logger, LoggerFactory}
-
 import scala.language.postfixOps
 import sys.process._
 
