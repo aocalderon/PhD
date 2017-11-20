@@ -24,6 +24,7 @@ object MaximalFinderExpansion {
     case class Center(id: Long, x: Double, y: Double)
     case class Pair(id1: Long, x1: Double, y1: Double, id2: Long, x2: Double, y2: Double)
     case class Candidate(id: Long, x: Double, y: Double, items: String)
+    case class PointCandidate(pid: Long, cid: Long)
     case class BBox(minx: Double, miny: Double, maxx: Double, maxy: Double)
 
     def run(points: Dataset[SP_Point]
@@ -131,16 +132,25 @@ object MaximalFinderExpansion {
                 (MBR(mins, maxs), mbr._2, 1)
             }
         val expandedRTree = RTree(expandedMBRs, candidatesMaxEntriesPerNode)
-        var candidatesByMBRId = candidates.flatMap{ candidate =>
+        val candidatesByMBRId = candidates.flatMap{ candidate =>
             expandedRTree.circleRange(candidate._1, 0.0)
-                .map(mbr => (mbr._2, candidate._2.items.split(",").sorted.mkString(" ")))
+                .map(mbr => (mbr._2, candidate._2))
             }
             .partitionBy(new ExpansionPartitioner(candidatesNumPartitions))
             .distinct()
-            .map(_._2)
             .cache()
         val nCandidatesByMBRId = candidatesByMBRId.count()
         logger.info("08.Getting expansions... [%.3fms] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nCandidatesByMBRId))
+        // 09.Tagging candidates in the expansion area...
+        timer = System.currentTimeMillis()
+        val pointCandidates = candidatesByMBRId.map{ c =>
+            c._2.items.split(",").map(i => PointCandidate(i.toLong, c._2.id))
+        }
+        .toDF
+        .as[PointCandidate]
+        .cache()
+        pointCandidates.join(points, pointCandidates.col("pid") === points.col("id")).show()
+        logger.info("08.09.Tagging candidates in the expansion area... [%.3fms] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nCandidatesByMBRId))
         // 09.Finding maximal disks...
 
         ////////////////////////////////////////////////////////////////
