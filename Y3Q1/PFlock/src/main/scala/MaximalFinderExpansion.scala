@@ -9,7 +9,7 @@ import org.apache.spark.sql.types.StructType
 import org.joda.time.DateTime
 import org.rogach.scallop.{ScallopConf, ScallopOption}
 import org.slf4j.{Logger, LoggerFactory}
-import SPMF.{AlgoCharmLCM, AlgoFPMax, AlgoLCM, Transactions}
+//import SPMF.{AlgoCharmLCM, AlgoFPMax, AlgoLCM, Transactions}
 
 import scala.collection.JavaConverters._
 
@@ -62,8 +62,8 @@ object MaximalFinderExpansion {
             .cache()
         val leftCenters = centerPairs.select("x1","y1")
         val rightCenters = centerPairs.select("x2","y2")
-        var centers = leftCenters.union(rightCenters)
-            .toDF("x","y")
+        val centers = leftCenters.union(rightCenters)
+            .toDF("x", "y")
             .withColumn("id", monotonically_increasing_id())
             .as[SP_Point]
             .cache()
@@ -84,7 +84,7 @@ object MaximalFinderExpansion {
         logger.info("05.Getting disks... [%.3fms] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nDisks))
         // 06.Filtering less-than-mu disks...
         timer = System.currentTimeMillis()
-        var filteredDisks = disks
+        val filteredDisks = disks
             .filter(row => row.getList[Int](3).size() >= mu)
             .rdd
             .cache()
@@ -98,9 +98,9 @@ object MaximalFinderExpansion {
                 )
             }
             .cache()
-        var nCandidates = candidates.count()
-        val candidatesSampleRate: Double = 0.05
-        val candidatesDimension: Int = 2
+        val nCandidates = candidates.count()
+        val candidatesSampleRate: Double = sampleRate
+        val candidatesDimension: Int = dimensions
         val candidatesTransferThreshold: Long = 800 * 1024 * 1024
         val candidatesMaxEntriesPerNode: Int = 25
         val candidatesPartitionSize: Int = conf.candidates()
@@ -144,9 +144,11 @@ object MaximalFinderExpansion {
         // 09.Tagging candidates in the expansion area...
         timer = System.currentTimeMillis()
         val pointCandidates = candidatesByMBRId.map{ c =>
-            c._2.items.split(",").map(i => PointCandidate(i.toLong, c._2.id))
+            ( c._2.id, c._2.items.split(",").map(_.toLong).toList)
         }
         .toDF
+        .withColumn("pid", explode($"items"))
+        .select("cid","pid")
         .as[PointCandidate]
         .cache()
         pointCandidates.join(points, pointCandidates.col("pid") === points.col("id")).show()
