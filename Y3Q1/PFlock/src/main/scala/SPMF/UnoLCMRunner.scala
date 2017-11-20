@@ -8,26 +8,26 @@ import sys.process._
 
 object UnoLCMRunner {
     def main(args: Array[String]): Unit = {
-        var data = new mutable.HashSet[(Int, Set[Int])]
-        val lines = Source.fromFile("/home/acald013/tmp/DB80K_E100.0_M50_Maximals.txt")
+        var data = new mutable.HashSet[(Int, String)]
+        val lines = Source.fromFile("/home/acald013/tmp/DB80K_E80.0_M25_Maximals.txt")
         println("Reading file...")
-	for(line <- lines.getLines()){
+        for(line <- lines.getLines()){
             val IdAndTransaction = line.split(";")
             val tid = IdAndTransaction(0).toInt
-            val transaction = IdAndTransaction(1).split(" ").map(_.toInt).toList.sorted.toSet
+            val transaction = IdAndTransaction(1).split(" ").map(_.toInt).sorted.toList.mkString(" ")
             data += (tid -> transaction)
         }
         lines.close()
-	println("Running LCM...")
-        val transactionsByTID = data.groupBy(x => x._1).mapValues(v => v.map(m => m._2))
+        println("Running LCM...")
+        val transactionsByTID = data.groupBy(x => x._1).mapValues(v => v.map(_._2).mkString("\n"))
         for(tid <- transactionsByTID.keys){
-            val output = transactionsByTID.get(tid).map(t => t.mkString(" ")).toList.mkString("\n")
+            val output = transactionsByTID.get(tid).toString
             new PrintWriter("/tmp/input%d.txt".format(tid)){
                 write(output)
                 close()
             }
-            println("lcm M /tmp/input%d.txt 1 -".format(tid))
-            "lcm M /tmp/input%d.txt 1 -".format(tid) !
+            println("lcm M /tmp/input%d.txt 1 /tmp/output%d.txt".format(tid, tid))
+            "time lcm M /tmp/input%d.txt 1 /tmp/output%d.txt".format(tid,tid) !
         }
     }
 }

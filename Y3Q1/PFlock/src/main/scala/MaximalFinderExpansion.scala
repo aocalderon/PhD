@@ -133,11 +133,11 @@ object MaximalFinderExpansion {
         val expandedRTree = RTree(expandedMBRs, candidatesMaxEntriesPerNode)
         var candidatesByMBRId = candidates.flatMap{ candidate =>
             expandedRTree.circleRange(candidate._1, 0.0)
-                .map(mbr => (mbr._2, candidate._2))
+                .map(mbr => (mbr._2, candidate._2.items.split(",").sorted.mkString(" ")))
             }
-            .cache()
-        candidatesByMBRId = candidatesByMBRId
             .partitionBy(new ExpansionPartitioner(candidatesNumPartitions))
+            .distinct()
+            .map(_._2)
             .cache()
         val nCandidatesByMBRId = candidatesByMBRId.count()
         logger.info("08.Getting expansions... [%.3fms] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nCandidatesByMBRId))
@@ -162,11 +162,7 @@ object MaximalFinderExpansion {
 
                 ////////////////////////////////////////////////////////
 
-                val transactions = partition
-                    .map { candidate =>
-                        "%s".format(candidate._2.items.split(",").sorted.mkString(" "))
-                    }
-                transactions.map(t => "%d;%s".format(index, t))
+                partition.map(t => "%d;%s".format(index, t))
 
                 ////////////////////////////////////////////////////////
 
