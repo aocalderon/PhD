@@ -3,13 +3,13 @@ import org.apache.spark.sql.catalyst.ScalaReflection
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.simba.index.{RTree, RTreeType}
 import org.apache.spark.sql.simba.partitioner.STRPartitioner
-import org.apache.spark.sql.simba.spatial.{MBR, Point}
+import org.apache.spark.sql.simba.spatial.{Shape, MBR, Point}
 import org.apache.spark.sql.simba.{Dataset, SimbaSession}
 import org.apache.spark.sql.types.StructType
 import org.joda.time.DateTime
 import org.rogach.scallop.{ScallopConf, ScallopOption}
 import org.slf4j.{Logger, LoggerFactory}
-//import SPMF.{AlgoCharmLCM, AlgoFPMax, AlgoLCM, Transactions}
+import SPMF.{AlgoCharmLCM, AlgoFPMax, AlgoLCM, Transactions}
 
 import scala.collection.JavaConverters._
 
@@ -17,14 +17,14 @@ object MaximalFinderExpansion {
     private val logger: Logger = LoggerFactory.getLogger("myLogger")
     private val precision: Double = 0.001
     private val dimensions: Int = 2
-    private val sampleRate: Double = 0.05
+    private val sampleRate: Double = 0.01
     private var nPoints: Long = 0
 
     case class SP_Point(id: Long, x: Double, y: Double)
     case class Center(id: Long, x: Double, y: Double)
     case class Pair(id1: Long, x1: Double, y1: Double, id2: Long, x2: Double, y2: Double)
     case class Candidate(id: Long, x: Double, y: Double, items: String)
-    case class PointCandidate(pid: Long, cid: Long)
+    case class CandidatePoints(cid: Long, pid: Long)
     case class BBox(minx: Double, miny: Double, maxx: Double, maxy: Double)
 
     def run(points: Dataset[SP_Point]
@@ -40,9 +40,9 @@ object MaximalFinderExpansion {
         // 1.Indexing points...
         var timer = System.currentTimeMillis()
         val p1 = points.toDF("id1", "x1", "y1")
-        p1.index(RTreeType, "p1RT", Array("x1", "y1"))
+        p1.index(RTreeType, "p1RT", Array("x1", "y1")).cache()
         val p2 = points.toDF("id2", "x2", "y2")
-        p2.index(RTreeType, "p1RT", Array("x2", "y2"))
+        p2.index(RTreeType, "p2RT", Array("x2", "y2")).cache()
         logger.info("01.Indexing points... [%.3fms] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nPoints))
         // 02.Getting pairs...
         timer = System.currentTimeMillis()
@@ -85,136 +85,153 @@ object MaximalFinderExpansion {
         // 06.Filtering less-than-mu disks...
         timer = System.currentTimeMillis()
         val filteredDisks = disks
-            .filter(row => row.getList[Int](3).size() >= mu)
+            .filter(row => row.getList[Long](3).size() >= mu)
             .rdd
             .cache()
         val nFilteredDisks = filteredDisks.count()
         logger.info("06.Filtering less-than-mu disks... [%.3fms] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nFilteredDisks))
-        // 07.Indexing candidates...
+        // 07.Prunning duplicate candidates...
         timer = System.currentTimeMillis()
-        var candidates = filteredDisks.map{ d =>
-                (new Point(Array(d.getDouble(1), d.getDouble(2)))
-                    , Candidate(d.getLong(0), d.getDouble(1), d.getDouble(2), d.getList[Int](3).asScala.mkString(","))
+        val candidatePoints = filteredDisks
+            .map{ c =>
+                ( c.getLong(0), c.getList[Long](3).asScala)
+            }
+            .toDF("cid", "items")
+            .withColumn("pid", explode($"items"))
+            .select("cid","pid")
+            .as[CandidatePoints]
+            .cache()
+        val candidates = candidatePoints
+            .join(points, candidatePoints.col("pid") === points.col("id"))
+            .groupBy($"cid").agg(min($"x"), min($"y"), max($"x"), max($"y"), collect_list("pid"))
+            .map{ c => 
+                Candidate( 0
+                    , (c.getDouble(1) + c.getDouble(3)) / 2.0
+                    , (c.getDouble(2) + c.getDouble(4)) / 2.0
+                    , c.getList[Long](5).asScala.sorted.mkString(" ") 
                 )
             }
-            .cache()
-        val nCandidates = candidates.count()
-        val candidatesSampleRate: Double = sampleRate
-        val candidatesDimension: Int = dimensions
-        val candidatesTransferThreshold: Long = 800 * 1024 * 1024
-        val candidatesMaxEntriesPerNode: Int = 25
-        val candidatesPartitionSize: Int = conf.candidates()
-        var candidatesNumPartitions: Int = Math.ceil(nCandidates / candidatesPartitionSize).toInt
-        logger.info("Candidates # of partitions: %d".format(candidates.getNumPartitions))
-        val candidatesPartitioner: STRPartitioner = new STRPartitioner(candidatesNumPartitions
-            , candidatesSampleRate
-            , candidatesDimension
-            , candidatesTransferThreshold
-            , candidatesMaxEntriesPerNode
-            , candidates)
-        // Re-partition just for debugging purposes...
-        candidates = candidates.partitionBy(candidatesPartitioner)
-            .cache()
-        candidatesNumPartitions = candidates.getNumPartitions
-        logger.info("Candidates # of partitions: %d".format(candidatesNumPartitions))
-        logger.info("07.Indexing candidates... [%.3fms] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nCandidates))
-        // 08.Getting expansions...
-
-        ////////////////////////////////////////////////////////////////
-        saveStringArray(candidatesPartitioner.mbrBound.map(mbr => "%d;%s".format(mbr._2, mbr2wkt(mbr._1))), "MBRs", conf)
-        ////////////////////////////////////////////////////////////////
-
-        timer = System.currentTimeMillis()
-        val expandedMBRs = candidatesPartitioner.mbrBound
-            .map{ mbr =>
-                val mins = new Point( Array(mbr._1.low.coord(0) - epsilon, mbr._1.low.coord(1) - epsilon) )
-                val maxs = new Point( Array(mbr._1.high.coord(0) + epsilon, mbr._1.high.coord(1) + epsilon) )
-                (MBR(mins, maxs), mbr._2, 1)
-            }
-        val expandedRTree = RTree(expandedMBRs, candidatesMaxEntriesPerNode)
-        val candidatesByMBRId = candidates.flatMap{ candidate =>
-            expandedRTree.circleRange(candidate._1, 0.0)
-                .map(mbr => (mbr._2, candidate._2))
-            }
-            .partitionBy(new ExpansionPartitioner(candidatesNumPartitions))
             .distinct()
             .cache()
-        val nCandidatesByMBRId = candidatesByMBRId.count()
-        logger.info("08.Getting expansions... [%.3fms] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nCandidatesByMBRId))
-        // 09.Tagging candidates in the expansion area...
-        timer = System.currentTimeMillis()
-        val pointCandidates = candidatesByMBRId.map{ c =>
-            ( c._2.id, c._2.items.split(",").map(_.toLong).toList)
+        val nCandidates = candidates.count()
+        logger.info("07.Prunning duplicate candidates... [%.3fms] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nCandidates))
+        // 08.Indexing candidates... 
+        if(nCandidates > 0){
+            val pointCandidate = candidates.map{ candidate =>
+                    ( new Point(Array(candidate.x, candidate.y)), candidate)
+                }
+                .rdd
+                .cache()
+            val candidatesSampleRate: Double = sampleRate
+            val candidatesDimension: Int = dimensions
+            val candidatesTransferThreshold: Long = 800 * 1024 * 1024
+            val candidatesMaxEntriesPerNode: Int = 25
+            val candidatesPartitionSize: Int = conf.candidates()
+            //var candidatesNumPartitions: Int = Math.ceil(nCandidates / candidatesPartitionSize).toInt
+            var candidatesNumPartitions: Int = conf.cores()
+            logger.info("Candidates # of partitions: %d".format(candidates.rdd.getNumPartitions))
+            val candidatesPartitioner: STRPartitioner = new STRPartitioner(candidatesNumPartitions
+                , candidatesSampleRate
+                , candidatesDimension
+                , candidatesTransferThreshold
+                , candidatesMaxEntriesPerNode
+                , pointCandidate)
+            logger.info("08.Indexing candidates... [%.3fms] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nCandidates))
+            // 09.Getting expansions...
+
+            ////////////////////////////////////////////////////////////////
+            //saveStringArray(candidatesPartitioner.mbrBound.map(mbr => "%d;%s".format(mbr._2, mbr2wkt(mbr._1))), "MBRs", conf)
+            ////////////////////////////////////////////////////////////////
+
+            timer = System.currentTimeMillis()
+            val expandedMBRs = candidatesPartitioner.mbrBound
+                .map{ mbr =>
+                    val mins = new Point( Array(mbr._1.low.coord(0) - epsilon, mbr._1.low.coord(1) - epsilon) )
+                    val maxs = new Point( Array(mbr._1.high.coord(0) + epsilon, mbr._1.high.coord(1) + epsilon) )
+                    (MBR(mins, maxs), mbr._2, 1)
+                }
+            val expandedRTree = RTree(expandedMBRs, candidatesMaxEntriesPerNode)
+            candidatesNumPartitions = expandedMBRs.size
+            val candidates2 = pointCandidate.flatMap{ candidate =>
+                expandedRTree.circleRange(candidate._1, 0.0)
+                    .map{ mbr => 
+                        ( mbr._2, (candidate._2, isInExpansionArea(candidate._2, mbr._1, epsilon), mbr._2) ) 
+                    }
+                }
+                .partitionBy(new ExpansionPartitioner(candidatesNumPartitions))
+                .map(_._2)
+                .cache()
+            candidatesNumPartitions = candidates2.getNumPartitions
+            logger.info("Candidates # of partitions: %d".format(candidatesNumPartitions))
+            val nCandidates2 = candidates2.count()
+            logger.info("09.Getting expansions... [%.3fms] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nCandidates2))
+            // 10.Finding maximal disks...
+
+            ////////////////////////////////////////////////////////////////
+            //saveStringArray(expandedMBRs.map(mbr => "%d;%s".format(mbr._2, mbr2wkt(mbr._1))), "EMBRs", conf)
+            ////////////////////////////////////////////////////////////////
+
+            timer = System.currentTimeMillis()
+            val method = conf.method()
+            var maximals = candidates2
+                .mapPartitionsWithIndex{ (index, partition) =>
+                    var ret: Iterator[java.util.ArrayList[Integer]] = null
+                    if(method == "fpmax"){
+                        val transactions = partition
+                            .map { candidate =>
+                                candidate._1.items
+                                .split(" ")
+                                .map(new Integer(_))
+                                .toList.asJava
+                            }.toList.asJava
+                        ////////////////////////////////////////////////////////
+                        //partition.map(t => "%d;%f;%f;%s;%s;%d".format(index, t._1.x, t._1.y, t._1.items, t._2.toString, t._3))
+                        ////////////////////////////////////////////////////////
+                        val algorithm = new AlgoFPMax
+                        val maximals = algorithm.runAlgorithm(transactions, 1)
+                        ret = maximals.getItemsets(mu).asScala.toIterator
+                    } else {
+                        val transactions = partition
+                            .map { candidate =>
+                                candidate._1.items
+                                .split(" ")
+                                .map(new Integer(_))
+                                .toList.asJava
+                            }.toSet.asJava
+                        val LCM = new AlgoLCM
+                        val data = new Transactions(transactions)
+                        val closed = LCM.runAlgorithm(1, data)
+                        ret = closed.getMaximalItemsets1(mu).asScala.toIterator
+                    }
+                    ret
+                }
+                .cache()
+            var nMaximals = maximals.count()
+            logger.info("10.Finding maximal disks... [%.3fms] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nMaximals))
+
+            ////////////////////////////////////////////////////////////////
+            //saveStringArray(maximals.collect(), "Maximals", conf)
+            ////////////////////////////////////////////////////////////////
+
+            // 11.Prunning duplicates...
+            timer = System.currentTimeMillis()
+            maximals = maximals.distinct().cache()
+            nMaximals = maximals.count()
+            logger.info("11.Prunning redundants... [%.3fms] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nMaximals))
+            val endTime = System.currentTimeMillis()
+            val totalTime = (endTime - startTime)/1000.0
+            // Printing info summary ...
+            logger.info("%12s,%6s,%6s,%7s,%8s,%10s,%13s,%11s".
+                format("Dataset", "Eps", "Cores", "Time",
+                    "# Pairs", "# Disks", "# Candidates", "# Maximals"
+                )
+            )
+            logger.info("%12s,%6.1f,%6d,%7.2f,%8d,%10d,%13d,%11d".
+                format( conf.dataset(), conf.epsilon(), conf.cores(), totalTime,
+                    nPairs, nDisks, nCandidates, nMaximals
+                )
+            )
         }
-        .toDF
-        .withColumn("pid", explode($"items"))
-        .select("cid","pid")
-        .as[PointCandidate]
-        .cache()
-        pointCandidates.join(points, pointCandidates.col("pid") === points.col("id")).show()
-        logger.info("08.09.Tagging candidates in the expansion area... [%.3fms] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nCandidatesByMBRId))
-        // 09.Finding maximal disks...
-
-        ////////////////////////////////////////////////////////////////
-        saveStringArray(expandedMBRs.map(mbr => "%d;%s".format(mbr._2, mbr2wkt(mbr._1))), "EMBRs", conf)
-        ////////////////////////////////////////////////////////////////
-
-        timer = System.currentTimeMillis()
-        var maximals = candidatesByMBRId 
-            .mapPartitionsWithIndex{ (index, partition) =>
-                /*
-                val transactions = partition
-                    .map { candidate =>
-                        candidate._2.items
-                        .split(",")
-                        .map(new Integer(_))
-                        .sorted.toList.asJava
-                    }.toSet.asJava
-                */
-
-                ////////////////////////////////////////////////////////
-
-                partition.map(t => "%d;%s".format(index, t))
-
-                ////////////////////////////////////////////////////////
-
-                //val algorithm = new AlgoFPMax
-                //val maximals = algorithm.runAlgorithm(transactions, 1)
-                //maximals.getItemsets(mu).asScala.toIterator
-                //val LCM = new AlgoLCM
-                //val data = new Transactions(transactions)
-                //val closed = LCM.runAlgorithm(1, data)
-                //closed.getMaximalItemsets1(mu).asScala.toIterator
-                //val MFI = new AlgoCharmLCM
-                //val maximals = MFI.runAlgorithm(closed)
-                //maximals.getItemsets(mu).asScala.toIterator
-            }
-            .cache()
-        var nMaximals = maximals.count()
-        logger.info("09.Finding maximal disks... [%.3fms] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nMaximals))
-
-        ////////////////////////////////////////////////////////////////
-        saveStringArray(maximals.collect(), "Maximals", conf)
-        ////////////////////////////////////////////////////////////////
-
-        // 10.Prunning duplicates...
-        timer = System.currentTimeMillis()
-        maximals = maximals.distinct().cache()
-        nMaximals = maximals.count()
-        logger.info("10.Prunning redundants... [%.3fms] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nMaximals))
-        val endTime = System.currentTimeMillis()
-        val totalTime = (endTime - startTime)/1000.0
-        // Printing info summary ...
-        logger.info("%12s,%6s,%6s,%7s,%8s,%10s,%13s,%11s".
-            format("Dataset", "Eps", "Cores", "Time",
-                "# Pairs", "# Disks", "# Candidates", "# Maximals"
-            )
-        )
-        logger.info("%12s,%6.1f,%6d,%7.2f,%8d,%10d,%13d,%11d".
-            format( conf.dataset(), conf.epsilon(), conf.cores(), totalTime,
-                nPairs, nDisks, nCandidates, nMaximals
-            )
-        )
         // Dropping indices...
         timer = System.currentTimeMillis()
         p1.dropIndex()
@@ -257,7 +274,18 @@ object MaximalFinderExpansion {
         centerPair
     }
 
-    def isInside(x: Double, y: Double, bbox: BBox, epsilon: Double): Boolean ={
+    def isInExpansionArea(candidate: Candidate, shape: Shape, epsilon: Double): Boolean = {
+        val mbr = shape.asInstanceOf[MBR]
+        val x = candidate.x
+        val y = candidate.y
+        x < (mbr.high.coord(0) - epsilon) &&
+            x > (mbr.low.coord(0) + epsilon) &&
+            y < (mbr.high.coord(1) - epsilon) &&
+            y > (mbr.low.coord(1) + epsilon)
+        
+    }
+
+    def isInside(x: Double, y: Double, bbox: BBox, epsilon: Double): Boolean = {
         x < (bbox.maxx - epsilon) &&
             x > (bbox.minx + epsilon) &&
             y < (bbox.maxy - epsilon) &&
@@ -289,6 +317,7 @@ object MaximalFinderExpansion {
         val path:       ScallopOption[String]	= opt[String](default = Some("Y3Q1/Datasets/"))
         val dataset:	ScallopOption[String]	= opt[String](default = Some("B20K"))
         val extension:	ScallopOption[String]	= opt[String](default = Some("csv"))
+        val method:     ScallopOption[String]	= opt[String](default = Some("fpmax"))
         verify()
     }
 
