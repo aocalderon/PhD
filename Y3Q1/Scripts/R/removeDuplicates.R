@@ -9,7 +9,7 @@ pacman::p_load(data.table, sqldf)
 PHD_HOME = Sys.getenv(c("PHD_HOME"))
 PATH = "Y3Q1/Datasets/"
 EXTENSION = ".csv"
-DATASET = "B60K"
+DATASET = "B80K"
 filename = paste0(PHD_HOME,PATH,DATASET,EXTENSION)
 data = read.table(filename, header = F, sep = ',')
 
