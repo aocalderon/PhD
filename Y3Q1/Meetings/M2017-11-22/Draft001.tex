@@ -2,22 +2,67 @@
 \usepackage[hidelinks]{hyperref}
 \usepackage[utf8]{inputenc}
 \usepackage{graphicx}
+\usepackage{mathtools}
+\usepackage[]{algorithmic}
+\usepackage[]{algorithm}
+
 
 \begin{document}
- 
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+\renewcommand{\algorithmicforall}{\textbf{for each}}
+
 \section*{Pseudo-code}
+
+\begin{algorithm}
+  \caption{Finding maximal disks following a parallel approach.}
+  \label{alg:maximals}
+  \begin{algorithmic}
+    \REQUIRE 
+    Set of points $T$, \\
+    Maximum distance $\epsilon$, \\ 
+    Minimum number of points per disk $\mu$ \\
+
+    \ENSURE 
+    Set of maximal disks $M$ 
+    \vspace{5mm}
+    % 01.Indexing points... 
+    \STATE $pointsRT \leftarrow build.RTree(T)$ 
+    % 02.Getting pairs... 
+    \STATE $P \leftarrow find.Pairs(pointRT, \epsilon)$ 
+    % 03.Computing centers... 
+    \STATE $C \leftarrow$ \O{}
+    \FORALL{$p_i$ in $P$}
+      \STATE $c_i^1, c_i^2 \leftarrow compute.Disks(p_i,\epsilon)$ 
+      \STATE $C.Add(c_i^1, c_i^2)$
+    \ENDFOR
+    % 04.Indexing centers... 
+    % 05.Getting disks... 
+    \STATE $D \leftarrow$ \O{}
+    \FORALL{$c_i$ in $C$} 
+      \STATE $d_i \leftarrow find.PointsAround(c_i, \epsilon)$ 
+      \IF{$|d_i| \geq \mu$}
+	\STATE $D.Add(d_i)$
+      \ENDIF
+    \ENDFOR
+    % 06.Filtering less-than-mu disks... 
+    % 07.Prunning duplicate candidates...
+    % 08.Indexing candidates...
+    % 09.Getting expansions... 
+    % 10.Finding maximal disks...
+    % 11.Prunning redundants...
+  \end{algorithmic}
+\end{algorithm}
 
 \section*{Proof Sketch}
 It is assumed that the stages of pairs finding, disks generation and `\textit{less-than-$\mu$}' disk filtering have already been done. We start with a set of candidate disks which are represented by their centers and the set of original points which are enclosed by them.  It is expected that they are organized in an R-Tree index as it is shown in figure \ref{fig:r-tree}.  The following procedure aims to filter out those disks which set of points are a subset of another disk's set of points.  Just disks with a superset of points are kept and they are knows as maximal disks. 
 
 \begin{figure}
-	\centering
-	\begin{center}
-	\includegraphics[width=0.7\textwidth]{./Figures/r-tree}
-	% R-Tree.png: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=
-\end{center}
-	\caption{An inital R-Tree over a set of candidates disks represented by their centers.}
-	\label{fig:r-tree}
+  \centering
+  \includegraphics[width=0.7\textwidth]{./Figures/r-tree}
+  % R-Tree.png: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=
+  \caption{An inital R-Tree over a set of candidates disks represented by their centers.}
+  \label{fig:r-tree}
 \end{figure}
 
 There are two problems to report maximal disks following a parallel approach. First, it can be disks with the same set of points which are reported as maximals in different partitions.  We should report only one of them.  Second, it can be a disk with a subset of points which appears as maximal in one partition but there is another disk in another partition with a superset that contains that set.   We should just report the disk with the superset of points.  We will refer the first problem as \textit{duplicate reporting} and the second one as \textit{subset reporting}.  
