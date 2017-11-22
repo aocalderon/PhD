@@ -8,10 +8,38 @@
 \section*{Pseudo-code}
 
 \section*{Proof Sketch}
-It is assumed that the stages of pairs finding, disks generation and `\textit{less-than-$\mu$}' disks filtering have already been done. We start with a set of candidate disks which are denoted by their centers and the set of original points which are enclosed by each disk.  It is expected that they are organized in an R-Tree index.
+It is assumed that the stages of pairs finding, disks generation and `\textit{less-than-$\mu$}' disk filtering have already been done. We start with a set of candidate disks which are represented by their centers and the set of original points which are enclosed by them.  It is expected that they are organized in an R-Tree index as it is shown in figure \ref{fig:r-tree}.  The following procedure aims to filter out those disks which set of points are a subset of another disk's set of points.  Just disks with a superset of points are kept and they are knows as maximal disks. 
 
-a R-Tree index has been built with the centers of all the candidate disks found so far.  They have been already filtered out those that its number of enclosed points do not overpass $\mu$. A set of points enclosed by each disk is attached to its center.  The following procedure aims to filter out those disks which set of points is a subset of another disk.  Just disks with a superset of points are kept.
+\begin{figure}
+	\centering
+	\begin{center}
+	\includegraphics[width=0.7\textwidth]{./Figures/r-tree}
+	% R-Tree.png: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=
+\end{center}
+	\caption{An inital R-Tree over a set of candidates disks represented by their centers.}
+	\label{fig:r-tree}
+\end{figure}
 
+There are two problems to report maximal disks following a parallel approach. First, it can be disks with the same set of points which are reported as maximals in different partitions.  We should report only one of them.  Second, it can be a disk with a subset of points which appears as maximal in one partition but there is another disk in another partition with a superset that contains that set.   We should just report the disk with the superset of points.  We will refer the first problem as \textit{duplicate reporting} and the second one as \textit{subset reporting}.  
 
+Duplicate reporting can be easily avoided by using a deterministic way to represent the center of each disk previous to the partitioning.  It is, using an unique center for those disks with the same set of points.  For example, changing the center of the disks to the centroid of the MBR of its points will lead to a unique representation of the disks.  The change of the center does not affect the logic of the procedure due to the set of points of the disks remains the same.
+
+Subset reporting demands more attention.  In order to avoid this problem, we have to evaluate disks which potentially can contain the set of points of other disks.  Keep in mind that just disks which intersect each other should be evaluated as that means that they have points in common. From figure \ref{fig:r-tree}, it is clear than disks close to the edge of each partition (or MBR) could intersect other disks in the edge of contiguous partitions. Specifically, disks lying $\epsilon$ distance to the edge of their MBRs must be further analyzed but note that those remaining in the internal area are certainly safe. 
+
+\begin{figure}
+	\centering
+	\begin{center}
+	\includegraphics[width=0.8\textwidth]{./Figures/expansion}
+	% R-Tree.png: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=
+\end{center}
+	\caption{An $\epsilon$ expansion over the partitions of the R-Tree.}
+	\label{fig:expansion}
+\end{figure}
+
+As we have access to the MBRs, we perform an expansion applying a $\epsilon$ buffer around each of them (see figure \ref{fig:expansion}). As the radius of each disk is $\frac{\epsilon}{2}$, it is clear that a disk in any specific partition only can intersect other disks if they lie in the extension area of that partition.  
+
+We re-index the original set of candidate disks using the new expanded MBRs.  For those disks which intersect multiple expanded MBRs, a copy of the disk is sent to each of them. If a disk lie in the expansion area of one of the new MBR, it is marked accordingly. A disk can lie in the expansion area of multiple MBRs but it will be outside of the expansion area of its original MBR. 
+
+Now we can run a maximal pattern algorithm to find supersets of points and their correspond disks in each partition. Any disk with a subset of points will be obfuscated by its superset (if any) lying in the expansion area avoiding subset reporting.  In order to avoid duplicate reporting we only report a maximal disk if it does not lie in the expansion area. As a disk will only be one time outside of an expansion area, we let this disk to be reported by its original partition.
 
 \end{document}
