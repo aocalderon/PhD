@@ -1,6 +1,6 @@
 #!/bin/bash
 
-N=3
+N=5
 CANDIDATES=128
 
 # Running Scaleup on 1 Node with 20K dataset...
