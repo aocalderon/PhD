@@ -1,0 +1,27 @@
+\documentclass[12pt]{scrartcl}
+\usepackage[hidelinks]{hyperref}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+
+\begin{document}
+ 
+\section*{Pseudo-code}
+
+\section*{Proof Sketch}
+It is assumed that the stages of pairs finding, disks generation and `\textit{less-than-$\mu$}' disks filtering have already been done. We start with a set of candidate disks which are denoted by their centers and the set of original points which are enclosed by each disk.  It is expected that they are organized in an R-Tree index as it is shown in figure \ref{fig:r-tree}.  The following procedure aims to filter out those disks which set of points are a subset of another disk's set of points.  Just disks with a superset of points are kept.
+
+\begin{figure}[t]
+	\centering
+	\begin{center}
+	\includegraphics[width=0.7\textwidth]{./Figures/test}
+	% R-Tree.png: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=
+\end{center}
+
+	\caption{An inital R-Tree over a set of candidates disks represented by their centers.}
+	\label{fig:r-tree}
+\end{figure}
+
+
+
+
+\end{document}

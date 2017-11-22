@@ -1,0 +1,17 @@
+\documentclass[12pt]{scrartcl}
+\usepackage[hidelinks]{hyperref}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+
+\begin{document}
+ 
+\section*{Pseudo-code}
+
+\section*{Proof Sketch}
+It is assumed that the stages of pairs finding, disks generation and `\textit{less-than-$\mu$}' disks filtering have already been done. We start with a set of candidate disks which are denoted by their centers and the set of original points which are enclosed by each disk.  It is expected that they are organized in an R-Tree index.
+
+a R-Tree index has been built with the centers of all the candidate disks found so far.  They have been already filtered out those that its number of enclosed points do not overpass $\mu$. A set of points enclosed by each disk is attached to its center.  The following procedure aims to filter out those disks which set of points is a subset of another disk.  Just disks with a superset of points are kept.
+
+
+
+\end{document}
