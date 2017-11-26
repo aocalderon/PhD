@@ -1,0 +1,161 @@
+---
+title: "Scaleup Analysis"
+author: "Andres Calderon"
+date: '`r Sys.Date()`'
+output:
+  html_document: default
+  pdf_document: default
+---
+
+<!---  --->
+
+```{r ScaleupSetup, include=FALSE}
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(ggplot2, data.table, foreach, sqldf, tidyr, stringr, dplyr)
+
+PHD_HOME = Sys.getenv(c("PHD_HOME"))
+PATH = "Y3Q1/Scripts/Scaleup/Scaleup_2017-11-21/"
+FILENAME = "Berlin_D20K-80K_E10.0-50.0"
+EXTENSION = "csv"
+
+f = paste0(PHD_HOME,PATH,FILENAME,".",EXTENSION)
+data = read.table(f, header = F, sep = ">")
+data = as.data.frame(str_split_fixed(data[,2], ",", 8), stringsAsFactors = F)
+data = data[, c(1, 2, 3, 4)]
+names(data) = c("Dataset", "Epsilon", "Cores", "Time")
+data$Dataset = str_sub(str_trim(data$Dataset), 2)
+data$Dataset = factor(data$Dataset, levels = paste0(seq(20, 80, 20), "K"))
+data$Time = as.numeric(data$Time)
+data$Epsilon = as.numeric(data$Epsilon)
+data$Cores = as.numeric(data$Cores)
+
+data2 = sqldf("SELECT Dataset, Epsilon, Cores, avg(Time) AS Time FROM data GROUP BY 1, 2, 3")
+```
+
+## `r filename`
+
+```{r ScaleupPlot, echo=FALSE, fig.width=10.5, fig.height=7.5, fig.align='center'}
+temp_title = paste("(radius of disk in mts) in Berlin dataset (Partitions = 1024, Mu = 12).")
+title = substitute(paste("Execution time by ", epsilon) ~ temp_title, list(temp_title = temp_title))
+g = ggplot(data=data2, aes(x=factor(Epsilon), y=Time, fill=Dataset)) +
+  geom_bar(stat="identity", position=position_dodge(width = 0.75),width = 0.75) +
+  labs(title=title, y="Time(s)", x=expression(paste(epsilon,"(mts)")))
+plot(g)
+```
+
+## By Stage
+
+```{r ScaleupByStages, echo=FALSE, fig.width=10.5, fig.height=7.5, fig.align='center'}
+PHD_HOME = Sys.getenv(c("PHD_HOME"))
+PATH = "Y3Q1/Scripts/Scaleup/Scaleup_2017-11-21/"
+FILENAME = "Berlin_D20K-80K_E10.0-50.0"
+EXTENSION = "dat"
+
+f = paste0(PHD_HOME,PATH,filename,".",EXTENSION)
+lines = read.table(f, header = F, sep = ">")
+lines = str_trim(lines[,2])
+output = paste0(PHD_HOME,PATH,"Berlin_Stages.dat")
+cat("Dataset,Cores,Epsilon,Stages,Time", file=output, sep = "\n")
+for(line in lines){
+  stage = "00.Setting mu="
+  if(grepl(stage, line)){
+    temp = str_split_fixed(line, ",", 5)
+    epsilon = str_split_fixed(temp[2], "=", 2)[,2]
+    epsilon = as.numeric(str_trim(epsilon))
+    cores = str_split_fixed(temp[3], "=", 2)[,2]
+    cores = as.numeric(str_trim(cores))
+    dataset = str_split_fixed(temp[5], "=", 2)[,2]
+    dataset = str_sub(str_trim(dataset), 2)
+  }
+  stage = "01.Indexing points"
+  if(grepl(stage, line)){
+    time = str_split_fixed(line, "\\[", 2)
+    time = str_split_fixed(time[2], "ms", 2)[,1]
+    time = as.numeric(str_trim(time))
+    text = paste0(dataset,",",cores,",",epsilon,",",stage,",",time,"\n")
+    cat(text, file=output, append = T)
+  }
+  stage = "02.Getting pairs"
+  if(grepl(stage, line)){
+    time = str_split_fixed(line, "\\[", 2)
+    time = str_split_fixed(time[2], "ms", 2)[,1]
+    time = as.numeric(str_trim(time))
+    text = paste0(dataset,",",cores,",",epsilon,",",stage,",",time,"\n")
+    cat(text, file=output, append = T)
+  }
+  stage = "03.Computing centers"
+  if(grepl(stage, line)){
+    time = str_split_fixed(line, "\\[", 2)
+    time = str_split_fixed(time[2], "ms", 2)[,1]
+    time = as.numeric(str_trim(time))
+    text = paste0(dataset,",",cores,",",epsilon,",",stage,",",time,"\n")
+    cat(text, file=output, append = T)
+  }
+  stage = "04.Indexing centers"
+  if(grepl(stage, line)){
+    time = str_split_fixed(line, "\\[", 2)
+    time = str_split_fixed(time[2], "ms", 2)[,1]
+    time = as.numeric(str_trim(time))
+    text = paste0(dataset,",",cores,",",epsilon,",",stage,",",time,"\n")
+    cat(text, file=output, append = T)
+  }
+  stage = "05.Getting disks"
+  if(grepl(stage, line)){
+    time = str_split_fixed(line, "\\[", 2)
+    time = str_split_fixed(time[2], "ms", 2)[,1]
+    time = as.numeric(str_trim(time))
+    text = paste0(dataset,",",cores,",",epsilon,",",stage,",",time,"\n")
+    cat(text, file=output, append = T)
+  }
+  stage = "06.Filtering less-than-mu disks"
+  if(grepl(stage, line)){
+    time = str_split_fixed(line, "\\[", 2)
+    time = str_split_fixed(time[2], "ms", 2)[,1]
+    time = as.numeric(str_trim(time))
+    text = paste0(dataset,",",cores,",",epsilon,",","Filtering mu",",",time,"\n")
+    cat(text, file=output, append = T)
+  }
+  stage = "07.Prunning duplicate candidates"
+  if(grepl(stage, line)){
+    time = str_split_fixed(line, "\\[", 2)
+    time = str_split_fixed(time[2], "ms", 2)[,1]
+    time = as.numeric(str_trim(time))
+    text = paste0(dataset,",",cores,",",epsilon,",",stage,",",time,"\n")
+    cat(text, file=output, append = T)
+  }
+  stage = " 08.Indexing candidates"
+  if(grepl(stage, line)){
+    time = str_split_fixed(line, "\\[", 2)
+    time = str_split_fixed(time[2], "ms", 2)[,1]
+    time = as.numeric(str_trim(time))
+    text = paste0(dataset,",",cores,",",epsilon,",",stage,",",time,"\n")
+    cat(text, file=output, append = T)
+  }
+  stage = "09.Getting expansions"
+  if(grepl(stage, line)){
+    time = str_split_fixed(line, "\\[", 2)
+    time = str_split_fixed(time[2], "ms", 2)[,1]
+    time = as.numeric(str_trim(time))
+    text = paste0(dataset,",",cores,",",epsilon,",",stage,",",time,"\n")
+    cat(text, file=output, append = T)
+  }
+  stage = "10.Finding maximal disks"
+  if(grepl(stage, line)){
+    time = str_split_fixed(line, "\\[", 2)
+    time = str_split_fixed(time[2], "ms", 2)[,1]
+    time = as.numeric(str_trim(time))
+    text = paste0(dataset,",",cores,",",epsilon,",",stage,",",time,"\n")
+    cat(text, file=output, append = T)
+  }  
+}
+
+data = read.csv(output)
+data = sqldf("SELECT Dataset, Cores, Epsilon, Stages, AVG(Time) AS Time FROM data GROUP BY Dataset, Cores, Epsilon, Stages")
+temp_title = paste("(radius of disk in mts) in Berlin dataset.")
+title = substitute(paste("Execution time by stages and ", epsilon) ~ temp_title, list(temp_title = temp_title))
+g = ggplot(data=data, aes(x=factor(Epsilon), y=Time, fill=Dataset)) +
+  geom_bar(stat="identity", position=position_dodge(width = 0.75), width = 0.75) +
+  labs(title=title, y="Time(s)", x=expression(paste(epsilon,"(mts)"))) +
+  facet_wrap(~Stages)
+plot(g)
+```

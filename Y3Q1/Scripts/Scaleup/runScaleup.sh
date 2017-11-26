@@ -14,8 +14,8 @@ do
 	#./runDataset.sh B20K $CANDIDATES 10 5 7
 	#./runDataset.sh B20K $CANDIDATES 20 10 7
 	#./runDataset.sh B20K $CANDIDATES 30 15 7
-	./runDataset.sh B20K $CANDIDATES 40 30 7
-	./runDataset.sh B20K $CANDIDATES 50 40 7
+	#./runDataset.sh B20K $CANDIDATES 40 30 7
+	#./runDataset.sh B20K $CANDIDATES 50 40 7
 done
 
 # Running Scaleup on 2 Nodes with 40K dataset...
@@ -31,8 +31,8 @@ do
 	#./runDataset.sh B40K $CANDIDATES 10 5 14
 	#./runDataset.sh B40K $CANDIDATES 20 10 14
 	#./runDataset.sh B40K $CANDIDATES 30 15 14
-	./runDataset.sh B40K $CANDIDATES 40 30 14
-	./runDataset.sh B40K $CANDIDATES 50 40 14
+	#./runDataset.sh B40K $CANDIDATES 40 30 14
+	#./runDataset.sh B40K $CANDIDATES 50 40 14
 done
 
 # Running Scaleup on 3 Nodes with 60K dataset...
