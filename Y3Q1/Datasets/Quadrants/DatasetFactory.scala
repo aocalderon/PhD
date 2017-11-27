@@ -7,6 +7,7 @@ object DatasetFactory extends LogSupport {
 
     def main(args: Array[String]): Unit = {
         Logger.setDefaultFormatter(LogFormatter.SourceCodeLogFormatter)
+        val delta: Double = 1000
         val phd_home = scala.util.Properties.envOrElse("PHD_HOME", "/home/and/Documents/PhD/Code/")
         val path: String = "Y3Q1/Datasets/Quadrants/"
         val dataset: String = "B20K_SE"
@@ -24,6 +25,10 @@ object DatasetFactory extends LogSupport {
             points += new Point(n, x, y)
             n = n + 1
         }
+		new java.io.PrintWriter(s"$phd_home$path${dataset}_0.$extension") {
+			write(points.toList.map(p => "%d,%f,%f".format(p.id, p.x, p.y)).mkString("\n"))
+			close()
+		}
 			
         var min_x: Double = Double.MaxValue
         var min_y: Double = Double.MaxValue
@@ -46,6 +51,38 @@ object DatasetFactory extends LogSupport {
                 max_y = y
             }    
         }
-        info("(%.2f, %.2f) (%.2f, %.2f)".format(min_x, min_y, max_x, max_y))
+        val extent_y = max_y - min_y
+        val extent_x = max_x - min_x
+        info("(%.2f, %.2f)".format(extent_x, extent_y))
+
+        var above = new ListBuffer[Point]
+        points.zipWithIndex
+			.foreach{ case(point, index) =>
+				above += new Point(index + n, point.x, point.y + extent_y + delta)
+			}
+		new java.io.PrintWriter(s"$phd_home$path${dataset}_1.$extension") {
+			write(above.toList.map(p => "%d,%f,%f".format(p.id, p.x, p.y)).mkString("\n"))
+			close()
+		}
+
+        var below = new ListBuffer[Point]
+        points.zipWithIndex
+			.foreach{ case(point, index) =>
+				below += new Point(index + (2 * n), point.x, point.y - extent_y - delta)
+			}
+		new java.io.PrintWriter(s"$phd_home$path${dataset}_2.$extension") {
+			write(below.toList.map(p => "%d,%f,%f".format(p.id, p.x, p.y)).mkString("\n"))
+			close()
+		}
+
+        var below2 = new ListBuffer[Point]
+        below.zipWithIndex
+			.foreach{ case(point, index) =>
+				below2 += new Point(index + (3 * n), point.x, point.y - extent_y - delta)
+			}
+		new java.io.PrintWriter(s"$phd_home$path${dataset}_3.$extension") {
+			write(below2.toList.map(p => "%d,%f,%f".format(p.id, p.x, p.y)).mkString("\n"))
+			close()
+		}
 	}
 }
