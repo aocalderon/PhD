@@ -14,15 +14,15 @@ if (!require("pacman")) install.packages("pacman")
 pacman::p_load(ggplot2, data.table, foreach, sqldf, tidyr, stringr, dplyr)
 
 PHD_HOME = Sys.getenv(c("PHD_HOME"))
-PATH = "Y3Q1/Scripts/Scaleup/Scaleup_2017-11-21/"
-FILENAME = "Berlin_D20K-80K_E10.0-50.0"
-EXTENSION = "csv"
+PATH = "Y3Q1/Scripts/Scaleup/Scaleup_2017-11-28/"
+FILENAME = "Berlin_N20K-80K_E10-50"
+EXTENSION = "txt"
 
 f = paste0(PHD_HOME,PATH,FILENAME,".",EXTENSION)
 data = read.table(f, header = F, sep = ">")
 data = as.data.frame(str_split_fixed(data[,2], ",", 8), stringsAsFactors = F)
 names(data) = c("Dataset", "Epsilon", "Cores", "Time", "NPairs", "NCenters", "NDisks", "NMaximals")
-write.table(sapply(data, trimws, which="both"), "/tmp/Berlin_D20K-80K_E10-50.csv", col.names = T, row.names = F, sep = ",", quote = F)
+write.table(sapply(data, trimws, which="both"), paste0(PHD_HOME,PATH,FILENAME,".csv"), col.names = T, row.names = F, sep = ",", quote = F)
 data = data[, c(1, 2, 3, 4)]
 names(data) = c("Dataset", "Epsilon", "Cores", "Time")
 data$Dataset = str_sub(str_trim(data$Dataset), 2)
@@ -34,7 +34,7 @@ data$Cores = as.numeric(data$Cores)
 data2 = sqldf("SELECT Dataset, Epsilon, Cores, avg(Time) AS Time FROM data GROUP BY 1, 2, 3")
 ```
 
-## `r filename`
+## `r FILENAME`
 
 ```{r ScaleupPlot, echo=FALSE, fig.width=10.5, fig.height=7.5, fig.align='center'}
 temp_title = paste("(radius of disk in mts) in Berlin dataset.")
@@ -49,8 +49,8 @@ plot(g)
 
 ```{r ScaleupByStages, echo=FALSE, fig.width=10.5, fig.height=7.5, fig.align='center'}
 PHD_HOME = Sys.getenv(c("PHD_HOME"))
-PATH = "Y3Q1/Scripts/Scaleup/Scaleup_2017-11-21/"
-FILENAME = "Berlin_D20K-80K_E10.0-50.0"
+PATH = "Y3Q1/Scripts/Scaleup/Scaleup_2017-11-28/"
+FILENAME = "Berlin_N20K-80K_E10-50"
 EXTENSION = "dat"
 
 f = paste0(PHD_HOME,PATH,FILENAME,".",EXTENSION)
