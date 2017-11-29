@@ -1,4 +1,11 @@
-[0m[[0m[31merror[0m] [0m[0m/home/acald013/PhD/Y3Q1/Validation/Checker.scala:13:63: value sorted is not a member of scala.collection.parallel.mutable.ParArray[Int][0m
-[0m[[0m[31merror[0m] [0m[0m	val items: SortedSet[Int] = line.split(" ").par.map(_.toInt).sorted.to[SortedSet][0m
-[0m[[0m[31merror[0m] [0m[0m	                                                             ^[0m
-[0m[[0m[31merror[0m] [0m[0mone error found[0m
+[0m[[0m[31merror[0m] [0m[0m/home/acald013/PhD/Y3Q1/Validation/Checker.scala:83:65: type mismatch;[0m
+[0m[[0m[31merror[0m] [0m[0m found   : Array[Long][0m
+[0m[[0m[31merror[0m] [0m[0m required: Array[Int][0m
+[0m[[0m[31merror[0m] [0m[0m	    temp += line.substring(1, line.indexOf(":")).split(",").map(_.toLong)[0m
+[0m[[0m[31merror[0m] [0m[0m	                                                               ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/acald013/PhD/Y3Q1/Validation/Checker.scala:89:65: type mismatch;[0m
+[0m[[0m[31merror[0m] [0m[0m found   : Array[Long][0m
+[0m[[0m[31merror[0m] [0m[0m required: Array[Int][0m
+[0m[[0m[31merror[0m] [0m[0m	    temp += line.substring(1, line.indexOf(":")).split(",").map(_.toLong)[0m
+[0m[[0m[31merror[0m] [0m[0m	                                                               ^[0m
+[0m[[0m[31merror[0m] [0m[0mtwo errors found[0m

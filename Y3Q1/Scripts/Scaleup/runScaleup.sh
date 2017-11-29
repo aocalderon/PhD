@@ -1,6 +1,6 @@
 #!/bin/bash
 
-N=3
+N=5
 EPSILONS=(10 20 30 40 50)
 MUS=(5 10 15 20 25)
 M=${#EPSILONS[@]}
@@ -49,6 +49,7 @@ echo "acald013@dblab-rack14" >> $SPARK_HOME/conf/slaves
 $SPARK_HOME/sbin/start-all.sh
 
 DATASET="B60K"
+CORES=21
 for i in `seq 1 $N`
 do
 	for(( j=0; j<${M}; j++ ));
@@ -68,6 +69,7 @@ echo "acald013@dblab-rack15" >> $SPARK_HOME/conf/slaves
 $SPARK_HOME/sbin/start-all.sh
 
 DATASET="B80K"
+CORES=28
 for i in `seq 1 $N`
 do
 	for(( j=0; j<${M}; j++ ));
