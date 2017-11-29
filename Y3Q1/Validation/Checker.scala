@@ -9,22 +9,22 @@ import java.io.PrintWriter
 object Checker {
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
 	
-  class Itemset(val line: String) extends Ordered [Itemset]  {
+  class Disk(val line: String) extends Ordered [Itemset]  {
 		val temp = line.split(",")
 		val x: Double = temp(0).toDouble
 		val y: Double = temp(1).toDouble
-		val items: SortedSet[Long] = temp(2).split(" ").par.map(_.toLong).to[SortedSet]
-		val n = items.size
+		val pids: SortedSet[Long] = temp(2).split(" ").par.map(_.toLong).to[SortedSet]
+		val n = pids.size
   
-		override def toString = "{%s: %d}".format(items.mkString(","), n)
+		override def toString = "%f;%f;%s;%d".format(x, y, pids.mkString(" "), n)
 
-		override def compare(that: Itemset) = {
+		override def compare(that: Disk) = {
 	    if (this.n > that.n)
 				1
 	    else if (this.n < that.n)
 				-1
 	    else
-				compareStream(this.items.toStream, that.items.toStream)
+				compareStream(this.pids.toStream, that.pids.toStream)
 		}
   
 	def compareStream(x: Stream[Long], y: Stream[Long]): Int = {
@@ -104,15 +104,20 @@ object Checker {
   }
     	
 	def main(args: Array[String]): Unit = {
+    val phd_home = scala.util.Properties.envOrElse("PHD_HOME", "/home/and/Documents/PhD/Code/")
+    val val_path = "Y3Q1/Validation/"
 		var extension = "txt"
-		var dataset = ""
 
-		dataset = "/tmp/s32"
-		Checker.readFile(dataset)
+    filename1 = "B20K_E50_M25_C7_Maximals"
+    var path1 = "%s%s%s.%".format(phd_home, val_path, filename1, extension)
+		Checker.readFile(path1)
 
-		dataset = "/tmp/s33"
-		Checker.readFile(dataset)
+    filename2 = "B20K_E50_M25_C28_Maximals"
+    var path2 = "%s%s%s.%".format(phd_home, val_path, filename2, extension)
+		Checker.readFile(path2)
 
-		Checker.compareFiles("/tmp/s33_sorted.txt","/tmp/s32_sorted.txt")
+    path1 = "%s%s%s_sorted.%".format(phd_home, val_path, filename, extension)
+    path2 = "%s%s%s_sorted.%".format(phd_home, val_path, filename, extension)
+		Checker.compareFiles(path1,path2)
   }
 }
