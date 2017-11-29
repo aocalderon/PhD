@@ -9,14 +9,14 @@ import java.io.PrintWriter
 object Checker {
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
 	
-  class Disk(val line: String) extends Ordered [Itemset]  {
-		val temp = line.split(",")
+  class Disk(val line: String) extends Ordered [Disk]  {
+		val temp = line.split(";")
 		val x: Double = temp(0).toDouble
 		val y: Double = temp(1).toDouble
 		val pids: SortedSet[Long] = temp(2).split(" ").par.map(_.toLong).to[SortedSet]
 		val n = pids.size
   
-		override def toString = "%f;%f;%s;%d".format(x, y, pids.mkString(" "), n)
+		override def toString = "POINT(%f %f);%s".format(x, y, pids.mkString(" "))
 
 		override def compare(that: Disk) = {
 	    if (this.n > that.n)
@@ -42,20 +42,39 @@ object Checker {
 	}
 }
 
-  def readFile(dataset: String, extension: String = "txt"): Unit = {
-		var filename = "%s.%s".format(dataset, extension)
-		logger.info("Reading %s".format(filename))
-		var itemsets: SortedSet[Itemset] = SortedSet.empty
-		val file = Source.fromFile(filename)
+  def saveSortedFile(path: String): String = {
+		logger.info("Reading %s".format(path))
+    val extension = path.split("\\.").last
+    val path_without_extension = path.split("\\.").dropRight(1).mkString(".")
+		var disks: SortedSet[Disk] = SortedSet.empty
+		val file = Source.fromFile(path)
 		for (line <- file.getLines) {
-	    itemsets += new Itemset(line)
+	    disks += new Disk(line)
 		}
 		file.close()
-		new PrintWriter("%s_sorted.%s".format(dataset, extension)) { 
-	    write(itemsets.mkString("\n"))
+    val sorted_path = "%s_sorted.%s".format(path_without_extension, extension)
+		new PrintWriter(sorted_path) {
+	    write(disks.mkString("\n"))
 	    close() 
 		}
 		file.close()
+    logger.info("%s has been sorted as %s".format(path, sorted_path))
+
+    sorted_path
+  }
+
+  def sortFile(path: String): SortedSet[Disk] = {
+    logger.info("Reading %s".format(path))
+    val extension = path.split("\\.").last
+    val path_without_extension = path.split("\\.").dropRight(1).mkString(".")
+    var disks: SortedSet[Disk] = SortedSet.empty
+    val file = Source.fromFile(path)
+    for (line <- file.getLines) {
+      disks += new Disk(line)
+    }
+    file.close()
+
+    disks
   }
 
   def findItemsetInFile(filename: String, the_itemset: List[Int]): Unit = {
@@ -76,30 +95,20 @@ object Checker {
 		}
   }
 
-  def compareFiles(filename1: String, filename2: String): Unit = {
-		val file1 = Source.fromFile(filename1)
-		var temp: ListBuffer[Array[Long]] = ListBuffer.empty
-		for (line <- file1.getLines)
-	    temp += line.substring(1, line.indexOf(":")).split(",").map(_.toLong)
-		val itemsets1 = temp.toList
-		file1.close()
-		val file2 = Source.fromFile(filename2)
-		temp = ListBuffer.empty
-		for (line <- file2.getLines)
-	    temp += line.substring(1, line.indexOf(":")).split(",").map(_.toLong)
-		val itemsets2 = temp.toList
-		file2.close()
-		for(itemset1 <- itemsets1){
+  def compareFiles(path1: String, path2: String): Unit = {
+		val disks1 = sortFile(path1)
+    val disks2 = sortFile(path2)
+		for(disk1 <- disks1){
 	    var found = false
-	    for(itemset2 <- itemsets2){
-				if(!found && itemset2.intersect(itemset1).sameElements(itemset1)){
+	    for(disk2 <- disks2){
+				if(!found && disk2.pids.intersect(disk1.pids).sameElements(disk1.pids)){
 					found = true
-					if(itemset1.size != itemset2.size)
-						println("%s has been found in %s ...".format(itemset1.mkString(" "), itemset2.mkString(" ")))
+					if(disk1.n != disk2.n)
+						println("%s has been found in %s ...".format(disk1.toString, disk2.toString))
 				}
 	    }
 	    if(!found)
-				println("%s has not been found...".format(itemset1.mkString(" ")))
+				println("%s has not been found...".format(disk1.toString))
 		}
   }
     	
@@ -108,16 +117,11 @@ object Checker {
     val val_path = "Y3Q1/Validation/"
 		var extension = "txt"
 
-    filename1 = "B20K_E50_M25_C7_Maximals"
-    var path1 = "%s%s%s.%".format(phd_home, val_path, filename1, extension)
-		Checker.readFile(path1)
+    val filename1 = "B20K_E50.0_M25_C28_Maximals"
+    var filename2 = "B20K_E50.0_M25_C7_Maximals"
 
-    filename2 = "B20K_E50_M25_C28_Maximals"
-    var path2 = "%s%s%s.%".format(phd_home, val_path, filename2, extension)
-		Checker.readFile(path2)
-
-    path1 = "%s%s%s_sorted.%".format(phd_home, val_path, filename, extension)
-    path2 = "%s%s%s_sorted.%".format(phd_home, val_path, filename, extension)
+    var path1 = "%s%s%s.%s".format(phd_home, val_path, filename1, extension)
+    var path2 = "%s%s%s.%s".format(phd_home, val_path, filename2, extension)
 		Checker.compareFiles(path1,path2)
   }
 }
