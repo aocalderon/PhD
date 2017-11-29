@@ -18,6 +18,7 @@ object MaximalFinderExpansion {
   private val precision: Double = 0.001
   private val dimensions: Int = 2
   private val sampleRate: Double = 0.01
+  private var phd_home: String = ""
   private var nPoints: Long = 0
 
   case class SP_Point(id: Long, x: Double, y: Double)
@@ -260,13 +261,13 @@ object MaximalFinderExpansion {
       ////////////////////////////////////////////////////////////////
       
       // Printing info summary ...
-      logger.info("%12s,%6s,%6s,%7s,%8s,%10s,%13s,%11s".
-        format("Dataset", "Eps", "Cores", "Time",
+      logger.info("%12s,%6s,%6s,%3s,%7s,%8s,%10s,%13s,%11s".
+        format("Dataset", "Eps", "Cores", "Mu", "Time",
           "# Pairs", "# Disks", "# Candidates", "# Maximals"
         )
       )
-      logger.info("%12s,%6.1f,%6d,%7.2f,%8d,%10d,%13d,%11d".
-        format( conf.dataset(), conf.epsilon(), conf.cores(), totalTime,
+      logger.info("%12s,%6.1f,%6d,%3d,%7.2f,%8d,%10d,%13d,%11d".
+        format( conf.dataset(), conf.epsilon(), conf.cores(), conf.mu(), totalTime,
           nPairs, nDisks, nCandidates, nMaximals
         )
       )
@@ -331,8 +332,10 @@ object MaximalFinderExpansion {
       y > (bbox.miny + epsilon)
   }
 
-  def saveStringArray(array: Array[String], filename: String, conf: Conf): Unit = {
-    new java.io.PrintWriter("/tmp/%s_E%.1f_M%d_%s.txt".format(conf.dataset(), conf.epsilon(), conf.mu(), filename)) {
+  def saveStringArray(array: Array[String], tag: String, conf: Conf): Unit = {
+    val path = s"${phd_home}${conf.valpath()}"
+    val filename = s"${conf.dataset()}_E${conf.epsilon()}_M${conf.mu()}_C${conf.cores()}"
+    new java.io.PrintWriter("%s%s_%s.txt".format(path, filename, tag)) {
       write(array.mkString("\n"))
       close()
     }
@@ -346,17 +349,18 @@ object MaximalFinderExpansion {
   def mbr2wkt(mbr: MBR): String = toWKT(mbr.low.coord(0),mbr.low.coord(1),mbr.high.coord(0),mbr.high.coord(1))
 
   class Conf(arguments: Seq[String]) extends ScallopConf(arguments) {
-    val epsilon:  ScallopOption[Double]   = opt[Double](default = Some(10.0))
-    val mu:     ScallopOption[Int]    = opt[Int]   (default = Some(5))
-    val entries:	ScallopOption[Int]    = opt[Int]   (default = Some(25))
-    val partitions:	ScallopOption[Int]    = opt[Int]   (default = Some(1024))
-    val candidates:	ScallopOption[Int]    = opt[Int]   (default = Some(256))
-    val cores:    ScallopOption[Int]    = opt[Int]   (default = Some(28))
-    val master:   ScallopOption[String]	= opt[String](default = Some("spark://169.235.27.138:7077")) /* spark://169.235.27.138:7077 */
-    val path:     ScallopOption[String]	= opt[String](default = Some("Y3Q1/Datasets/"))
-    val dataset:	ScallopOption[String]	= opt[String](default = Some("B20K"))
-    val extension:	ScallopOption[String]	= opt[String](default = Some("csv"))
-    val method:   ScallopOption[String]	= opt[String](default = Some("fpmax"))
+    val epsilon:    ScallopOption[Double] = opt[Double] (default = Some(10.0))
+    val mu:         ScallopOption[Int]    = opt[Int]    (default = Some(5))
+    val entries:    ScallopOption[Int]    = opt[Int]    (default = Some(25))
+    val partitions: ScallopOption[Int]    = opt[Int]    (default = Some(1024))
+    val candidates: ScallopOption[Int]    = opt[Int]    (default = Some(256))
+    val cores:      ScallopOption[Int]    = opt[Int]    (default = Some(28))
+    val master:     ScallopOption[String] = opt[String] (default = Some("spark://169.235.27.138:7077")) /* spark://169.235.27.138:7077 */
+    val path:       ScallopOption[String] = opt[String] (default = Some("Y3Q1/Datasets/"))
+    val valpath:    ScallopOption[String] = opt[String] (default = Some("Y3Q1/Validation/"))
+    val dataset:    ScallopOption[String] = opt[String] (default = Some("B20K"))
+    val extension:  ScallopOption[String] = opt[String] (default = Some("csv"))
+    val method:     ScallopOption[String] = opt[String] (default = Some("fpmax"))
     verify()
   }
 
@@ -378,7 +382,7 @@ object MaximalFinderExpansion {
     logger.info("Starting session... [%.3fs]".format((System.currentTimeMillis() - timer)/1000.0))
     // Reading...
     timer = System.currentTimeMillis()
-    val phd_home = scala.util.Properties.envOrElse("PHD_HOME", "/home/acald013/PhD/")
+    phd_home = scala.util.Properties.envOrElse("PHD_HOME", "/home/acald013/PhD/")
     val filename = "%s%s%s.%s".format(phd_home, conf.path(), conf.dataset(), conf.extension())
     val points = simba.read
       .option("header", "false")

@@ -1,8 +1,8 @@
 #!/bin/bash
 
 N=5
-EPSILONS=(10 20 30 40 50)
-MUS=(5 10 15 20 25)
+EPSILONS=(30 40 50 60)
+MUS=(25 25 25 25)
 M=${#EPSILONS[@]}
 
 # Running Scaleup on 1 Node with 20K dataset...
