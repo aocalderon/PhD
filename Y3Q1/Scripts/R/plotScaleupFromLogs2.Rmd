@@ -57,96 +57,98 @@ f = paste0(PHD_HOME,PATH,FILENAME,".",EXTENSION)
 lines = read.table(f, header = F, sep = ">")
 lines = str_trim(lines[,2])
 output = paste0(PHD_HOME,PATH,"Berlin_Stages.dat")
-cat("Dataset,Cores,Epsilon,Stages,Time", file=output, sep = "\n")
+cat("Dataset,Cores,Epsilon,Mu,Stages,Time", file=output, sep = "\n")
 for(line in lines){
   stage = "00.Setting mu="
   if(grepl(stage, line)){
-    temp = str_split_fixed(line, ",", 5)
+    temp = str_split_fixed(line, ",", 4)
+    mu = str_split_fixed(temp[1], "=", 2)[,2]
+    mu = as.numeric(str_trim(mu))
     epsilon = str_split_fixed(temp[2], "=", 2)[,2]
     epsilon = as.numeric(str_trim(epsilon))
     cores = str_split_fixed(temp[3], "=", 2)[,2]
     cores = as.numeric(str_trim(cores))
-    dataset = str_split_fixed(temp[5], "=", 2)[,2]
+    dataset = str_split_fixed(temp[4], "=", 2)[,2]
     dataset = str_sub(str_trim(dataset), 2)
   }
   stage = "01.Indexing points"
   if(grepl(stage, line)){
     time = str_split_fixed(line, "\\[", 2)
-    time = str_split_fixed(time[2], "ms", 2)[,1]
+    time = str_split_fixed(time[2], "s\\]", 2)[,1]
     time = as.numeric(str_trim(time))
-    text = paste0(dataset,",",cores,",",epsilon,",",stage,",",time,"\n")
+    text = paste0(dataset,",",cores,",",epsilon,",",mu,",",stage,",",time,"\n")
     cat(text, file=output, append = T)
   }
   stage = "02.Getting pairs"
   if(grepl(stage, line)){
     time = str_split_fixed(line, "\\[", 2)
-    time = str_split_fixed(time[2], "ms", 2)[,1]
+    time = str_split_fixed(time[2], "s\\]", 2)[,1]
     time = as.numeric(str_trim(time))
-    text = paste0(dataset,",",cores,",",epsilon,",",stage,",",time,"\n")
+    text = paste0(dataset,",",cores,",",epsilon,",",mu,",",stage,",",time,"\n")
     cat(text, file=output, append = T)
   }
   stage = "03.Computing centers"
   if(grepl(stage, line)){
     time = str_split_fixed(line, "\\[", 2)
-    time = str_split_fixed(time[2], "ms", 2)[,1]
+    time = str_split_fixed(time[2], "s\\]", 2)[,1]
     time = as.numeric(str_trim(time))
-    text = paste0(dataset,",",cores,",",epsilon,",",stage,",",time,"\n")
+    text = paste0(dataset,",",cores,",",epsilon,",",mu,",",stage,",",time,"\n")
     cat(text, file=output, append = T)
   }
   stage = "04.Indexing centers"
   if(grepl(stage, line)){
     time = str_split_fixed(line, "\\[", 2)
-    time = str_split_fixed(time[2], "ms", 2)[,1]
+    time = str_split_fixed(time[2], "s\\]", 2)[,1]
     time = as.numeric(str_trim(time))
-    text = paste0(dataset,",",cores,",",epsilon,",",stage,",",time,"\n")
+    text = paste0(dataset,",",cores,",",epsilon,",",mu,",",stage,",",time,"\n")
     cat(text, file=output, append = T)
   }
   stage = "05.Getting disks"
   if(grepl(stage, line)){
     time = str_split_fixed(line, "\\[", 2)
-    time = str_split_fixed(time[2], "ms", 2)[,1]
+    time = str_split_fixed(time[2], "s\\]", 2)[,1]
     time = as.numeric(str_trim(time))
-    text = paste0(dataset,",",cores,",",epsilon,",",stage,",",time,"\n")
+    text = paste0(dataset,",",cores,",",epsilon,",",mu,",",stage,",",time,"\n")
     cat(text, file=output, append = T)
   }
   stage = "06.Filtering less-than-mu disks"
   if(grepl(stage, line)){
     time = str_split_fixed(line, "\\[", 2)
-    time = str_split_fixed(time[2], "ms", 2)[,1]
+    time = str_split_fixed(time[2], "s\\]", 2)[,1]
     time = as.numeric(str_trim(time))
-    text = paste0(dataset,",",cores,",",epsilon,",","Filtering mu",",",time,"\n")
+    text = paste0(dataset,",",cores,",",epsilon,",",mu,",",stage,",",time,"\n")
     cat(text, file=output, append = T)
   }
   stage = "07.Prunning duplicate candidates"
   if(grepl(stage, line)){
     time = str_split_fixed(line, "\\[", 2)
-    time = str_split_fixed(time[2], "ms", 2)[,1]
+    time = str_split_fixed(time[2], "s\\]", 2)[,1]
     time = as.numeric(str_trim(time))
-    text = paste0(dataset,",",cores,",",epsilon,",",stage,",",time,"\n")
+    text = paste0(dataset,",",cores,",",epsilon,",",mu,",",stage,",",time,"\n")
     cat(text, file=output, append = T)
   }
   stage = " 08.Indexing candidates"
   if(grepl(stage, line)){
     time = str_split_fixed(line, "\\[", 2)
-    time = str_split_fixed(time[2], "ms", 2)[,1]
+    time = str_split_fixed(time[2], "s\\]", 2)[,1]
     time = as.numeric(str_trim(time))
-    text = paste0(dataset,",",cores,",",epsilon,",",stage,",",time,"\n")
+    text = paste0(dataset,",",cores,",",epsilon,",",mu,",",stage,",",time,"\n")
     cat(text, file=output, append = T)
   }
   stage = "09.Getting expansions"
   if(grepl(stage, line)){
     time = str_split_fixed(line, "\\[", 2)
-    time = str_split_fixed(time[2], "ms", 2)[,1]
+    time = str_split_fixed(time[2], "s\\]", 2)[,1]
     time = as.numeric(str_trim(time))
-    text = paste0(dataset,",",cores,",",epsilon,",",stage,",",time,"\n")
+    text = paste0(dataset,",",cores,",",epsilon,",",mu,",",stage,",",time,"\n")
     cat(text, file=output, append = T)
   }
   stage = "10.Finding maximal disks"
   if(grepl(stage, line)){
     time = str_split_fixed(line, "\\[", 2)
-    time = str_split_fixed(time[2], "ms", 2)[,1]
+    time = str_split_fixed(time[2], "s\\]", 2)[,1]
     time = as.numeric(str_trim(time))
-    text = paste0(dataset,",",cores,",",epsilon,",",stage,",",time,"\n")
+    text = paste0(dataset,",",cores,",",epsilon,",",mu,",",stage,",",time,"\n")
     cat(text, file=output, append = T)
   }  
 }
