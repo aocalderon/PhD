@@ -1,15 +1,15 @@
+import SPMF.{AlgoFPMax, AlgoLCM, Transactions}
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.catalyst.ScalaReflection
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.simba.index.{RTree, RTreeType}
 import org.apache.spark.sql.simba.partitioner.STRPartitioner
-import org.apache.spark.sql.simba.spatial.{Shape, MBR, Point}
+import org.apache.spark.sql.simba.spatial.{MBR, Point, Shape}
 import org.apache.spark.sql.simba.{Dataset, SimbaSession}
 import org.apache.spark.sql.types.StructType
 import org.joda.time.DateTime
 import org.rogach.scallop.{ScallopConf, ScallopOption}
 import org.slf4j.{Logger, LoggerFactory}
-import SPMF.{AlgoCharmLCM, AlgoFPMax, AlgoLCM, Transactions}
 
 import scala.collection.JavaConverters._
 
@@ -129,7 +129,7 @@ object MaximalFinderExpansion {
       val candidatesDimension: Int = dimensions
       val candidatesTransferThreshold: Long = 800 * 1024 * 1024
       val candidatesMaxEntriesPerNode: Int = 25
-      val candidatesPartitionSize: Int = conf.candidates()
+      //val candidatesPartitionSize: Int = conf.candidates()
       //var candidatesNumPartitions: Int = Math.ceil(nCandidates / candidatesPartitionSize).toInt
       var candidatesNumPartitions: Int = conf.cores()
       logger.info("Candidates # of partitions: %d".format(candidates.rdd.getNumPartitions))
@@ -156,16 +156,11 @@ object MaximalFinderExpansion {
           ( MBR(mins, maxs), mbr._2, 1 )
         }
       val expandedRTree = RTree(expandedMBRs, candidatesMaxEntriesPerNode)
-      candidatesNumPartitions = expandedMBRs.size
+      candidatesNumPartitions = expandedMBRs.length
       val candidates2 = pointCandidate.flatMap{ candidate =>
         expandedRTree.circleRange(candidate._1, 0.0)
           .map{ mbr => 
-
-            ////////////////////////////////////////////////////////////////
-            //( mbr._2, (candidate._2, isInExpansionArea(candidate._2, mbr._1, epsilon), mbr._2) ) 
-            ////////////////////////////////////////////////////////////////
-            
-            ( mbr._2, candidate._2 ) 
+            ( mbr._2, candidate._2 )
           }
         }
         .partitionBy(new ExpansionPartitioner(candidatesNumPartitions))
@@ -183,8 +178,8 @@ object MaximalFinderExpansion {
 
       timer = System.currentTimeMillis()
       val method = conf.method()
-      var maximals = candidates2
-        .mapPartitionsWithIndex{ (partitionIndex, partitionCandidates) =>
+      val maximals = candidates2
+        .mapPartitionsWithIndex{ (_, partitionCandidates) =>
           var maximalsIterator: Iterator[List[Long]] = null
           if(method == "fpmax"){
             val transactions = partitionCandidates
@@ -241,12 +236,12 @@ object MaximalFinderExpansion {
           val y = (m.getDouble(2) + m.getDouble(4)) / 2.0
           val items = m.getList[Long](5).asScala.sorted.mkString(" ")
           val center = new Point(Array(x, y)) 
-          val maximal = new Maximal(x, y, items)
+          val maximal = Maximal(x, y, items)
           (center, maximal)
         }
         .cache()
        val maximals2 = centerMaximal.flatMap{ maximal =>
-          expandedRTree.circleRange(maximal._1, 0.0)
+         expandedRTree.circleRange(maximal._1, 0.0)
           .map{ mbr => 
             ( maximal._2, isInExpansionArea(maximal._2, mbr._1, epsilon) ) 
           }
