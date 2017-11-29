@@ -143,7 +143,7 @@ object MaximalFinderExpansion {
       // 09.Getting expansions...
 
       ////////////////////////////////////////////////////////////////
-      //saveStringArray(candidatesPartitioner.mbrBound.map(mbr => "%d;%s".format(mbr._2, mbr2wkt(mbr._1))), "MBRs", conf)
+      saveStringArray(candidatesPartitioner.mbrBound.map(mbr => "%d;%s".format(mbr._2, mbr2wkt(mbr._1))), "MBRs", conf)
       ////////////////////////////////////////////////////////////////
 
       timer = System.currentTimeMillis()
@@ -178,7 +178,7 @@ object MaximalFinderExpansion {
       // 10.Finding maximal disks...
 
       ////////////////////////////////////////////////////////////////
-      //saveStringArray(expandedMBRs.map(mbr => "%d;%s".format(mbr._2, mbr2wkt(mbr._1))), "EMBRs", conf)
+      saveStringArray(expandedMBRs.map(mbr => "%d;%s".format(mbr._2, mbr2wkt(mbr._1))), "EMBRs", conf)
       ////////////////////////////////////////////////////////////////
 
       timer = System.currentTimeMillis()
@@ -224,11 +224,6 @@ object MaximalFinderExpansion {
         .cache()
       var nMaximals = maximals.count()
       logger.info("10.Finding maximal disks... [%.3fs] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nMaximals))
-
-      ////////////////////////////////////////////////////////////////
-      //saveStringArray(maximals.collect(), "Maximals", conf)
-      ////////////////////////////////////////////////////////////////
-
       // 11.Prunning duplicates...
       timer = System.currentTimeMillis()
       val maximalPoints = maximals
@@ -264,8 +259,10 @@ object MaximalFinderExpansion {
       logger.info("11.Prunning duplicates... [%.3fs] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nMaximals))
       val endTime = System.currentTimeMillis()
       val totalTime = (endTime - startTime)/1000.0
-      
-      logger.info(maximals2.map(m => "\n%.2f,%.2f,%s".format(m.x, m.y, m.items)).collect.mkString("") + "\n")
+
+      ////////////////////////////////////////////////////////////////
+      saveStringArray(maximals2.map(m => "%f;%f;%s".format(m.x, m.y, m.items)).collect(), "Maximals", conf)
+      ////////////////////////////////////////////////////////////////
       
       // Printing info summary ...
       logger.info("%12s,%6s,%6s,%7s,%8s,%10s,%13s,%11s".
@@ -340,7 +337,7 @@ object MaximalFinderExpansion {
   }
 
   def saveStringArray(array: Array[String], filename: String, conf: Conf): Unit = {
-    new java.io.PrintWriter("/tmp/D%s_E%.1f_M%d_%s.txt".format(conf.dataset(), conf.epsilon(), conf.mu(), filename)) {
+    new java.io.PrintWriter("/tmp/%s_E%.1f_M%d_%s.txt".format(conf.dataset(), conf.epsilon(), conf.mu(), filename)) {
       write(array.mkString("\n"))
       close()
     }
