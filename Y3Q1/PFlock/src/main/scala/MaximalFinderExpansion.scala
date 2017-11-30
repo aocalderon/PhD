@@ -375,7 +375,7 @@ object MaximalFinderExpansion {
       .master(master)
       .appName("MaximalFinderExpansion")
       .config("simba.index.partitions",conf.partitions().toString)
-      .config("spark.cores.max",conf.cores().toString)
+      //.config("spark.cores.max",conf.cores().toString)
       .getOrCreate()
     import simba.implicits._
     import simba.simbaImplicits._
