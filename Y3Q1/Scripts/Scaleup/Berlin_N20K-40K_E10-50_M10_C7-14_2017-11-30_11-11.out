@@ -1,0 +1,766 @@
+acald013@dblab-rack15: stopping org.apache.spark.deploy.worker.Worker
+acald013@dblab-rack14: stopping org.apache.spark.deploy.worker.Worker
+acald013@dblab-rack12: stopping org.apache.spark.deploy.worker.Worker
+acald013@dblab-rack11: stopping org.apache.spark.deploy.worker.Worker
+stopping org.apache.spark.deploy.master.Master
+starting org.apache.spark.deploy.master.Master, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.master.Master-1-dblab-rack11.cs.ucr.edu.out
+acald013@dblab-rack11: starting org.apache.spark.deploy.worker.Worker, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.worker.Worker-1-dblab-rack11.cs.ucr.edu.out
+Running iteration 1/3 for B20K (epsilon = 10 , mu = 10)...
+2017-11-30 05:49:35,127 -> Starting session... [1.901s]
+2017-11-30 05:49:39,499 -> Reading dataset... [4.370s]
+2017-11-30 05:49:39,544 -> Lauching MaximalFinder at 05:49:39.514...
+2017-11-30 05:49:39,597 -> 00.Setting mu=10,epsilon=10.0,cores=7,dataset=B20K
+2017-11-30 05:49:48,493 -> 01.Indexing points... [8.896s] [19715 results]
+2017-11-30 05:49:55,054 -> 02.Getting pairs... [6.561s] [11226 results]
+2017-11-30 05:50:00,287 -> 03.Computing centers... [5.233s] [22452 results]
+2017-11-30 05:50:09,823 -> 04.Indexing centers... [9.536s] [22452 results]
+2017-11-30 05:50:20,316 -> 05.Getting disks... [10.493s] [22452 results]
+2017-11-30 05:50:21,082 -> 06.Filtering less-than-mu disks... [0.765s] [210 results]
+2017-11-30 05:50:23,505 -> 07.Prunning duplicate candidates... [2.417s] [111 results]
+2017-11-30 05:50:23,579 -> Candidates # of partitions: 200
+2017-11-30 05:50:24,107 -> 08.Indexing candidates... [3.019s] [111 results]
+2017-11-30 05:50:24,114 -> Candidates # of partitions: 9
+2017-11-30 05:50:24,342 -> 09.Getting expansions... [0.233s] [466 results]
+2017-11-30 05:50:24,450 -> 10.Finding maximal disks... [0.107s] [47 results]
+2017-11-30 05:50:26,472 -> 11.Prunning duplicates... [2.022s] [12 results]
+2017-11-30 05:50:26,787 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-11-30 05:50:26,787 ->         B20K,  10.0,     7, 10,  46.88,   11226,     22452,          111,         12
+2017-11-30 05:50:26,864 -> Dropping indices...[0.077s]
+2017-11-30 05:50:26,864 -> Finishing MaximalFinder at 05:50:26.864...
+2017-11-30 05:50:26,865 -> Total time for MaximalFinder: 47.319ms...
+2017-11-30 05:50:26,956 -> Closing session... [0.091s]
+Done!!! Thu Nov 30 05:50:27 PST 2017
+Running iteration 1/3 for B20K (epsilon = 20 , mu = 10)...
+2017-11-30 05:50:30,800 -> Starting session... [1.549s]
+2017-11-30 05:50:34,659 -> Reading dataset... [3.857s]
+2017-11-30 05:50:34,692 -> Lauching MaximalFinder at 05:50:34.663...
+2017-11-30 05:50:34,734 -> 00.Setting mu=10,epsilon=20.0,cores=7,dataset=B20K
+2017-11-30 05:50:43,868 -> 01.Indexing points... [9.133s] [19715 results]
+2017-11-30 05:50:50,805 -> 02.Getting pairs... [6.937s] [23819 results]
+2017-11-30 05:50:56,340 -> 03.Computing centers... [5.535s] [47638 results]
+2017-11-30 05:51:06,359 -> 04.Indexing centers... [10.019s] [47638 results]
+2017-11-30 05:51:17,495 -> 05.Getting disks... [11.136s] [47638 results]
+2017-11-30 05:51:18,956 -> 06.Filtering less-than-mu disks... [1.461s] [2392 results]
+2017-11-30 05:51:21,886 -> 07.Prunning duplicate candidates... [2.930s] [1524 results]
+2017-11-30 05:51:22,001 -> Candidates # of partitions: 200
+2017-11-30 05:51:22,518 -> 08.Indexing candidates... [3.562s] [1524 results]
+2017-11-30 05:51:22,537 -> Candidates # of partitions: 9
+2017-11-30 05:51:22,962 -> 09.Getting expansions... [0.434s] [2613 results]
+2017-11-30 05:51:23,117 -> 10.Finding maximal disks... [0.154s] [149 results]
+2017-11-30 05:51:25,147 -> 11.Prunning duplicates... [2.029s] [41 results]
+2017-11-30 05:51:25,453 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-11-30 05:51:25,454 ->         B20K,  20.0,     7, 10,  50.41,   23819,     47638,         1524,         41
+2017-11-30 05:51:25,560 -> Dropping indices...[0.106s]
+2017-11-30 05:51:25,560 -> Finishing MaximalFinder at 05:51:25.560...
+2017-11-30 05:51:25,561 -> Total time for MaximalFinder: 50.868ms...
+2017-11-30 05:51:25,648 -> Closing session... [0.087s]
+Done!!! Thu Nov 30 05:51:26 PST 2017
+Running iteration 1/3 for B20K (epsilon = 30 , mu = 10)...
+2017-11-30 05:51:29,576 -> Starting session... [1.540s]
+2017-11-30 05:51:32,999 -> Reading dataset... [3.422s]
+2017-11-30 05:51:33,033 -> Lauching MaximalFinder at 05:51:33.004...
+2017-11-30 05:51:33,061 -> 00.Setting mu=10,epsilon=30.0,cores=7,dataset=B20K
+2017-11-30 05:51:41,620 -> 01.Indexing points... [8.559s] [19715 results]
+2017-11-30 05:51:49,118 -> 02.Getting pairs... [7.498s] [36174 results]
+2017-11-30 05:51:54,975 -> 03.Computing centers... [5.857s] [72348 results]
+2017-11-30 05:52:05,154 -> 04.Indexing centers... [10.179s] [72348 results]
+2017-11-30 05:52:17,548 -> 05.Getting disks... [12.394s] [72348 results]
+2017-11-30 05:52:19,044 -> 06.Filtering less-than-mu disks... [1.496s] [5877 results]
+2017-11-30 05:52:22,152 -> 07.Prunning duplicate candidates... [3.108s] [3889 results]
+2017-11-30 05:52:22,254 -> Candidates # of partitions: 200
+2017-11-30 05:52:22,774 -> 08.Indexing candidates... [3.730s] [3889 results]
+2017-11-30 05:52:22,798 -> Candidates # of partitions: 9
+2017-11-30 05:52:23,103 -> 09.Getting expansions... [0.314s] [5518 results]
+2017-11-30 05:52:23,386 -> 10.Finding maximal disks... [0.282s] [310 results]
+2017-11-30 05:52:25,492 -> 11.Prunning duplicates... [2.106s] [70 results]
+2017-11-30 05:52:25,821 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-11-30 05:52:25,821 ->         B20K,  30.0,     7, 10,  52.43,   36174,     72348,         3889,         70
+2017-11-30 05:52:25,899 -> Dropping indices...[0.078s]
+2017-11-30 05:52:25,899 -> Finishing MaximalFinder at 05:52:25.899...
+2017-11-30 05:52:25,899 -> Total time for MaximalFinder: 52.866ms...
+2017-11-30 05:52:25,953 -> Closing session... [0.054s]
+Done!!! Thu Nov 30 05:52:26 PST 2017
+Running iteration 1/3 for B20K (epsilon = 40 , mu = 10)...
+2017-11-30 05:52:29,766 -> Starting session... [1.529s]
+2017-11-30 05:52:33,194 -> Reading dataset... [3.428s]
+2017-11-30 05:52:33,227 -> Lauching MaximalFinder at 05:52:33.198...
+2017-11-30 05:52:33,256 -> 00.Setting mu=10,epsilon=40.0,cores=7,dataset=B20K
+2017-11-30 05:52:42,293 -> 01.Indexing points... [9.037s] [19715 results]
+2017-11-30 05:52:49,745 -> 02.Getting pairs... [7.451s] [49403 results]
+2017-11-30 05:52:55,754 -> 03.Computing centers... [6.009s] [98806 results]
+2017-11-30 05:53:06,092 -> 04.Indexing centers... [10.338s] [98806 results]
+2017-11-30 05:53:19,671 -> 05.Getting disks... [13.579s] [98806 results]
+2017-11-30 05:53:21,477 -> 06.Filtering less-than-mu disks... [1.805s] [12205 results]
+2017-11-30 05:53:25,130 -> 07.Prunning duplicate candidates... [3.653s] [8256 results]
+2017-11-30 05:53:25,210 -> Candidates # of partitions: 200
+2017-11-30 05:53:25,725 -> 08.Indexing candidates... [4.248s] [8256 results]
+2017-11-30 05:53:25,732 -> Candidates # of partitions: 9
+2017-11-30 05:53:26,148 -> 09.Getting expansions... [0.422s] [12359 results]
+2017-11-30 05:53:27,014 -> 10.Finding maximal disks... [0.864s] [656 results]
+2017-11-30 05:53:29,101 -> 11.Prunning duplicates... [2.087s] [141 results]
+2017-11-30 05:53:29,456 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-11-30 05:53:29,456 ->         B20K,  40.0,     7, 10,  55.85,   49403,     98806,         8256,        141
+2017-11-30 05:53:29,553 -> Dropping indices...[0.097s]
+2017-11-30 05:53:29,553 -> Finishing MaximalFinder at 05:53:29.553...
+2017-11-30 05:53:29,553 -> Total time for MaximalFinder: 56.326ms...
+2017-11-30 05:53:29,614 -> Closing session... [0.061s]
+Done!!! Thu Nov 30 05:53:30 PST 2017
+Running iteration 1/3 for B20K (epsilon = 50 , mu = 10)...
+2017-11-30 05:53:33,422 -> Starting session... [1.534s]
+2017-11-30 05:53:36,891 -> Reading dataset... [3.468s]
+2017-11-30 05:53:36,924 -> Lauching MaximalFinder at 05:53:36.895...
+2017-11-30 05:53:36,953 -> 00.Setting mu=10,epsilon=50.0,cores=7,dataset=B20K
+2017-11-30 05:53:45,882 -> 01.Indexing points... [8.929s] [19715 results]
+2017-11-30 05:53:53,580 -> 02.Getting pairs... [7.698s] [62752 results]
+2017-11-30 05:53:59,604 -> 03.Computing centers... [6.023s] [125504 results]
+2017-11-30 05:54:10,777 -> 04.Indexing centers... [11.173s] [125504 results]
+2017-11-30 05:54:24,755 -> 05.Getting disks... [13.978s] [125504 results]
+2017-11-30 05:54:26,866 -> 06.Filtering less-than-mu disks... [2.110s] [19162 results]
+2017-11-30 05:54:31,251 -> 07.Prunning duplicate candidates... [4.385s] [13078 results]
+2017-11-30 05:54:31,323 -> Candidates # of partitions: 200
+2017-11-30 05:54:31,872 -> 08.Indexing candidates... [5.006s] [13078 results]
+2017-11-30 05:54:31,880 -> Candidates # of partitions: 9
+2017-11-30 05:54:32,207 -> 09.Getting expansions... [0.334s] [19547 results]
+2017-11-30 05:54:33,375 -> 10.Finding maximal disks... [1.167s] [1034 results]
+2017-11-30 05:54:35,395 -> 11.Prunning duplicates... [2.020s] [215 results]
+2017-11-30 05:54:35,688 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-11-30 05:54:35,689 ->         B20K,  50.0,     7, 10,  58.44,   62752,    125504,        13078,        215
+2017-11-30 05:54:35,761 -> Dropping indices...[0.072s]
+2017-11-30 05:54:35,761 -> Finishing MaximalFinder at 05:54:35.761...
+2017-11-30 05:54:35,761 -> Total time for MaximalFinder: 58.836ms...
+2017-11-30 05:54:35,823 -> Closing session... [0.062s]
+Done!!! Thu Nov 30 05:54:36 PST 2017
+Running iteration 2/3 for B20K (epsilon = 10 , mu = 10)...
+2017-11-30 05:54:39,634 -> Starting session... [1.480s]
+2017-11-30 05:54:43,145 -> Reading dataset... [3.510s]
+2017-11-30 05:54:43,181 -> Lauching MaximalFinder at 05:54:43.149...
+2017-11-30 05:54:43,210 -> 00.Setting mu=10,epsilon=10.0,cores=7,dataset=B20K
+2017-11-30 05:54:51,936 -> 01.Indexing points... [8.725s] [19715 results]
+2017-11-30 05:54:58,574 -> 02.Getting pairs... [6.638s] [11226 results]
+2017-11-30 05:55:04,026 -> 03.Computing centers... [5.452s] [22452 results]
+2017-11-30 05:55:13,711 -> 04.Indexing centers... [9.685s] [22452 results]
+2017-11-30 05:55:23,987 -> 05.Getting disks... [10.275s] [22452 results]
+2017-11-30 05:55:24,726 -> 06.Filtering less-than-mu disks... [0.739s] [210 results]
+2017-11-30 05:55:27,598 -> 07.Prunning duplicate candidates... [2.872s] [111 results]
+2017-11-30 05:55:27,670 -> Candidates # of partitions: 200
+2017-11-30 05:55:28,165 -> 08.Indexing candidates... [3.439s] [111 results]
+2017-11-30 05:55:28,184 -> Candidates # of partitions: 9
+2017-11-30 05:55:28,401 -> 09.Getting expansions... [0.224s] [466 results]
+2017-11-30 05:55:28,503 -> 10.Finding maximal disks... [0.101s] [47 results]
+2017-11-30 05:55:30,458 -> 11.Prunning duplicates... [1.955s] [12 results]
+2017-11-30 05:55:30,781 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-11-30 05:55:30,782 ->         B20K,  10.0,     7, 10,  47.25,   11226,     22452,          111,         12
+2017-11-30 05:55:30,867 -> Dropping indices...[0.085s]
+2017-11-30 05:55:30,868 -> Finishing MaximalFinder at 05:55:30.867...
+2017-11-30 05:55:30,868 -> Total time for MaximalFinder: 47.686ms...
+2017-11-30 05:55:30,946 -> Closing session... [0.078s]
+Done!!! Thu Nov 30 05:55:31 PST 2017
+Running iteration 2/3 for B20K (epsilon = 20 , mu = 10)...
+2017-11-30 05:55:34,714 -> Starting session... [1.475s]
+2017-11-30 05:55:38,435 -> Reading dataset... [3.720s]
+2017-11-30 05:55:38,468 -> Lauching MaximalFinder at 05:55:38.439...
+2017-11-30 05:55:38,510 -> 00.Setting mu=10,epsilon=20.0,cores=7,dataset=B20K
+2017-11-30 05:55:46,832 -> 01.Indexing points... [8.322s] [19715 results]
+2017-11-30 05:55:53,745 -> 02.Getting pairs... [6.913s] [23819 results]
+2017-11-30 05:55:59,237 -> 03.Computing centers... [5.492s] [47638 results]
+2017-11-30 05:56:09,164 -> 04.Indexing centers... [9.926s] [47638 results]
+2017-11-30 05:56:20,732 -> 05.Getting disks... [11.568s] [47638 results]
+2017-11-30 05:56:21,905 -> 06.Filtering less-than-mu disks... [1.173s] [2392 results]
+2017-11-30 05:56:25,204 -> 07.Prunning duplicate candidates... [3.299s] [1524 results]
+2017-11-30 05:56:25,295 -> Candidates # of partitions: 200
+2017-11-30 05:56:26,480 -> 08.Indexing candidates... [4.575s] [1524 results]
+2017-11-30 05:56:26,491 -> Candidates # of partitions: 9
+2017-11-30 05:56:26,809 -> 09.Getting expansions... [0.327s] [2613 results]
+2017-11-30 05:56:26,976 -> 10.Finding maximal disks... [0.166s] [149 results]
+2017-11-30 05:56:29,252 -> 11.Prunning duplicates... [2.276s] [41 results]
+2017-11-30 05:56:29,527 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-11-30 05:56:29,527 ->         B20K,  20.0,     7, 10,  50.74,   23819,     47638,         1524,         41
+2017-11-30 05:56:29,686 -> Dropping indices...[0.159s]
+2017-11-30 05:56:29,686 -> Finishing MaximalFinder at 05:56:29.686...
+2017-11-30 05:56:29,686 -> Total time for MaximalFinder: 51.218ms...
+2017-11-30 05:56:29,748 -> Closing session... [0.062s]
+Done!!! Thu Nov 30 05:56:30 PST 2017
+Running iteration 2/3 for B20K (epsilon = 30 , mu = 10)...
+2017-11-30 05:56:33,513 -> Starting session... [1.502s]
+2017-11-30 05:56:36,839 -> Reading dataset... [3.325s]
+2017-11-30 05:56:36,872 -> Lauching MaximalFinder at 05:56:36.843...
+2017-11-30 05:56:36,912 -> 00.Setting mu=10,epsilon=30.0,cores=7,dataset=B20K
+2017-11-30 05:56:45,972 -> 01.Indexing points... [9.060s] [19715 results]
+2017-11-30 05:56:53,213 -> 02.Getting pairs... [7.240s] [36174 results]
+2017-11-30 05:56:58,675 -> 03.Computing centers... [5.462s] [72348 results]
+2017-11-30 05:57:08,893 -> 04.Indexing centers... [10.218s] [72348 results]
+2017-11-30 05:57:21,726 -> 05.Getting disks... [12.832s] [72348 results]
+2017-11-30 05:57:23,448 -> 06.Filtering less-than-mu disks... [1.722s] [5877 results]
+2017-11-30 05:57:27,327 -> 07.Prunning duplicate candidates... [3.879s] [3889 results]
+2017-11-30 05:57:27,397 -> Candidates # of partitions: 200
+2017-11-30 05:57:27,936 -> 08.Indexing candidates... [4.488s] [3889 results]
+2017-11-30 05:57:27,944 -> Candidates # of partitions: 9
+2017-11-30 05:57:28,244 -> 09.Getting expansions... [0.306s] [5518 results]
+2017-11-30 05:57:28,495 -> 10.Finding maximal disks... [0.250s] [310 results]
+2017-11-30 05:57:30,464 -> 11.Prunning duplicates... [1.969s] [70 results]
+2017-11-30 05:57:30,794 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-11-30 05:57:30,794 ->         B20K,  30.0,     7, 10,  53.55,   36174,     72348,         3889,         70
+2017-11-30 05:57:30,875 -> Dropping indices...[0.081s]
+2017-11-30 05:57:30,876 -> Finishing MaximalFinder at 05:57:30.875...
+2017-11-30 05:57:30,876 -> Total time for MaximalFinder: 54.003ms...
+2017-11-30 05:57:30,950 -> Closing session... [0.073s]
+Done!!! Thu Nov 30 05:57:31 PST 2017
+Running iteration 2/3 for B20K (epsilon = 40 , mu = 10)...
+2017-11-30 05:57:34,747 -> Starting session... [1.494s]
+2017-11-30 05:57:38,192 -> Reading dataset... [3.442s]
+2017-11-30 05:57:38,226 -> Lauching MaximalFinder at 05:57:38.196...
+2017-11-30 05:57:38,266 -> 00.Setting mu=10,epsilon=40.0,cores=7,dataset=B20K
+2017-11-30 05:57:47,079 -> 01.Indexing points... [8.813s] [19715 results]
+2017-11-30 05:57:54,386 -> 02.Getting pairs... [7.307s] [49403 results]
+2017-11-30 05:57:59,893 -> 03.Computing centers... [5.506s] [98806 results]
+2017-11-30 05:58:10,484 -> 04.Indexing centers... [10.591s] [98806 results]
+2017-11-30 05:58:23,982 -> 05.Getting disks... [13.498s] [98806 results]
+2017-11-30 05:58:25,944 -> 06.Filtering less-than-mu disks... [1.962s] [12205 results]
+2017-11-30 05:58:30,094 -> 07.Prunning duplicate candidates... [4.150s] [8256 results]
+2017-11-30 05:58:30,176 -> Candidates # of partitions: 200
+2017-11-30 05:58:30,733 -> 08.Indexing candidates... [4.789s] [8256 results]
+2017-11-30 05:58:30,741 -> Candidates # of partitions: 9
+2017-11-30 05:58:31,072 -> 09.Getting expansions... [0.337s] [12359 results]
+2017-11-30 05:58:31,910 -> 10.Finding maximal disks... [0.838s] [656 results]
+2017-11-30 05:58:33,919 -> 11.Prunning duplicates... [2.009s] [141 results]
+2017-11-30 05:58:34,255 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-11-30 05:58:34,256 ->         B20K,  40.0,     7, 10,  55.65,   49403,     98806,         8256,        141
+2017-11-30 05:58:34,353 -> Dropping indices...[0.097s]
+2017-11-30 05:58:34,354 -> Finishing MaximalFinder at 05:58:34.354...
+2017-11-30 05:58:34,354 -> Total time for MaximalFinder: 56.128ms...
+2017-11-30 05:58:34,415 -> Closing session... [0.061s]
+Done!!! Thu Nov 30 05:58:34 PST 2017
+Running iteration 2/3 for B20K (epsilon = 50 , mu = 10)...
+2017-11-30 05:58:38,231 -> Starting session... [1.470s]
+2017-11-30 05:58:41,556 -> Reading dataset... [3.325s]
+2017-11-30 05:58:41,590 -> Lauching MaximalFinder at 05:58:41.560...
+2017-11-30 05:58:41,618 -> 00.Setting mu=10,epsilon=50.0,cores=7,dataset=B20K
+2017-11-30 05:58:50,517 -> 01.Indexing points... [8.898s] [19715 results]
+2017-11-30 05:58:58,725 -> 02.Getting pairs... [8.208s] [62752 results]
+2017-11-30 05:59:04,607 -> 03.Computing centers... [5.880s] [125504 results]
+2017-11-30 05:59:15,351 -> 04.Indexing centers... [10.744s] [125504 results]
+2017-11-30 05:59:29,669 -> 05.Getting disks... [14.318s] [125504 results]
+2017-11-30 05:59:32,199 -> 06.Filtering less-than-mu disks... [2.530s] [19162 results]
+2017-11-30 05:59:36,758 -> 07.Prunning duplicate candidates... [4.559s] [13078 results]
+2017-11-30 05:59:36,861 -> Candidates # of partitions: 200
+2017-11-30 05:59:37,431 -> 08.Indexing candidates... [5.232s] [13078 results]
+2017-11-30 05:59:37,439 -> Candidates # of partitions: 9
+2017-11-30 05:59:37,795 -> 09.Getting expansions... [0.362s] [19547 results]
+2017-11-30 05:59:38,816 -> 10.Finding maximal disks... [1.020s] [1034 results]
+2017-11-30 05:59:41,029 -> 11.Prunning duplicates... [2.213s] [215 results]
+2017-11-30 05:59:41,356 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-11-30 05:59:41,356 ->         B20K,  50.0,     7, 10,  59.41,   62752,    125504,        13078,        215
+2017-11-30 05:59:41,446 -> Dropping indices...[0.090s]
+2017-11-30 05:59:41,446 -> Finishing MaximalFinder at 05:59:41.446...
+2017-11-30 05:59:41,446 -> Total time for MaximalFinder: 59.856ms...
+2017-11-30 05:59:41,500 -> Closing session... [0.054s]
+Done!!! Thu Nov 30 05:59:41 PST 2017
+Running iteration 3/3 for B20K (epsilon = 10 , mu = 10)...
+2017-11-30 05:59:45,183 -> Starting session... [1.428s]
+2017-11-30 05:59:48,728 -> Reading dataset... [3.545s]
+2017-11-30 05:59:48,762 -> Lauching MaximalFinder at 05:59:48.733...
+2017-11-30 05:59:48,792 -> 00.Setting mu=10,epsilon=10.0,cores=7,dataset=B20K
+2017-11-30 05:59:57,597 -> 01.Indexing points... [8.804s] [19715 results]
+2017-11-30 06:00:04,261 -> 02.Getting pairs... [6.664s] [11226 results]
+2017-11-30 06:00:10,002 -> 03.Computing centers... [5.741s] [22452 results]
+2017-11-30 06:00:20,021 -> 04.Indexing centers... [10.018s] [22452 results]
+2017-11-30 06:00:30,788 -> 05.Getting disks... [10.767s] [22452 results]
+2017-11-30 06:00:31,602 -> 06.Filtering less-than-mu disks... [0.814s] [210 results]
+2017-11-30 06:00:34,128 -> 07.Prunning duplicate candidates... [2.526s] [111 results]
+2017-11-30 06:00:34,196 -> Candidates # of partitions: 200
+2017-11-30 06:00:34,776 -> 08.Indexing candidates... [3.174s] [111 results]
+2017-11-30 06:00:34,785 -> Candidates # of partitions: 9
+2017-11-30 06:00:35,006 -> 09.Getting expansions... [0.228s] [466 results]
+2017-11-30 06:00:35,106 -> 10.Finding maximal disks... [0.099s] [47 results]
+2017-11-30 06:00:36,909 -> 11.Prunning duplicates... [1.802s] [12 results]
+2017-11-30 06:00:37,190 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-11-30 06:00:37,190 ->         B20K,  10.0,     7, 10,  48.12,   11226,     22452,          111,         12
+2017-11-30 06:00:37,265 -> Dropping indices...[0.075s]
+2017-11-30 06:00:37,266 -> Finishing MaximalFinder at 06:00:37.266...
+2017-11-30 06:00:37,266 -> Total time for MaximalFinder: 48.503ms...
+2017-11-30 06:00:37,363 -> Closing session... [0.097s]
+Done!!! Thu Nov 30 06:00:37 PST 2017
+Running iteration 3/3 for B20K (epsilon = 20 , mu = 10)...
+2017-11-30 06:00:41,163 -> Starting session... [1.538s]
+2017-11-30 06:00:44,632 -> Reading dataset... [3.469s]
+2017-11-30 06:00:44,666 -> Lauching MaximalFinder at 06:00:44.636...
+2017-11-30 06:00:44,694 -> 00.Setting mu=10,epsilon=20.0,cores=7,dataset=B20K
+2017-11-30 06:00:53,859 -> 01.Indexing points... [9.165s] [19715 results]
+2017-11-30 06:01:00,716 -> 02.Getting pairs... [6.857s] [23819 results]
+2017-11-30 06:01:06,324 -> 03.Computing centers... [5.608s] [47638 results]
+2017-11-30 06:01:16,631 -> 04.Indexing centers... [10.306s] [47638 results]
+2017-11-30 06:01:28,504 -> 05.Getting disks... [11.873s] [47638 results]
+2017-11-30 06:01:29,674 -> 06.Filtering less-than-mu disks... [1.170s] [2392 results]
+2017-11-30 06:01:32,867 -> 07.Prunning duplicate candidates... [3.193s] [1524 results]
+2017-11-30 06:01:32,948 -> Candidates # of partitions: 200
+2017-11-30 06:01:33,449 -> 08.Indexing candidates... [3.775s] [1524 results]
+2017-11-30 06:01:33,456 -> Candidates # of partitions: 9
+2017-11-30 06:01:33,848 -> 09.Getting expansions... [0.398s] [2613 results]
+2017-11-30 06:01:34,017 -> 10.Finding maximal disks... [0.168s] [149 results]
+2017-11-30 06:01:35,901 -> 11.Prunning duplicates... [1.884s] [41 results]
+2017-11-30 06:01:36,275 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-11-30 06:01:36,275 ->         B20K,  20.0,     7, 10,  51.21,   23819,     47638,         1524,         41
+2017-11-30 06:01:36,371 -> Dropping indices...[0.096s]
+2017-11-30 06:01:36,372 -> Finishing MaximalFinder at 06:01:36.371...
+2017-11-30 06:01:36,372 -> Total time for MaximalFinder: 51.705ms...
+2017-11-30 06:01:36,521 -> Closing session... [0.149s]
+Done!!! Thu Nov 30 06:01:36 PST 2017
+Running iteration 3/3 for B20K (epsilon = 30 , mu = 10)...
+2017-11-30 06:01:40,278 -> Starting session... [1.542s]
+2017-11-30 06:01:43,699 -> Reading dataset... [3.421s]
+2017-11-30 06:01:43,732 -> Lauching MaximalFinder at 06:01:43.703...
+2017-11-30 06:01:43,760 -> 00.Setting mu=10,epsilon=30.0,cores=7,dataset=B20K
+2017-11-30 06:01:52,100 -> 01.Indexing points... [8.339s] [19715 results]
+2017-11-30 06:01:59,176 -> 02.Getting pairs... [7.076s] [36174 results]
+2017-11-30 06:02:04,971 -> 03.Computing centers... [5.795s] [72348 results]
+2017-11-30 06:02:15,275 -> 04.Indexing centers... [10.303s] [72348 results]
+2017-11-30 06:02:27,888 -> 05.Getting disks... [12.612s] [72348 results]
+2017-11-30 06:02:29,339 -> 06.Filtering less-than-mu disks... [1.451s] [5877 results]
+2017-11-30 06:02:33,085 -> 07.Prunning duplicate candidates... [3.746s] [3889 results]
+2017-11-30 06:02:33,154 -> Candidates # of partitions: 200
+2017-11-30 06:02:33,696 -> 08.Indexing candidates... [4.357s] [3889 results]
+2017-11-30 06:02:33,708 -> Candidates # of partitions: 9
+2017-11-30 06:02:34,029 -> 09.Getting expansions... [0.330s] [5518 results]
+2017-11-30 06:02:34,318 -> 10.Finding maximal disks... [0.288s] [310 results]
+2017-11-30 06:02:36,680 -> 11.Prunning duplicates... [2.362s] [70 results]
+2017-11-30 06:02:36,985 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-11-30 06:02:36,986 ->         B20K,  30.0,     7, 10,  52.92,   36174,     72348,         3889,         70
+2017-11-30 06:02:37,057 -> Dropping indices...[0.071s]
+2017-11-30 06:02:37,057 -> Finishing MaximalFinder at 06:02:37.057...
+2017-11-30 06:02:37,057 -> Total time for MaximalFinder: 53.324ms...
+2017-11-30 06:02:37,108 -> Closing session... [0.051s]
+Done!!! Thu Nov 30 06:02:37 PST 2017
+Running iteration 3/3 for B20K (epsilon = 40 , mu = 10)...
+2017-11-30 06:02:40,830 -> Starting session... [1.501s]
+2017-11-30 06:02:44,384 -> Reading dataset... [3.554s]
+2017-11-30 06:02:44,417 -> Lauching MaximalFinder at 06:02:44.388...
+2017-11-30 06:02:44,445 -> 00.Setting mu=10,epsilon=40.0,cores=7,dataset=B20K
+2017-11-30 06:02:53,481 -> 01.Indexing points... [9.035s] [19715 results]
+2017-11-30 06:03:01,042 -> 02.Getting pairs... [7.561s] [49403 results]
+2017-11-30 06:03:06,927 -> 03.Computing centers... [5.884s] [98806 results]
+2017-11-30 06:03:17,598 -> 04.Indexing centers... [10.671s] [98806 results]
+2017-11-30 06:03:31,202 -> 05.Getting disks... [13.603s] [98806 results]
+2017-11-30 06:03:33,019 -> 06.Filtering less-than-mu disks... [1.817s] [12205 results]
+2017-11-30 06:03:37,032 -> 07.Prunning duplicate candidates... [4.013s] [8256 results]
+2017-11-30 06:03:37,106 -> Candidates # of partitions: 200
+2017-11-30 06:03:37,659 -> 08.Indexing candidates... [4.640s] [8256 results]
+2017-11-30 06:03:37,667 -> Candidates # of partitions: 9
+2017-11-30 06:03:38,025 -> 09.Getting expansions... [0.364s] [12359 results]
+2017-11-30 06:03:38,819 -> 10.Finding maximal disks... [0.793s] [656 results]
+2017-11-30 06:03:40,904 -> 11.Prunning duplicates... [2.085s] [141 results]
+2017-11-30 06:03:41,202 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-11-30 06:03:41,202 ->         B20K,  40.0,     7, 10,  56.46,   49403,     98806,         8256,        141
+2017-11-30 06:03:41,283 -> Dropping indices...[0.081s]
+2017-11-30 06:03:41,283 -> Finishing MaximalFinder at 06:03:41.283...
+2017-11-30 06:03:41,283 -> Total time for MaximalFinder: 56.865ms...
+2017-11-30 06:03:41,327 -> Closing session... [0.044s]
+Done!!! Thu Nov 30 06:03:41 PST 2017
+Running iteration 3/3 for B20K (epsilon = 50 , mu = 10)...
+2017-11-30 06:03:45,052 -> Starting session... [1.464s]
+2017-11-30 06:03:48,607 -> Reading dataset... [3.555s]
+2017-11-30 06:03:48,641 -> Lauching MaximalFinder at 06:03:48.612...
+2017-11-30 06:03:48,683 -> 00.Setting mu=10,epsilon=50.0,cores=7,dataset=B20K
+2017-11-30 06:03:57,821 -> 01.Indexing points... [9.138s] [19715 results]
+2017-11-30 06:04:06,094 -> 02.Getting pairs... [8.273s] [62752 results]
+2017-11-30 06:04:12,046 -> 03.Computing centers... [5.951s] [125504 results]
+2017-11-30 06:04:24,002 -> 04.Indexing centers... [11.955s] [125504 results]
+2017-11-30 06:04:38,458 -> 05.Getting disks... [14.456s] [125504 results]
+2017-11-30 06:04:40,723 -> 06.Filtering less-than-mu disks... [2.264s] [19162 results]
+2017-11-30 06:04:44,666 -> 07.Prunning duplicate candidates... [3.943s] [13078 results]
+2017-11-30 06:04:44,741 -> Candidates # of partitions: 200
+2017-11-30 06:04:45,451 -> 08.Indexing candidates... [4.728s] [13078 results]
+2017-11-30 06:04:45,462 -> Candidates # of partitions: 9
+2017-11-30 06:04:45,800 -> 09.Getting expansions... [0.347s] [19547 results]
+2017-11-30 06:04:46,956 -> 10.Finding maximal disks... [1.155s] [1034 results]
+2017-11-30 06:04:49,049 -> 11.Prunning duplicates... [2.093s] [215 results]
+2017-11-30 06:04:49,356 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-11-30 06:04:49,356 ->         B20K,  50.0,     7, 10,  60.37,   62752,    125504,        13078,        215
+2017-11-30 06:04:49,447 -> Dropping indices...[0.091s]
+2017-11-30 06:04:49,447 -> Finishing MaximalFinder at 06:04:49.447...
+2017-11-30 06:04:49,447 -> Total time for MaximalFinder: 60.806ms...
+2017-11-30 06:04:49,551 -> Closing session... [0.104s]
+Done!!! Thu Nov 30 06:04:50 PST 2017
+acald013@dblab-rack11: stopping org.apache.spark.deploy.worker.Worker
+stopping org.apache.spark.deploy.master.Master
+starting org.apache.spark.deploy.master.Master, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.master.Master-1-dblab-rack11.cs.ucr.edu.out
+acald013@dblab-rack12: starting org.apache.spark.deploy.worker.Worker, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.worker.Worker-1-dblab-rack12.out
+acald013@dblab-rack11: starting org.apache.spark.deploy.worker.Worker, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.worker.Worker-1-dblab-rack11.cs.ucr.edu.out
+Running iteration 1/3 for B40K (epsilon = 10 , mu = 10)...
+2017-11-30 06:04:59,368 -> Starting session... [1.598s]
+2017-11-30 06:05:02,751 -> Reading dataset... [3.382s]
+2017-11-30 06:05:02,784 -> Lauching MaximalFinder at 06:05:02.755...
+2017-11-30 06:05:02,812 -> 00.Setting mu=10,epsilon=10.0,cores=14,dataset=B40K
+2017-11-30 06:05:11,015 -> 01.Indexing points... [8.202s] [39429 results]
+2017-11-30 06:05:18,168 -> 02.Getting pairs... [7.152s] [22452 results]
+2017-11-30 06:05:22,591 -> 03.Computing centers... [4.423s] [44904 results]
+2017-11-30 06:05:29,669 -> 04.Indexing centers... [7.078s] [44904 results]
+2017-11-30 06:05:38,334 -> 05.Getting disks... [8.665s] [44904 results]
+2017-11-30 06:05:39,150 -> 06.Filtering less-than-mu disks... [0.816s] [420 results]
+2017-11-30 06:05:42,849 -> 07.Prunning duplicate candidates... [3.699s] [222 results]
+2017-11-30 06:05:42,946 -> Candidates # of partitions: 200
+2017-11-30 06:05:43,385 -> 08.Indexing candidates... [4.235s] [222 results]
+2017-11-30 06:05:43,412 -> Candidates # of partitions: 16
+2017-11-30 06:05:43,635 -> 09.Getting expansions... [0.233s] [889 results]
+2017-11-30 06:05:43,741 -> 10.Finding maximal disks... [0.104s] [92 results]
+2017-11-30 06:05:45,726 -> 11.Prunning duplicates... [1.985s] [23 results]
+2017-11-30 06:05:46,087 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-11-30 06:05:46,088 ->         B40K,  10.0,    14, 10,  42.91,   22452,     44904,          222,         23
+2017-11-30 06:05:46,162 -> Dropping indices...[0.074s]
+2017-11-30 06:05:46,162 -> Finishing MaximalFinder at 06:05:46.162...
+2017-11-30 06:05:46,162 -> Total time for MaximalFinder: 43.377ms...
+2017-11-30 06:05:46,233 -> Closing session... [0.071s]
+Done!!! Thu Nov 30 06:05:46 PST 2017
+Running iteration 1/3 for B40K (epsilon = 20 , mu = 10)...
+2017-11-30 06:05:49,967 -> Starting session... [1.448s]
+2017-11-30 06:05:53,351 -> Reading dataset... [3.384s]
+2017-11-30 06:05:53,392 -> Lauching MaximalFinder at 06:05:53.357...
+2017-11-30 06:05:53,420 -> 00.Setting mu=10,epsilon=20.0,cores=14,dataset=B40K
+2017-11-30 06:06:01,267 -> 01.Indexing points... [7.846s] [39429 results]
+2017-11-30 06:06:08,392 -> 02.Getting pairs... [7.125s] [47638 results]
+2017-11-30 06:06:12,706 -> 03.Computing centers... [4.314s] [95276 results]
+2017-11-30 06:06:20,214 -> 04.Indexing centers... [7.508s] [95276 results]
+2017-11-30 06:06:30,565 -> 05.Getting disks... [10.351s] [95276 results]
+2017-11-30 06:06:31,793 -> 06.Filtering less-than-mu disks... [1.228s] [4784 results]
+2017-11-30 06:06:34,616 -> 07.Prunning duplicate candidates... [2.823s] [3048 results]
+2017-11-30 06:06:34,712 -> Candidates # of partitions: 200
+2017-11-30 06:06:35,194 -> 08.Indexing candidates... [3.401s] [3048 results]
+2017-11-30 06:06:35,203 -> Candidates # of partitions: 16
+2017-11-30 06:06:35,706 -> 09.Getting expansions... [0.510s] [5824 results]
+2017-11-30 06:06:35,924 -> 10.Finding maximal disks... [0.217s] [343 results]
+2017-11-30 06:06:38,266 -> 11.Prunning duplicates... [2.342s] [75 results]
+2017-11-30 06:06:38,510 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-11-30 06:06:38,510 ->         B40K,  20.0,    14, 10,  44.85,   47638,     95276,         3048,         75
+2017-11-30 06:06:38,592 -> Dropping indices...[0.082s]
+2017-11-30 06:06:38,592 -> Finishing MaximalFinder at 06:06:38.592...
+2017-11-30 06:06:38,592 -> Total time for MaximalFinder: 45.200ms...
+2017-11-30 06:06:38,650 -> Closing session... [0.058s]
+Done!!! Thu Nov 30 06:06:39 PST 2017
+Running iteration 1/3 for B40K (epsilon = 30 , mu = 10)...
+2017-11-30 06:06:42,472 -> Starting session... [1.512s]
+2017-11-30 06:06:45,932 -> Reading dataset... [3.460s]
+2017-11-30 06:06:45,975 -> Lauching MaximalFinder at 06:06:45.938...
+2017-11-30 06:06:46,005 -> 00.Setting mu=10,epsilon=30.0,cores=14,dataset=B40K
+2017-11-30 06:06:53,750 -> 01.Indexing points... [7.744s] [39429 results]
+2017-11-30 06:07:01,452 -> 02.Getting pairs... [7.702s] [72348 results]
+2017-11-30 06:07:05,694 -> 03.Computing centers... [4.241s] [144696 results]
+2017-11-30 06:07:13,532 -> 04.Indexing centers... [7.838s] [144696 results]
+2017-11-30 06:07:25,048 -> 05.Getting disks... [11.515s] [144696 results]
+2017-11-30 06:07:27,243 -> 06.Filtering less-than-mu disks... [2.195s] [11754 results]
+2017-11-30 06:07:31,273 -> 07.Prunning duplicate candidates... [4.030s] [7778 results]
+2017-11-30 06:07:31,374 -> Candidates # of partitions: 200
+2017-11-30 06:07:31,794 -> 08.Indexing candidates... [4.551s] [7778 results]
+2017-11-30 06:07:31,803 -> Candidates # of partitions: 16
+2017-11-30 06:07:32,074 -> 09.Getting expansions... [0.278s] [10911 results]
+2017-11-30 06:07:32,311 -> 10.Finding maximal disks... [0.236s] [619 results]
+2017-11-30 06:07:34,385 -> 11.Prunning duplicates... [2.074s] [131 results]
+2017-11-30 06:07:34,654 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-11-30 06:07:34,654 ->         B40K,  30.0,    14, 10,  48.38,   72348,    144696,         7778,        131
+2017-11-30 06:07:34,725 -> Dropping indices...[0.071s]
+2017-11-30 06:07:34,725 -> Finishing MaximalFinder at 06:07:34.725...
+2017-11-30 06:07:34,726 -> Total time for MaximalFinder: 48.750ms...
+2017-11-30 06:07:34,773 -> Closing session... [0.047s]
+Done!!! Thu Nov 30 06:07:35 PST 2017
+Running iteration 1/3 for B40K (epsilon = 40 , mu = 10)...
+2017-11-30 06:07:38,412 -> Starting session... [1.429s]
+2017-11-30 06:07:41,927 -> Reading dataset... [3.514s]
+2017-11-30 06:07:41,960 -> Lauching MaximalFinder at 06:07:41.931...
+2017-11-30 06:07:41,989 -> 00.Setting mu=10,epsilon=40.0,cores=14,dataset=B40K
+2017-11-30 06:07:49,468 -> 01.Indexing points... [7.479s] [39429 results]
+2017-11-30 06:07:57,403 -> 02.Getting pairs... [7.935s] [98806 results]
+2017-11-30 06:08:01,404 -> 03.Computing centers... [4.001s] [197612 results]
+2017-11-30 06:08:08,823 -> 04.Indexing centers... [7.418s] [197612 results]
+2017-11-30 06:08:21,439 -> 05.Getting disks... [12.615s] [197612 results]
+2017-11-30 06:08:24,510 -> 06.Filtering less-than-mu disks... [3.071s] [24410 results]
+2017-11-30 06:08:28,893 -> 07.Prunning duplicate candidates... [4.383s] [16512 results]
+2017-11-30 06:08:28,961 -> Candidates # of partitions: 200
+2017-11-30 06:08:29,444 -> 08.Indexing candidates... [4.934s] [16512 results]
+2017-11-30 06:08:29,452 -> Candidates # of partitions: 16
+2017-11-30 06:08:29,773 -> 09.Getting expansions... [0.327s] [24427 results]
+2017-11-30 06:08:30,768 -> 10.Finding maximal disks... [0.994s] [1303 results]
+2017-11-30 06:08:33,117 -> 11.Prunning duplicates... [2.349s] [194 results]
+2017-11-30 06:08:33,384 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-11-30 06:08:33,385 ->         B40K,  40.0,    14, 10,  51.13,   98806,    197612,        16512,        194
+2017-11-30 06:08:33,480 -> Dropping indices...[0.095s]
+2017-11-30 06:08:33,480 -> Finishing MaximalFinder at 06:08:33.480...
+2017-11-30 06:08:33,480 -> Total time for MaximalFinder: 51.519ms...
+2017-11-30 06:08:33,541 -> Closing session... [0.061s]
+Done!!! Thu Nov 30 06:08:33 PST 2017
+Running iteration 1/3 for B40K (epsilon = 50 , mu = 10)...
+2017-11-30 06:08:37,326 -> Starting session... [1.483s]
+2017-11-30 06:08:40,877 -> Reading dataset... [3.548s]
+2017-11-30 06:08:40,910 -> Lauching MaximalFinder at 06:08:40.881...
+2017-11-30 06:08:40,950 -> 00.Setting mu=10,epsilon=50.0,cores=14,dataset=B40K
+2017-11-30 06:08:48,731 -> 01.Indexing points... [7.781s] [39429 results]
+2017-11-30 06:08:56,701 -> 02.Getting pairs... [7.969s] [125504 results]
+2017-11-30 06:09:00,932 -> 03.Computing centers... [4.231s] [251008 results]
+2017-11-30 06:09:08,750 -> 04.Indexing centers... [7.818s] [251008 results]
+2017-11-30 06:09:21,390 -> 05.Getting disks... [12.640s] [251008 results]
+2017-11-30 06:09:23,771 -> 06.Filtering less-than-mu disks... [2.381s] [38324 results]
+2017-11-30 06:09:28,394 -> 07.Prunning duplicate candidates... [4.623s] [26156 results]
+2017-11-30 06:09:28,474 -> Candidates # of partitions: 200
+2017-11-30 06:09:29,004 -> 08.Indexing candidates... [5.233s] [26156 results]
+2017-11-30 06:09:29,012 -> Candidates # of partitions: 16
+2017-11-30 06:09:29,455 -> 09.Getting expansions... [0.449s] [36923 results]
+2017-11-30 06:09:30,547 -> 10.Finding maximal disks... [1.091s] [1866 results]
+2017-11-30 06:09:32,748 -> 11.Prunning duplicates... [2.201s] [307 results]
+2017-11-30 06:09:33,079 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-11-30 06:09:33,080 ->         B40K,  50.0,    14, 10,  51.80,  125504,    251008,        26156,        307
+2017-11-30 06:09:33,162 -> Dropping indices...[0.081s]
+2017-11-30 06:09:33,162 -> Finishing MaximalFinder at 06:09:33.162...
+2017-11-30 06:09:33,162 -> Total time for MaximalFinder: 52.252ms...
+2017-11-30 06:09:33,221 -> Closing session... [0.059s]
+Done!!! Thu Nov 30 06:09:33 PST 2017
+Running iteration 2/3 for B40K (epsilon = 10 , mu = 10)...
+2017-11-30 06:09:36,984 -> Starting session... [1.503s]
+2017-11-30 06:09:40,588 -> Reading dataset... [3.604s]
+2017-11-30 06:09:40,629 -> Lauching MaximalFinder at 06:09:40.594...
+2017-11-30 06:09:40,659 -> 00.Setting mu=10,epsilon=10.0,cores=14,dataset=B40K
+2017-11-30 06:09:48,076 -> 01.Indexing points... [7.417s] [39429 results]
+2017-11-30 06:09:54,662 -> 02.Getting pairs... [6.586s] [22452 results]
+2017-11-30 06:09:58,677 -> 03.Computing centers... [4.015s] [44904 results]
+2017-11-30 06:10:06,044 -> 04.Indexing centers... [7.366s] [44904 results]
+2017-11-30 06:10:15,619 -> 05.Getting disks... [9.575s] [44904 results]
+2017-11-30 06:10:16,649 -> 06.Filtering less-than-mu disks... [1.030s] [420 results]
+2017-11-30 06:10:19,764 -> 07.Prunning duplicate candidates... [3.115s] [222 results]
+2017-11-30 06:10:19,849 -> Candidates # of partitions: 200
+2017-11-30 06:10:20,314 -> 08.Indexing candidates... [3.665s] [222 results]
+2017-11-30 06:10:20,327 -> Candidates # of partitions: 16
+2017-11-30 06:10:20,847 -> 09.Getting expansions... [0.530s] [889 results]
+2017-11-30 06:10:20,958 -> 10.Finding maximal disks... [0.109s] [92 results]
+2017-11-30 06:10:22,894 -> 11.Prunning duplicates... [1.936s] [23 results]
+2017-11-30 06:10:23,150 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-11-30 06:10:23,150 ->         B40K,  10.0,    14, 10,  42.24,   22452,     44904,          222,         23
+2017-11-30 06:10:23,219 -> Dropping indices...[0.069s]
+2017-11-30 06:10:23,220 -> Finishing MaximalFinder at 06:10:23.220...
+2017-11-30 06:10:23,220 -> Total time for MaximalFinder: 42.591ms...
+2017-11-30 06:10:23,260 -> Closing session... [0.040s]
+Done!!! Thu Nov 30 06:10:23 PST 2017
+Running iteration 2/3 for B40K (epsilon = 20 , mu = 10)...
+2017-11-30 06:10:27,006 -> Starting session... [1.525s]
+2017-11-30 06:10:30,648 -> Reading dataset... [3.640s]
+2017-11-30 06:10:30,685 -> Lauching MaximalFinder at 06:10:30.652...
+2017-11-30 06:10:30,712 -> 00.Setting mu=10,epsilon=20.0,cores=14,dataset=B40K
+2017-11-30 06:10:38,006 -> 01.Indexing points... [7.293s] [39429 results]
+2017-11-30 06:10:44,696 -> 02.Getting pairs... [6.690s] [47638 results]
+2017-11-30 06:10:48,624 -> 03.Computing centers... [3.928s] [95276 results]
+2017-11-30 06:10:56,094 -> 04.Indexing centers... [7.470s] [95276 results]
+2017-11-30 06:11:07,418 -> 05.Getting disks... [11.324s] [95276 results]
+2017-11-30 06:11:08,714 -> 06.Filtering less-than-mu disks... [1.296s] [4784 results]
+2017-11-30 06:11:11,706 -> 07.Prunning duplicate candidates... [2.992s] [3048 results]
+2017-11-30 06:11:11,806 -> Candidates # of partitions: 200
+2017-11-30 06:11:12,293 -> 08.Indexing candidates... [3.579s] [3048 results]
+2017-11-30 06:11:12,304 -> Candidates # of partitions: 16
+2017-11-30 06:11:12,739 -> 09.Getting expansions... [0.443s] [5824 results]
+2017-11-30 06:11:12,926 -> 10.Finding maximal disks... [0.186s] [343 results]
+2017-11-30 06:11:15,141 -> 11.Prunning duplicates... [2.215s] [75 results]
+2017-11-30 06:11:15,389 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-11-30 06:11:15,389 ->         B40K,  20.0,    14, 10,  44.43,   47638,     95276,         3048,         75
+2017-11-30 06:11:15,460 -> Dropping indices...[0.070s]
+2017-11-30 06:11:15,460 -> Finishing MaximalFinder at 06:11:15.460...
+2017-11-30 06:11:15,460 -> Total time for MaximalFinder: 44.775ms...
+2017-11-30 06:11:15,497 -> Closing session... [0.037s]
+Done!!! Thu Nov 30 06:11:15 PST 2017
+Running iteration 2/3 for B40K (epsilon = 30 , mu = 10)...
+2017-11-30 06:11:19,196 -> Starting session... [1.495s]
+2017-11-30 06:11:22,690 -> Reading dataset... [3.494s]
+2017-11-30 06:11:22,723 -> Lauching MaximalFinder at 06:11:22.694...
+2017-11-30 06:11:22,751 -> 00.Setting mu=10,epsilon=30.0,cores=14,dataset=B40K
+2017-11-30 06:11:31,031 -> 01.Indexing points... [8.280s] [39429 results]
+2017-11-30 06:11:38,533 -> 02.Getting pairs... [7.501s] [72348 results]
+2017-11-30 06:11:42,797 -> 03.Computing centers... [4.264s] [144696 results]
+2017-11-30 06:11:50,151 -> 04.Indexing centers... [7.353s] [144696 results]
+2017-11-30 06:12:01,087 -> 05.Getting disks... [10.935s] [144696 results]
+2017-11-30 06:12:03,210 -> 06.Filtering less-than-mu disks... [2.123s] [11754 results]
+2017-11-30 06:12:06,997 -> 07.Prunning duplicate candidates... [3.787s] [7778 results]
+2017-11-30 06:12:07,071 -> Candidates # of partitions: 200
+2017-11-30 06:12:07,478 -> 08.Indexing candidates... [4.268s] [7778 results]
+2017-11-30 06:12:07,489 -> Candidates # of partitions: 16
+2017-11-30 06:12:07,763 -> 09.Getting expansions... [0.282s] [10911 results]
+2017-11-30 06:12:08,019 -> 10.Finding maximal disks... [0.255s] [619 results]
+2017-11-30 06:12:10,036 -> 11.Prunning duplicates... [2.017s] [131 results]
+2017-11-30 06:12:10,390 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-11-30 06:12:10,391 ->         B40K,  30.0,    14, 10,  47.29,   72348,    144696,         7778,        131
+2017-11-30 06:12:10,481 -> Dropping indices...[0.090s]
+2017-11-30 06:12:10,482 -> Finishing MaximalFinder at 06:12:10.482...
+2017-11-30 06:12:10,482 -> Total time for MaximalFinder: 47.759ms...
+2017-11-30 06:12:10,547 -> Closing session... [0.065s]
+Done!!! Thu Nov 30 06:12:10 PST 2017
+Running iteration 2/3 for B40K (epsilon = 40 , mu = 10)...
+2017-11-30 06:12:14,289 -> Starting session... [1.528s]
+2017-11-30 06:12:17,778 -> Reading dataset... [3.486s]
+2017-11-30 06:12:17,822 -> Lauching MaximalFinder at 06:12:17.784...
+2017-11-30 06:12:17,852 -> 00.Setting mu=10,epsilon=40.0,cores=14,dataset=B40K
+2017-11-30 06:12:25,250 -> 01.Indexing points... [7.397s] [39429 results]
+2017-11-30 06:12:32,950 -> 02.Getting pairs... [7.700s] [98806 results]
+2017-11-30 06:12:37,647 -> 03.Computing centers... [4.697s] [197612 results]
+2017-11-30 06:12:45,655 -> 04.Indexing centers... [8.008s] [197612 results]
+2017-11-30 06:12:58,385 -> 05.Getting disks... [12.729s] [197612 results]
+2017-11-30 06:13:00,529 -> 06.Filtering less-than-mu disks... [2.144s] [24410 results]
+2017-11-30 06:13:04,418 -> 07.Prunning duplicate candidates... [3.889s] [16512 results]
+2017-11-30 06:13:04,500 -> Candidates # of partitions: 200
+2017-11-30 06:13:05,084 -> 08.Indexing candidates... [4.555s] [16512 results]
+2017-11-30 06:13:05,092 -> Candidates # of partitions: 16
+2017-11-30 06:13:05,575 -> 09.Getting expansions... [0.489s] [24427 results]
+2017-11-30 06:13:06,698 -> 10.Finding maximal disks... [1.122s] [1303 results]
+2017-11-30 06:13:08,880 -> 11.Prunning duplicates... [2.182s] [194 results]
+2017-11-30 06:13:09,122 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-11-30 06:13:09,123 ->         B40K,  40.0,    14, 10,  51.03,   98806,    197612,        16512,        194
+2017-11-30 06:13:09,195 -> Dropping indices...[0.072s]
+2017-11-30 06:13:09,196 -> Finishing MaximalFinder at 06:13:09.196...
+2017-11-30 06:13:09,196 -> Total time for MaximalFinder: 51.374ms...
+2017-11-30 06:13:09,240 -> Closing session... [0.044s]
+Done!!! Thu Nov 30 06:13:09 PST 2017
+Running iteration 2/3 for B40K (epsilon = 50 , mu = 10)...
+2017-11-30 06:13:12,961 -> Starting session... [1.492s]
+2017-11-30 06:13:16,482 -> Reading dataset... [3.520s]
+2017-11-30 06:13:16,521 -> Lauching MaximalFinder at 06:13:16.487...
+2017-11-30 06:13:16,551 -> 00.Setting mu=10,epsilon=50.0,cores=14,dataset=B40K
+2017-11-30 06:13:23,959 -> 01.Indexing points... [7.407s] [39429 results]
+2017-11-30 06:13:31,898 -> 02.Getting pairs... [7.939s] [125504 results]
+2017-11-30 06:13:36,268 -> 03.Computing centers... [4.370s] [251008 results]
+2017-11-30 06:13:45,125 -> 04.Indexing centers... [8.857s] [251008 results]
+2017-11-30 06:13:58,595 -> 05.Getting disks... [13.470s] [251008 results]
+2017-11-30 06:14:00,821 -> 06.Filtering less-than-mu disks... [2.226s] [38324 results]
+2017-11-30 06:14:05,023 -> 07.Prunning duplicate candidates... [4.201s] [26156 results]
+2017-11-30 06:14:05,097 -> Candidates # of partitions: 200
+2017-11-30 06:14:05,688 -> 08.Indexing candidates... [4.866s] [26156 results]
+2017-11-30 06:14:05,696 -> Candidates # of partitions: 16
+2017-11-30 06:14:06,033 -> 09.Getting expansions... [0.343s] [36923 results]
+2017-11-30 06:14:07,053 -> 10.Finding maximal disks... [1.019s] [1866 results]
+2017-11-30 06:14:09,203 -> 11.Prunning duplicates... [2.150s] [307 results]
+2017-11-30 06:14:09,473 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-11-30 06:14:09,473 ->         B40K,  50.0,    14, 10,  52.65,  125504,    251008,        26156,        307
+2017-11-30 06:14:09,557 -> Dropping indices...[0.084s]
+2017-11-30 06:14:09,557 -> Finishing MaximalFinder at 06:14:09.557...
+2017-11-30 06:14:09,557 -> Total time for MaximalFinder: 53.036ms...
+2017-11-30 06:14:09,637 -> Closing session... [0.080s]
+Done!!! Thu Nov 30 06:14:10 PST 2017
+Running iteration 3/3 for B40K (epsilon = 10 , mu = 10)...
+2017-11-30 06:14:13,365 -> Starting session... [1.475s]
+2017-11-30 06:14:16,837 -> Reading dataset... [3.472s]
+2017-11-30 06:14:16,875 -> Lauching MaximalFinder at 06:14:16.842...
+2017-11-30 06:14:16,904 -> 00.Setting mu=10,epsilon=10.0,cores=14,dataset=B40K
+2017-11-30 06:14:24,485 -> 01.Indexing points... [7.581s] [39429 results]
+2017-11-30 06:14:30,947 -> 02.Getting pairs... [6.462s] [22452 results]
+2017-11-30 06:14:34,905 -> 03.Computing centers... [3.958s] [44904 results]
+2017-11-30 06:14:42,922 -> 04.Indexing centers... [8.017s] [44904 results]
+2017-11-30 06:14:52,830 -> 05.Getting disks... [9.908s] [44904 results]
+2017-11-30 06:14:54,267 -> 06.Filtering less-than-mu disks... [1.437s] [420 results]
+2017-11-30 06:14:57,363 -> 07.Prunning duplicate candidates... [3.096s] [222 results]
+2017-11-30 06:14:57,438 -> Candidates # of partitions: 200
+2017-11-30 06:14:57,960 -> 08.Indexing candidates... [3.693s] [222 results]
+2017-11-30 06:14:57,971 -> Candidates # of partitions: 16
+2017-11-30 06:14:58,218 -> 09.Getting expansions... [0.256s] [889 results]
+2017-11-30 06:14:58,341 -> 10.Finding maximal disks... [0.121s] [92 results]
+2017-11-30 06:15:00,308 -> 11.Prunning duplicates... [1.967s] [23 results]
+2017-11-30 06:15:00,562 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-11-30 06:15:00,563 ->         B40K,  10.0,    14, 10,  43.40,   22452,     44904,          222,         23
+2017-11-30 06:15:00,637 -> Dropping indices...[0.074s]
+2017-11-30 06:15:00,637 -> Finishing MaximalFinder at 06:15:00.637...
+2017-11-30 06:15:00,637 -> Total time for MaximalFinder: 43.762ms...
+2017-11-30 06:15:00,695 -> Closing session... [0.058s]
+Done!!! Thu Nov 30 06:15:01 PST 2017
+Running iteration 3/3 for B40K (epsilon = 20 , mu = 10)...
+2017-11-30 06:15:05,291 -> Starting session... [1.534s]
+2017-11-30 06:15:08,681 -> Reading dataset... [3.389s]
+2017-11-30 06:15:08,714 -> Lauching MaximalFinder at 06:15:08.685...
+2017-11-30 06:15:08,743 -> 00.Setting mu=10,epsilon=20.0,cores=14,dataset=B40K
+2017-11-30 06:15:16,474 -> 01.Indexing points... [7.730s] [39429 results]
+2017-11-30 06:15:23,822 -> 02.Getting pairs... [7.348s] [47638 results]
+2017-11-30 06:15:27,795 -> 03.Computing centers... [3.973s] [95276 results]
+2017-11-30 06:15:34,824 -> 04.Indexing centers... [7.029s] [95276 results]
+2017-11-30 06:15:45,624 -> 05.Getting disks... [10.800s] [95276 results]
+2017-11-30 06:15:47,174 -> 06.Filtering less-than-mu disks... [1.550s] [4784 results]
+2017-11-30 06:15:51,345 -> 07.Prunning duplicate candidates... [4.171s] [3048 results]
+2017-11-30 06:15:51,418 -> Candidates # of partitions: 200
+2017-11-30 06:15:51,907 -> 08.Indexing candidates... [4.733s] [3048 results]
+2017-11-30 06:15:51,915 -> Candidates # of partitions: 16
+2017-11-30 06:15:52,302 -> 09.Getting expansions... [0.393s] [5824 results]
+2017-11-30 06:15:52,551 -> 10.Finding maximal disks... [0.247s] [343 results]
+2017-11-30 06:15:55,074 -> 11.Prunning duplicates... [2.522s] [75 results]
+2017-11-30 06:15:55,371 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-11-30 06:15:55,372 ->         B40K,  20.0,    14, 10,  46.33,   47638,     95276,         3048,         75
+2017-11-30 06:15:55,456 -> Dropping indices...[0.084s]
+2017-11-30 06:15:55,456 -> Finishing MaximalFinder at 06:15:55.456...
+2017-11-30 06:15:55,456 -> Total time for MaximalFinder: 46.742ms...
+2017-11-30 06:15:55,503 -> Closing session... [0.047s]
+Done!!! Thu Nov 30 06:15:55 PST 2017
+Running iteration 3/3 for B40K (epsilon = 30 , mu = 10)...
+2017-11-30 06:15:59,184 -> Starting session... [1.458s]
+2017-11-30 06:16:02,680 -> Reading dataset... [3.495s]
+2017-11-30 06:16:02,713 -> Lauching MaximalFinder at 06:16:02.684...
+2017-11-30 06:16:02,744 -> 00.Setting mu=10,epsilon=30.0,cores=14,dataset=B40K
+2017-11-30 06:16:10,591 -> 01.Indexing points... [7.847s] [39429 results]
+2017-11-30 06:16:18,136 -> 02.Getting pairs... [7.545s] [72348 results]
+2017-11-30 06:16:22,290 -> 03.Computing centers... [4.154s] [144696 results]
+2017-11-30 06:16:29,507 -> 04.Indexing centers... [7.217s] [144696 results]
+2017-11-30 06:16:41,192 -> 05.Getting disks... [11.685s] [144696 results]
+2017-11-30 06:16:42,767 -> 06.Filtering less-than-mu disks... [1.575s] [11754 results]
+2017-11-30 06:16:47,063 -> 07.Prunning duplicate candidates... [4.296s] [7778 results]
+2017-11-30 06:16:47,165 -> Candidates # of partitions: 200
+2017-11-30 06:16:47,688 -> 08.Indexing candidates... [4.921s] [7778 results]
+2017-11-30 06:16:47,696 -> Candidates # of partitions: 16
+2017-11-30 06:16:48,011 -> 09.Getting expansions... [0.321s] [10911 results]
+2017-11-30 06:16:48,317 -> 10.Finding maximal disks... [0.305s] [619 results]
+2017-11-30 06:16:50,980 -> 11.Prunning duplicates... [2.663s] [131 results]
+2017-11-30 06:16:51,269 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-11-30 06:16:51,269 ->         B40K,  30.0,    14, 10,  48.24,   72348,    144696,         7778,        131
+2017-11-30 06:16:51,360 -> Dropping indices...[0.091s]
+2017-11-30 06:16:51,361 -> Finishing MaximalFinder at 06:16:51.361...
+2017-11-30 06:16:51,361 -> Total time for MaximalFinder: 48.648ms...
+2017-11-30 06:16:51,442 -> Closing session... [0.081s]
+Done!!! Thu Nov 30 06:16:51 PST 2017
+Running iteration 3/3 for B40K (epsilon = 40 , mu = 10)...
+2017-11-30 06:16:56,809 -> Starting session... [2.098s]
+2017-11-30 06:17:00,625 -> Reading dataset... [3.815s]
+2017-11-30 06:17:00,668 -> Lauching MaximalFinder at 06:17:00.630...
+2017-11-30 06:17:00,697 -> 00.Setting mu=10,epsilon=40.0,cores=14,dataset=B40K
+2017-11-30 06:17:08,619 -> 01.Indexing points... [7.922s] [39429 results]
+2017-11-30 06:17:16,020 -> 02.Getting pairs... [7.400s] [98806 results]
+2017-11-30 06:17:20,250 -> 03.Computing centers... [4.230s] [197612 results]
+2017-11-30 06:17:28,336 -> 04.Indexing centers... [8.086s] [197612 results]
+2017-11-30 06:17:42,100 -> 05.Getting disks... [13.764s] [197612 results]
+2017-11-30 06:17:44,301 -> 06.Filtering less-than-mu disks... [2.201s] [24410 results]
+2017-11-30 06:17:48,092 -> 07.Prunning duplicate candidates... [3.791s] [16512 results]
+2017-11-30 06:17:48,162 -> Candidates # of partitions: 200
+2017-11-30 06:17:48,830 -> 08.Indexing candidates... [4.529s] [16512 results]
+2017-11-30 06:17:48,842 -> Candidates # of partitions: 16
+2017-11-30 06:17:49,289 -> 09.Getting expansions... [0.456s] [24427 results]
+2017-11-30 06:17:50,319 -> 10.Finding maximal disks... [1.029s] [1303 results]
+2017-11-30 06:17:52,488 -> 11.Prunning duplicates... [2.169s] [194 results]
+2017-11-30 06:17:52,749 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-11-30 06:17:52,749 ->         B40K,  40.0,    14, 10,  51.79,   98806,    197612,        16512,        194
+2017-11-30 06:17:52,822 -> Dropping indices...[0.072s]
+2017-11-30 06:17:52,822 -> Finishing MaximalFinder at 06:17:52.822...
+2017-11-30 06:17:52,822 -> Total time for MaximalFinder: 52.154ms...
+2017-11-30 06:17:52,882 -> Closing session... [0.060s]
+Done!!! Thu Nov 30 06:17:53 PST 2017
+Running iteration 3/3 for B40K (epsilon = 50 , mu = 10)...
+2017-11-30 06:17:56,679 -> Starting session... [1.520s]
+2017-11-30 06:18:00,153 -> Reading dataset... [3.473s]
+2017-11-30 06:18:00,196 -> Lauching MaximalFinder at 06:18:00.159...
+2017-11-30 06:18:00,226 -> 00.Setting mu=10,epsilon=50.0,cores=14,dataset=B40K
+2017-11-30 06:18:07,805 -> 01.Indexing points... [7.579s] [39429 results]
+2017-11-30 06:18:15,802 -> 02.Getting pairs... [7.997s] [125504 results]
+2017-11-30 06:18:20,136 -> 03.Computing centers... [4.334s] [251008 results]
+2017-11-30 06:18:28,722 -> 04.Indexing centers... [8.586s] [251008 results]
+2017-11-30 06:18:42,324 -> 05.Getting disks... [13.601s] [251008 results]
+2017-11-30 06:18:44,551 -> 06.Filtering less-than-mu disks... [2.227s] [38324 results]
+2017-11-30 06:18:49,422 -> 07.Prunning duplicate candidates... [4.871s] [26156 results]
+2017-11-30 06:18:49,494 -> Candidates # of partitions: 200
+2017-11-30 06:18:50,025 -> 08.Indexing candidates... [5.474s] [26156 results]
+2017-11-30 06:18:50,035 -> Candidates # of partitions: 16
+2017-11-30 06:18:50,324 -> 09.Getting expansions... [0.296s] [36923 results]
+2017-11-30 06:18:51,513 -> 10.Finding maximal disks... [1.188s] [1866 results]
+2017-11-30 06:18:53,880 -> 11.Prunning duplicates... [2.367s] [307 results]
+2017-11-30 06:18:54,154 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-11-30 06:18:54,154 ->         B40K,  50.0,    14, 10,  53.66,  125504,    251008,        26156,        307
+2017-11-30 06:18:54,232 -> Dropping indices...[0.077s]
+2017-11-30 06:18:54,232 -> Finishing MaximalFinder at 06:18:54.232...
+2017-11-30 06:18:54,232 -> Total time for MaximalFinder: 54.036ms...
+2017-11-30 06:18:54,273 -> Closing session... [0.041s]
+Done!!! Thu Nov 30 06:18:54 PST 2017
+acald013@dblab-rack12: stopping org.apache.spark.deploy.worker.Worker
+acald013@dblab-rack11: stopping org.apache.spark.deploy.worker.Worker
+stopping org.apache.spark.deploy.master.Master
+Done!!!

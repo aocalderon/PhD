@@ -25,9 +25,10 @@ object MaximalFinderExpansion {
   case class Center(id: Long, x: Double, y: Double)
   case class Pair(id1: Long, x1: Double, y1: Double, id2: Long, x2: Double, y2: Double)
   case class Candidate(id: Long, x: Double, y: Double, items: String)
-  case class Maximal(x: Double, y: Double, items: String)
+  case class Maximal(id: Long, x: Double, y: Double, items: String)
   case class CandidatePoints(cid: Long, pid: Long)
-  case class MaximalPoints(mid: Long, pid: Long)
+  case class MaximalPoints(partitionId: Int, maximalId: Long, pointId: Long)
+  case class MaximalMBR(maximal: Maximal, mbr: MBR)
   case class BBox(minx: Double, miny: Double, maxx: Double, maxy: Double)
 
   def run(points: Dataset[SP_Point]
@@ -180,8 +181,8 @@ object MaximalFinderExpansion {
       timer = System.currentTimeMillis()
       val method = conf.method()
       val maximals = candidates2
-        .mapPartitionsWithIndex{ (_, partitionCandidates) =>
-          var maximalsIterator: Iterator[List[Long]] = null
+        .mapPartitionsWithIndex{ (partitionIndex, partitionCandidates) =>
+          var maximalsIterator: Iterator[(Int, List[Long])] = null
           if(method == "fpmax"){
             val transactions = partitionCandidates
               .map { candidate =>
@@ -197,7 +198,7 @@ object MaximalFinderExpansion {
             val maximals = algorithm.runAlgorithm(transactions, 1)
             maximalsIterator = maximals.getItemsets(mu)
               .asScala
-              .map(m => m.asScala.toList.map(_.toLong))
+              .map(m => (partitionIndex, m.asScala.toList.map(_.toLong)))
               .toIterator
           } else {
             val transactions = partitionCandidates
@@ -212,7 +213,7 @@ object MaximalFinderExpansion {
             val closed = LCM.runAlgorithm(1, data)
             maximalsIterator = closed.getMaximalItemsets1(mu)
               .asScala
-              .map(m => m.asScala.toList.map(_.toLong))
+              .map(m => (partitionIndex, m.asScala.toList.map(_.toLong)))
               .toIterator
           }
           maximalsIterator
@@ -223,32 +224,46 @@ object MaximalFinderExpansion {
       // 11.Prunning duplicates...
       timer = System.currentTimeMillis()
       val maximalPoints = maximals
-        .toDF("pids")
-        .withColumn("mid", monotonically_increasing_id())
-        .withColumn("pid", explode($"pids"))
-        .select("mid", "pid")
+        .toDF("partitionId", "pointsId")
+        .withColumn("maximalId", monotonically_increasing_id())
+        .withColumn("pointId", explode($"pointsId"))
+        .select("partitionId", "maximalId", "pointId")
         .as[MaximalPoints]
         .cache()
-      val centerMaximal = maximalPoints
-        .join(points, maximalPoints.col("pid") === points.col("id"))
-        .groupBy($"mid").agg(min($"x"), min($"y"), max($"x"), max($"y"), collect_list("pid"))
+      val partitionMaximal = maximalPoints
+        .join(points, maximalPoints.col("pointId") === points.col("id"))
+        .groupBy($"partitionId", $"maximalId").agg(min($"x"), min($"y"), max($"x"), max($"y"), collect_list("pointId"))
         .map{ m => 
-          val x = (m.getDouble(1) + m.getDouble(3)) / 2.0
-          val y = (m.getDouble(2) + m.getDouble(4)) / 2.0
-          val items = m.getList[Long](5).asScala.sorted.mkString(" ")
-          val center = new Point(Array(x, y)) 
-          val maximal = Maximal(x, y, items)
-          (center, maximal)
+          val partitionId = m.getInt(0)
+          val maximalId = m.getLong(1)
+          val x = (m.getDouble(2) + m.getDouble(4)) / 2.0
+          val y = (m.getDouble(3) + m.getDouble(5)) / 2.0
+          val pids = m.getList[Long](6).asScala.sorted.mkString(" ")
+          val maximal = "%f;%f;%d;%s".format(x, y, maximalId, pids)
+          (partitionId, maximal)
         }
+        .toDF("partitionId", "maximal")
         .cache()
-       val maximals2 = centerMaximal.flatMap{ maximal =>
-         expandedRTree.circleRange(maximal._1, 0.0)
-          .map{ mbr => 
-            ( maximal._2, isInExpansionArea(maximal._2, mbr._1, epsilon) ) 
+      val expandedMBRs2 = simba.sparkContext
+        .parallelize(
+          expandedMBRs.map{ mbr =>
+            (mbr._2, 
+              "%f;%f;%f;%f;".format(
+                mbr._1.low.coord(0),
+                mbr._1.low.coord(1),
+                mbr._1.high.coord(0),
+                mbr._1.high.coord(1))
+            )
           }
-        }
-        .filter(maximal => !maximal._2)
-        .map(maximal => maximal._1)   
+        )
+        .toDF("MBRId", "MBRCoordinates")
+        .cache()
+      val maximals2 = partitionMaximal
+        .join(expandedMBRs2, partitionMaximal.col("partitionId") === expandedMBRs2.col("MBRId"))
+        .select($"maximal", $"MBRCoordinates")
+        .map(m => (m.getString(0), isInExpansionArea(m.getString(0), m.getString(1), epsilon)))
+        .filter(m => !m._2)
+        .map(m => m._1)   
         .distinct()
         .cache()
       nMaximals = maximals2.count()
@@ -257,7 +272,7 @@ object MaximalFinderExpansion {
       val totalTime = (endTime - startTime)/1000.0
 
       ////////////////////////////////////////////////////////////////
-      saveStringArray(maximals2.map(m => "%f;%f;%s".format(m.x, m.y, m.items)).collect(), "Maximals", conf)
+      saveStringArray(maximals2.collect(), "Maximals", conf)
       ////////////////////////////////////////////////////////////////
       
       // Printing info summary ...
@@ -314,15 +329,20 @@ object MaximalFinderExpansion {
     centerPair
   }
 
-  def isInExpansionArea(maximal: Maximal, shape: Shape, epsilon: Double): Boolean = {
-    val mbr = shape.asInstanceOf[MBR]
-    val x = maximal.x
-    val y = maximal.y
-    x < (mbr.high.coord(0) - epsilon) &&
-      x > (mbr.low.coord(0) + epsilon) &&
-      y < (mbr.high.coord(1) - epsilon) &&
-      y > (mbr.low.coord(1) + epsilon)
-    
+  def isInExpansionArea(maximalString: String, coordinatesString: String, epsilon: Double): Boolean = {
+    val maximal = maximalString.split(";")
+    val x = maximal(0).toDouble
+    val y = maximal(1).toDouble
+    val coordinates = coordinatesString.split(";")
+    val min_x = coordinates(0).toDouble
+    val min_y = coordinates(1).toDouble
+    val max_x = coordinates(2).toDouble
+    val max_y = coordinates(3).toDouble
+
+    x < (max_x - epsilon) &&
+      x > (min_x + epsilon) &&
+      y < (max_y - epsilon) &&
+      y > (min_y + epsilon)
   }
 
   def isInside(x: Double, y: Double, bbox: BBox, epsilon: Double): Boolean = {

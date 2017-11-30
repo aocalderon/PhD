@@ -1,14 +1,14 @@
 #!/bin/bash
 
-N=5
+N=3
 EPSILONS=(10 20 30 40 50)
-MUS=(5 10 15 20 25)
+MUS=(10 10 10 10 10)
 M=${#EPSILONS[@]}
 
 # Running Scaleup on 1 Node with 20K dataset...
 $SPARK_HOME/sbin/stop-all.sh
 truncate -s 0 $SPARK_HOME/conf/slaves
-echo "acald013@dblab-rack12" >> $SPARK_HOME/conf/slaves
+echo "acald013@dblab-rack11" >> $SPARK_HOME/conf/slaves
 $SPARK_HOME/sbin/start-all.sh
 
 DATASET="B20K"
@@ -25,7 +25,7 @@ done
 # Running Scaleup on 2 Nodes with 40K dataset...
 $SPARK_HOME/sbin/stop-all.sh
 truncate -s 0 $SPARK_HOME/conf/slaves
-echo "acald013@dblab-rack14" >> $SPARK_HOME/conf/slaves
+echo "acald013@dblab-rack11" >> $SPARK_HOME/conf/slaves
 echo "acald013@dblab-rack12" >> $SPARK_HOME/conf/slaves
 $SPARK_HOME/sbin/start-all.sh
 
