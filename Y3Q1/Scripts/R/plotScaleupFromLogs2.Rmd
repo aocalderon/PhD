@@ -14,8 +14,8 @@ if (!require("pacman")) install.packages("pacman")
 pacman::p_load(ggplot2, data.table, foreach, sqldf, tidyr, stringr, dplyr)
 
 PHD_HOME = Sys.getenv(c("PHD_HOME"))
-PATH = "Y3Q1/Scripts/Scaleup/Scaleup_2017-11-29/"
-FILENAME = "Berlin_N20K-80K_E30-60_M25_2017-11-29_15-32"
+PATH = "Y3Q1/Scripts/Scaleup/Scaleup_2017-11-30/"
+FILENAME = "Berlin_N20K-80K_E10-50_M10_2017-11-29_21-02"
 EXTENSION = "txt"
 
 f = paste0(PHD_HOME,PATH,FILENAME,".",EXTENSION)
@@ -48,9 +48,6 @@ plot(g)
 ## By Stage
 
 ```{r ScaleupByStages, echo=FALSE, fig.width=10.5, fig.height=7.5, fig.align='center'}
-PHD_HOME = Sys.getenv(c("PHD_HOME"))
-PATH = "Y3Q1/Scripts/Scaleup/Scaleup_2017-11-29/"
-FILENAME = "Berlin_N20K-80K_E30-60_M25_2017-11-29_15-32"
 EXTENSION = "dat"
 
 f = paste0(PHD_HOME,PATH,FILENAME,".",EXTENSION)
