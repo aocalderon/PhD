@@ -355,7 +355,7 @@ object MaximalFinderExpansion {
     val partitions: ScallopOption[Int]    = opt[Int]    (default = Some(1024))
     val candidates: ScallopOption[Int]    = opt[Int]    (default = Some(256))
     val cores:      ScallopOption[Int]    = opt[Int]    (default = Some(28))
-    val master:     ScallopOption[String] = opt[String] (default = Some("spark://169.235.27.138:7077")) /* spark://169.235.27.138:7077 */
+    val master:     ScallopOption[String] = opt[String] (default = Some("spark://169.235.27.134:7077")) /* spark://169.235.27.134:7077 */
     val path:       ScallopOption[String] = opt[String] (default = Some("Y3Q1/Datasets/"))
     val valpath:    ScallopOption[String] = opt[String] (default = Some("Y3Q1/Validation/"))
     val dataset:    ScallopOption[String] = opt[String] (default = Some("B20K"))
