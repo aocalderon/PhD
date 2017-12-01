@@ -179,7 +179,7 @@ object MaximalFinderExpansion {
           mbr._2 -> "%f;%f;%f;%f".format(mbr._1.low.coord(0),mbr._1.low.coord(1),mbr._1.high.coord(0),mbr._1.high.coord(1))
         }
         .toMap
-      saveStringArray(EMBRs.toArray.map(_._2), "ExpandedMBRs", conf)
+      saveStringArray(EMBRs.toArray.map(e => toWKT(e._2)), "ExpandedMBRs", conf)
       ////////////////////////////////////////////////////////////////
 
       timer = System.currentTimeMillis()
