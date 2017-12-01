@@ -12,17 +12,15 @@ output:
 ```{r ScaleupSetup, include=FALSE}
 if (!require("pacman")) install.packages("pacman")
 pacman::p_load(ggplot2, data.table, foreach, sqldf, tidyr, stringr, dplyr)
+source('analyzeNohupLog.R')
 
 PHD_HOME = Sys.getenv(c("PHD_HOME"))
-PATH = "Y3Q1/Scripts/Scaleup/Scaleup_2017-11-30/"
+PHD_PATH = "Y3Q1/Scripts/Scaleup/Scaleup_2017-11-30/"
 FILENAME = "Berlin_N20K-80K_E10-50_M10_2017-11-30_18-28"
-EXTENSION = "txt"
+EXTENSION = "out"
 
-f = paste0(PHD_HOME,PATH,FILENAME,".",EXTENSION)
-data = read.table(f, header = F, sep = ">")
-data = as.data.frame(str_split_fixed(data[,2], ",", 9), stringsAsFactors = F)
-names(data) = c("Dataset", "Epsilon", "Cores", "Mu", "Time", "NPairs", "NCenters", "NDisks", "NMaximals")
-write.table(sapply(data, trimws, which="both"), paste0(PHD_HOME,PATH,FILENAME,".csv"), col.names = T, row.names = F, sep = ",", quote = F)
+runLogETL(PHD_HOME, PHD_PATH,FILENAME,EXTENSION)
+data = read.csv(paste0(PHD_HOME,PHD_PATH,FILENAME,".csv"))
 data = data[, c(1, 2, 3, 5)]
 names(data) = c("Dataset", "Epsilon", "Cores", "Time")
 data$Dataset = str_sub(str_trim(data$Dataset), 2)
@@ -48,12 +46,9 @@ plot(g)
 ## By Stage
 
 ```{r ScaleupByStages, echo=FALSE, fig.width=10.5, fig.height=7.5, fig.align='center'}
-EXTENSION = "dat"
-
-f = paste0(PHD_HOME,PATH,FILENAME,".",EXTENSION)
-lines = read.table(f, header = F, sep = ">")
-lines = str_trim(lines[,2])
-output = paste0(PHD_HOME,PATH,"Berlin_Stages.dat")
+f = paste0(PHD_HOME,PHD_PATH,FILENAME,".txt")
+lines = readLines(f)
+output = paste0(PHD_HOME,PHD_PATH,"Berlin_Stages.dat")
 cat("Dataset,Cores,Epsilon,Mu,Stages,Time", file=output, sep = "\n")
 for(line in lines){
   stage = "00.Setting mu="
