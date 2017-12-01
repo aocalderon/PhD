@@ -222,7 +222,7 @@ object MaximalFinderExpansion {
       var nMaximals = maximals.map(_._2.mkString(" ")).distinct().count()
       logger.info("10.Finding maximal disks... [%.3fs] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nMaximals))
       
-      // 11.Prunning duplicates...
+      // 11.Prunning duplicates and subsets...
       timer = System.currentTimeMillis()
       val EMBRs = expandedMBRs.map{ mbr =>
           mbr._2 -> "%f;%f;%f;%f".format(mbr._1.low.coord(0),mbr._1.low.coord(1),mbr._1.high.coord(0),mbr._1.high.coord(1))
@@ -247,22 +247,19 @@ object MaximalFinderExpansion {
           val maximal = "%f;%f;%s".format(x, y, pids)
           (maximal, MBRCoordinates)
         }
-        .map(m => (m._1, m._2, isInExpansionArea(m._1, m._2, epsilon)))
-        //.filter(m => !m._2)
+        .map(m => (m._1, m._2, isNotInExpansionArea(m._1, m._2, epsilon)))
+        //.filter(m => m._3)
         //.map(m => m._1)   
         //.distinct()
         .cache()
       nMaximals = maximals2.count()
-      logger.info("Before filter,map and distinct = %d".format(nMaximals))
-      nMaximals = maximals2.map(m => m._1).distinct().count()
-      logger.info("After filter,map and distinct = %d".format(nMaximals))
-      logger.info("11.Prunning duplicates... [%.3fs] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nMaximals))
+      logger.info("11.Prunning duplicates and subsets... [%.3fs] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nMaximals))
       
       val endTime = System.currentTimeMillis()
       val totalTime = (endTime - startTime)/1000.0
 
       ////////////////////////////////////////////////////////////////
-      saveStringArray(maximals2.map(m => "%s;%s;%s".format(m._1, m._2, m._3.toString)).collect(), "MaximalsTest", conf)
+      saveStringArray(maximals2.map(m => "%s;%s;%s".format(m._1, toWKT(m._2), m._3.toString)).collect(), "maximalEMBRs", conf)
       ////////////////////////////////////////////////////////////////
       
       // Printing info summary ...
@@ -319,7 +316,7 @@ object MaximalFinderExpansion {
     centerPair
   }
 
-  def isInExpansionArea(maximalString: String, coordinatesString: String, epsilon: Double): Boolean = {
+  def isNotInExpansionArea(maximalString: String, coordinatesString: String, epsilon: Double): Boolean = {
     val maximal = maximalString.split(";")
     val x = maximal(0).toDouble
     val y = maximal(1).toDouble
@@ -349,6 +346,16 @@ object MaximalFinderExpansion {
       write(array.mkString("\n"))
       close()
     }
+  }
+
+  def toWKT(coordinatesString: String): String = {
+    val coordinates = coordinatesString.split(";")
+    val min_x = coordinates(0).toDouble
+    val min_y = coordinates(1).toDouble
+    val max_x = coordinates(2).toDouble
+    val max_y = coordinates(3).toDouble
+    
+    toWKT(min_x, min_y, max_x, max_x)
   }
 
   def toWKT(minx: Double, miny: Double, maxx: Double, maxy: Double): String = {
