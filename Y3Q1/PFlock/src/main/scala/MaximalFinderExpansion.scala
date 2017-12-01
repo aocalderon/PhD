@@ -355,12 +355,12 @@ object MaximalFinderExpansion {
     val max_x = coordinates(2).toDouble
     val max_y = coordinates(3).toDouble
     
-    toWKT(min_x, min_y, max_x, max_x)
+    toWKT(min_x, min_y, max_x, max_y)
   }
 
   def toWKT(minx: Double, miny: Double, maxx: Double, maxy: Double): String = {
     "POLYGON (( %f %f, %f %f, %f %f, %f %f, %f %f ))".
-      format(minx, maxy,maxx, maxy,maxx, miny,minx, miny,minx, maxy)
+      format(minx,maxy,maxx,maxy,maxx,miny,minx,miny,minx,maxy)
   }
   
   def mbr2wkt(mbr: MBR): String = toWKT(mbr.low.coord(0),mbr.low.coord(1),mbr.high.coord(0),mbr.high.coord(1))
