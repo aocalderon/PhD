@@ -342,7 +342,7 @@ object MaximalFinderExpansion {
   def saveStringArray(array: Array[String], tag: String, conf: Conf): Unit = {
     val path = s"${phd_home}${conf.valpath()}"
     val filename = s"${conf.dataset()}_E${conf.epsilon()}_M${conf.mu()}_C${conf.cores()}"
-    new java.io.PrintWriter("%s%s_%s.txt".format(path, filename, tag)) {
+    new java.io.PrintWriter("%s%s_%s_%d.txt".format(path, filename, tag, System.currentTimeMillis)) {
       write(array.mkString("\n"))
       close()
     }
