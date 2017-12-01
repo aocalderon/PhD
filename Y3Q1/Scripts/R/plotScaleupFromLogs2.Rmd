@@ -15,7 +15,7 @@ pacman::p_load(ggplot2, data.table, foreach, sqldf, tidyr, stringr, dplyr)
 
 PHD_HOME = Sys.getenv(c("PHD_HOME"))
 PATH = "Y3Q1/Scripts/Scaleup/Scaleup_2017-11-30/"
-FILENAME = "Berlin_N20K-80K_E10-50_M10_2017-11-29_21-02"
+FILENAME = "Berlin_N20K-80K_E10-50_M10_2017-11-30_18-28"
 EXTENSION = "txt"
 
 f = paste0(PHD_HOME,PATH,FILENAME,".",EXTENSION)
@@ -147,7 +147,16 @@ for(line in lines){
     time = as.numeric(str_trim(time))
     text = paste0(dataset,",",cores,",",epsilon,",",mu,",",stage,",",time,"\n")
     cat(text, file=output, append = T)
-  }  
+  }
+  stage = "11.Prunning duplicates"
+  if(grepl(stage, line)){
+    stage = "11.Prunning duplicates and subsets"
+    time = str_split_fixed(line, "\\[", 2)
+    time = str_split_fixed(time[2], "s\\]", 2)[,1]
+    time = as.numeric(str_trim(time))
+    text = paste0(dataset,",",cores,",",epsilon,",",mu,",",stage,",",time,"\n")
+    cat(text, file=output, append = T)
+  }
 }
 
 data = read.csv(output)
