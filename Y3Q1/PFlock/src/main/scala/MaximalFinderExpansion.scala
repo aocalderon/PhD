@@ -248,20 +248,21 @@ object MaximalFinderExpansion {
           (maximal, MBRCoordinates)
         }
         .map(m => (m._1, m._2, isNotInExpansionArea(m._1, m._2, epsilon)))
-        //.filter(m => m._3)
-        //.map(m => m._1)   
-        //.distinct()
         .cache()
-      nMaximals = maximals2.count()
-      logger.info("11.Prunning duplicates and subsets... [%.3fs] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nMaximals))
-      
-      val endTime = System.currentTimeMillis()
-      val totalTime = (endTime - startTime)/1000.0
 
       ////////////////////////////////////////////////////////////////
       saveStringArray(maximals2.map(m => "%s;%s;%s".format(m._1, toWKT(m._2), m._3.toString)).collect(), "maximalEMBRs", conf)
       ////////////////////////////////////////////////////////////////
-      
+
+      val maximals3 = maximals2
+        .filter(m => m._3)
+        .map(m => m._1)   
+        .distinct()
+        .cache()
+      nMaximals = maximals3.count()
+      logger.info("11.Prunning duplicates and subsets... [%.3fs] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nMaximals))
+      val endTime = System.currentTimeMillis()
+      val totalTime = (endTime - startTime)/1000.0
       // Printing info summary ...
       logger.info("%12s,%6s,%6s,%3s,%7s,%8s,%10s,%13s,%11s".
         format("Dataset", "Eps", "Cores", "Mu", "Time",
@@ -326,10 +327,10 @@ object MaximalFinderExpansion {
     val max_x = coordinates(2).toDouble
     val max_y = coordinates(3).toDouble
 
-    x < (max_x - epsilon) &&
-      x > (min_x + epsilon) &&
-      y < (max_y - epsilon) &&
-      y > (min_y + epsilon)
+    x <= (max_x - epsilon) &&
+      x >= (min_x + epsilon) &&
+      y <= (max_y - epsilon) &&
+      y >= (min_y + epsilon)
   }
 
   def isInside(x: Double, y: Double, bbox: BBox, epsilon: Double): Boolean = {
