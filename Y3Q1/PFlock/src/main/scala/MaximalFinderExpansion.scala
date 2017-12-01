@@ -157,6 +157,15 @@ object MaximalFinderExpansion {
             , mbr._1.high.coord(1) + epsilon) )
           ( MBR(mins, maxs), mbr._2, 1 )
         }
+
+      ////////////////////////////////////////////////////////////////
+      val EMBRs = expandedMBRs.map{ mbr =>
+          mbr._2 -> "%f;%f;%f;%f".format(mbr._1.low.coord(0),mbr._1.low.coord(1),mbr._1.high.coord(0),mbr._1.high.coord(1))
+        }
+        .toMap
+      saveStringArray(EMBRs.toArray.map(e => toWKT(e._2)), "ExpandedMBRs", conf)
+      ////////////////////////////////////////////////////////////////
+        
       val expandedRTree = RTree(expandedMBRs, candidatesMaxEntriesPerNode)
       candidatesNumPartitions = expandedMBRs.length
       val candidates2 = pointCandidate.flatMap{ candidate =>
@@ -173,15 +182,6 @@ object MaximalFinderExpansion {
       val nCandidates2 = candidates2.count()
       logger.info("09.Getting expansions... [%.3fs] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nCandidates2))
       // 10.Finding maximal disks...
-
-      ////////////////////////////////////////////////////////////////
-      val EMBRs = expandedMBRs.map{ mbr =>
-          mbr._2 -> "%f;%f;%f;%f".format(mbr._1.low.coord(0),mbr._1.low.coord(1),mbr._1.high.coord(0),mbr._1.high.coord(1))
-        }
-        .toMap
-      saveStringArray(EMBRs.toArray.map(e => toWKT(e._2)), "ExpandedMBRs", conf)
-      ////////////////////////////////////////////////////////////////
-
       timer = System.currentTimeMillis()
       val method = conf.method()
       val maximals = candidates2
