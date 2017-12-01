@@ -198,7 +198,7 @@ object MaximalFinderExpansion {
             val maximals = algorithm.runAlgorithm(transactions, 1)
             maximalsIterator = maximals.getItemsets(mu)
               .asScala
-              .map(m => (partitionIndex, m.asScala.toList.map(_.toLong)))
+              .map(m => (partitionIndex, m.asScala.toList.map(_.toLong).sorted))
               .toIterator
           } else {
             val transactions = partitionCandidates
@@ -213,16 +213,21 @@ object MaximalFinderExpansion {
             val closed = LCM.runAlgorithm(1, data)
             maximalsIterator = closed.getMaximalItemsets1(mu)
               .asScala
-              .map(m => (partitionIndex, m.asScala.toList.map(_.toLong)))
+              .map(m => (partitionIndex, m.asScala.toList.map(_.toLong).sorted))
               .toIterator
           }
           maximalsIterator
         }
         .cache()
-      var nMaximals = maximals.count()
+      var nMaximals = maximals.map(_._2.mkString(" ")).distinct().count()
       logger.info("10.Finding maximal disks... [%.3fs] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nMaximals))
+      
       // 11.Prunning duplicates...
       timer = System.currentTimeMillis()
+      val EMBRs = expandedMBRs.map{ mbr =>
+          mbr._2 -> "%f;%f;%f;%f".format(mbr._1.low.coord(0),mbr._1.low.coord(1),mbr._1.high.coord(0),mbr._1.high.coord(1))
+        }
+        .toMap
       val maximalPoints = maximals
         .toDF("partitionId", "pointsId")
         .withColumn("maximalId", monotonically_increasing_id())
@@ -230,49 +235,34 @@ object MaximalFinderExpansion {
         .select("partitionId", "maximalId", "pointId")
         .as[MaximalPoints]
         .cache()
-      val partitionMaximal = maximalPoints
+      val maximals2 = maximalPoints
         .join(points, maximalPoints.col("pointId") === points.col("id"))
         .groupBy($"partitionId", $"maximalId").agg(min($"x"), min($"y"), max($"x"), max($"y"), collect_list("pointId"))
         .map{ m => 
-          val partitionId = m.getInt(0)
-          val maximalId = m.getLong(1)
+          val MBRCoordinates = EMBRs(m.getInt(0))
+          //val maximalId = m.getLong(1)
           val x = (m.getDouble(2) + m.getDouble(4)) / 2.0
           val y = (m.getDouble(3) + m.getDouble(5)) / 2.0
           val pids = m.getList[Long](6).asScala.sorted.mkString(" ")
-          val maximal = "%f;%f;%d;%s".format(x, y, maximalId, pids)
-          (partitionId, maximal)
+          val maximal = "%f;%f;%s".format(x, y, pids)
+          (maximal, MBRCoordinates)
         }
-        .toDF("partitionId", "maximal")
-        .cache()
-      val expandedMBRs2 = simba.sparkContext
-        .parallelize(
-          expandedMBRs.map{ mbr =>
-            (mbr._2, 
-              "%f;%f;%f;%f;".format(
-                mbr._1.low.coord(0),
-                mbr._1.low.coord(1),
-                mbr._1.high.coord(0),
-                mbr._1.high.coord(1))
-            )
-          }
-        )
-        .toDF("MBRId", "MBRCoordinates")
-        .cache()
-      val maximals2 = partitionMaximal
-        .join(expandedMBRs2, partitionMaximal.col("partitionId") === expandedMBRs2.col("MBRId"))
-        .select($"maximal", $"MBRCoordinates")
-        .map(m => (m.getString(0), isInExpansionArea(m.getString(0), m.getString(1), epsilon)))
-        .filter(m => !m._2)
-        .map(m => m._1)   
-        .distinct()
+        .map(m => (m._1, m._2, isInExpansionArea(m._1, m._2, epsilon)))
+        //.filter(m => !m._2)
+        //.map(m => m._1)   
+        //.distinct()
         .cache()
       nMaximals = maximals2.count()
+      logger.info("Before filter,map and distinct = %d".format(nMaximals))
+      nMaximals = maximals2.map(m => m._1).distinct().count()
+      logger.info("After filter,map and distinct = %d".format(nMaximals))
       logger.info("11.Prunning duplicates... [%.3fs] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nMaximals))
+      
       val endTime = System.currentTimeMillis()
       val totalTime = (endTime - startTime)/1000.0
 
       ////////////////////////////////////////////////////////////////
-      saveStringArray(maximals2.collect(), "Maximals", conf)
+      saveStringArray(maximals2.map(m => "%s;%s;%s".format(m._1, m._2, m._3.toString)).collect(), "MaximalsTest", conf)
       ////////////////////////////////////////////////////////////////
       
       // Printing info summary ...
