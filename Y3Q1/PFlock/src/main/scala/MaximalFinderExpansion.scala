@@ -175,7 +175,11 @@ object MaximalFinderExpansion {
       // 10.Finding maximal disks...
 
       ////////////////////////////////////////////////////////////////
-      saveStringArray(expandedMBRs.map(mbr => "%d;%s".format(mbr._2, mbr2wkt(mbr._1))), "EMBRs", conf)
+      val EMBRs = expandedMBRs.map{ mbr =>
+          mbr._2 -> "%f;%f;%f;%f".format(mbr._1.low.coord(0),mbr._1.low.coord(1),mbr._1.high.coord(0),mbr._1.high.coord(1))
+        }
+        .toMap
+      saveStringArray(EMBRs.toArray.map(_._2), "ExpandedMBRs", conf)
       ////////////////////////////////////////////////////////////////
 
       timer = System.currentTimeMillis()
@@ -224,10 +228,6 @@ object MaximalFinderExpansion {
       
       // 11.Prunning duplicates and subsets...
       timer = System.currentTimeMillis()
-      val EMBRs = expandedMBRs.map{ mbr =>
-          mbr._2 -> "%f;%f;%f;%f".format(mbr._1.low.coord(0),mbr._1.low.coord(1),mbr._1.high.coord(0),mbr._1.high.coord(1))
-        }
-        .toMap
       val maximalPoints = maximals
         .toDF("partitionId", "pointsId")
         .withColumn("maximalId", monotonically_increasing_id())
