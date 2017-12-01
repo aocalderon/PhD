@@ -15,13 +15,13 @@ pacman::p_load(ggplot2, data.table, foreach, sqldf, tidyr, stringr, dplyr)
 source('analyzeNohupLog.R')
 
 PHD_HOME = Sys.getenv(c("PHD_HOME"))
-PHD_PATH = "Y3Q1/Scripts/Scaleup/Scaleup_2017-11-30/"
-FILENAME = "Berlin_N20K-80K_E10-50_M10_2017-11-30_18-28"
+PHD_PATH = "Y3Q1/Scripts/Scaleup/"
+FILENAME = "nohup"
 EXTENSION = "out"
 
 runLogETL(PHD_HOME, PHD_PATH,FILENAME,EXTENSION)
-data = read.csv(paste0(PHD_HOME,PHD_PATH,FILENAME,".csv"))
-data = data[, c(1, 2, 3, 5)]
+data0 = read.csv(paste0(PHD_HOME,PHD_PATH,FILENAME,".csv"))
+data = data0[, c(1, 2, 3, 5)]
 names(data) = c("Dataset", "Epsilon", "Cores", "Time")
 data$Dataset = str_sub(str_trim(data$Dataset), 2)
 data$Dataset = factor(data$Dataset, levels = paste0(seq(20, 80, 20), "K"))
@@ -48,7 +48,7 @@ plot(g)
 ```{r ScaleupByStages, echo=FALSE, fig.width=10.5, fig.height=7.5, fig.align='center'}
 f = paste0(PHD_HOME,PHD_PATH,FILENAME,".txt")
 lines = readLines(f)
-output = paste0(PHD_HOME,PHD_PATH,"Berlin_Stages.dat")
+output = paste0(PHD_HOME,PHD_PATH,"stages.dat")
 cat("Dataset,Cores,Epsilon,Mu,Stages,Time", file=output, sep = "\n")
 for(line in lines){
   stage = "00.Setting mu="
@@ -154,11 +154,11 @@ for(line in lines){
   }
 }
 
-data = read.csv(output)
-data = sqldf("SELECT Dataset, Cores, Epsilon, Stages, AVG(Time) AS Time FROM data GROUP BY Dataset, Cores, Epsilon, Stages")
+stages = read.csv(output)
+stages = sqldf("SELECT Dataset, Cores, Epsilon, Stages, AVG(Time) AS Time FROM stages GROUP BY Dataset, Cores, Epsilon, Stages")
 temp_title = paste("(radius of disk in mts) in Berlin dataset.")
 title = substitute(paste("Execution time by stages and ", epsilon) ~ temp_title, list(temp_title = temp_title))
-g = ggplot(data=data, aes(x=factor(Epsilon), y=Time, fill=Dataset)) +
+g = ggplot(data=stages, aes(x=factor(Epsilon), y=Time, fill=Dataset)) +
   geom_bar(stat="identity", position=position_dodge(width = 0.75), width = 0.75) +
   labs(title=title, y="Time(s)", x=expression(paste(epsilon,"(mts)"))) +
   facet_wrap(~Stages)
