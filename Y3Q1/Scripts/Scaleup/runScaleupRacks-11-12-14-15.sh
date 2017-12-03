@@ -1,8 +1,8 @@
 #!/bin/bash
 
-N=1
-EPSILONS=(10 20 30 40 50)
-MUS=(10 10 10 10 10)
+N=3
+EPSILONS=(10 20 30)
+MUS=(10 10 10)
 #EPSILONS=(10)
 #MUS=(10)
 M=${#EPSILONS[@]}
