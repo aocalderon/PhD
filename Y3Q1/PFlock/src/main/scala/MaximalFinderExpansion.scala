@@ -31,7 +31,7 @@ object MaximalFinderExpansion {
   case class MaximalMBR(maximal: Maximal, mbr: MBR)
   case class BBox(minx: Double, miny: Double, maxx: Double, maxy: Double)
 
-  def run(points: Dataset[SP_Point]
+  def run(pointsRDD: RDD[SP_Point]
       , simba: SimbaSession
       , conf: Conf): Unit = {
     // 00.Setting variables...
@@ -44,7 +44,7 @@ object MaximalFinderExpansion {
     val startTime = System.currentTimeMillis()
     // 01.Indexing points...
     var timer = System.currentTimeMillis()
-    var p1 = points.repartition(conf.cores()).toDF("id1", "x1", "y1").cache()
+    var p1 = pointsRDD.toDF("id1", "x1", "y1").cache()
     var p1NumPartitions: Int = p1.rdd.getNumPartitions
     logger.info("[Partitions Info]Points;Before indexing;%d".format(p1NumPartitions))
     p1 = p1.index(RTreeType, "p1RT", Array("x1", "y1")).cache()
@@ -52,6 +52,7 @@ object MaximalFinderExpansion {
     logger.info("[Partitions Info]Points;After indexing;%d".format(p1NumPartitions))
     var p2 = p1.toDF("id2", "x2", "y2").cache()
     //p2.index(RTreeType, "p2RT", Array("x2", "y2")).cache()
+    val points = pointsRDD.toDS
     logger.info("01.Indexing points... [%.3fs] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nPoints))
     // 02.Getting pairs...
     timer = System.currentTimeMillis()
@@ -408,6 +409,7 @@ object MaximalFinderExpansion {
       .schema(POINT_SCHEMA)
       .csv(filename)
       .as[SP_Point]
+      .rdd
       .cache()
     nPoints = points.count()
     logger.info("Reading dataset... [%.3fs]".format((System.currentTimeMillis() - timer)/1000.0))

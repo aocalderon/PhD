@@ -25,43 +25,53 @@ object PartitionSaver {
 
 	def main(args: Array[String]): Unit = {
 		val dataset = args(0)
-		val entries = args(1)
-		val partitions = args(2)
-		val epsilon = args(3).toDouble
-		val mu = args(4).toInt
-		val master = args(5)
-		val cores = args(6)
+		val epsilon = args(1).toDouble
+		val mu = args(2).toInt
+		val cores = args(3)
+		val partitions = args(4)
+		val master = "spark://169.235.27.134:7077"
 		val POINT_SCHEMA = ScalaReflection.schemaFor[SP_Point].dataType.asInstanceOf[StructType]
 		val CANDIDATE_SCHEMA = ScalaReflection.schemaFor[Candidate].dataType.asInstanceOf[StructType]
 		val DELTA = 0.01
 		// Setting session...
 		logger.info("Setting session...")
-        val simba = SimbaSession.builder().
-			master(master).
-			appName("Optimizer").
-			config("simba.rtree.maxEntriesPerNode", entries).
-			config("simba.index.partitions", partitions).
-			config("spark.cores.max", cores).
-			getOrCreate()
+      val simba = SimbaSession.builder().
+				master(master).
+				appName("PartitionerSaver").
+				config("simba.index.partitions", partitions).
+				config("spark.cores.max", cores).
+				getOrCreate()
 		import simba.implicits._
 		import simba.simbaImplicits._
-        // Reading...
+    // Reading...
+    var timer = System.currentTimeMillis()
 		val phd_home = scala.util.Properties.envOrElse("PHD_HOME", "/home/acald013/PhD/")
 		val path = "Y3Q1/Datasets/"
 		val extension = "csv"
 		val filename = "%s%s%s.%s".format(phd_home, path, dataset, extension)
-		logger.info("Reading %s...".format(filename))
-		val points = simba.read.option("header", "false").schema(POINT_SCHEMA).csv(filename).as[SP_Point]
-		val n = points.count()
-        // Indexing...
-		logger.info("Point indexing...")
-		val p1 = points.toDF("id1", "x1", "y1")
-		p1.index(RTreeType, "p1RT", Array("x1", "y1"))
-		val p2 = points.toDF("id2", "x2", "y2")
-		p2.index(RTreeType, "p2RT", Array("x2", "y2"))
-		// Self-join...
-		logger.info("Self-join...")
-		val pairsRDD = p1.distanceJoin(p2, Array("x1", "y1"), Array("x2", "y2"), epsilon).rdd
+		val points = simba.read.option("header", "false").schema(POINT_SCHEMA).csv(filename).as[SP_Point].cache()
+		val nPoints = points.count()
+		logger.info("Reading... [%.3fs] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nPoints))
+		var pointsNumPartitions = points.rdd.getNumPartitions
+		logger.info("points,Before indexing,%d".format(pointsNumPartitions))
+    // Indexing points...
+    timer = System.currentTimeMillis()
+    points.createOrReplaceTempView("points")
+    simba.indexTable("points", RTreeType, "pointsRT",  Array("x", "y") )
+    simba.showIndex("points")
+		val p1 = simba.sql("SELECT id AS id1, x AS x1, y AS y1 FROM points")
+		val p2 = simba.sql("SELECT id AS id2, x AS x2, y AS y2 FROM points")
+    logger.info("Indexing points... [%.3fs] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nPoints))
+		val p1NumPartitions = points.rdd.getNumPartitions
+		logger.info("p1,After indexing,%d".format(p1NumPartitions))
+		val p2NumPartitions = points.rdd.getNumPartitions
+		logger.info("p2,After indexing,%d".format(p2NumPartitions))
+    // Getting pairs...
+    timer = System.currentTimeMillis()
+		val pairs = p1.distanceJoin(p2, Array("x1", "y1"), Array("x2", "y2"), epsilon).rdd.cache()
+		val nPairs = pairs.count()
+    logger.info("Getting pairs... [%.3fs] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nPairs))
+		/*
 		// Computing disks...
 		logger.info("Computing disks...")
 		val centers = findDisks(pairsRDD, epsilon)
@@ -211,13 +221,14 @@ object PartitionSaver {
 				timeI, timeF, avg, sd, variance, min, max
 			)
 		)
+		*/
 		// Dropping indices...
 		logger.info("Dropping indices...")
-		centers.dropIndexByName("centersRT")
-		filteredCandidates.dropIndexByName("candidatesRT")
-		candidatesFrame.dropIndexByName("candidatesFrameRT")
-		p1.dropIndexByName("p1RT")
-		p2.dropIndexByName("p2RT")
+		//centers.dropIndexByName("centersRT")
+		//filteredCandidates.dropIndexByName("candidatesRT")
+		//candidatesFrame.dropIndexByName("candidatesFrameRT")
+    p1.dropIndex()
+    p2.dropIndex()
 		// Closing app...
 		logger.info("Closing app...")
 		simba.stop()
