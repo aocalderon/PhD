@@ -44,13 +44,13 @@ object MaximalFinderExpansion {
     val startTime = System.currentTimeMillis()
     // 01.Indexing points...
     var timer = System.currentTimeMillis()
-    val p1 = points.repartition(1024).toDF("id1", "x1", "y1")
+    var p1 = points.repartition(conf.cores()).toDF("id1", "x1", "y1").cache()
     var p1NumPartitions: Int = p1.rdd.getNumPartitions
     logger.info("[Partitions Info]Points;Before indexing;%d".format(p1NumPartitions))
-    p1.index(RTreeType, "p1RT", Array("x1", "y1"))
+    p1 = p1.index(RTreeType, "p1RT", Array("x1", "y1")).cache()
     p1NumPartitions = p1.rdd.getNumPartitions
     logger.info("[Partitions Info]Points;After indexing;%d".format(p1NumPartitions))
-    val p2 = p1.toDF("id2", "x2", "y2").cache()
+    var p2 = p1.toDF("id2", "x2", "y2").cache()
     //p2.index(RTreeType, "p2RT", Array("x2", "y2")).cache()
     logger.info("01.Indexing points... [%.3fs] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nPoints))
     // 02.Getting pairs...
@@ -71,11 +71,11 @@ object MaximalFinderExpansion {
       .cache()
     val leftCenters = centerPairs.select("x1","y1")
     val rightCenters = centerPairs.select("x2","y2")
-    val centers = leftCenters.union(rightCenters)
+    var centers = leftCenters.union(rightCenters)
       .toDF("x", "y")
       .withColumn("id", monotonically_increasing_id())
       .as[SP_Point]
-      .repartition(1024)
+      .repartition(conf.cores())
       .cache()
     val nCenters = centers.count()
     logger.info("03.Computing centers... [%.3fs] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nCenters))
@@ -83,7 +83,7 @@ object MaximalFinderExpansion {
     timer = System.currentTimeMillis()
     var centersNumPartitions: Int = centers.rdd.getNumPartitions
     logger.info("[Partitions Info]Centers;Before indexing;%d".format(centersNumPartitions))
-    centers.index(RTreeType, "centersRT", Array("x", "y"))
+    centers = centers.index(RTreeType, "centersRT", Array("x", "y")).cache()
     centersNumPartitions = centers.rdd.getNumPartitions
     logger.info("[Partitions Info]Centers;After indexing;%d".format(centersNumPartitions))
     logger.info("04.Indexing centers... [%.3fs] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nCenters))
