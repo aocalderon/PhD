@@ -2,15 +2,23 @@
 
 DATE=`date`
 echo $DATE
-echo "[WorkerOrder] 14; 11,12; 11,12,14; 11,12,14,15"
-./runScaleupRacks-14-1112-111214-11121415.sh
-cp nohup.out Berlin-14-1112-111214-11121415.out
+echo "[WorkerOrder] 14; 11,14; 11,12,14; 11,12,14,15"
+./runScaleupRacks-14-1114-111214-11121415.sh
+cp nohup.out Berlin-14-1114-111214-11121415.out
 truncate -s 0 nohup.out
 DATE=`date`
 echo $DATE
 printf "\n\n"
 
-##
+#DATE=`date`
+#echo $DATE
+#echo "[WorkerOrder] 14; 11,12; 11,12,14; 11,12,14,15"
+#./runScaleupRacks-14-1112-111214-11121415.sh
+#cp nohup.out Berlin-14-1112-111214-11121415.out
+#truncate -s 0 nohup.out
+#DATE=`date`
+#echo $DATE
+#printf "\n\n"
 
 ##DATE=`date`
 ##echo $DATE
