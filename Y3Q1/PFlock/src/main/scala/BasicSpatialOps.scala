@@ -15,7 +15,7 @@ object BasicSpatialOps {
   def main(args: Array[String]): Unit = {
     // "spark://169.235.27.134:7077"
     val simba = SimbaSession.builder().master("local[*]").appName("SparkSessionForSimba").
-      config("simba.join.partitions", "7").config("simba.index.partitions", "7").getOrCreate()
+      config("simba.join.partitions", "64").config("simba.index.partitions", "64").getOrCreate()
 
     simba.sparkContext.setLogLevel("ERROR")
     runJoinQuery(simba)
@@ -29,7 +29,7 @@ object BasicSpatialOps {
 
     val phd_home = scala.util.Properties.envOrElse("PHD_HOME", "/home/acald013/PhD/")
     val filename = "%s%s%s.%s".format(phd_home, "Y3Q1/Datasets/", "B20K", "csv")
-    val points = simba.read.option("header", "false").text(filename).cache()
+    val points = simba.sparkContext.textFile(filename)
     val nPoints = points.count()
 
     val DS1 = (0 until 20000).map(x => PointData(x, x + 1, x + 2, x.toString)).toDS.index(RTreeType, "ds1RT", Array("x","y"))
@@ -39,11 +39,17 @@ object BasicSpatialOps {
     println(DS2.rdd.getNumPartitions)
 
     DS1.distanceJoin(DS2, Array("x", "y"),Array("x", "y"), 3).show()
-    
-    val p1 = points.map(p => p.getString(0).split(",")).
-      map(p => P1(p(0).toLong, p(1).toDouble,p(2).toDouble)).rdd.toDS.
+
+    println(nPoints)
+    println(points.getNumPartitions)
+    val p1 = points.map(_.split(",")).
+      map(p => P1(p(0).trim.toLong,p(1).trim.toDouble,p(2).trim.toDouble)).
+      toDS().
       index(RTreeType,"p1RT",Array("x1","y1"))
-    val p2 = points.map(p => p.getString(0).split(",")).map(p => P2(p(0).toLong,p(1).toDouble,p(2).toDouble)).index(RTreeType, "p2RT", Array("x2","y2"))
+    val p2 = points.map(_.split(",")).
+      map(p => P2(p(0).trim.toLong,p(1).trim.toDouble,p(2).trim.toDouble)).
+      toDS().
+      index(RTreeType,"p2RT",Array("x2","y2"))
     println(p1.rdd.getNumPartitions)
     println(p2.rdd.getNumPartitions)
   }

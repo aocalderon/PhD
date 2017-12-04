@@ -22,6 +22,8 @@ object MaximalFinderExpansion {
   private var nPoints: Long = 0
 
   case class SP_Point(id: Long, x: Double, y: Double)
+  case class P1(id1: Long, x1: Double, y1: Double)
+  case class P2(id2: Long, x2: Double, y2: Double)
   case class Center(id: Long, x: Double, y: Double)
   case class Pair(id1: Long, x1: Double, y1: Double, id2: Long, x2: Double, y2: Double)
   case class Candidate(id: Long, x: Double, y: Double, items: String)
@@ -31,7 +33,7 @@ object MaximalFinderExpansion {
   case class MaximalMBR(maximal: Maximal, mbr: MBR)
   case class BBox(minx: Double, miny: Double, maxx: Double, maxy: Double)
 
-  def run(pointsRDD: RDD[SP_Point]
+  def run(pointsRDD: RDD[String]
       , simba: SimbaSession
       , conf: Conf): Unit = {
     // 00.Setting variables...
@@ -44,15 +46,25 @@ object MaximalFinderExpansion {
     val startTime = System.currentTimeMillis()
     // 01.Indexing points...
     var timer = System.currentTimeMillis()
-    var p1 = pointsRDD.toDF("id1", "x1", "y1").cache()
-    var p1NumPartitions: Int = p1.rdd.getNumPartitions
-    logger.info("[Partitions Info]Points;Before indexing;%d".format(p1NumPartitions))
-    p1 = p1.index(RTreeType, "p1RT", Array("x1", "y1")).cache()
-    p1NumPartitions = p1.rdd.getNumPartitions
-    logger.info("[Partitions Info]Points;After indexing;%d".format(p1NumPartitions))
-    var p2 = p1.toDF("id2", "x2", "y2").cache()
-    //p2.index(RTreeType, "p2RT", Array("x2", "y2")).cache()
-    val points = pointsRDD.toDS
+    var pointsNumPartitions = pointsRDD.getNumPartitions
+    logger.info("[Partitions Info]Points;Before indexing;%d".format(pointsNumPartitions))
+    val p1 = pointsRDD.map(_.split(",")).
+      map(p => P1(p(0).trim.toLong,p(1).trim.toDouble,p(2).trim.toDouble)).
+      toDS().
+      index(RTreeType,"p1RT",Array("x1","y1")).
+      cache()
+    val p2 = pointsRDD.map(_.split(",")).
+      map(p => P2(p(0).trim.toLong,p(1).trim.toDouble,p(2).trim.toDouble)).
+      toDS().
+      index(RTreeType,"p2RT",Array("x2","y2")).
+      cache()
+    val points = pointsRDD.map(_.split(",")).
+      map(p => SP_Point(p(0).trim.toLong,p(1).trim.toDouble,p(2).trim.toDouble)).
+      toDS().
+      index(RTreeType,"pointsRT",Array("x","y")).
+      cache()
+    pointsNumPartitions = points.rdd.getNumPartitions
+    logger.info("[Partitions Info]Points;After indexing;%d".format(pointsNumPartitions))
     logger.info("01.Indexing points... [%.3fs] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nPoints))
     // 02.Getting pairs...
     timer = System.currentTimeMillis()
@@ -72,19 +84,20 @@ object MaximalFinderExpansion {
       .cache()
     val leftCenters = centerPairs.select("x1","y1")
     val rightCenters = centerPairs.select("x2","y2")
-    var centers = leftCenters.union(rightCenters)
+    val centersRDD = leftCenters.union(rightCenters)
       .toDF("x", "y")
       .withColumn("id", monotonically_increasing_id())
       .as[SP_Point]
+      .rdd
       .repartition(conf.cores())
       .cache()
-    val nCenters = centers.count()
+    val nCenters = centersRDD.count()
     logger.info("03.Computing centers... [%.3fs] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nCenters))
     // 04.Indexing centers...
     timer = System.currentTimeMillis()
-    var centersNumPartitions: Int = centers.rdd.getNumPartitions
+    var centersNumPartitions: Int = centersRDD.getNumPartitions
     logger.info("[Partitions Info]Centers;Before indexing;%d".format(centersNumPartitions))
-    centers = centers.index(RTreeType, "centersRT", Array("x", "y")).cache()
+    val centers = centersRDD.toDS.index(RTreeType, "centersRT", Array("x", "y")).cache()
     centersNumPartitions = centers.rdd.getNumPartitions
     logger.info("[Partitions Info]Centers;After indexing;%d".format(centersNumPartitions))
     logger.info("04.Indexing centers... [%.3fs] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nCenters))
@@ -404,13 +417,9 @@ object MaximalFinderExpansion {
     timer = System.currentTimeMillis()
     phd_home = scala.util.Properties.envOrElse("PHD_HOME", "/home/acald013/PhD/")
     val filename = "%s%s%s.%s".format(phd_home, conf.path(), conf.dataset(), conf.extension())
-    val points = simba.read
-      .option("header", "false")
-      .schema(POINT_SCHEMA)
-      .csv(filename)
-      .as[SP_Point]
-      .rdd
-      .cache()
+    val points = simba.sparkContext.
+      textFile(filename, conf.cores()).
+      cache()
     nPoints = points.count()
     logger.info("Reading dataset... [%.3fs]".format((System.currentTimeMillis() - timer)/1000.0))
     // Running MaximalFinder...
