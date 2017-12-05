@@ -9,8 +9,8 @@ object DatasetFactory extends LogSupport {
         Logger.setDefaultFormatter(LogFormatter.SourceCodeLogFormatter)
         val delta: Double = 1000
         val phd_home = scala.util.Properties.envOrElse("PHD_HOME", "/home/and/Documents/PhD/Code/")
-        val path: String = "Y3Q1/Datasets/Quadrants/"
-        val dataset: String = "B20K_SE"
+        val path: String = "Y3Q1/Datasets/Original/"
+        val dataset: String = "B60K"
         val extension: String = "csv"
 
         val filename = s"$phd_home$path$dataset.$extension"
