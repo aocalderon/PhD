@@ -15,7 +15,7 @@ import scala.collection.JavaConverters._
 
 object MaximalFinderExpansion {
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
-  private val precision: Double = 0.001
+  private val precision: Double = 0.01
   private val dimensions: Int = 2
   private val sampleRate: Double = 0.01
   private var phd_home: String = ""
@@ -68,7 +68,7 @@ object MaximalFinderExpansion {
     logger.info("01.Indexing points... [%.3fs] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nPoints))
     // 02.Getting pairs...
     timer = System.currentTimeMillis()
-    val pairs = p1.distanceJoin(p2, Array("x1", "y1"), Array("x2", "y2"), epsilon)
+    val pairs = p1.distanceJoin(p2, Array("x1", "y1"), Array("x2", "y2"), epsilon + precision)
       .as[Pair]
       .filter(pair => pair.id1 < pair.id2)
       .rdd
