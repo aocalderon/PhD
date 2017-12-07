@@ -1,4 +1,5 @@
 #!/usr/bin/Rscript
+
 if (!require("pacman")) install.packages("pacman")
 pacman::p_load(sqldf, stringr)
 

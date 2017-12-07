@@ -13,14 +13,15 @@ truncate -s 0 $SPARK_HOME/conf/slaves
 echo "acald013@dblab-rack14" >> $SPARK_HOME/conf/slaves
 $SPARK_HOME/sbin/start-all.sh
 
-DATASET="B20K"
+PATH=$1
+DATASET="B60K"
 CORES=7
 for i in `seq 1 $N`
 do
 	for(( j=0; j<${M}; j++ ));
 	do 
 		echo "Running iteration $i/$N for $DATASET (epsilon = ${EPSILONS[$j]} , mu = ${MUS[$j]})..."
-		./runDataset.sh $DATASET ${EPSILONS[$j]} ${MUS[$j]} $CORES
+		./runDataset.sh $PATH $DATASET ${EPSILONS[$j]} ${MUS[$j]} $CORES
 	done
 done
 
@@ -31,14 +32,14 @@ echo "acald013@dblab-rack11" >> $SPARK_HOME/conf/slaves
 echo "acald013@dblab-rack14" >> $SPARK_HOME/conf/slaves
 $SPARK_HOME/sbin/start-all.sh
 
-DATASET="B40K"
+DATASET="B120K"
 CORES=14
 for i in `seq 1 $N`
 do
 	for(( j=0; j<${M}; j++ ));
 	do 
 		echo "Running iteration $i/$N for $DATASET (epsilon = ${EPSILONS[$j]} , mu = ${MUS[$j]})..."
-		./runDataset.sh $DATASET ${EPSILONS[$j]} ${MUS[$j]} $CORES
+		./runDataset.sh $PATH $DATASET ${EPSILONS[$j]} ${MUS[$j]} $CORES
 	done
 done
 
@@ -50,14 +51,14 @@ echo "acald013@dblab-rack12" >> $SPARK_HOME/conf/slaves
 echo "acald013@dblab-rack14" >> $SPARK_HOME/conf/slaves
 $SPARK_HOME/sbin/start-all.sh
 
-DATASET="B60K"
+DATASET="B180K"
 CORES=21
 for i in `seq 1 $N`
 do
 	for(( j=0; j<${M}; j++ ));
 	do 
 		echo "Running iteration $i/$N for $DATASET (epsilon = ${EPSILONS[$j]} , mu = ${MUS[$j]})..."
-		./runDataset.sh $DATASET ${EPSILONS[$j]} ${MUS[$j]} $CORES
+		./runDataset.sh $PATH $DATASET ${EPSILONS[$j]} ${MUS[$j]} $CORES
 	done
 done
 
@@ -70,14 +71,14 @@ echo "acald013@dblab-rack14" >> $SPARK_HOME/conf/slaves
 echo "acald013@dblab-rack15" >> $SPARK_HOME/conf/slaves
 $SPARK_HOME/sbin/start-all.sh
 
-DATASET="B80K"
+DATASET="B240K"
 CORES=35
 for i in `seq 1 $N`
 do
 	for(( j=0; j<${M}; j++ ));
 	do 
 		echo "Running iteration $i/$N for $DATASET (epsilon = ${EPSILONS[$j]} , mu = ${MUS[$j]})..."
-		./runDataset.sh $DATASET ${EPSILONS[$j]} ${MUS[$j]} $CORES
+		./runDataset.sh $PATH $DATASET ${EPSILONS[$j]} ${MUS[$j]} $CORES
 	done
 done
 
