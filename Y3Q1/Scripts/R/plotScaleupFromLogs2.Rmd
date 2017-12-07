@@ -3,8 +3,16 @@ title: "Scaleup Analysis"
 author: "Andres Calderon"
 date: '`r Sys.Date()`'
 output:
-  html_document: default
   pdf_document: default
+  html_document: 
+    theme: paper
+params:
+  phd_path:
+    value: "Y3Q1/Scripts/Scaleup/"
+  filename:
+    value: "nohup"
+  extension:
+    value: "out"
 ---
 
 <!---  --->
@@ -15,16 +23,16 @@ pacman::p_load(ggplot2, data.table, foreach, sqldf, tidyr, stringr, dplyr)
 source('analyzeNohupLog.R')
 
 PHD_HOME = Sys.getenv(c("PHD_HOME"))
-PHD_PATH = "Y3Q1/Scripts/Scaleup/"
-FILENAME = "Berlin-14-1112-111214-11121415"
-EXTENSION = "out"
+PHD_PATH = params$phd_path
+FILENAME = params$filename
+EXTENSION = params$extension
 
 runLogETL(PHD_HOME, PHD_PATH,FILENAME,EXTENSION)
 data0 = read.csv(paste0(PHD_HOME,PHD_PATH,FILENAME,".csv"))
 data = data0[, c(1, 2, 3, 5)]
 names(data) = c("Dataset", "Epsilon", "Cores", "Time")
 data$Dataset = str_sub(str_trim(data$Dataset), 2)
-data$Dataset = factor(data$Dataset, levels = paste0(seq(20, 80, 20), "K"))
+data$Dataset = factor(data$Dataset)
 data$Time = as.numeric(data$Time)
 data$Epsilon = as.numeric(data$Epsilon)
 data$Cores = as.numeric(data$Cores)
