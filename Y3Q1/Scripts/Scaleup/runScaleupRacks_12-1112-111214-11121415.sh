@@ -13,7 +13,7 @@ truncate -s 0 $SPARK_HOME/conf/slaves
 echo "acald013@dblab-rack12" >> $SPARK_HOME/conf/slaves
 $SPARK_HOME/sbin/start-all.sh
 
-PATH=$1
+DATA_PATH=$1
 DATASET="B60K"
 CORES=7
 for i in `seq 1 $N`
@@ -21,7 +21,7 @@ do
 	for(( j=0; j<${M}; j++ ));
 	do 
 		echo "Running iteration $i/$N for $DATASET (epsilon = ${EPSILONS[$j]} , mu = ${MUS[$j]})..."
-		./runDataset.sh $PATH $DATASET ${EPSILONS[$j]} ${MUS[$j]} $CORES
+		./runDataset.sh $DATA_PATH $DATASET ${EPSILONS[$j]} ${MUS[$j]} $CORES
 	done
 done
 
@@ -39,7 +39,7 @@ do
 	for(( j=0; j<${M}; j++ ));
 	do 
 		echo "Running iteration $i/$N for $DATASET (epsilon = ${EPSILONS[$j]} , mu = ${MUS[$j]})..."
-		./runDataset.sh $PATH $DATASET ${EPSILONS[$j]} ${MUS[$j]} $CORES
+		./runDataset.sh $DATA_PATH $DATASET ${EPSILONS[$j]} ${MUS[$j]} $CORES
 	done
 done
 
@@ -58,7 +58,7 @@ do
 	for(( j=0; j<${M}; j++ ));
 	do 
 		echo "Running iteration $i/$N for $DATASET (epsilon = ${EPSILONS[$j]} , mu = ${MUS[$j]})..."
-		./runDataset.sh $PATH $DATASET ${EPSILONS[$j]} ${MUS[$j]} $CORES
+		./runDataset.sh $DATA_PATH $DATASET ${EPSILONS[$j]} ${MUS[$j]} $CORES
 	done
 done
 
@@ -78,7 +78,7 @@ do
 	for(( j=0; j<${M}; j++ ));
 	do 
 		echo "Running iteration $i/$N for $DATASET (epsilon = ${EPSILONS[$j]} , mu = ${MUS[$j]})..."
-		./runDataset.sh $PATH $DATASET ${EPSILONS[$j]} ${MUS[$j]} $CORES
+		./runDataset.sh $DATA_PATH $DATASET ${EPSILONS[$j]} ${MUS[$j]} $CORES
 	done
 done
 
