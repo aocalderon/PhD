@@ -1,542 +1,539 @@
-Thu Dec 7 11:47:39 PST 2017
-
-
-Thu Dec 7 11:47:39 PST 2017
+Thu Dec 7 18:14:18 PST 2017
 [WorkerOrder] 14; 11,12; 11,12,14; 11,12,14,15
 acald013@dblab-rack15: no org.apache.spark.deploy.worker.Worker to stop
-acald013@dblab-rack11: no org.apache.spark.deploy.worker.Worker to stop
 acald013@dblab-rack12: no org.apache.spark.deploy.worker.Worker to stop
 acald013@dblab-rack14: no org.apache.spark.deploy.worker.Worker to stop
+acald013@dblab-rack11: no org.apache.spark.deploy.worker.Worker to stop
 no org.apache.spark.deploy.master.Master to stop
 starting org.apache.spark.deploy.master.Master, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.master.Master-1-dblab-rack11.cs.ucr.edu.out
 acald013@dblab-rack14: starting org.apache.spark.deploy.worker.Worker, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.worker.Worker-1-dblab-rack14.cs.ucr.edu.out
-Running iteration 1/3 for B60K (epsilon = 10 , mu = 10)...
-2017-12-07 11:47:52,919 -> Starting session... [1.448s]
-2017-12-07 11:47:55,231 -> Reading dataset... [2.311s]
-2017-12-07 11:47:55,286 -> Lauching MaximalFinder at 11:47:55.237...
-2017-12-07 11:47:55,286 -> 00.Setting mu=10,epsilon=10.0,cores=7,dataset=B60K
-2017-12-07 11:47:55,287 -> [Partitions Info]Points;Before indexing;7
-2017-12-07 11:48:07,088 -> [Partitions Info]Points;After indexing;1024
-2017-12-07 11:48:07,089 -> 01.Indexing points... [11.802s] [60000 results]
-2017-12-07 11:48:21,915 -> 02.Getting pairs... [14.826s] [15905 results]
-2017-12-07 11:48:24,811 -> 03.Computing centers... [2.895s] [31810 results]
-2017-12-07 11:48:24,811 -> [Partitions Info]Centers;Before indexing;7
-2017-12-07 11:48:26,781 -> [Partitions Info]Centers;After indexing;1024
-2017-12-07 11:48:26,781 -> 04.Indexing centers... [1.970s] [31810 results]
-2017-12-07 11:48:39,394 -> 05.Getting disks... [12.612s] [31810 results]
-2017-12-07 11:48:40,232 -> 06.Filtering less-than-mu disks... [0.838s] [89 results]
-2017-12-07 11:48:46,008 -> 07.Prunning duplicate candidates... [5.776s] [50 results]
-2017-12-07 11:48:46,018 -> [Partitions Info]Candidates;Before indexing;200
-2017-12-07 11:48:46,623 -> 08.Indexing candidates... [6.391s] [50 results]
-2017-12-07 11:48:46,831 -> [Partitions Info]Candidates;After indexing;9
-2017-12-07 11:48:46,831 -> 09.Getting expansions... [0.208s] [282 results]
-2017-12-07 11:48:47,282 -> 10.Finding maximal disks... [0.451s] [5 results]
-2017-12-07 11:48:50,023 -> 11.Prunning duplicates and subsets... [2.741s] [5 results]
-2017-12-07 11:48:50,024 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
-2017-12-07 11:48:50,024 ->         B60K,  10.0,     7, 10,  54.74,   15905,     31810,           50,          5
-2017-12-07 11:48:50,082 -> Dropping indices...[0.058s]
-2017-12-07 11:48:50,082 -> Finishing MaximalFinder at 11:48:50.082...
-2017-12-07 11:48:50,082 -> Total time for MaximalFinder: 54.796ms...
-2017-12-07 11:48:50,122 -> Closing session... [0.040s]
-Done!!! Thu Dec  7 11:48:50 PST 2017
-Running iteration 1/3 for B60K (epsilon = 20 , mu = 10)...
-2017-12-07 11:48:53,896 -> Starting session... [1.552s]
-2017-12-07 11:48:56,281 -> Reading dataset... [2.384s]
-2017-12-07 11:48:56,332 -> Lauching MaximalFinder at 11:48:56.288...
-2017-12-07 11:48:56,333 -> 00.Setting mu=10,epsilon=20.0,cores=7,dataset=B60K
-2017-12-07 11:48:56,333 -> [Partitions Info]Points;Before indexing;7
-2017-12-07 11:49:07,936 -> [Partitions Info]Points;After indexing;1024
-2017-12-07 11:49:07,936 -> 01.Indexing points... [11.603s] [60000 results]
-2017-12-07 11:49:23,032 -> 02.Getting pairs... [15.096s] [36979 results]
-2017-12-07 11:49:26,163 -> 03.Computing centers... [3.131s] [73958 results]
-2017-12-07 11:49:26,163 -> [Partitions Info]Centers;Before indexing;7
-2017-12-07 11:49:28,378 -> [Partitions Info]Centers;After indexing;1024
-2017-12-07 11:49:28,378 -> 04.Indexing centers... [2.215s] [73958 results]
-2017-12-07 11:49:42,678 -> 05.Getting disks... [14.300s] [73958 results]
-2017-12-07 11:49:43,895 -> 06.Filtering less-than-mu disks... [1.217s] [887 results]
-2017-12-07 11:49:51,019 -> 07.Prunning duplicate candidates... [7.124s] [537 results]
-2017-12-07 11:49:51,026 -> [Partitions Info]Candidates;Before indexing;200
-2017-12-07 11:49:51,594 -> 08.Indexing candidates... [7.699s] [537 results]
-2017-12-07 11:49:51,857 -> [Partitions Info]Candidates;After indexing;9
-2017-12-07 11:49:51,857 -> 09.Getting expansions... [0.263s] [1398 results]
-2017-12-07 11:49:52,362 -> 10.Finding maximal disks... [0.505s] [47 results]
-2017-12-07 11:49:55,232 -> 11.Prunning duplicates and subsets... [2.869s] [47 results]
-2017-12-07 11:49:55,232 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
-2017-12-07 11:49:55,232 ->         B60K,  20.0,     7, 10,  58.90,   36979,     73958,          537,         47
-2017-12-07 11:49:55,282 -> Dropping indices...[0.050s]
-2017-12-07 11:49:55,282 -> Finishing MaximalFinder at 11:49:55.282...
-2017-12-07 11:49:55,283 -> Total time for MaximalFinder: 58.949ms...
-2017-12-07 11:49:55,425 -> Closing session... [0.142s]
-Done!!! Thu Dec  7 11:49:55 PST 2017
 Running iteration 1/3 for B60K (epsilon = 30 , mu = 10)...
-2017-12-07 11:49:59,112 -> Starting session... [1.438s]
-2017-12-07 11:50:01,161 -> Reading dataset... [2.049s]
-2017-12-07 11:50:01,203 -> Lauching MaximalFinder at 11:50:01.165...
-2017-12-07 11:50:01,203 -> 00.Setting mu=10,epsilon=30.0,cores=7,dataset=B60K
-2017-12-07 11:50:01,203 -> [Partitions Info]Points;Before indexing;7
-2017-12-07 11:50:12,642 -> [Partitions Info]Points;After indexing;1024
-2017-12-07 11:50:12,643 -> 01.Indexing points... [11.440s] [60000 results]
-2017-12-07 11:50:28,302 -> 02.Getting pairs... [15.659s] [61034 results]
-2017-12-07 11:50:31,436 -> 03.Computing centers... [3.134s] [122068 results]
-2017-12-07 11:50:31,436 -> [Partitions Info]Centers;Before indexing;7
-2017-12-07 11:50:33,795 -> [Partitions Info]Centers;After indexing;1024
-2017-12-07 11:50:33,795 -> 04.Indexing centers... [2.359s] [122068 results]
-2017-12-07 11:50:48,775 -> 05.Getting disks... [14.979s] [122068 results]
-2017-12-07 11:50:50,633 -> 06.Filtering less-than-mu disks... [1.858s] [2569 results]
-2017-12-07 11:50:58,380 -> 07.Prunning duplicate candidates... [7.747s] [1599 results]
-2017-12-07 11:50:58,389 -> [Partitions Info]Candidates;Before indexing;200
-2017-12-07 11:50:59,072 -> 08.Indexing candidates... [8.439s] [1599 results]
-2017-12-07 11:50:59,402 -> [Partitions Info]Candidates;After indexing;9
-2017-12-07 11:50:59,402 -> 09.Getting expansions... [0.330s] [2972 results]
-2017-12-07 11:50:59,961 -> 10.Finding maximal disks... [0.559s] [129 results]
-2017-12-07 11:51:03,185 -> 11.Prunning duplicates and subsets... [3.223s] [129 results]
-2017-12-07 11:51:03,186 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
-2017-12-07 11:51:03,186 ->         B60K,  30.0,     7, 10,  61.98,   61034,    122068,         1599,        129
-2017-12-07 11:51:03,240 -> Dropping indices...[0.054s]
-2017-12-07 11:51:03,240 -> Finishing MaximalFinder at 11:51:03.240...
-2017-12-07 11:51:03,240 -> Total time for MaximalFinder: 62.037ms...
-2017-12-07 11:51:03,276 -> Closing session... [0.036s]
-Done!!! Thu Dec  7 11:51:03 PST 2017
-Running iteration 2/3 for B60K (epsilon = 10 , mu = 10)...
-2017-12-07 11:51:07,068 -> Starting session... [1.563s]
-2017-12-07 11:51:09,321 -> Reading dataset... [2.253s]
-2017-12-07 11:51:09,371 -> Lauching MaximalFinder at 11:51:09.329...
-2017-12-07 11:51:09,372 -> 00.Setting mu=10,epsilon=10.0,cores=7,dataset=B60K
-2017-12-07 11:51:09,372 -> [Partitions Info]Points;Before indexing;7
-2017-12-07 11:51:20,517 -> [Partitions Info]Points;After indexing;1024
-2017-12-07 11:51:20,518 -> 01.Indexing points... [11.146s] [60000 results]
-2017-12-07 11:51:34,999 -> 02.Getting pairs... [14.481s] [15905 results]
-2017-12-07 11:51:37,871 -> 03.Computing centers... [2.872s] [31810 results]
-2017-12-07 11:51:37,871 -> [Partitions Info]Centers;Before indexing;7
-2017-12-07 11:51:39,659 -> [Partitions Info]Centers;After indexing;1024
-2017-12-07 11:51:39,659 -> 04.Indexing centers... [1.788s] [31810 results]
-2017-12-07 11:51:52,007 -> 05.Getting disks... [12.348s] [31810 results]
-2017-12-07 11:51:52,857 -> 06.Filtering less-than-mu disks... [0.850s] [89 results]
-2017-12-07 11:51:58,902 -> 07.Prunning duplicate candidates... [6.045s] [50 results]
-2017-12-07 11:51:58,908 -> [Partitions Info]Candidates;Before indexing;200
-2017-12-07 11:51:59,466 -> 08.Indexing candidates... [6.609s] [50 results]
-2017-12-07 11:51:59,677 -> [Partitions Info]Candidates;After indexing;9
-2017-12-07 11:51:59,677 -> 09.Getting expansions... [0.211s] [282 results]
-2017-12-07 11:52:00,115 -> 10.Finding maximal disks... [0.438s] [5 results]
-2017-12-07 11:52:03,003 -> 11.Prunning duplicates and subsets... [2.888s] [5 results]
-2017-12-07 11:52:03,003 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
-2017-12-07 11:52:03,003 ->         B60K,  10.0,     7, 10,  53.63,   15905,     31810,           50,          5
-2017-12-07 11:52:03,062 -> Dropping indices...[0.058s]
-2017-12-07 11:52:03,062 -> Finishing MaximalFinder at 11:52:03.062...
-2017-12-07 11:52:03,062 -> Total time for MaximalFinder: 53.690ms...
-2017-12-07 11:52:03,099 -> Closing session... [0.037s]
-Done!!! Thu Dec  7 11:52:03 PST 2017
-Running iteration 2/3 for B60K (epsilon = 20 , mu = 10)...
-2017-12-07 11:52:06,738 -> Starting session... [1.392s]
-2017-12-07 11:52:08,837 -> Reading dataset... [2.098s]
-2017-12-07 11:52:08,876 -> Lauching MaximalFinder at 11:52:08.842...
-2017-12-07 11:52:08,876 -> 00.Setting mu=10,epsilon=20.0,cores=7,dataset=B60K
-2017-12-07 11:52:08,877 -> [Partitions Info]Points;Before indexing;7
-2017-12-07 11:52:21,052 -> [Partitions Info]Points;After indexing;1024
-2017-12-07 11:52:21,053 -> 01.Indexing points... [12.176s] [60000 results]
-2017-12-07 11:52:36,983 -> 02.Getting pairs... [15.930s] [36979 results]
-2017-12-07 11:52:40,231 -> 03.Computing centers... [3.248s] [73958 results]
-2017-12-07 11:52:40,232 -> [Partitions Info]Centers;Before indexing;7
-2017-12-07 11:52:42,640 -> [Partitions Info]Centers;After indexing;1024
-2017-12-07 11:52:42,641 -> 04.Indexing centers... [2.408s] [73958 results]
-2017-12-07 11:52:57,345 -> 05.Getting disks... [14.704s] [73958 results]
-2017-12-07 11:52:58,816 -> 06.Filtering less-than-mu disks... [1.471s] [887 results]
-2017-12-07 11:53:05,752 -> 07.Prunning duplicate candidates... [6.936s] [537 results]
-2017-12-07 11:53:05,761 -> [Partitions Info]Candidates;Before indexing;200
-2017-12-07 11:53:06,624 -> 08.Indexing candidates... [7.808s] [537 results]
-2017-12-07 11:53:06,869 -> [Partitions Info]Candidates;After indexing;9
-2017-12-07 11:53:06,869 -> 09.Getting expansions... [0.245s] [1398 results]
-2017-12-07 11:53:07,394 -> 10.Finding maximal disks... [0.525s] [47 results]
-2017-12-07 11:53:10,353 -> 11.Prunning duplicates and subsets... [2.958s] [47 results]
-2017-12-07 11:53:10,354 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
-2017-12-07 11:53:10,354 ->         B60K,  20.0,     7, 10,  61.48,   36979,     73958,          537,         47
-2017-12-07 11:53:10,412 -> Dropping indices...[0.058s]
-2017-12-07 11:53:10,412 -> Finishing MaximalFinder at 11:53:10.412...
-2017-12-07 11:53:10,412 -> Total time for MaximalFinder: 61.536ms...
-2017-12-07 11:53:10,449 -> Closing session... [0.037s]
-Done!!! Thu Dec  7 11:53:10 PST 2017
+2017-12-07 18:14:27,484 -> Starting session... [1.461s]
+2017-12-07 18:14:29,818 -> Reading dataset... [2.333s]
+2017-12-07 18:14:29,862 -> Lauching MaximalFinder at 18:14:29.824...
+2017-12-07 18:14:29,862 -> 00.Setting mu=10,epsilon=30.0,cores=7,dataset=B60K
+2017-12-07 18:14:29,862 -> [Partitions Info]Points;Before indexing;7
+2017-12-07 18:14:41,723 -> [Partitions Info]Points;After indexing;1024
+2017-12-07 18:14:41,724 -> 01.Indexing points... [11.862s] [60000 results]
+2017-12-07 18:14:57,456 -> 02.Getting pairs... [15.732s] [61034 results]
+2017-12-07 18:15:01,067 -> 03.Computing centers... [3.610s] [122068 results]
+2017-12-07 18:15:01,068 -> [Partitions Info]Centers;Before indexing;7
+2017-12-07 18:15:03,479 -> [Partitions Info]Centers;After indexing;1024
+2017-12-07 18:15:03,479 -> 04.Indexing centers... [2.411s] [122068 results]
+2017-12-07 18:15:19,696 -> 05.Getting disks... [16.216s] [122068 results]
+2017-12-07 18:15:21,347 -> 06.Filtering less-than-mu disks... [1.651s] [2569 results]
+2017-12-07 18:15:29,573 -> 07.Prunning duplicate candidates... [8.226s] [1599 results]
+2017-12-07 18:15:29,582 -> [Partitions Info]Candidates;Before indexing;200
+2017-12-07 18:15:30,182 -> 08.Indexing candidates... [8.835s] [1599 results]
+2017-12-07 18:15:30,471 -> [Partitions Info]Candidates;After indexing;9
+2017-12-07 18:15:30,471 -> 09.Getting expansions... [0.289s] [2972 results]
+2017-12-07 18:15:31,026 -> 10.Finding maximal disks... [0.555s] [129 results]
+2017-12-07 18:15:34,062 -> 11.Prunning duplicates and subsets... [3.036s] [129 results]
+2017-12-07 18:15:34,062 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-12-07 18:15:34,062 ->         B60K,  30.0,     7, 10,  64.20,   61034,    122068,         1599,        129
+2017-12-07 18:15:34,113 -> Dropping indices...[0.050s]
+2017-12-07 18:15:34,113 -> Finishing MaximalFinder at 18:15:34.113...
+2017-12-07 18:15:34,114 -> Total time for MaximalFinder: 64.251ms...
+2017-12-07 18:15:34,155 -> Closing session... [0.041s]
+Done!!! Thu Dec  7 18:15:34 PST 2017
+Running iteration 1/3 for B60K (epsilon = 20 , mu = 10)...
+2017-12-07 18:15:37,778 -> Starting session... [1.328s]
+2017-12-07 18:15:39,939 -> Reading dataset... [2.160s]
+2017-12-07 18:15:39,986 -> Lauching MaximalFinder at 18:15:39.946...
+2017-12-07 18:15:39,986 -> 00.Setting mu=10,epsilon=20.0,cores=7,dataset=B60K
+2017-12-07 18:15:39,987 -> [Partitions Info]Points;Before indexing;7
+2017-12-07 18:15:51,454 -> [Partitions Info]Points;After indexing;1024
+2017-12-07 18:15:51,454 -> 01.Indexing points... [11.468s] [60000 results]
+2017-12-07 18:16:06,843 -> 02.Getting pairs... [15.389s] [36979 results]
+2017-12-07 18:16:09,651 -> 03.Computing centers... [2.808s] [73958 results]
+2017-12-07 18:16:09,651 -> [Partitions Info]Centers;Before indexing;7
+2017-12-07 18:16:11,980 -> [Partitions Info]Centers;After indexing;1024
+2017-12-07 18:16:11,981 -> 04.Indexing centers... [2.330s] [73958 results]
+2017-12-07 18:16:26,400 -> 05.Getting disks... [14.419s] [73958 results]
+2017-12-07 18:16:27,621 -> 06.Filtering less-than-mu disks... [1.220s] [887 results]
+2017-12-07 18:16:34,607 -> 07.Prunning duplicate candidates... [6.986s] [537 results]
+2017-12-07 18:16:34,617 -> [Partitions Info]Candidates;Before indexing;200
+2017-12-07 18:16:35,238 -> 08.Indexing candidates... [7.617s] [537 results]
+2017-12-07 18:16:35,504 -> [Partitions Info]Candidates;After indexing;9
+2017-12-07 18:16:35,504 -> 09.Getting expansions... [0.266s] [1398 results]
+2017-12-07 18:16:36,001 -> 10.Finding maximal disks... [0.497s] [47 results]
+2017-12-07 18:16:39,108 -> 11.Prunning duplicates and subsets... [3.107s] [47 results]
+2017-12-07 18:16:39,108 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-12-07 18:16:39,108 ->         B60K,  20.0,     7, 10,  59.12,   36979,     73958,          537,         47
+2017-12-07 18:16:39,156 -> Dropping indices...[0.048s]
+2017-12-07 18:16:39,156 -> Finishing MaximalFinder at 18:16:39.156...
+2017-12-07 18:16:39,156 -> Total time for MaximalFinder: 59.170ms...
+2017-12-07 18:16:39,190 -> Closing session... [0.034s]
+Done!!! Thu Dec  7 18:16:39 PST 2017
+Running iteration 1/3 for B60K (epsilon = 10 , mu = 10)...
+2017-12-07 18:16:42,784 -> Starting session... [1.387s]
+2017-12-07 18:16:45,150 -> Reading dataset... [2.365s]
+2017-12-07 18:16:45,210 -> Lauching MaximalFinder at 18:16:45.157...
+2017-12-07 18:16:45,210 -> 00.Setting mu=10,epsilon=10.0,cores=7,dataset=B60K
+2017-12-07 18:16:45,211 -> [Partitions Info]Points;Before indexing;7
+2017-12-07 18:16:56,796 -> [Partitions Info]Points;After indexing;1024
+2017-12-07 18:16:56,797 -> 01.Indexing points... [11.586s] [60000 results]
+2017-12-07 18:17:11,419 -> 02.Getting pairs... [14.622s] [15905 results]
+2017-12-07 18:17:14,323 -> 03.Computing centers... [2.904s] [31810 results]
+2017-12-07 18:17:14,323 -> [Partitions Info]Centers;Before indexing;7
+2017-12-07 18:17:16,239 -> [Partitions Info]Centers;After indexing;1024
+2017-12-07 18:17:16,240 -> 04.Indexing centers... [1.917s] [31810 results]
+2017-12-07 18:17:28,731 -> 05.Getting disks... [12.491s] [31810 results]
+2017-12-07 18:17:29,591 -> 06.Filtering less-than-mu disks... [0.859s] [89 results]
+2017-12-07 18:17:35,553 -> 07.Prunning duplicate candidates... [5.962s] [50 results]
+2017-12-07 18:17:35,559 -> [Partitions Info]Candidates;Before indexing;200
+2017-12-07 18:17:36,153 -> 08.Indexing candidates... [6.562s] [50 results]
+2017-12-07 18:17:36,357 -> [Partitions Info]Candidates;After indexing;9
+2017-12-07 18:17:36,357 -> 09.Getting expansions... [0.204s] [282 results]
+2017-12-07 18:17:36,815 -> 10.Finding maximal disks... [0.458s] [5 results]
+2017-12-07 18:17:39,655 -> 11.Prunning duplicates and subsets... [2.840s] [5 results]
+2017-12-07 18:17:39,656 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-12-07 18:17:39,656 ->         B60K,  10.0,     7, 10,  54.45,   15905,     31810,           50,          5
+2017-12-07 18:17:39,706 -> Dropping indices...[0.049s]
+2017-12-07 18:17:39,706 -> Finishing MaximalFinder at 18:17:39.706...
+2017-12-07 18:17:39,706 -> Total time for MaximalFinder: 54.496ms...
+2017-12-07 18:17:39,741 -> Closing session... [0.035s]
+Done!!! Thu Dec  7 18:17:40 PST 2017
 Running iteration 2/3 for B60K (epsilon = 30 , mu = 10)...
-2017-12-07 11:53:14,143 -> Starting session... [1.467s]
-2017-12-07 11:53:16,579 -> Reading dataset... [2.435s]
-2017-12-07 11:53:16,628 -> Lauching MaximalFinder at 11:53:16.585...
-2017-12-07 11:53:16,628 -> 00.Setting mu=10,epsilon=30.0,cores=7,dataset=B60K
-2017-12-07 11:53:16,629 -> [Partitions Info]Points;Before indexing;7
-2017-12-07 11:53:28,200 -> [Partitions Info]Points;After indexing;1024
-2017-12-07 11:53:28,200 -> 01.Indexing points... [11.571s] [60000 results]
-2017-12-07 11:53:43,963 -> 02.Getting pairs... [15.763s] [61034 results]
-2017-12-07 11:53:47,275 -> 03.Computing centers... [3.312s] [122068 results]
-2017-12-07 11:53:47,276 -> [Partitions Info]Centers;Before indexing;7
-2017-12-07 11:53:49,757 -> [Partitions Info]Centers;After indexing;1024
-2017-12-07 11:53:49,757 -> 04.Indexing centers... [2.481s] [122068 results]
-2017-12-07 11:54:05,338 -> 05.Getting disks... [15.580s] [122068 results]
-2017-12-07 11:54:07,134 -> 06.Filtering less-than-mu disks... [1.796s] [2569 results]
-2017-12-07 11:54:15,103 -> 07.Prunning duplicate candidates... [7.969s] [1599 results]
-2017-12-07 11:54:15,112 -> [Partitions Info]Candidates;Before indexing;200
-2017-12-07 11:54:15,730 -> 08.Indexing candidates... [8.596s] [1599 results]
-2017-12-07 11:54:16,033 -> [Partitions Info]Candidates;After indexing;9
-2017-12-07 11:54:16,033 -> 09.Getting expansions... [0.303s] [2972 results]
-2017-12-07 11:54:16,603 -> 10.Finding maximal disks... [0.570s] [129 results]
-2017-12-07 11:54:19,667 -> 11.Prunning duplicates and subsets... [3.064s] [129 results]
-2017-12-07 11:54:19,667 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
-2017-12-07 11:54:19,667 ->         B60K,  30.0,     7, 10,  63.04,   61034,    122068,         1599,        129
-2017-12-07 11:54:19,727 -> Dropping indices...[0.060s]
-2017-12-07 11:54:19,727 -> Finishing MaximalFinder at 11:54:19.727...
-2017-12-07 11:54:19,727 -> Total time for MaximalFinder: 63.099ms...
-2017-12-07 11:54:19,763 -> Closing session... [0.036s]
-Done!!! Thu Dec  7 11:54:20 PST 2017
-Running iteration 3/3 for B60K (epsilon = 10 , mu = 10)...
-2017-12-07 11:54:23,456 -> Starting session... [1.486s]
-2017-12-07 11:54:25,765 -> Reading dataset... [2.309s]
-2017-12-07 11:54:25,814 -> Lauching MaximalFinder at 11:54:25.772...
-2017-12-07 11:54:25,814 -> 00.Setting mu=10,epsilon=10.0,cores=7,dataset=B60K
-2017-12-07 11:54:25,815 -> [Partitions Info]Points;Before indexing;7
-2017-12-07 11:54:37,649 -> [Partitions Info]Points;After indexing;1024
-2017-12-07 11:54:37,650 -> 01.Indexing points... [11.835s] [60000 results]
-2017-12-07 11:54:52,528 -> 02.Getting pairs... [14.878s] [15905 results]
-2017-12-07 11:54:55,576 -> 03.Computing centers... [3.047s] [31810 results]
-2017-12-07 11:54:55,576 -> [Partitions Info]Centers;Before indexing;7
-2017-12-07 11:54:57,476 -> [Partitions Info]Centers;After indexing;1024
-2017-12-07 11:54:57,476 -> 04.Indexing centers... [1.900s] [31810 results]
-2017-12-07 11:55:09,955 -> 05.Getting disks... [12.479s] [31810 results]
-2017-12-07 11:55:10,807 -> 06.Filtering less-than-mu disks... [0.852s] [89 results]
-2017-12-07 11:55:16,842 -> 07.Prunning duplicate candidates... [6.035s] [50 results]
-2017-12-07 11:55:16,849 -> [Partitions Info]Candidates;Before indexing;200
-2017-12-07 11:55:17,410 -> 08.Indexing candidates... [6.603s] [50 results]
-2017-12-07 11:55:17,640 -> [Partitions Info]Candidates;After indexing;9
-2017-12-07 11:55:17,640 -> 09.Getting expansions... [0.230s] [282 results]
-2017-12-07 11:55:18,080 -> 10.Finding maximal disks... [0.440s] [5 results]
-2017-12-07 11:55:20,859 -> 11.Prunning duplicates and subsets... [2.779s] [5 results]
-2017-12-07 11:55:20,859 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
-2017-12-07 11:55:20,859 ->         B60K,  10.0,     7, 10,  55.04,   15905,     31810,           50,          5
-2017-12-07 11:55:20,910 -> Dropping indices...[0.051s]
-2017-12-07 11:55:20,910 -> Finishing MaximalFinder at 11:55:20.910...
-2017-12-07 11:55:20,910 -> Total time for MaximalFinder: 55.096ms...
-2017-12-07 11:55:20,944 -> Closing session... [0.033s]
-Done!!! Thu Dec  7 11:55:21 PST 2017
-Running iteration 3/3 for B60K (epsilon = 20 , mu = 10)...
-2017-12-07 11:55:24,522 -> Starting session... [1.385s]
-2017-12-07 11:55:26,691 -> Reading dataset... [2.169s]
-2017-12-07 11:55:26,739 -> Lauching MaximalFinder at 11:55:26.698...
-2017-12-07 11:55:26,740 -> 00.Setting mu=10,epsilon=20.0,cores=7,dataset=B60K
-2017-12-07 11:55:26,740 -> [Partitions Info]Points;Before indexing;7
-2017-12-07 11:55:38,751 -> [Partitions Info]Points;After indexing;1024
-2017-12-07 11:55:38,751 -> 01.Indexing points... [12.011s] [60000 results]
-2017-12-07 11:55:54,168 -> 02.Getting pairs... [15.417s] [36979 results]
-2017-12-07 11:55:57,327 -> 03.Computing centers... [3.159s] [73958 results]
-2017-12-07 11:55:57,327 -> [Partitions Info]Centers;Before indexing;7
-2017-12-07 11:55:59,449 -> [Partitions Info]Centers;After indexing;1024
-2017-12-07 11:55:59,449 -> 04.Indexing centers... [2.122s] [73958 results]
-2017-12-07 11:56:13,815 -> 05.Getting disks... [14.366s] [73958 results]
-2017-12-07 11:56:15,122 -> 06.Filtering less-than-mu disks... [1.306s] [887 results]
-2017-12-07 11:56:22,410 -> 07.Prunning duplicate candidates... [7.288s] [537 results]
-2017-12-07 11:56:22,418 -> [Partitions Info]Candidates;Before indexing;200
-2017-12-07 11:56:22,994 -> 08.Indexing candidates... [7.872s] [537 results]
-2017-12-07 11:56:23,239 -> [Partitions Info]Candidates;After indexing;9
-2017-12-07 11:56:23,239 -> 09.Getting expansions... [0.245s] [1398 results]
-2017-12-07 11:56:23,727 -> 10.Finding maximal disks... [0.488s] [47 results]
-2017-12-07 11:56:26,711 -> 11.Prunning duplicates and subsets... [2.984s] [47 results]
-2017-12-07 11:56:26,711 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
-2017-12-07 11:56:26,711 ->         B60K,  20.0,     7, 10,  59.97,   36979,     73958,          537,         47
-2017-12-07 11:56:26,772 -> Dropping indices...[0.060s]
-2017-12-07 11:56:26,773 -> Finishing MaximalFinder at 11:56:26.773...
-2017-12-07 11:56:26,773 -> Total time for MaximalFinder: 60.033ms...
-2017-12-07 11:56:26,818 -> Closing session... [0.045s]
-Done!!! Thu Dec  7 11:56:27 PST 2017
+2017-12-07 18:17:43,456 -> Starting session... [1.518s]
+2017-12-07 18:17:45,845 -> Reading dataset... [2.388s]
+2017-12-07 18:17:45,899 -> Lauching MaximalFinder at 18:17:45.851...
+2017-12-07 18:17:45,900 -> 00.Setting mu=10,epsilon=30.0,cores=7,dataset=B60K
+2017-12-07 18:17:45,900 -> [Partitions Info]Points;Before indexing;7
+2017-12-07 18:17:57,573 -> [Partitions Info]Points;After indexing;1024
+2017-12-07 18:17:57,573 -> 01.Indexing points... [11.673s] [60000 results]
+2017-12-07 18:18:13,275 -> 02.Getting pairs... [15.702s] [61034 results]
+2017-12-07 18:18:16,635 -> 03.Computing centers... [3.360s] [122068 results]
+2017-12-07 18:18:16,635 -> [Partitions Info]Centers;Before indexing;7
+2017-12-07 18:18:19,067 -> [Partitions Info]Centers;After indexing;1024
+2017-12-07 18:18:19,068 -> 04.Indexing centers... [2.433s] [122068 results]
+2017-12-07 18:18:34,474 -> 05.Getting disks... [15.406s] [122068 results]
+2017-12-07 18:18:36,484 -> 06.Filtering less-than-mu disks... [2.010s] [2569 results]
+2017-12-07 18:18:44,422 -> 07.Prunning duplicate candidates... [7.937s] [1599 results]
+2017-12-07 18:18:44,428 -> [Partitions Info]Candidates;Before indexing;200
+2017-12-07 18:18:45,015 -> 08.Indexing candidates... [8.530s] [1599 results]
+2017-12-07 18:18:45,416 -> [Partitions Info]Candidates;After indexing;9
+2017-12-07 18:18:45,416 -> 09.Getting expansions... [0.401s] [2972 results]
+2017-12-07 18:18:45,955 -> 10.Finding maximal disks... [0.539s] [129 results]
+2017-12-07 18:18:48,948 -> 11.Prunning duplicates and subsets... [2.993s] [129 results]
+2017-12-07 18:18:48,948 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-12-07 18:18:48,948 ->         B60K,  30.0,     7, 10,  63.05,   61034,    122068,         1599,        129
+2017-12-07 18:18:48,997 -> Dropping indices...[0.049s]
+2017-12-07 18:18:48,997 -> Finishing MaximalFinder at 18:18:48.997...
+2017-12-07 18:18:48,997 -> Total time for MaximalFinder: 63.097ms...
+2017-12-07 18:18:49,031 -> Closing session... [0.034s]
+Done!!! Thu Dec  7 18:18:49 PST 2017
+Running iteration 2/3 for B60K (epsilon = 20 , mu = 10)...
+2017-12-07 18:18:52,712 -> Starting session... [1.431s]
+2017-12-07 18:18:54,774 -> Reading dataset... [2.062s]
+2017-12-07 18:18:54,811 -> Lauching MaximalFinder at 18:18:54.779...
+2017-12-07 18:18:54,812 -> 00.Setting mu=10,epsilon=20.0,cores=7,dataset=B60K
+2017-12-07 18:18:54,812 -> [Partitions Info]Points;Before indexing;7
+2017-12-07 18:19:06,342 -> [Partitions Info]Points;After indexing;1024
+2017-12-07 18:19:06,342 -> 01.Indexing points... [11.530s] [60000 results]
+2017-12-07 18:19:21,569 -> 02.Getting pairs... [15.227s] [36979 results]
+2017-12-07 18:19:24,390 -> 03.Computing centers... [2.821s] [73958 results]
+2017-12-07 18:19:24,390 -> [Partitions Info]Centers;Before indexing;7
+2017-12-07 18:19:26,571 -> [Partitions Info]Centers;After indexing;1024
+2017-12-07 18:19:26,571 -> 04.Indexing centers... [2.181s] [73958 results]
+2017-12-07 18:19:40,732 -> 05.Getting disks... [14.161s] [73958 results]
+2017-12-07 18:19:42,152 -> 06.Filtering less-than-mu disks... [1.419s] [887 results]
+2017-12-07 18:19:49,537 -> 07.Prunning duplicate candidates... [7.385s] [537 results]
+2017-12-07 18:19:49,546 -> [Partitions Info]Candidates;Before indexing;200
+2017-12-07 18:19:50,112 -> 08.Indexing candidates... [7.960s] [537 results]
+2017-12-07 18:19:50,364 -> [Partitions Info]Candidates;After indexing;9
+2017-12-07 18:19:50,364 -> 09.Getting expansions... [0.252s] [1398 results]
+2017-12-07 18:19:50,905 -> 10.Finding maximal disks... [0.541s] [47 results]
+2017-12-07 18:19:53,848 -> 11.Prunning duplicates and subsets... [2.943s] [47 results]
+2017-12-07 18:19:53,848 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-12-07 18:19:53,849 ->         B60K,  20.0,     7, 10,  59.04,   36979,     73958,          537,         47
+2017-12-07 18:19:53,897 -> Dropping indices...[0.048s]
+2017-12-07 18:19:53,898 -> Finishing MaximalFinder at 18:19:53.898...
+2017-12-07 18:19:53,898 -> Total time for MaximalFinder: 59.087ms...
+2017-12-07 18:19:53,935 -> Closing session... [0.037s]
+Done!!! Thu Dec  7 18:19:54 PST 2017
+Running iteration 2/3 for B60K (epsilon = 10 , mu = 10)...
+2017-12-07 18:19:57,545 -> Starting session... [1.390s]
+2017-12-07 18:19:59,617 -> Reading dataset... [2.071s]
+2017-12-07 18:19:59,675 -> Lauching MaximalFinder at 18:19:59.624...
+2017-12-07 18:19:59,675 -> 00.Setting mu=10,epsilon=10.0,cores=7,dataset=B60K
+2017-12-07 18:19:59,675 -> [Partitions Info]Points;Before indexing;7
+2017-12-07 18:20:10,920 -> [Partitions Info]Points;After indexing;1024
+2017-12-07 18:20:10,921 -> 01.Indexing points... [11.246s] [60000 results]
+2017-12-07 18:20:25,531 -> 02.Getting pairs... [14.610s] [15905 results]
+2017-12-07 18:20:28,536 -> 03.Computing centers... [3.005s] [31810 results]
+2017-12-07 18:20:28,536 -> [Partitions Info]Centers;Before indexing;7
+2017-12-07 18:20:30,420 -> [Partitions Info]Centers;After indexing;1024
+2017-12-07 18:20:30,420 -> 04.Indexing centers... [1.884s] [31810 results]
+2017-12-07 18:20:42,864 -> 05.Getting disks... [12.444s] [31810 results]
+2017-12-07 18:20:43,684 -> 06.Filtering less-than-mu disks... [0.820s] [89 results]
+2017-12-07 18:20:49,915 -> 07.Prunning duplicate candidates... [6.231s] [50 results]
+2017-12-07 18:20:49,922 -> [Partitions Info]Candidates;Before indexing;200
+2017-12-07 18:20:50,495 -> 08.Indexing candidates... [6.811s] [50 results]
+2017-12-07 18:20:50,707 -> [Partitions Info]Candidates;After indexing;9
+2017-12-07 18:20:50,707 -> 09.Getting expansions... [0.212s] [282 results]
+2017-12-07 18:20:51,166 -> 10.Finding maximal disks... [0.459s] [5 results]
+2017-12-07 18:20:53,919 -> 11.Prunning duplicates and subsets... [2.753s] [5 results]
+2017-12-07 18:20:53,920 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-12-07 18:20:53,920 ->         B60K,  10.0,     7, 10,  54.25,   15905,     31810,           50,          5
+2017-12-07 18:20:53,970 -> Dropping indices...[0.049s]
+2017-12-07 18:20:53,970 -> Finishing MaximalFinder at 18:20:53.970...
+2017-12-07 18:20:53,970 -> Total time for MaximalFinder: 54.295ms...
+2017-12-07 18:20:54,005 -> Closing session... [0.035s]
+Done!!! Thu Dec  7 18:20:54 PST 2017
 Running iteration 3/3 for B60K (epsilon = 30 , mu = 10)...
-2017-12-07 11:56:30,573 -> Starting session... [1.530s]
-2017-12-07 11:56:32,748 -> Reading dataset... [2.175s]
-2017-12-07 11:56:32,801 -> Lauching MaximalFinder at 11:56:32.754...
-2017-12-07 11:56:32,802 -> 00.Setting mu=10,epsilon=30.0,cores=7,dataset=B60K
-2017-12-07 11:56:32,802 -> [Partitions Info]Points;Before indexing;7
-2017-12-07 11:56:45,116 -> [Partitions Info]Points;After indexing;1024
-2017-12-07 11:56:45,116 -> 01.Indexing points... [12.314s] [60000 results]
-2017-12-07 11:57:00,674 -> 02.Getting pairs... [15.558s] [61034 results]
-2017-12-07 11:57:03,996 -> 03.Computing centers... [3.322s] [122068 results]
-2017-12-07 11:57:03,996 -> [Partitions Info]Centers;Before indexing;7
-2017-12-07 11:57:06,472 -> [Partitions Info]Centers;After indexing;1024
-2017-12-07 11:57:06,472 -> 04.Indexing centers... [2.476s] [122068 results]
-2017-12-07 11:57:21,747 -> 05.Getting disks... [15.275s] [122068 results]
-2017-12-07 11:57:23,716 -> 06.Filtering less-than-mu disks... [1.969s] [2569 results]
-2017-12-07 11:57:31,587 -> 07.Prunning duplicate candidates... [7.871s] [1599 results]
-2017-12-07 11:57:31,593 -> [Partitions Info]Candidates;Before indexing;200
-2017-12-07 11:57:32,214 -> 08.Indexing candidates... [8.498s] [1599 results]
-2017-12-07 11:57:32,597 -> [Partitions Info]Candidates;After indexing;9
-2017-12-07 11:57:32,597 -> 09.Getting expansions... [0.383s] [2972 results]
-2017-12-07 11:57:33,182 -> 10.Finding maximal disks... [0.585s] [129 results]
-2017-12-07 11:57:36,130 -> 11.Prunning duplicates and subsets... [2.948s] [129 results]
-2017-12-07 11:57:36,130 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
-2017-12-07 11:57:36,130 ->         B60K,  30.0,     7, 10,  63.33,   61034,    122068,         1599,        129
-2017-12-07 11:57:36,185 -> Dropping indices...[0.055s]
-2017-12-07 11:57:36,185 -> Finishing MaximalFinder at 11:57:36.185...
-2017-12-07 11:57:36,185 -> Total time for MaximalFinder: 63.384ms...
-2017-12-07 11:57:36,340 -> Closing session... [0.155s]
-Done!!! Thu Dec  7 11:57:36 PST 2017
+2017-12-07 18:20:57,606 -> Starting session... [1.386s]
+2017-12-07 18:20:59,981 -> Reading dataset... [2.375s]
+2017-12-07 18:21:00,025 -> Lauching MaximalFinder at 18:20:59.986...
+2017-12-07 18:21:00,025 -> 00.Setting mu=10,epsilon=30.0,cores=7,dataset=B60K
+2017-12-07 18:21:00,026 -> [Partitions Info]Points;Before indexing;7
+2017-12-07 18:21:11,622 -> [Partitions Info]Points;After indexing;1024
+2017-12-07 18:21:11,623 -> 01.Indexing points... [11.597s] [60000 results]
+2017-12-07 18:21:27,511 -> 02.Getting pairs... [15.888s] [61034 results]
+2017-12-07 18:21:31,022 -> 03.Computing centers... [3.511s] [122068 results]
+2017-12-07 18:21:31,022 -> [Partitions Info]Centers;Before indexing;7
+2017-12-07 18:21:33,513 -> [Partitions Info]Centers;After indexing;1024
+2017-12-07 18:21:33,513 -> 04.Indexing centers... [2.491s] [122068 results]
+2017-12-07 18:21:49,273 -> 05.Getting disks... [15.760s] [122068 results]
+2017-12-07 18:21:51,106 -> 06.Filtering less-than-mu disks... [1.833s] [2569 results]
+2017-12-07 18:21:59,187 -> 07.Prunning duplicate candidates... [8.081s] [1599 results]
+2017-12-07 18:21:59,194 -> [Partitions Info]Candidates;Before indexing;200
+2017-12-07 18:21:59,793 -> 08.Indexing candidates... [8.687s] [1599 results]
+2017-12-07 18:22:00,086 -> [Partitions Info]Candidates;After indexing;9
+2017-12-07 18:22:00,086 -> 09.Getting expansions... [0.292s] [2972 results]
+2017-12-07 18:22:00,633 -> 10.Finding maximal disks... [0.547s] [129 results]
+2017-12-07 18:22:03,732 -> 11.Prunning duplicates and subsets... [3.099s] [129 results]
+2017-12-07 18:22:03,732 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-12-07 18:22:03,732 ->         B60K,  30.0,     7, 10,  63.71,   61034,    122068,         1599,        129
+2017-12-07 18:22:03,780 -> Dropping indices...[0.048s]
+2017-12-07 18:22:03,780 -> Finishing MaximalFinder at 18:22:03.780...
+2017-12-07 18:22:03,780 -> Total time for MaximalFinder: 63.755ms...
+2017-12-07 18:22:03,820 -> Closing session... [0.040s]
+Done!!! Thu Dec  7 18:22:04 PST 2017
+Running iteration 3/3 for B60K (epsilon = 20 , mu = 10)...
+2017-12-07 18:22:07,502 -> Starting session... [1.438s]
+2017-12-07 18:22:09,689 -> Reading dataset... [2.187s]
+2017-12-07 18:22:09,736 -> Lauching MaximalFinder at 18:22:09.696...
+2017-12-07 18:22:09,737 -> 00.Setting mu=10,epsilon=20.0,cores=7,dataset=B60K
+2017-12-07 18:22:09,737 -> [Partitions Info]Points;Before indexing;7
+2017-12-07 18:22:20,627 -> [Partitions Info]Points;After indexing;1024
+2017-12-07 18:22:20,628 -> 01.Indexing points... [10.890s] [60000 results]
+2017-12-07 18:22:35,707 -> 02.Getting pairs... [15.079s] [36979 results]
+2017-12-07 18:22:38,602 -> 03.Computing centers... [2.895s] [73958 results]
+2017-12-07 18:22:38,603 -> [Partitions Info]Centers;Before indexing;7
+2017-12-07 18:22:40,746 -> [Partitions Info]Centers;After indexing;1024
+2017-12-07 18:22:40,746 -> 04.Indexing centers... [2.143s] [73958 results]
+2017-12-07 18:22:54,732 -> 05.Getting disks... [13.986s] [73958 results]
+2017-12-07 18:22:56,085 -> 06.Filtering less-than-mu disks... [1.353s] [887 results]
+2017-12-07 18:23:03,370 -> 07.Prunning duplicate candidates... [7.285s] [537 results]
+2017-12-07 18:23:03,378 -> [Partitions Info]Candidates;Before indexing;200
+2017-12-07 18:23:03,955 -> 08.Indexing candidates... [7.870s] [537 results]
+2017-12-07 18:23:04,241 -> [Partitions Info]Candidates;After indexing;9
+2017-12-07 18:23:04,241 -> 09.Getting expansions... [0.286s] [1398 results]
+2017-12-07 18:23:04,739 -> 10.Finding maximal disks... [0.498s] [47 results]
+2017-12-07 18:23:07,665 -> 11.Prunning duplicates and subsets... [2.926s] [47 results]
+2017-12-07 18:23:07,666 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-12-07 18:23:07,666 ->         B60K,  20.0,     7, 10,  57.93,   36979,     73958,          537,         47
+2017-12-07 18:23:07,719 -> Dropping indices...[0.053s]
+2017-12-07 18:23:07,719 -> Finishing MaximalFinder at 18:23:07.719...
+2017-12-07 18:23:07,719 -> Total time for MaximalFinder: 57.983ms...
+2017-12-07 18:23:07,760 -> Closing session... [0.041s]
+Done!!! Thu Dec  7 18:23:08 PST 2017
+Running iteration 3/3 for B60K (epsilon = 10 , mu = 10)...
+2017-12-07 18:23:11,478 -> Starting session... [1.502s]
+2017-12-07 18:23:13,707 -> Reading dataset... [2.229s]
+2017-12-07 18:23:13,754 -> Lauching MaximalFinder at 18:23:13.714...
+2017-12-07 18:23:13,755 -> 00.Setting mu=10,epsilon=10.0,cores=7,dataset=B60K
+2017-12-07 18:23:13,755 -> [Partitions Info]Points;Before indexing;7
+2017-12-07 18:23:25,199 -> [Partitions Info]Points;After indexing;1024
+2017-12-07 18:23:25,199 -> 01.Indexing points... [11.444s] [60000 results]
+2017-12-07 18:23:39,670 -> 02.Getting pairs... [14.471s] [15905 results]
+2017-12-07 18:23:42,594 -> 03.Computing centers... [2.924s] [31810 results]
+2017-12-07 18:23:42,595 -> [Partitions Info]Centers;Before indexing;7
+2017-12-07 18:23:44,488 -> [Partitions Info]Centers;After indexing;1024
+2017-12-07 18:23:44,488 -> 04.Indexing centers... [1.894s] [31810 results]
+2017-12-07 18:23:56,945 -> 05.Getting disks... [12.457s] [31810 results]
+2017-12-07 18:23:57,947 -> 06.Filtering less-than-mu disks... [1.002s] [89 results]
+2017-12-07 18:24:03,796 -> 07.Prunning duplicate candidates... [5.848s] [50 results]
+2017-12-07 18:24:03,805 -> [Partitions Info]Candidates;Before indexing;200
+2017-12-07 18:24:04,385 -> 08.Indexing candidates... [6.437s] [50 results]
+2017-12-07 18:24:04,599 -> [Partitions Info]Candidates;After indexing;9
+2017-12-07 18:24:04,599 -> 09.Getting expansions... [0.214s] [282 results]
+2017-12-07 18:24:05,050 -> 10.Finding maximal disks... [0.451s] [5 results]
+2017-12-07 18:24:07,896 -> 11.Prunning duplicates and subsets... [2.846s] [5 results]
+2017-12-07 18:24:07,896 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-12-07 18:24:07,897 ->         B60K,  10.0,     7, 10,  54.14,   15905,     31810,           50,          5
+2017-12-07 18:24:07,946 -> Dropping indices...[0.049s]
+2017-12-07 18:24:07,946 -> Finishing MaximalFinder at 18:24:07.946...
+2017-12-07 18:24:07,946 -> Total time for MaximalFinder: 54.192ms...
+2017-12-07 18:24:07,983 -> Closing session... [0.037s]
+Done!!! Thu Dec  7 18:24:08 PST 2017
 acald013@dblab-rack14: stopping org.apache.spark.deploy.worker.Worker
 stopping org.apache.spark.deploy.master.Master
 starting org.apache.spark.deploy.master.Master, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.master.Master-1-dblab-rack11.cs.ucr.edu.out
 acald013@dblab-rack12: starting org.apache.spark.deploy.worker.Worker, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.worker.Worker-1-dblab-rack12.out
 acald013@dblab-rack11: starting org.apache.spark.deploy.worker.Worker, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.worker.Worker-1-dblab-rack11.cs.ucr.edu.out
-Running iteration 1/3 for B120K (epsilon = 10 , mu = 10)...
-2017-12-07 11:57:46,027 -> Starting session... [1.777s]
-2017-12-07 11:57:49,103 -> Reading dataset... [3.075s]
-2017-12-07 11:57:49,137 -> Lauching MaximalFinder at 11:57:49.107...
-2017-12-07 11:57:49,138 -> 00.Setting mu=10,epsilon=10.0,cores=14,dataset=B120K
-2017-12-07 11:57:49,138 -> [Partitions Info]Points;Before indexing;14
-2017-12-07 11:58:02,776 -> [Partitions Info]Points;After indexing;1024
-2017-12-07 11:58:02,777 -> 01.Indexing points... [13.639s] [120000 results]
-2017-12-07 11:58:16,271 -> 02.Getting pairs... [13.494s] [31810 results]
-2017-12-07 11:58:19,538 -> 03.Computing centers... [3.267s] [63620 results]
-2017-12-07 11:58:19,538 -> [Partitions Info]Centers;Before indexing;14
-2017-12-07 11:58:21,296 -> [Partitions Info]Centers;After indexing;1024
-2017-12-07 11:58:21,296 -> 04.Indexing centers... [1.758s] [63620 results]
-2017-12-07 11:58:32,320 -> 05.Getting disks... [11.024s] [63620 results]
-2017-12-07 11:58:33,203 -> 06.Filtering less-than-mu disks... [0.883s] [178 results]
-2017-12-07 11:58:39,319 -> 07.Prunning duplicate candidates... [6.116s] [100 results]
-2017-12-07 11:58:39,326 -> [Partitions Info]Candidates;Before indexing;200
-2017-12-07 11:58:39,920 -> 08.Indexing candidates... [6.717s] [100 results]
-2017-12-07 11:58:40,111 -> [Partitions Info]Candidates;After indexing;16
-2017-12-07 11:58:40,111 -> 09.Getting expansions... [0.191s] [598 results]
-2017-12-07 11:58:40,609 -> 10.Finding maximal disks... [0.498s] [10 results]
-2017-12-07 11:58:43,203 -> 11.Prunning duplicates and subsets... [2.594s] [10 results]
-2017-12-07 11:58:43,203 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
-2017-12-07 11:58:43,204 ->        B120K,  10.0,    14, 10,  54.07,   31810,     63620,          100,         10
-2017-12-07 11:58:43,275 -> Dropping indices...[0.071s]
-2017-12-07 11:58:43,275 -> Finishing MaximalFinder at 11:58:43.275...
-2017-12-07 11:58:43,277 -> Total time for MaximalFinder: 54.137ms...
-2017-12-07 11:58:43,332 -> Closing session... [0.055s]
-Done!!! Thu Dec  7 11:58:44 PST 2017
-Running iteration 1/3 for B120K (epsilon = 20 , mu = 10)...
-2017-12-07 11:58:48,235 -> Starting session... [1.641s]
-2017-12-07 11:58:50,929 -> Reading dataset... [2.693s]
-2017-12-07 11:58:51,224 -> Lauching MaximalFinder at 11:58:50.936...
-2017-12-07 11:58:51,225 -> 00.Setting mu=10,epsilon=20.0,cores=14,dataset=B120K
-2017-12-07 11:58:51,225 -> [Partitions Info]Points;Before indexing;14
-2017-12-07 11:59:05,027 -> [Partitions Info]Points;After indexing;1024
-2017-12-07 11:59:05,027 -> 01.Indexing points... [13.802s] [120000 results]
-2017-12-07 11:59:19,396 -> 02.Getting pairs... [14.369s] [73958 results]
-2017-12-07 11:59:22,357 -> 03.Computing centers... [2.961s] [147916 results]
-2017-12-07 11:59:22,358 -> [Partitions Info]Centers;Before indexing;14
-2017-12-07 11:59:25,028 -> [Partitions Info]Centers;After indexing;1024
-2017-12-07 11:59:25,028 -> 04.Indexing centers... [2.670s] [147916 results]
-2017-12-07 11:59:38,171 -> 05.Getting disks... [13.143s] [147916 results]
-2017-12-07 11:59:39,642 -> 06.Filtering less-than-mu disks... [1.471s] [1774 results]
-2017-12-07 11:59:47,165 -> 07.Prunning duplicate candidates... [7.523s] [1074 results]
-2017-12-07 11:59:47,172 -> [Partitions Info]Candidates;Before indexing;200
-2017-12-07 11:59:47,793 -> 08.Indexing candidates... [8.151s] [1074 results]
-2017-12-07 11:59:48,037 -> [Partitions Info]Candidates;After indexing;16
-2017-12-07 11:59:48,037 -> 09.Getting expansions... [0.244s] [2622 results]
-2017-12-07 11:59:48,573 -> 10.Finding maximal disks... [0.536s] [94 results]
-2017-12-07 11:59:51,284 -> 11.Prunning duplicates and subsets... [2.711s] [94 results]
-2017-12-07 11:59:51,284 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
-2017-12-07 11:59:51,284 ->        B120K,  20.0,    14, 10,  60.06,   73958,    147916,         1074,         94
-2017-12-07 11:59:51,348 -> Dropping indices...[0.064s]
-2017-12-07 11:59:51,349 -> Finishing MaximalFinder at 11:59:51.349...
-2017-12-07 11:59:51,349 -> Total time for MaximalFinder: 60.124ms...
-2017-12-07 11:59:51,395 -> Closing session... [0.046s]
-Done!!! Thu Dec  7 11:59:51 PST 2017
 Running iteration 1/3 for B120K (epsilon = 30 , mu = 10)...
-2017-12-07 11:59:55,592 -> Starting session... [1.731s]
-2017-12-07 11:59:58,215 -> Reading dataset... [2.623s]
-2017-12-07 11:59:58,254 -> Lauching MaximalFinder at 11:59:58.221...
-2017-12-07 11:59:58,255 -> 00.Setting mu=10,epsilon=30.0,cores=14,dataset=B120K
-2017-12-07 11:59:58,255 -> [Partitions Info]Points;Before indexing;14
-2017-12-07 12:00:12,532 -> [Partitions Info]Points;After indexing;1024
-2017-12-07 12:00:12,532 -> 01.Indexing points... [14.277s] [120000 results]
-2017-12-07 12:00:27,274 -> 02.Getting pairs... [14.741s] [122068 results]
-2017-12-07 12:00:30,350 -> 03.Computing centers... [3.076s] [244136 results]
-2017-12-07 12:00:30,350 -> [Partitions Info]Centers;Before indexing;14
-2017-12-07 12:00:33,431 -> [Partitions Info]Centers;After indexing;1024
-2017-12-07 12:00:33,431 -> 04.Indexing centers... [3.081s] [244136 results]
-2017-12-07 12:00:47,641 -> 05.Getting disks... [14.210s] [244136 results]
-2017-12-07 12:00:49,805 -> 06.Filtering less-than-mu disks... [2.164s] [5138 results]
-2017-12-07 12:00:57,788 -> 07.Prunning duplicate candidates... [7.983s] [3198 results]
-2017-12-07 12:00:57,796 -> [Partitions Info]Candidates;Before indexing;200
-2017-12-07 12:00:58,226 -> 08.Indexing candidates... [8.421s] [3198 results]
-2017-12-07 12:00:58,503 -> [Partitions Info]Candidates;After indexing;16
-2017-12-07 12:00:58,503 -> 09.Getting expansions... [0.277s] [6395 results]
-2017-12-07 12:00:59,075 -> 10.Finding maximal disks... [0.572s] [258 results]
-2017-12-07 12:01:01,914 -> 11.Prunning duplicates and subsets... [2.839s] [258 results]
-2017-12-07 12:01:01,914 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
-2017-12-07 12:01:01,914 ->        B120K,  30.0,    14, 10,  63.66,  122068,    244136,         3198,        258
-2017-12-07 12:01:01,966 -> Dropping indices...[0.052s]
-2017-12-07 12:01:01,966 -> Finishing MaximalFinder at 12:01:01.966...
-2017-12-07 12:01:01,966 -> Total time for MaximalFinder: 63.712ms...
-2017-12-07 12:01:02,008 -> Closing session... [0.042s]
-Done!!! Thu Dec  7 12:01:02 PST 2017
-Running iteration 2/3 for B120K (epsilon = 10 , mu = 10)...
-2017-12-07 12:01:06,188 -> Starting session... [1.843s]
-2017-12-07 12:01:08,763 -> Reading dataset... [2.574s]
-2017-12-07 12:01:08,806 -> Lauching MaximalFinder at 12:01:08.769...
-2017-12-07 12:01:08,806 -> 00.Setting mu=10,epsilon=10.0,cores=14,dataset=B120K
-2017-12-07 12:01:08,806 -> [Partitions Info]Points;Before indexing;14
-2017-12-07 12:01:22,231 -> [Partitions Info]Points;After indexing;1024
-2017-12-07 12:01:22,231 -> 01.Indexing points... [13.425s] [120000 results]
-2017-12-07 12:01:35,028 -> 02.Getting pairs... [12.797s] [31810 results]
-2017-12-07 12:01:38,018 -> 03.Computing centers... [2.990s] [63620 results]
-2017-12-07 12:01:38,018 -> [Partitions Info]Centers;Before indexing;14
-2017-12-07 12:01:39,867 -> [Partitions Info]Centers;After indexing;1024
-2017-12-07 12:01:39,867 -> 04.Indexing centers... [1.849s] [63620 results]
-2017-12-07 12:01:51,091 -> 05.Getting disks... [11.224s] [63620 results]
-2017-12-07 12:01:52,193 -> 06.Filtering less-than-mu disks... [1.101s] [178 results]
-2017-12-07 12:01:58,479 -> 07.Prunning duplicate candidates... [6.286s] [100 results]
-2017-12-07 12:01:58,486 -> [Partitions Info]Candidates;Before indexing;200
-2017-12-07 12:01:59,090 -> 08.Indexing candidates... [6.897s] [100 results]
-2017-12-07 12:01:59,382 -> [Partitions Info]Candidates;After indexing;16
-2017-12-07 12:01:59,382 -> 09.Getting expansions... [0.292s] [598 results]
-2017-12-07 12:01:59,853 -> 10.Finding maximal disks... [0.470s] [10 results]
-2017-12-07 12:02:02,403 -> 11.Prunning duplicates and subsets... [2.550s] [10 results]
-2017-12-07 12:02:02,403 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
-2017-12-07 12:02:02,403 ->        B120K,  10.0,    14, 10,  53.60,   31810,     63620,          100,         10
-2017-12-07 12:02:02,470 -> Dropping indices...[0.066s]
-2017-12-07 12:02:02,470 -> Finishing MaximalFinder at 12:02:02.470...
-2017-12-07 12:02:02,470 -> Total time for MaximalFinder: 53.664ms...
-2017-12-07 12:02:02,576 -> Closing session... [0.106s]
-Done!!! Thu Dec  7 12:02:03 PST 2017
-Running iteration 2/3 for B120K (epsilon = 20 , mu = 10)...
-2017-12-07 12:02:06,670 -> Starting session... [1.744s]
-2017-12-07 12:02:09,350 -> Reading dataset... [2.680s]
-2017-12-07 12:02:09,386 -> Lauching MaximalFinder at 12:02:09.355...
-2017-12-07 12:02:09,386 -> 00.Setting mu=10,epsilon=20.0,cores=14,dataset=B120K
-2017-12-07 12:02:09,387 -> [Partitions Info]Points;Before indexing;14
-2017-12-07 12:02:22,814 -> [Partitions Info]Points;After indexing;1024
-2017-12-07 12:02:22,815 -> 01.Indexing points... [13.427s] [120000 results]
-2017-12-07 12:02:37,619 -> 02.Getting pairs... [14.804s] [73958 results]
-2017-12-07 12:02:40,698 -> 03.Computing centers... [3.079s] [147916 results]
-2017-12-07 12:02:40,698 -> [Partitions Info]Centers;Before indexing;14
-2017-12-07 12:02:43,271 -> [Partitions Info]Centers;After indexing;1024
-2017-12-07 12:02:43,271 -> 04.Indexing centers... [2.573s] [147916 results]
-2017-12-07 12:02:55,964 -> 05.Getting disks... [12.693s] [147916 results]
-2017-12-07 12:02:57,330 -> 06.Filtering less-than-mu disks... [1.366s] [1774 results]
-2017-12-07 12:03:04,207 -> 07.Prunning duplicate candidates... [6.877s] [1074 results]
-2017-12-07 12:03:04,214 -> [Partitions Info]Candidates;Before indexing;200
-2017-12-07 12:03:04,785 -> 08.Indexing candidates... [7.455s] [1074 results]
-2017-12-07 12:03:05,056 -> [Partitions Info]Candidates;After indexing;16
-2017-12-07 12:03:05,056 -> 09.Getting expansions... [0.271s] [2622 results]
-2017-12-07 12:03:05,583 -> 10.Finding maximal disks... [0.527s] [94 results]
-2017-12-07 12:03:08,575 -> 11.Prunning duplicates and subsets... [2.992s] [94 results]
-2017-12-07 12:03:08,575 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
-2017-12-07 12:03:08,575 ->        B120K,  20.0,    14, 10,  59.19,   73958,    147916,         1074,         94
-2017-12-07 12:03:08,632 -> Dropping indices...[0.057s]
-2017-12-07 12:03:08,632 -> Finishing MaximalFinder at 12:03:08.632...
-2017-12-07 12:03:08,632 -> Total time for MaximalFinder: 59.246ms...
-2017-12-07 12:03:08,682 -> Closing session... [0.050s]
-Done!!! Thu Dec  7 12:03:09 PST 2017
+2017-12-07 18:24:17,433 -> Starting session... [1.624s]
+2017-12-07 18:24:20,552 -> Reading dataset... [3.119s]
+2017-12-07 18:24:20,586 -> Lauching MaximalFinder at 18:24:20.557...
+2017-12-07 18:24:20,587 -> 00.Setting mu=10,epsilon=30.0,cores=14,dataset=B120K
+2017-12-07 18:24:20,587 -> [Partitions Info]Points;Before indexing;14
+2017-12-07 18:24:34,690 -> [Partitions Info]Points;After indexing;1024
+2017-12-07 18:24:34,690 -> 01.Indexing points... [14.103s] [120000 results]
+2017-12-07 18:24:49,895 -> 02.Getting pairs... [15.205s] [122068 results]
+2017-12-07 18:24:53,133 -> 03.Computing centers... [3.237s] [244136 results]
+2017-12-07 18:24:53,133 -> [Partitions Info]Centers;Before indexing;14
+2017-12-07 18:24:55,758 -> [Partitions Info]Centers;After indexing;1024
+2017-12-07 18:24:55,758 -> 04.Indexing centers... [2.625s] [244136 results]
+2017-12-07 18:25:09,084 -> 05.Getting disks... [13.326s] [244136 results]
+2017-12-07 18:25:11,012 -> 06.Filtering less-than-mu disks... [1.928s] [5138 results]
+2017-12-07 18:25:19,833 -> 07.Prunning duplicate candidates... [8.821s] [3198 results]
+2017-12-07 18:25:19,842 -> [Partitions Info]Candidates;Before indexing;200
+2017-12-07 18:25:20,467 -> 08.Indexing candidates... [9.455s] [3198 results]
+2017-12-07 18:25:20,751 -> [Partitions Info]Candidates;After indexing;16
+2017-12-07 18:25:20,751 -> 09.Getting expansions... [0.283s] [6395 results]
+2017-12-07 18:25:21,304 -> 10.Finding maximal disks... [0.553s] [258 results]
+2017-12-07 18:25:24,400 -> 11.Prunning duplicates and subsets... [3.096s] [258 results]
+2017-12-07 18:25:24,401 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-12-07 18:25:24,401 ->        B120K,  30.0,    14, 10,  63.81,  122068,    244136,         3198,        258
+2017-12-07 18:25:24,470 -> Dropping indices...[0.069s]
+2017-12-07 18:25:24,470 -> Finishing MaximalFinder at 18:25:24.470...
+2017-12-07 18:25:24,470 -> Total time for MaximalFinder: 63.884ms...
+2017-12-07 18:25:24,520 -> Closing session... [0.050s]
+Done!!! Thu Dec  7 18:25:24 PST 2017
+Running iteration 1/3 for B120K (epsilon = 20 , mu = 10)...
+2017-12-07 18:25:28,382 -> Starting session... [1.628s]
+2017-12-07 18:25:31,144 -> Reading dataset... [2.762s]
+2017-12-07 18:25:31,185 -> Lauching MaximalFinder at 18:25:31.149...
+2017-12-07 18:25:31,186 -> 00.Setting mu=10,epsilon=20.0,cores=14,dataset=B120K
+2017-12-07 18:25:31,186 -> [Partitions Info]Points;Before indexing;14
+2017-12-07 18:25:45,086 -> [Partitions Info]Points;After indexing;1024
+2017-12-07 18:25:45,086 -> 01.Indexing points... [13.900s] [120000 results]
+2017-12-07 18:25:59,352 -> 02.Getting pairs... [14.266s] [73958 results]
+2017-12-07 18:26:02,716 -> 03.Computing centers... [3.364s] [147916 results]
+2017-12-07 18:26:02,716 -> [Partitions Info]Centers;Before indexing;14
+2017-12-07 18:26:04,989 -> [Partitions Info]Centers;After indexing;1024
+2017-12-07 18:26:04,989 -> 04.Indexing centers... [2.273s] [147916 results]
+2017-12-07 18:26:18,035 -> 05.Getting disks... [13.046s] [147916 results]
+2017-12-07 18:26:19,666 -> 06.Filtering less-than-mu disks... [1.631s] [1774 results]
+2017-12-07 18:26:27,304 -> 07.Prunning duplicate candidates... [7.638s] [1074 results]
+2017-12-07 18:26:27,315 -> [Partitions Info]Candidates;Before indexing;200
+2017-12-07 18:26:27,966 -> 08.Indexing candidates... [8.300s] [1074 results]
+2017-12-07 18:26:28,217 -> [Partitions Info]Candidates;After indexing;16
+2017-12-07 18:26:28,217 -> 09.Getting expansions... [0.251s] [2622 results]
+2017-12-07 18:26:28,746 -> 10.Finding maximal disks... [0.529s] [94 results]
+2017-12-07 18:26:31,576 -> 11.Prunning duplicates and subsets... [2.830s] [94 results]
+2017-12-07 18:26:31,577 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-12-07 18:26:31,577 ->        B120K,  20.0,    14, 10,  60.39,   73958,    147916,         1074,         94
+2017-12-07 18:26:31,646 -> Dropping indices...[0.069s]
+2017-12-07 18:26:31,646 -> Finishing MaximalFinder at 18:26:31.646...
+2017-12-07 18:26:31,646 -> Total time for MaximalFinder: 60.461ms...
+2017-12-07 18:26:31,706 -> Closing session... [0.060s]
+Done!!! Thu Dec  7 18:26:32 PST 2017
+Running iteration 1/3 for B120K (epsilon = 10 , mu = 10)...
+2017-12-07 18:26:35,743 -> Starting session... [1.807s]
+2017-12-07 18:26:38,485 -> Reading dataset... [2.742s]
+2017-12-07 18:26:38,520 -> Lauching MaximalFinder at 18:26:38.490...
+2017-12-07 18:26:38,520 -> 00.Setting mu=10,epsilon=10.0,cores=14,dataset=B120K
+2017-12-07 18:26:38,520 -> [Partitions Info]Points;Before indexing;14
+2017-12-07 18:26:51,952 -> [Partitions Info]Points;After indexing;1024
+2017-12-07 18:26:51,953 -> 01.Indexing points... [13.433s] [120000 results]
+2017-12-07 18:27:05,627 -> 02.Getting pairs... [13.674s] [31810 results]
+2017-12-07 18:27:08,518 -> 03.Computing centers... [2.891s] [63620 results]
+2017-12-07 18:27:08,519 -> [Partitions Info]Centers;Before indexing;14
+2017-12-07 18:27:10,545 -> [Partitions Info]Centers;After indexing;1024
+2017-12-07 18:27:10,545 -> 04.Indexing centers... [2.026s] [63620 results]
+2017-12-07 18:27:22,230 -> 05.Getting disks... [11.685s] [63620 results]
+2017-12-07 18:27:23,092 -> 06.Filtering less-than-mu disks... [0.862s] [178 results]
+2017-12-07 18:27:29,531 -> 07.Prunning duplicate candidates... [6.439s] [100 results]
+2017-12-07 18:27:29,541 -> [Partitions Info]Candidates;Before indexing;200
+2017-12-07 18:27:30,138 -> 08.Indexing candidates... [7.046s] [100 results]
+2017-12-07 18:27:30,348 -> [Partitions Info]Candidates;After indexing;16
+2017-12-07 18:27:30,348 -> 09.Getting expansions... [0.210s] [598 results]
+2017-12-07 18:27:31,005 -> 10.Finding maximal disks... [0.657s] [10 results]
+2017-12-07 18:27:33,869 -> 11.Prunning duplicates and subsets... [2.864s] [10 results]
+2017-12-07 18:27:33,870 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-12-07 18:27:33,870 ->        B120K,  10.0,    14, 10,  55.35,   31810,     63620,          100,         10
+2017-12-07 18:27:33,938 -> Dropping indices...[0.068s]
+2017-12-07 18:27:33,938 -> Finishing MaximalFinder at 18:27:33.938...
+2017-12-07 18:27:33,939 -> Total time for MaximalFinder: 55.418ms...
+2017-12-07 18:27:34,056 -> Closing session... [0.117s]
+Done!!! Thu Dec  7 18:27:34 PST 2017
 Running iteration 2/3 for B120K (epsilon = 30 , mu = 10)...
-2017-12-07 12:03:12,842 -> Starting session... [1.771s]
-2017-12-07 12:03:15,565 -> Reading dataset... [2.719s]
-2017-12-07 12:03:15,617 -> Lauching MaximalFinder at 12:03:15.571...
-2017-12-07 12:03:15,618 -> 00.Setting mu=10,epsilon=30.0,cores=14,dataset=B120K
-2017-12-07 12:03:15,618 -> [Partitions Info]Points;Before indexing;14
-2017-12-07 12:03:29,073 -> [Partitions Info]Points;After indexing;1024
-2017-12-07 12:03:29,073 -> 01.Indexing points... [13.455s] [120000 results]
-2017-12-07 12:03:43,513 -> 02.Getting pairs... [14.440s] [122068 results]
-2017-12-07 12:03:46,738 -> 03.Computing centers... [3.225s] [244136 results]
-2017-12-07 12:03:46,738 -> [Partitions Info]Centers;Before indexing;14
-2017-12-07 12:03:49,302 -> [Partitions Info]Centers;After indexing;1024
-2017-12-07 12:03:49,303 -> 04.Indexing centers... [2.564s] [244136 results]
-2017-12-07 12:04:04,108 -> 05.Getting disks... [14.805s] [244136 results]
-2017-12-07 12:04:05,890 -> 06.Filtering less-than-mu disks... [1.782s] [5138 results]
-2017-12-07 12:04:13,333 -> 07.Prunning duplicate candidates... [7.443s] [3198 results]
-2017-12-07 12:04:13,340 -> [Partitions Info]Candidates;Before indexing;200
-2017-12-07 12:04:13,943 -> 08.Indexing candidates... [8.053s] [3198 results]
-2017-12-07 12:04:14,326 -> [Partitions Info]Candidates;After indexing;16
-2017-12-07 12:04:14,326 -> 09.Getting expansions... [0.383s] [6395 results]
-2017-12-07 12:04:14,901 -> 10.Finding maximal disks... [0.575s] [258 results]
-2017-12-07 12:04:17,690 -> 11.Prunning duplicates and subsets... [2.789s] [258 results]
-2017-12-07 12:04:17,690 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
-2017-12-07 12:04:17,690 ->        B120K,  30.0,    14, 10,  62.07,  122068,    244136,         3198,        258
-2017-12-07 12:04:17,763 -> Dropping indices...[0.072s]
-2017-12-07 12:04:17,763 -> Finishing MaximalFinder at 12:04:17.763...
-2017-12-07 12:04:17,763 -> Total time for MaximalFinder: 62.146ms...
-2017-12-07 12:04:17,810 -> Closing session... [0.047s]
-Done!!! Thu Dec  7 12:04:18 PST 2017
-Running iteration 3/3 for B120K (epsilon = 10 , mu = 10)...
-2017-12-07 12:04:21,829 -> Starting session... [1.696s]
-2017-12-07 12:04:24,636 -> Reading dataset... [2.807s]
-2017-12-07 12:04:24,680 -> Lauching MaximalFinder at 12:04:24.643...
-2017-12-07 12:04:24,680 -> 00.Setting mu=10,epsilon=10.0,cores=14,dataset=B120K
-2017-12-07 12:04:24,680 -> [Partitions Info]Points;Before indexing;14
-2017-12-07 12:04:38,340 -> [Partitions Info]Points;After indexing;1024
-2017-12-07 12:04:38,341 -> 01.Indexing points... [13.661s] [120000 results]
-2017-12-07 12:04:51,622 -> 02.Getting pairs... [13.281s] [31810 results]
-2017-12-07 12:04:54,906 -> 03.Computing centers... [3.284s] [63620 results]
-2017-12-07 12:04:54,906 -> [Partitions Info]Centers;Before indexing;14
-2017-12-07 12:04:56,916 -> [Partitions Info]Centers;After indexing;1024
-2017-12-07 12:04:56,916 -> 04.Indexing centers... [2.010s] [63620 results]
-2017-12-07 12:05:08,602 -> 05.Getting disks... [11.686s] [63620 results]
-2017-12-07 12:05:09,842 -> 06.Filtering less-than-mu disks... [1.240s] [178 results]
-2017-12-07 12:05:16,331 -> 07.Prunning duplicate candidates... [6.488s] [100 results]
-2017-12-07 12:05:16,340 -> [Partitions Info]Candidates;Before indexing;200
-2017-12-07 12:05:16,940 -> 08.Indexing candidates... [7.097s] [100 results]
-2017-12-07 12:05:17,148 -> [Partitions Info]Candidates;After indexing;16
-2017-12-07 12:05:17,149 -> 09.Getting expansions... [0.209s] [598 results]
-2017-12-07 12:05:17,632 -> 10.Finding maximal disks... [0.483s] [10 results]
-2017-12-07 12:05:20,621 -> 11.Prunning duplicates and subsets... [2.989s] [10 results]
-2017-12-07 12:05:20,621 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
-2017-12-07 12:05:20,621 ->        B120K,  10.0,    14, 10,  55.94,   31810,     63620,          100,         10
-2017-12-07 12:05:20,681 -> Dropping indices...[0.060s]
-2017-12-07 12:05:20,682 -> Finishing MaximalFinder at 12:05:20.681...
-2017-12-07 12:05:20,682 -> Total time for MaximalFinder: 56.001ms...
-2017-12-07 12:05:20,729 -> Closing session... [0.047s]
-Done!!! Thu Dec  7 12:05:21 PST 2017
-Running iteration 3/3 for B120K (epsilon = 20 , mu = 10)...
-2017-12-07 12:05:25,603 -> Starting session... [1.736s]
-2017-12-07 12:05:28,242 -> Reading dataset... [2.639s]
-2017-12-07 12:05:28,278 -> Lauching MaximalFinder at 12:05:28.246...
-2017-12-07 12:05:28,279 -> 00.Setting mu=10,epsilon=20.0,cores=14,dataset=B120K
-2017-12-07 12:05:28,279 -> [Partitions Info]Points;Before indexing;14
-2017-12-07 12:05:41,804 -> [Partitions Info]Points;After indexing;1024
-2017-12-07 12:05:41,804 -> 01.Indexing points... [13.525s] [120000 results]
-2017-12-07 12:05:56,070 -> 02.Getting pairs... [14.266s] [73958 results]
-2017-12-07 12:05:59,048 -> 03.Computing centers... [2.978s] [147916 results]
-2017-12-07 12:05:59,048 -> [Partitions Info]Centers;Before indexing;14
-2017-12-07 12:06:01,669 -> [Partitions Info]Centers;After indexing;1024
-2017-12-07 12:06:01,669 -> 04.Indexing centers... [2.621s] [147916 results]
-2017-12-07 12:06:14,244 -> 05.Getting disks... [12.574s] [147916 results]
-2017-12-07 12:06:15,810 -> 06.Filtering less-than-mu disks... [1.566s] [1774 results]
-2017-12-07 12:06:22,889 -> 07.Prunning duplicate candidates... [7.079s] [1074 results]
-2017-12-07 12:06:22,896 -> [Partitions Info]Candidates;Before indexing;200
-2017-12-07 12:06:23,435 -> 08.Indexing candidates... [7.625s] [1074 results]
-2017-12-07 12:06:23,701 -> [Partitions Info]Candidates;After indexing;16
-2017-12-07 12:06:23,701 -> 09.Getting expansions... [0.266s] [2622 results]
-2017-12-07 12:06:24,239 -> 10.Finding maximal disks... [0.538s] [94 results]
-2017-12-07 12:06:27,176 -> 11.Prunning duplicates and subsets... [2.937s] [94 results]
-2017-12-07 12:06:27,176 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
-2017-12-07 12:06:27,177 ->        B120K,  20.0,    14, 10,  58.90,   73958,    147916,         1074,         94
-2017-12-07 12:06:27,235 -> Dropping indices...[0.058s]
-2017-12-07 12:06:27,235 -> Finishing MaximalFinder at 12:06:27.235...
-2017-12-07 12:06:27,236 -> Total time for MaximalFinder: 58.957ms...
-2017-12-07 12:06:27,284 -> Closing session... [0.048s]
-Done!!! Thu Dec  7 12:06:27 PST 2017
+2017-12-07 18:27:37,931 -> Starting session... [1.677s]
+2017-12-07 18:27:41,150 -> Reading dataset... [3.218s]
+2017-12-07 18:27:41,187 -> Lauching MaximalFinder at 18:27:41.155...
+2017-12-07 18:27:41,187 -> 00.Setting mu=10,epsilon=30.0,cores=14,dataset=B120K
+2017-12-07 18:27:41,187 -> [Partitions Info]Points;Before indexing;14
+2017-12-07 18:27:54,384 -> [Partitions Info]Points;After indexing;1024
+2017-12-07 18:27:54,384 -> 01.Indexing points... [13.197s] [120000 results]
+2017-12-07 18:28:09,059 -> 02.Getting pairs... [14.675s] [122068 results]
+2017-12-07 18:28:12,525 -> 03.Computing centers... [3.466s] [244136 results]
+2017-12-07 18:28:12,525 -> [Partitions Info]Centers;Before indexing;14
+2017-12-07 18:28:14,995 -> [Partitions Info]Centers;After indexing;1024
+2017-12-07 18:28:14,995 -> 04.Indexing centers... [2.470s] [244136 results]
+2017-12-07 18:28:28,765 -> 05.Getting disks... [13.770s] [244136 results]
+2017-12-07 18:28:30,936 -> 06.Filtering less-than-mu disks... [2.171s] [5138 results]
+2017-12-07 18:28:38,719 -> 07.Prunning duplicate candidates... [7.783s] [3198 results]
+2017-12-07 18:28:38,725 -> [Partitions Info]Candidates;Before indexing;200
+2017-12-07 18:28:39,314 -> 08.Indexing candidates... [8.378s] [3198 results]
+2017-12-07 18:28:39,782 -> [Partitions Info]Candidates;After indexing;16
+2017-12-07 18:28:39,782 -> 09.Getting expansions... [0.468s] [6394 results]
+2017-12-07 18:28:40,335 -> 10.Finding maximal disks... [0.553s] [258 results]
+2017-12-07 18:28:43,577 -> 11.Prunning duplicates and subsets... [3.242s] [258 results]
+2017-12-07 18:28:43,577 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-12-07 18:28:43,577 ->        B120K,  30.0,    14, 10,  62.39,  122068,    244136,         3198,        258
+2017-12-07 18:28:43,630 -> Dropping indices...[0.053s]
+2017-12-07 18:28:43,631 -> Finishing MaximalFinder at 18:28:43.631...
+2017-12-07 18:28:43,631 -> Total time for MaximalFinder: 62.444ms...
+2017-12-07 18:28:43,680 -> Closing session... [0.049s]
+Done!!! Thu Dec  7 18:28:44 PST 2017
+Running iteration 2/3 for B120K (epsilon = 20 , mu = 10)...
+2017-12-07 18:28:47,644 -> Starting session... [1.711s]
+2017-12-07 18:28:50,416 -> Reading dataset... [2.765s]
+2017-12-07 18:28:50,454 -> Lauching MaximalFinder at 18:28:50.422...
+2017-12-07 18:28:50,454 -> 00.Setting mu=10,epsilon=20.0,cores=14,dataset=B120K
+2017-12-07 18:28:50,454 -> [Partitions Info]Points;Before indexing;14
+2017-12-07 18:29:04,002 -> [Partitions Info]Points;After indexing;1024
+2017-12-07 18:29:04,003 -> 01.Indexing points... [13.549s] [120000 results]
+2017-12-07 18:29:18,031 -> 02.Getting pairs... [14.028s] [73958 results]
+2017-12-07 18:29:21,187 -> 03.Computing centers... [3.156s] [147916 results]
+2017-12-07 18:29:21,187 -> [Partitions Info]Centers;Before indexing;14
+2017-12-07 18:29:23,340 -> [Partitions Info]Centers;After indexing;1024
+2017-12-07 18:29:23,340 -> 04.Indexing centers... [2.153s] [147916 results]
+2017-12-07 18:29:36,390 -> 05.Getting disks... [13.050s] [147916 results]
+2017-12-07 18:29:37,921 -> 06.Filtering less-than-mu disks... [1.531s] [1774 results]
+2017-12-07 18:29:45,070 -> 07.Prunning duplicate candidates... [7.149s] [1074 results]
+2017-12-07 18:29:45,079 -> [Partitions Info]Candidates;Before indexing;200
+2017-12-07 18:29:45,751 -> 08.Indexing candidates... [7.830s] [1074 results]
+2017-12-07 18:29:46,001 -> [Partitions Info]Candidates;After indexing;16
+2017-12-07 18:29:46,001 -> 09.Getting expansions... [0.250s] [2622 results]
+2017-12-07 18:29:46,537 -> 10.Finding maximal disks... [0.536s] [94 results]
+2017-12-07 18:29:49,656 -> 11.Prunning duplicates and subsets... [3.119s] [94 results]
+2017-12-07 18:29:49,656 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-12-07 18:29:49,656 ->        B120K,  20.0,    14, 10,  59.20,   73958,    147916,         1074,         94
+2017-12-07 18:29:49,712 -> Dropping indices...[0.055s]
+2017-12-07 18:29:49,712 -> Finishing MaximalFinder at 18:29:49.712...
+2017-12-07 18:29:49,712 -> Total time for MaximalFinder: 59.258ms...
+2017-12-07 18:29:49,755 -> Closing session... [0.043s]
+Done!!! Thu Dec  7 18:29:50 PST 2017
+Running iteration 2/3 for B120K (epsilon = 10 , mu = 10)...
+2017-12-07 18:29:53,690 -> Starting session... [1.645s]
+2017-12-07 18:29:56,370 -> Reading dataset... [2.659s]
+2017-12-07 18:29:56,414 -> Lauching MaximalFinder at 18:29:56.375...
+2017-12-07 18:29:56,415 -> 00.Setting mu=10,epsilon=10.0,cores=14,dataset=B120K
+2017-12-07 18:29:56,415 -> [Partitions Info]Points;Before indexing;14
+2017-12-07 18:30:09,813 -> [Partitions Info]Points;After indexing;1024
+2017-12-07 18:30:09,813 -> 01.Indexing points... [13.398s] [120000 results]
+2017-12-07 18:30:23,462 -> 02.Getting pairs... [13.649s] [31810 results]
+2017-12-07 18:30:26,299 -> 03.Computing centers... [2.837s] [63620 results]
+2017-12-07 18:30:26,299 -> [Partitions Info]Centers;Before indexing;14
+2017-12-07 18:30:28,410 -> [Partitions Info]Centers;After indexing;1024
+2017-12-07 18:30:28,410 -> 04.Indexing centers... [2.111s] [63620 results]
+2017-12-07 18:30:39,361 -> 05.Getting disks... [10.951s] [63620 results]
+2017-12-07 18:30:40,599 -> 06.Filtering less-than-mu disks... [1.238s] [178 results]
+2017-12-07 18:30:47,855 -> 07.Prunning duplicate candidates... [7.256s] [100 results]
+2017-12-07 18:30:47,863 -> [Partitions Info]Candidates;Before indexing;200
+2017-12-07 18:30:48,436 -> 08.Indexing candidates... [7.837s] [100 results]
+2017-12-07 18:30:48,631 -> [Partitions Info]Candidates;After indexing;16
+2017-12-07 18:30:48,631 -> 09.Getting expansions... [0.195s] [598 results]
+2017-12-07 18:30:49,286 -> 10.Finding maximal disks... [0.655s] [10 results]
+2017-12-07 18:30:52,149 -> 11.Prunning duplicates and subsets... [2.863s] [10 results]
+2017-12-07 18:30:52,150 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-12-07 18:30:52,150 ->        B120K,  10.0,    14, 10,  55.74,   31810,     63620,          100,         10
+2017-12-07 18:30:52,233 -> Dropping indices...[0.083s]
+2017-12-07 18:30:52,234 -> Finishing MaximalFinder at 18:30:52.233...
+2017-12-07 18:30:52,234 -> Total time for MaximalFinder: 55.818ms...
+2017-12-07 18:30:52,291 -> Closing session... [0.057s]
+Done!!! Thu Dec  7 18:30:52 PST 2017
 Running iteration 3/3 for B120K (epsilon = 30 , mu = 10)...
-2017-12-07 12:06:31,167 -> Starting session... [1.579s]
-2017-12-07 12:06:34,091 -> Reading dataset... [2.924s]
-2017-12-07 12:06:34,132 -> Lauching MaximalFinder at 12:06:34.096...
-2017-12-07 12:06:34,132 -> 00.Setting mu=10,epsilon=30.0,cores=14,dataset=B120K
-2017-12-07 12:06:34,132 -> [Partitions Info]Points;Before indexing;14
-2017-12-07 12:06:47,506 -> [Partitions Info]Points;After indexing;1024
-2017-12-07 12:06:47,507 -> 01.Indexing points... [13.375s] [120000 results]
-2017-12-07 12:07:02,160 -> 02.Getting pairs... [14.653s] [122068 results]
-2017-12-07 12:07:05,252 -> 03.Computing centers... [3.091s] [244136 results]
-2017-12-07 12:07:05,252 -> [Partitions Info]Centers;Before indexing;14
-2017-12-07 12:07:08,002 -> [Partitions Info]Centers;After indexing;1024
-2017-12-07 12:07:08,002 -> 04.Indexing centers... [2.750s] [244136 results]
-2017-12-07 12:07:22,644 -> 05.Getting disks... [14.642s] [244136 results]
-2017-12-07 12:07:24,647 -> 06.Filtering less-than-mu disks... [2.003s] [5138 results]
-2017-12-07 12:07:32,051 -> 07.Prunning duplicate candidates... [7.404s] [3198 results]
-2017-12-07 12:07:32,061 -> [Partitions Info]Candidates;Before indexing;200
-2017-12-07 12:07:32,720 -> 08.Indexing candidates... [8.073s] [3198 results]
-2017-12-07 12:07:32,982 -> [Partitions Info]Candidates;After indexing;16
-2017-12-07 12:07:32,982 -> 09.Getting expansions... [0.262s] [6395 results]
-2017-12-07 12:07:33,559 -> 10.Finding maximal disks... [0.577s] [258 results]
-2017-12-07 12:07:36,335 -> 11.Prunning duplicates and subsets... [2.776s] [258 results]
-2017-12-07 12:07:36,336 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
-2017-12-07 12:07:36,336 ->        B120K,  30.0,    14, 10,  62.20,  122068,    244136,         3198,        258
-2017-12-07 12:07:36,399 -> Dropping indices...[0.063s]
-2017-12-07 12:07:36,399 -> Finishing MaximalFinder at 12:07:36.399...
-2017-12-07 12:07:36,399 -> Total time for MaximalFinder: 62.267ms...
-2017-12-07 12:07:36,445 -> Closing session... [0.046s]
-Done!!! Thu Dec  7 12:07:36 PST 2017
+2017-12-07 18:30:56,185 -> Starting session... [1.696s]
+2017-12-07 18:30:58,974 -> Reading dataset... [2.789s]
+2017-12-07 18:30:59,035 -> Lauching MaximalFinder at 18:30:58.981...
+2017-12-07 18:30:59,036 -> 00.Setting mu=10,epsilon=30.0,cores=14,dataset=B120K
+2017-12-07 18:30:59,036 -> [Partitions Info]Points;Before indexing;14
+2017-12-07 18:31:12,604 -> [Partitions Info]Points;After indexing;1024
+2017-12-07 18:31:12,604 -> 01.Indexing points... [13.568s] [120000 results]
+2017-12-07 18:31:27,528 -> 02.Getting pairs... [14.924s] [122068 results]
+2017-12-07 18:31:30,887 -> 03.Computing centers... [3.359s] [244136 results]
+2017-12-07 18:31:30,887 -> [Partitions Info]Centers;Before indexing;14
+2017-12-07 18:31:33,730 -> [Partitions Info]Centers;After indexing;1024
+2017-12-07 18:31:33,730 -> 04.Indexing centers... [2.843s] [244136 results]
+2017-12-07 18:31:47,199 -> 05.Getting disks... [13.469s] [244136 results]
+2017-12-07 18:31:49,003 -> 06.Filtering less-than-mu disks... [1.803s] [5138 results]
+2017-12-07 18:31:56,916 -> 07.Prunning duplicate candidates... [7.913s] [3198 results]
+2017-12-07 18:31:56,926 -> [Partitions Info]Candidates;Before indexing;200
+2017-12-07 18:31:57,525 -> 08.Indexing candidates... [8.522s] [3198 results]
+2017-12-07 18:31:57,822 -> [Partitions Info]Candidates;After indexing;16
+2017-12-07 18:31:57,822 -> 09.Getting expansions... [0.297s] [6395 results]
+2017-12-07 18:31:58,388 -> 10.Finding maximal disks... [0.566s] [258 results]
+2017-12-07 18:32:01,475 -> 11.Prunning duplicates and subsets... [3.086s] [258 results]
+2017-12-07 18:32:01,476 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-12-07 18:32:01,476 ->        B120K,  30.0,    14, 10,  62.44,  122068,    244136,         3198,        258
+2017-12-07 18:32:01,543 -> Dropping indices...[0.067s]
+2017-12-07 18:32:01,544 -> Finishing MaximalFinder at 18:32:01.543...
+2017-12-07 18:32:01,544 -> Total time for MaximalFinder: 62.508ms...
+2017-12-07 18:32:01,590 -> Closing session... [0.046s]
+Done!!! Thu Dec  7 18:32:02 PST 2017
+Running iteration 3/3 for B120K (epsilon = 20 , mu = 10)...
+2017-12-07 18:32:05,467 -> Starting session... [1.608s]
+2017-12-07 18:32:08,461 -> Reading dataset... [2.994s]
+2017-12-07 18:32:08,521 -> Lauching MaximalFinder at 18:32:08.468...
+2017-12-07 18:32:08,521 -> 00.Setting mu=10,epsilon=20.0,cores=14,dataset=B120K
+2017-12-07 18:32:08,521 -> [Partitions Info]Points;Before indexing;14
+2017-12-07 18:32:22,326 -> [Partitions Info]Points;After indexing;1024
+2017-12-07 18:32:22,326 -> 01.Indexing points... [13.805s] [120000 results]
+2017-12-07 18:32:36,618 -> 02.Getting pairs... [14.291s] [73958 results]
+2017-12-07 18:32:39,871 -> 03.Computing centers... [3.253s] [147916 results]
+2017-12-07 18:32:39,872 -> [Partitions Info]Centers;Before indexing;14
+2017-12-07 18:32:41,835 -> [Partitions Info]Centers;After indexing;1024
+2017-12-07 18:32:41,835 -> 04.Indexing centers... [1.963s] [147916 results]
+2017-12-07 18:32:54,458 -> 05.Getting disks... [12.623s] [147916 results]
+2017-12-07 18:32:55,915 -> 06.Filtering less-than-mu disks... [1.457s] [1774 results]
+2017-12-07 18:33:03,065 -> 07.Prunning duplicate candidates... [7.150s] [1074 results]
+2017-12-07 18:33:03,072 -> [Partitions Info]Candidates;Before indexing;200
+2017-12-07 18:33:03,636 -> 08.Indexing candidates... [7.721s] [1074 results]
+2017-12-07 18:33:03,864 -> [Partitions Info]Candidates;After indexing;16
+2017-12-07 18:33:03,864 -> 09.Getting expansions... [0.228s] [2622 results]
+2017-12-07 18:33:04,413 -> 10.Finding maximal disks... [0.549s] [94 results]
+2017-12-07 18:33:07,324 -> 11.Prunning duplicates and subsets... [2.911s] [94 results]
+2017-12-07 18:33:07,324 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-12-07 18:33:07,324 ->        B120K,  20.0,    14, 10,  58.80,   73958,    147916,         1074,         94
+2017-12-07 18:33:07,391 -> Dropping indices...[0.067s]
+2017-12-07 18:33:07,392 -> Finishing MaximalFinder at 18:33:07.391...
+2017-12-07 18:33:07,392 -> Total time for MaximalFinder: 58.870ms...
+2017-12-07 18:33:07,432 -> Closing session... [0.040s]
+Done!!! Thu Dec  7 18:33:07 PST 2017
+Running iteration 3/3 for B120K (epsilon = 10 , mu = 10)...
+2017-12-07 18:33:11,463 -> Starting session... [1.708s]
+2017-12-07 18:33:14,269 -> Reading dataset... [2.806s]
+2017-12-07 18:33:14,313 -> Lauching MaximalFinder at 18:33:14.274...
+2017-12-07 18:33:14,313 -> 00.Setting mu=10,epsilon=10.0,cores=14,dataset=B120K
+2017-12-07 18:33:14,313 -> [Partitions Info]Points;Before indexing;14
+2017-12-07 18:33:28,020 -> [Partitions Info]Points;After indexing;1024
+2017-12-07 18:33:28,020 -> 01.Indexing points... [13.707s] [120000 results]
+2017-12-07 18:33:41,596 -> 02.Getting pairs... [13.576s] [31810 results]
+2017-12-07 18:33:44,332 -> 03.Computing centers... [2.735s] [63620 results]
+2017-12-07 18:33:44,332 -> [Partitions Info]Centers;Before indexing;14
+2017-12-07 18:33:46,518 -> [Partitions Info]Centers;After indexing;1024
+2017-12-07 18:33:46,518 -> 04.Indexing centers... [2.186s] [63620 results]
+2017-12-07 18:33:57,378 -> 05.Getting disks... [10.860s] [63620 results]
+2017-12-07 18:33:58,341 -> 06.Filtering less-than-mu disks... [0.963s] [178 results]
+2017-12-07 18:34:04,767 -> 07.Prunning duplicate candidates... [6.426s] [100 results]
+2017-12-07 18:34:04,774 -> [Partitions Info]Candidates;Before indexing;200
+2017-12-07 18:34:05,342 -> 08.Indexing candidates... [7.001s] [100 results]
+2017-12-07 18:34:05,523 -> [Partitions Info]Candidates;After indexing;16
+2017-12-07 18:34:05,523 -> 09.Getting expansions... [0.181s] [598 results]
+2017-12-07 18:34:06,177 -> 10.Finding maximal disks... [0.653s] [10 results]
+2017-12-07 18:34:08,801 -> 11.Prunning duplicates and subsets... [2.624s] [10 results]
+2017-12-07 18:34:08,801 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-12-07 18:34:08,801 ->        B120K,  10.0,    14, 10,  54.49,   31810,     63620,          100,         10
+2017-12-07 18:34:08,867 -> Dropping indices...[0.066s]
+2017-12-07 18:34:08,868 -> Finishing MaximalFinder at 18:34:08.867...
+2017-12-07 18:34:08,868 -> Total time for MaximalFinder: 54.554ms...
+2017-12-07 18:34:08,911 -> Closing session... [0.043s]
+Done!!! Thu Dec  7 18:34:09 PST 2017
 acald013@dblab-rack11: stopping org.apache.spark.deploy.worker.Worker
 acald013@dblab-rack12: stopping org.apache.spark.deploy.worker.Worker
 stopping org.apache.spark.deploy.master.Master
@@ -544,269 +541,269 @@ starting org.apache.spark.deploy.master.Master, logging to /home/acald013/Spark/
 acald013@dblab-rack12: starting org.apache.spark.deploy.worker.Worker, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.worker.Worker-1-dblab-rack12.out
 acald013@dblab-rack14: starting org.apache.spark.deploy.worker.Worker, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.worker.Worker-1-dblab-rack14.cs.ucr.edu.out
 acald013@dblab-rack11: starting org.apache.spark.deploy.worker.Worker, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.worker.Worker-1-dblab-rack11.cs.ucr.edu.out
-Running iteration 1/3 for B180K (epsilon = 10 , mu = 10)...
-2017-12-07 12:07:46,720 -> Starting session... [1.796s]
-2017-12-07 12:07:49,764 -> Reading dataset... [3.044s]
-2017-12-07 12:07:49,808 -> Lauching MaximalFinder at 12:07:49.769...
-2017-12-07 12:07:49,808 -> 00.Setting mu=10,epsilon=10.0,cores=21,dataset=B180K
-2017-12-07 12:07:49,808 -> [Partitions Info]Points;Before indexing;21
-2017-12-07 12:08:02,872 -> [Partitions Info]Points;After indexing;1024
-2017-12-07 12:08:02,872 -> 01.Indexing points... [13.064s] [180000 results]
-2017-12-07 12:08:14,475 -> 02.Getting pairs... [11.603s] [47715 results]
-2017-12-07 12:08:16,796 -> 03.Computing centers... [2.321s] [95430 results]
-2017-12-07 12:08:16,796 -> [Partitions Info]Centers;Before indexing;21
-2017-12-07 12:08:18,688 -> [Partitions Info]Centers;After indexing;1024
-2017-12-07 12:08:18,688 -> 04.Indexing centers... [1.892s] [95430 results]
-2017-12-07 12:08:27,865 -> 05.Getting disks... [9.176s] [95430 results]
-2017-12-07 12:08:28,908 -> 06.Filtering less-than-mu disks... [1.043s] [267 results]
-2017-12-07 12:08:34,666 -> 07.Prunning duplicate candidates... [5.758s] [150 results]
-2017-12-07 12:08:34,677 -> [Partitions Info]Candidates;Before indexing;200
-2017-12-07 12:08:35,290 -> 08.Indexing candidates... [6.382s] [150 results]
-2017-12-07 12:08:35,507 -> [Partitions Info]Candidates;After indexing;25
-2017-12-07 12:08:35,507 -> 09.Getting expansions... [0.216s] [1046 results]
-2017-12-07 12:08:36,190 -> 10.Finding maximal disks... [0.682s] [15 results]
-2017-12-07 12:08:38,666 -> 11.Prunning duplicates and subsets... [2.476s] [15 results]
-2017-12-07 12:08:38,666 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
-2017-12-07 12:08:38,667 ->        B180K,  10.0,    21, 10,  48.86,   47715,     95430,          150,         15
-2017-12-07 12:08:38,740 -> Dropping indices...[0.073s]
-2017-12-07 12:08:38,740 -> Finishing MaximalFinder at 12:08:38.740...
-2017-12-07 12:08:38,740 -> Total time for MaximalFinder: 48.932ms...
-2017-12-07 12:08:38,880 -> Closing session... [0.139s]
-Done!!! Thu Dec  7 12:08:40 PST 2017
-Running iteration 1/3 for B180K (epsilon = 20 , mu = 10)...
-2017-12-07 12:08:43,791 -> Starting session... [1.512s]
-2017-12-07 12:08:46,669 -> Reading dataset... [2.878s]
-2017-12-07 12:08:46,708 -> Lauching MaximalFinder at 12:08:46.675...
-2017-12-07 12:08:46,708 -> 00.Setting mu=10,epsilon=20.0,cores=21,dataset=B180K
-2017-12-07 12:08:46,708 -> [Partitions Info]Points;Before indexing;21
-2017-12-07 12:08:58,933 -> [Partitions Info]Points;After indexing;1024
-2017-12-07 12:08:58,934 -> 01.Indexing points... [12.226s] [180000 results]
-2017-12-07 12:09:10,876 -> 02.Getting pairs... [11.942s] [110937 results]
-2017-12-07 12:09:13,636 -> 03.Computing centers... [2.760s] [221874 results]
-2017-12-07 12:09:13,636 -> [Partitions Info]Centers;Before indexing;21
-2017-12-07 12:09:15,776 -> [Partitions Info]Centers;After indexing;1024
-2017-12-07 12:09:15,776 -> 04.Indexing centers... [2.140s] [221874 results]
-2017-12-07 12:09:27,126 -> 05.Getting disks... [11.350s] [221874 results]
-2017-12-07 12:09:28,564 -> 06.Filtering less-than-mu disks... [1.438s] [2661 results]
-2017-12-07 12:09:34,706 -> 07.Prunning duplicate candidates... [6.142s] [1611 results]
-2017-12-07 12:09:34,713 -> [Partitions Info]Candidates;Before indexing;200
-2017-12-07 12:09:35,257 -> 08.Indexing candidates... [6.692s] [1611 results]
-2017-12-07 12:09:35,513 -> [Partitions Info]Candidates;After indexing;25
-2017-12-07 12:09:35,514 -> 09.Getting expansions... [0.257s] [4836 results]
-2017-12-07 12:09:36,081 -> 10.Finding maximal disks... [0.567s] [141 results]
-2017-12-07 12:09:38,461 -> 11.Prunning duplicates and subsets... [2.380s] [141 results]
-2017-12-07 12:09:38,461 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
-2017-12-07 12:09:38,461 ->        B180K,  20.0,    21, 10,  51.75,  110937,    221874,         1611,        141
-2017-12-07 12:09:38,524 -> Dropping indices...[0.063s]
-2017-12-07 12:09:38,524 -> Finishing MaximalFinder at 12:09:38.524...
-2017-12-07 12:09:38,525 -> Total time for MaximalFinder: 51.816ms...
-2017-12-07 12:09:38,569 -> Closing session... [0.044s]
-Done!!! Thu Dec  7 12:09:39 PST 2017
 Running iteration 1/3 for B180K (epsilon = 30 , mu = 10)...
-2017-12-07 12:09:42,664 -> Starting session... [1.708s]
-2017-12-07 12:09:45,625 -> Reading dataset... [2.960s]
-2017-12-07 12:09:45,680 -> Lauching MaximalFinder at 12:09:45.632...
-2017-12-07 12:09:45,681 -> 00.Setting mu=10,epsilon=30.0,cores=21,dataset=B180K
-2017-12-07 12:09:45,681 -> [Partitions Info]Points;Before indexing;21
-2017-12-07 12:09:58,272 -> [Partitions Info]Points;After indexing;1024
-2017-12-07 12:09:58,273 -> 01.Indexing points... [12.592s] [180000 results]
-2017-12-07 12:10:11,181 -> 02.Getting pairs... [12.908s] [183102 results]
-2017-12-07 12:10:14,029 -> 03.Computing centers... [2.848s] [366204 results]
-2017-12-07 12:10:14,030 -> [Partitions Info]Centers;Before indexing;21
-2017-12-07 12:10:16,760 -> [Partitions Info]Centers;After indexing;1024
-2017-12-07 12:10:16,760 -> 04.Indexing centers... [2.731s] [366204 results]
-2017-12-07 12:10:29,303 -> 05.Getting disks... [12.543s] [366204 results]
-2017-12-07 12:10:31,756 -> 06.Filtering less-than-mu disks... [2.453s] [7707 results]
-2017-12-07 12:10:38,445 -> 07.Prunning duplicate candidates... [6.689s] [4797 results]
-2017-12-07 12:10:38,455 -> [Partitions Info]Candidates;Before indexing;200
-2017-12-07 12:10:39,102 -> 08.Indexing candidates... [7.346s] [4797 results]
-2017-12-07 12:10:39,757 -> [Partitions Info]Candidates;After indexing;25
-2017-12-07 12:10:39,757 -> 09.Getting expansions... [0.655s] [10344 results]
-2017-12-07 12:10:40,450 -> 10.Finding maximal disks... [0.693s] [387 results]
-2017-12-07 12:10:43,192 -> 11.Prunning duplicates and subsets... [2.742s] [387 results]
-2017-12-07 12:10:43,192 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
-2017-12-07 12:10:43,192 ->        B180K,  30.0,    21, 10,  57.51,  183102,    366204,         4797,        387
-2017-12-07 12:10:43,246 -> Dropping indices...[0.053s]
-2017-12-07 12:10:43,246 -> Finishing MaximalFinder at 12:10:43.246...
-2017-12-07 12:10:43,246 -> Total time for MaximalFinder: 57.565ms...
-2017-12-07 12:10:43,290 -> Closing session... [0.044s]
-Done!!! Thu Dec  7 12:10:43 PST 2017
-Running iteration 2/3 for B180K (epsilon = 10 , mu = 10)...
-2017-12-07 12:10:47,229 -> Starting session... [1.623s]
-2017-12-07 12:10:49,989 -> Reading dataset... [2.760s]
-2017-12-07 12:10:50,043 -> Lauching MaximalFinder at 12:10:49.996...
-2017-12-07 12:10:50,043 -> 00.Setting mu=10,epsilon=10.0,cores=21,dataset=B180K
-2017-12-07 12:10:50,044 -> [Partitions Info]Points;Before indexing;21
-2017-12-07 12:11:02,262 -> [Partitions Info]Points;After indexing;1024
-2017-12-07 12:11:02,263 -> 01.Indexing points... [12.219s] [180000 results]
-2017-12-07 12:11:13,378 -> 02.Getting pairs... [11.115s] [47715 results]
-2017-12-07 12:11:15,898 -> 03.Computing centers... [2.520s] [95430 results]
-2017-12-07 12:11:15,898 -> [Partitions Info]Centers;Before indexing;21
-2017-12-07 12:11:17,570 -> [Partitions Info]Centers;After indexing;1024
-2017-12-07 12:11:17,570 -> 04.Indexing centers... [1.672s] [95430 results]
-2017-12-07 12:11:27,131 -> 05.Getting disks... [9.561s] [95430 results]
-2017-12-07 12:11:28,024 -> 06.Filtering less-than-mu disks... [0.892s] [267 results]
-2017-12-07 12:11:33,159 -> 07.Prunning duplicate candidates... [5.135s] [150 results]
-2017-12-07 12:11:33,168 -> [Partitions Info]Candidates;Before indexing;200
-2017-12-07 12:11:33,713 -> 08.Indexing candidates... [5.689s] [150 results]
-2017-12-07 12:11:33,897 -> [Partitions Info]Candidates;After indexing;25
-2017-12-07 12:11:33,897 -> 09.Getting expansions... [0.184s] [1046 results]
-2017-12-07 12:11:34,397 -> 10.Finding maximal disks... [0.500s] [15 results]
-2017-12-07 12:11:36,870 -> 11.Prunning duplicates and subsets... [2.472s] [15 results]
-2017-12-07 12:11:36,870 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
-2017-12-07 12:11:36,870 ->        B180K,  10.0,    21, 10,  46.83,   47715,     95430,          150,         15
-2017-12-07 12:11:36,941 -> Dropping indices...[0.071s]
-2017-12-07 12:11:36,942 -> Finishing MaximalFinder at 12:11:36.941...
-2017-12-07 12:11:36,942 -> Total time for MaximalFinder: 46.898ms...
-2017-12-07 12:11:37,095 -> Closing session... [0.153s]
-Done!!! Thu Dec  7 12:11:37 PST 2017
-Running iteration 2/3 for B180K (epsilon = 20 , mu = 10)...
-2017-12-07 12:11:40,936 -> Starting session... [1.481s]
-2017-12-07 12:11:43,856 -> Reading dataset... [2.920s]
-2017-12-07 12:11:43,890 -> Lauching MaximalFinder at 12:11:43.860...
-2017-12-07 12:11:43,890 -> 00.Setting mu=10,epsilon=20.0,cores=21,dataset=B180K
-2017-12-07 12:11:43,890 -> [Partitions Info]Points;Before indexing;21
-2017-12-07 12:11:56,112 -> [Partitions Info]Points;After indexing;1024
-2017-12-07 12:11:56,113 -> 01.Indexing points... [12.223s] [180000 results]
-2017-12-07 12:12:07,753 -> 02.Getting pairs... [11.640s] [110937 results]
-2017-12-07 12:12:10,411 -> 03.Computing centers... [2.658s] [221874 results]
-2017-12-07 12:12:10,411 -> [Partitions Info]Centers;Before indexing;21
-2017-12-07 12:12:12,605 -> [Partitions Info]Centers;After indexing;1024
-2017-12-07 12:12:12,605 -> 04.Indexing centers... [2.194s] [221874 results]
-2017-12-07 12:12:22,982 -> 05.Getting disks... [10.376s] [221874 results]
-2017-12-07 12:12:24,328 -> 06.Filtering less-than-mu disks... [1.346s] [2661 results]
-2017-12-07 12:12:31,845 -> 07.Prunning duplicate candidates... [7.517s] [1611 results]
-2017-12-07 12:12:31,856 -> [Partitions Info]Candidates;Before indexing;200
-2017-12-07 12:12:32,411 -> 08.Indexing candidates... [8.083s] [1611 results]
-2017-12-07 12:12:32,623 -> [Partitions Info]Candidates;After indexing;25
-2017-12-07 12:12:32,623 -> 09.Getting expansions... [0.212s] [4836 results]
-2017-12-07 12:12:33,186 -> 10.Finding maximal disks... [0.563s] [141 results]
-2017-12-07 12:12:36,274 -> 11.Prunning duplicates and subsets... [3.088s] [141 results]
-2017-12-07 12:12:36,274 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
-2017-12-07 12:12:36,275 ->        B180K,  20.0,    21, 10,  52.38,  110937,    221874,         1611,        141
-2017-12-07 12:12:36,346 -> Dropping indices...[0.071s]
-2017-12-07 12:12:36,346 -> Finishing MaximalFinder at 12:12:36.346...
-2017-12-07 12:12:36,347 -> Total time for MaximalFinder: 52.456ms...
-2017-12-07 12:12:36,427 -> Closing session... [0.080s]
-Done!!! Thu Dec  7 12:12:36 PST 2017
+2017-12-07 18:34:18,968 -> Starting session... [1.742s]
+2017-12-07 18:34:22,079 -> Reading dataset... [3.109s]
+2017-12-07 18:34:22,121 -> Lauching MaximalFinder at 18:34:22.085...
+2017-12-07 18:34:22,122 -> 00.Setting mu=10,epsilon=30.0,cores=21,dataset=B180K
+2017-12-07 18:34:22,122 -> [Partitions Info]Points;Before indexing;21
+2017-12-07 18:34:34,017 -> [Partitions Info]Points;After indexing;1024
+2017-12-07 18:34:34,017 -> 01.Indexing points... [11.895s] [180000 results]
+2017-12-07 18:34:46,552 -> 02.Getting pairs... [12.535s] [183102 results]
+2017-12-07 18:34:49,271 -> 03.Computing centers... [2.719s] [366204 results]
+2017-12-07 18:34:49,271 -> [Partitions Info]Centers;Before indexing;21
+2017-12-07 18:34:51,706 -> [Partitions Info]Centers;After indexing;1024
+2017-12-07 18:34:51,707 -> 04.Indexing centers... [2.436s] [366204 results]
+2017-12-07 18:35:03,647 -> 05.Getting disks... [11.940s] [366204 results]
+2017-12-07 18:35:05,592 -> 06.Filtering less-than-mu disks... [1.945s] [7707 results]
+2017-12-07 18:35:12,136 -> 07.Prunning duplicate candidates... [6.544s] [4797 results]
+2017-12-07 18:35:12,142 -> [Partitions Info]Candidates;Before indexing;200
+2017-12-07 18:35:12,673 -> 08.Indexing candidates... [7.081s] [4797 results]
+2017-12-07 18:35:13,373 -> [Partitions Info]Candidates;After indexing;25
+2017-12-07 18:35:13,373 -> 09.Getting expansions... [0.700s] [10344 results]
+2017-12-07 18:35:13,973 -> 10.Finding maximal disks... [0.600s] [387 results]
+2017-12-07 18:35:16,761 -> 11.Prunning duplicates and subsets... [2.788s] [387 results]
+2017-12-07 18:35:16,761 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-12-07 18:35:16,761 ->        B180K,  30.0,    21, 10,  54.64,  183102,    366204,         4797,        387
+2017-12-07 18:35:16,819 -> Dropping indices...[0.058s]
+2017-12-07 18:35:16,819 -> Finishing MaximalFinder at 18:35:16.819...
+2017-12-07 18:35:16,820 -> Total time for MaximalFinder: 54.698ms...
+2017-12-07 18:35:16,864 -> Closing session... [0.043s]
+Done!!! Thu Dec  7 18:35:17 PST 2017
+Running iteration 1/3 for B180K (epsilon = 20 , mu = 10)...
+2017-12-07 18:35:20,986 -> Starting session... [1.778s]
+2017-12-07 18:35:24,159 -> Reading dataset... [3.170s]
+2017-12-07 18:35:24,203 -> Lauching MaximalFinder at 18:35:24.166...
+2017-12-07 18:35:24,203 -> 00.Setting mu=10,epsilon=20.0,cores=21,dataset=B180K
+2017-12-07 18:35:24,203 -> [Partitions Info]Points;Before indexing;21
+2017-12-07 18:35:36,367 -> [Partitions Info]Points;After indexing;1024
+2017-12-07 18:35:36,367 -> 01.Indexing points... [12.164s] [180000 results]
+2017-12-07 18:35:48,076 -> 02.Getting pairs... [11.709s] [110937 results]
+2017-12-07 18:35:50,649 -> 03.Computing centers... [2.573s] [221874 results]
+2017-12-07 18:35:50,649 -> [Partitions Info]Centers;Before indexing;21
+2017-12-07 18:35:52,910 -> [Partitions Info]Centers;After indexing;1024
+2017-12-07 18:35:52,910 -> 04.Indexing centers... [2.261s] [221874 results]
+2017-12-07 18:36:04,166 -> 05.Getting disks... [11.256s] [221874 results]
+2017-12-07 18:36:05,795 -> 06.Filtering less-than-mu disks... [1.629s] [2661 results]
+2017-12-07 18:36:12,952 -> 07.Prunning duplicate candidates... [7.157s] [1611 results]
+2017-12-07 18:36:12,961 -> [Partitions Info]Candidates;Before indexing;200
+2017-12-07 18:36:13,517 -> 08.Indexing candidates... [7.722s] [1611 results]
+2017-12-07 18:36:13,742 -> [Partitions Info]Candidates;After indexing;25
+2017-12-07 18:36:13,742 -> 09.Getting expansions... [0.225s] [4836 results]
+2017-12-07 18:36:14,335 -> 10.Finding maximal disks... [0.592s] [141 results]
+2017-12-07 18:36:17,006 -> 11.Prunning duplicates and subsets... [2.671s] [141 results]
+2017-12-07 18:36:17,006 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-12-07 18:36:17,006 ->        B180K,  20.0,    21, 10,  52.80,  110937,    221874,         1611,        141
+2017-12-07 18:36:17,066 -> Dropping indices...[0.059s]
+2017-12-07 18:36:17,066 -> Finishing MaximalFinder at 18:36:17.066...
+2017-12-07 18:36:17,066 -> Total time for MaximalFinder: 52.863ms...
+2017-12-07 18:36:17,103 -> Closing session... [0.037s]
+Done!!! Thu Dec  7 18:36:17 PST 2017
+Running iteration 1/3 for B180K (epsilon = 10 , mu = 10)...
+2017-12-07 18:36:20,598 -> Starting session... [1.140s]
+2017-12-07 18:36:23,451 -> Reading dataset... [2.852s]
+2017-12-07 18:36:23,497 -> Lauching MaximalFinder at 18:36:23.457...
+2017-12-07 18:36:23,497 -> 00.Setting mu=10,epsilon=10.0,cores=21,dataset=B180K
+2017-12-07 18:36:23,498 -> [Partitions Info]Points;Before indexing;21
+2017-12-07 18:36:35,436 -> [Partitions Info]Points;After indexing;1024
+2017-12-07 18:36:35,436 -> 01.Indexing points... [11.939s] [180000 results]
+2017-12-07 18:36:47,259 -> 02.Getting pairs... [11.821s] [47715 results]
+2017-12-07 18:36:49,555 -> 03.Computing centers... [2.296s] [95430 results]
+2017-12-07 18:36:49,556 -> [Partitions Info]Centers;Before indexing;21
+2017-12-07 18:36:51,425 -> [Partitions Info]Centers;After indexing;1024
+2017-12-07 18:36:51,425 -> 04.Indexing centers... [1.870s] [95430 results]
+2017-12-07 18:37:00,427 -> 05.Getting disks... [9.002s] [95430 results]
+2017-12-07 18:37:01,472 -> 06.Filtering less-than-mu disks... [1.045s] [267 results]
+2017-12-07 18:37:07,538 -> 07.Prunning duplicate candidates... [6.066s] [150 results]
+2017-12-07 18:37:07,548 -> [Partitions Info]Candidates;Before indexing;200
+2017-12-07 18:37:08,168 -> 08.Indexing candidates... [6.696s] [150 results]
+2017-12-07 18:37:08,365 -> [Partitions Info]Candidates;After indexing;25
+2017-12-07 18:37:08,365 -> 09.Getting expansions... [0.197s] [1046 results]
+2017-12-07 18:37:08,902 -> 10.Finding maximal disks... [0.537s] [15 results]
+2017-12-07 18:37:11,453 -> 11.Prunning duplicates and subsets... [2.551s] [15 results]
+2017-12-07 18:37:11,453 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-12-07 18:37:11,454 ->        B180K,  10.0,    21, 10,  47.96,   47715,     95430,          150,         15
+2017-12-07 18:37:11,505 -> Dropping indices...[0.051s]
+2017-12-07 18:37:11,505 -> Finishing MaximalFinder at 18:37:11.505...
+2017-12-07 18:37:11,505 -> Total time for MaximalFinder: 48.008ms...
+2017-12-07 18:37:11,544 -> Closing session... [0.039s]
+Done!!! Thu Dec  7 18:37:11 PST 2017
 Running iteration 2/3 for B180K (epsilon = 30 , mu = 10)...
-2017-12-07 12:12:40,318 -> Starting session... [1.554s]
-2017-12-07 12:12:43,108 -> Reading dataset... [2.790s]
-2017-12-07 12:12:43,152 -> Lauching MaximalFinder at 12:12:43.115...
-2017-12-07 12:12:43,152 -> 00.Setting mu=10,epsilon=30.0,cores=21,dataset=B180K
-2017-12-07 12:12:43,153 -> [Partitions Info]Points;Before indexing;21
-2017-12-07 12:12:55,719 -> [Partitions Info]Points;After indexing;1024
-2017-12-07 12:12:55,719 -> 01.Indexing points... [12.567s] [180000 results]
-2017-12-07 12:13:08,966 -> 02.Getting pairs... [13.247s] [183102 results]
-2017-12-07 12:13:11,848 -> 03.Computing centers... [2.882s] [366204 results]
-2017-12-07 12:13:11,848 -> [Partitions Info]Centers;Before indexing;21
-2017-12-07 12:13:14,397 -> [Partitions Info]Centers;After indexing;1024
-2017-12-07 12:13:14,397 -> 04.Indexing centers... [2.549s] [366204 results]
-2017-12-07 12:13:26,520 -> 05.Getting disks... [12.123s] [366204 results]
-2017-12-07 12:13:28,277 -> 06.Filtering less-than-mu disks... [1.757s] [7707 results]
-2017-12-07 12:13:34,859 -> 07.Prunning duplicate candidates... [6.582s] [4797 results]
-2017-12-07 12:13:34,869 -> [Partitions Info]Candidates;Before indexing;200
-2017-12-07 12:13:35,402 -> 08.Indexing candidates... [7.125s] [4797 results]
-2017-12-07 12:13:35,694 -> [Partitions Info]Candidates;After indexing;25
-2017-12-07 12:13:35,694 -> 09.Getting expansions... [0.292s] [10344 results]
-2017-12-07 12:13:36,315 -> 10.Finding maximal disks... [0.620s] [387 results]
-2017-12-07 12:13:38,883 -> 11.Prunning duplicates and subsets... [2.568s] [387 results]
-2017-12-07 12:13:38,884 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
-2017-12-07 12:13:38,884 ->        B180K,  30.0,    21, 10,  55.73,  183102,    366204,         4797,        387
-2017-12-07 12:13:38,957 -> Dropping indices...[0.073s]
-2017-12-07 12:13:38,958 -> Finishing MaximalFinder at 12:13:38.958...
-2017-12-07 12:13:38,958 -> Total time for MaximalFinder: 55.806ms...
-2017-12-07 12:13:39,010 -> Closing session... [0.052s]
-Done!!! Thu Dec  7 12:13:39 PST 2017
-Running iteration 3/3 for B180K (epsilon = 10 , mu = 10)...
-2017-12-07 12:13:43,068 -> Starting session... [1.771s]
-2017-12-07 12:13:45,914 -> Reading dataset... [2.845s]
-2017-12-07 12:13:45,952 -> Lauching MaximalFinder at 12:13:45.919...
-2017-12-07 12:13:45,953 -> 00.Setting mu=10,epsilon=10.0,cores=21,dataset=B180K
-2017-12-07 12:13:45,953 -> [Partitions Info]Points;Before indexing;21
-2017-12-07 12:13:58,724 -> [Partitions Info]Points;After indexing;1024
-2017-12-07 12:13:58,725 -> 01.Indexing points... [12.771s] [180000 results]
-2017-12-07 12:14:10,244 -> 02.Getting pairs... [11.519s] [47715 results]
-2017-12-07 12:14:12,595 -> 03.Computing centers... [2.351s] [95430 results]
-2017-12-07 12:14:12,595 -> [Partitions Info]Centers;Before indexing;21
-2017-12-07 12:14:14,627 -> [Partitions Info]Centers;After indexing;1024
-2017-12-07 12:14:14,627 -> 04.Indexing centers... [2.032s] [95430 results]
-2017-12-07 12:14:23,260 -> 05.Getting disks... [8.633s] [95430 results]
-2017-12-07 12:14:24,374 -> 06.Filtering less-than-mu disks... [1.114s] [267 results]
-2017-12-07 12:14:30,279 -> 07.Prunning duplicate candidates... [5.905s] [150 results]
-2017-12-07 12:14:30,289 -> [Partitions Info]Candidates;Before indexing;200
-2017-12-07 12:14:30,829 -> 08.Indexing candidates... [6.455s] [150 results]
-2017-12-07 12:14:31,036 -> [Partitions Info]Candidates;After indexing;25
-2017-12-07 12:14:31,036 -> 09.Getting expansions... [0.207s] [1046 results]
-2017-12-07 12:14:31,687 -> 10.Finding maximal disks... [0.651s] [15 results]
-2017-12-07 12:14:34,305 -> 11.Prunning duplicates and subsets... [2.617s] [15 results]
-2017-12-07 12:14:34,305 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
-2017-12-07 12:14:34,305 ->        B180K,  10.0,    21, 10,  48.35,   47715,     95430,          150,         15
-2017-12-07 12:14:34,368 -> Dropping indices...[0.063s]
-2017-12-07 12:14:34,368 -> Finishing MaximalFinder at 12:14:34.368...
-2017-12-07 12:14:34,368 -> Total time for MaximalFinder: 48.416ms...
-2017-12-07 12:14:34,409 -> Closing session... [0.041s]
-Done!!! Thu Dec  7 12:14:34 PST 2017
-Running iteration 3/3 for B180K (epsilon = 20 , mu = 10)...
-2017-12-07 12:14:38,632 -> Starting session... [1.731s]
-2017-12-07 12:14:41,629 -> Reading dataset... [2.996s]
-2017-12-07 12:14:41,672 -> Lauching MaximalFinder at 12:14:41.634...
-2017-12-07 12:14:41,672 -> 00.Setting mu=10,epsilon=20.0,cores=21,dataset=B180K
-2017-12-07 12:14:41,672 -> [Partitions Info]Points;Before indexing;21
-2017-12-07 12:14:53,781 -> [Partitions Info]Points;After indexing;1024
-2017-12-07 12:14:53,782 -> 01.Indexing points... [12.109s] [180000 results]
-2017-12-07 12:15:06,063 -> 02.Getting pairs... [12.281s] [110937 results]
-2017-12-07 12:15:08,445 -> 03.Computing centers... [2.382s] [221874 results]
-2017-12-07 12:15:08,445 -> [Partitions Info]Centers;Before indexing;21
-2017-12-07 12:15:10,870 -> [Partitions Info]Centers;After indexing;1024
-2017-12-07 12:15:10,870 -> 04.Indexing centers... [2.425s] [221874 results]
-2017-12-07 12:15:21,725 -> 05.Getting disks... [10.854s] [221874 results]
-2017-12-07 12:15:23,202 -> 06.Filtering less-than-mu disks... [1.477s] [2661 results]
-2017-12-07 12:15:29,239 -> 07.Prunning duplicate candidates... [6.036s] [1611 results]
-2017-12-07 12:15:29,248 -> [Partitions Info]Candidates;Before indexing;200
-2017-12-07 12:15:29,853 -> 08.Indexing candidates... [6.650s] [1611 results]
-2017-12-07 12:15:30,096 -> [Partitions Info]Candidates;After indexing;25
-2017-12-07 12:15:30,096 -> 09.Getting expansions... [0.243s] [4836 results]
-2017-12-07 12:15:30,778 -> 10.Finding maximal disks... [0.682s] [141 results]
-2017-12-07 12:15:33,201 -> 11.Prunning duplicates and subsets... [2.423s] [141 results]
-2017-12-07 12:15:33,202 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
-2017-12-07 12:15:33,202 ->        B180K,  20.0,    21, 10,  51.53,  110937,    221874,         1611,        141
-2017-12-07 12:15:33,258 -> Dropping indices...[0.056s]
-2017-12-07 12:15:33,258 -> Finishing MaximalFinder at 12:15:33.258...
-2017-12-07 12:15:33,258 -> Total time for MaximalFinder: 51.586ms...
-2017-12-07 12:15:33,372 -> Closing session... [0.114s]
-Done!!! Thu Dec  7 12:15:34 PST 2017
+2017-12-07 18:37:15,795 -> Starting session... [1.776s]
+2017-12-07 18:37:18,711 -> Reading dataset... [2.915s]
+2017-12-07 18:37:18,747 -> Lauching MaximalFinder at 18:37:18.715...
+2017-12-07 18:37:18,748 -> 00.Setting mu=10,epsilon=30.0,cores=21,dataset=B180K
+2017-12-07 18:37:18,748 -> [Partitions Info]Points;Before indexing;21
+2017-12-07 18:37:30,691 -> [Partitions Info]Points;After indexing;1024
+2017-12-07 18:37:30,691 -> 01.Indexing points... [11.943s] [180000 results]
+2017-12-07 18:37:43,005 -> 02.Getting pairs... [12.313s] [183102 results]
+2017-12-07 18:37:45,907 -> 03.Computing centers... [2.901s] [366204 results]
+2017-12-07 18:37:45,907 -> [Partitions Info]Centers;Before indexing;21
+2017-12-07 18:37:48,484 -> [Partitions Info]Centers;After indexing;1024
+2017-12-07 18:37:48,484 -> 04.Indexing centers... [2.577s] [366204 results]
+2017-12-07 18:38:01,412 -> 05.Getting disks... [12.928s] [366204 results]
+2017-12-07 18:38:03,372 -> 06.Filtering less-than-mu disks... [1.960s] [7707 results]
+2017-12-07 18:38:10,355 -> 07.Prunning duplicate candidates... [6.983s] [4797 results]
+2017-12-07 18:38:10,364 -> [Partitions Info]Candidates;Before indexing;200
+2017-12-07 18:38:10,928 -> 08.Indexing candidates... [7.556s] [4797 results]
+2017-12-07 18:38:11,215 -> [Partitions Info]Candidates;After indexing;25
+2017-12-07 18:38:11,215 -> 09.Getting expansions... [0.287s] [10344 results]
+2017-12-07 18:38:11,809 -> 10.Finding maximal disks... [0.594s] [387 results]
+2017-12-07 18:38:14,565 -> 11.Prunning duplicates and subsets... [2.756s] [387 results]
+2017-12-07 18:38:14,566 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-12-07 18:38:14,566 ->        B180K,  30.0,    21, 10,  55.82,  183102,    366204,         4797,        387
+2017-12-07 18:38:14,629 -> Dropping indices...[0.063s]
+2017-12-07 18:38:14,630 -> Finishing MaximalFinder at 18:38:14.630...
+2017-12-07 18:38:14,630 -> Total time for MaximalFinder: 55.883ms...
+2017-12-07 18:38:14,680 -> Closing session... [0.050s]
+Done!!! Thu Dec  7 18:38:15 PST 2017
+Running iteration 2/3 for B180K (epsilon = 20 , mu = 10)...
+2017-12-07 18:38:18,721 -> Starting session... [1.700s]
+2017-12-07 18:38:21,634 -> Reading dataset... [2.913s]
+2017-12-07 18:38:21,691 -> Lauching MaximalFinder at 18:38:21.641...
+2017-12-07 18:38:21,692 -> 00.Setting mu=10,epsilon=20.0,cores=21,dataset=B180K
+2017-12-07 18:38:21,692 -> [Partitions Info]Points;Before indexing;21
+2017-12-07 18:38:33,814 -> [Partitions Info]Points;After indexing;1024
+2017-12-07 18:38:33,815 -> 01.Indexing points... [12.123s] [180000 results]
+2017-12-07 18:38:46,153 -> 02.Getting pairs... [12.338s] [110937 results]
+2017-12-07 18:38:48,710 -> 03.Computing centers... [2.557s] [221874 results]
+2017-12-07 18:38:48,711 -> [Partitions Info]Centers;Before indexing;21
+2017-12-07 18:38:51,064 -> [Partitions Info]Centers;After indexing;1024
+2017-12-07 18:38:51,064 -> 04.Indexing centers... [2.354s] [221874 results]
+2017-12-07 18:39:01,536 -> 05.Getting disks... [10.472s] [221874 results]
+2017-12-07 18:39:03,204 -> 06.Filtering less-than-mu disks... [1.668s] [2661 results]
+2017-12-07 18:39:09,576 -> 07.Prunning duplicate candidates... [6.372s] [1611 results]
+2017-12-07 18:39:09,583 -> [Partitions Info]Candidates;Before indexing;200
+2017-12-07 18:39:10,227 -> 08.Indexing candidates... [7.023s] [1611 results]
+2017-12-07 18:39:10,545 -> [Partitions Info]Candidates;After indexing;25
+2017-12-07 18:39:10,545 -> 09.Getting expansions... [0.318s] [4836 results]
+2017-12-07 18:39:11,115 -> 10.Finding maximal disks... [0.570s] [141 results]
+2017-12-07 18:39:13,646 -> 11.Prunning duplicates and subsets... [2.531s] [141 results]
+2017-12-07 18:39:13,646 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-12-07 18:39:13,647 ->        B180K,  20.0,    21, 10,  51.95,  110937,    221874,         1611,        141
+2017-12-07 18:39:13,711 -> Dropping indices...[0.064s]
+2017-12-07 18:39:13,711 -> Finishing MaximalFinder at 18:39:13.711...
+2017-12-07 18:39:13,711 -> Total time for MaximalFinder: 52.020ms...
+2017-12-07 18:39:13,758 -> Closing session... [0.047s]
+Done!!! Thu Dec  7 18:39:15 PST 2017
+Running iteration 2/3 for B180K (epsilon = 10 , mu = 10)...
+2017-12-07 18:39:18,503 -> Starting session... [1.681s]
+2017-12-07 18:39:21,362 -> Reading dataset... [2.859s]
+2017-12-07 18:39:21,398 -> Lauching MaximalFinder at 18:39:21.367...
+2017-12-07 18:39:21,399 -> 00.Setting mu=10,epsilon=10.0,cores=21,dataset=B180K
+2017-12-07 18:39:21,399 -> [Partitions Info]Points;Before indexing;21
+2017-12-07 18:39:33,947 -> [Partitions Info]Points;After indexing;1024
+2017-12-07 18:39:33,948 -> 01.Indexing points... [12.548s] [180000 results]
+2017-12-07 18:39:45,656 -> 02.Getting pairs... [11.708s] [47715 results]
+2017-12-07 18:39:48,069 -> 03.Computing centers... [2.413s] [95430 results]
+2017-12-07 18:39:48,070 -> [Partitions Info]Centers;Before indexing;21
+2017-12-07 18:39:49,804 -> [Partitions Info]Centers;After indexing;1024
+2017-12-07 18:39:49,804 -> 04.Indexing centers... [1.734s] [95430 results]
+2017-12-07 18:39:59,897 -> 05.Getting disks... [10.093s] [95430 results]
+2017-12-07 18:40:00,895 -> 06.Filtering less-than-mu disks... [0.997s] [267 results]
+2017-12-07 18:40:05,655 -> 07.Prunning duplicate candidates... [4.759s] [150 results]
+2017-12-07 18:40:05,665 -> [Partitions Info]Candidates;Before indexing;200
+2017-12-07 18:40:06,255 -> 08.Indexing candidates... [5.359s] [150 results]
+2017-12-07 18:40:06,490 -> [Partitions Info]Candidates;After indexing;25
+2017-12-07 18:40:06,490 -> 09.Getting expansions... [0.235s] [1046 results]
+2017-12-07 18:40:07,010 -> 10.Finding maximal disks... [0.520s] [15 results]
+2017-12-07 18:40:09,457 -> 11.Prunning duplicates and subsets... [2.447s] [15 results]
+2017-12-07 18:40:09,457 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-12-07 18:40:09,457 ->        B180K,  10.0,    21, 10,  48.06,   47715,     95430,          150,         15
+2017-12-07 18:40:09,513 -> Dropping indices...[0.056s]
+2017-12-07 18:40:09,513 -> Finishing MaximalFinder at 18:40:09.513...
+2017-12-07 18:40:09,513 -> Total time for MaximalFinder: 48.115ms...
+2017-12-07 18:40:09,556 -> Closing session... [0.043s]
+Done!!! Thu Dec  7 18:40:10 PST 2017
 Running iteration 3/3 for B180K (epsilon = 30 , mu = 10)...
-2017-12-07 12:15:38,256 -> Starting session... [1.667s]
-2017-12-07 12:15:41,047 -> Reading dataset... [2.790s]
-2017-12-07 12:15:41,086 -> Lauching MaximalFinder at 12:15:41.053...
-2017-12-07 12:15:41,087 -> 00.Setting mu=10,epsilon=30.0,cores=21,dataset=B180K
-2017-12-07 12:15:41,087 -> [Partitions Info]Points;Before indexing;21
-2017-12-07 12:15:53,677 -> [Partitions Info]Points;After indexing;1024
-2017-12-07 12:15:53,677 -> 01.Indexing points... [12.590s] [180000 results]
-2017-12-07 12:16:06,442 -> 02.Getting pairs... [12.765s] [183102 results]
-2017-12-07 12:16:08,969 -> 03.Computing centers... [2.527s] [366204 results]
-2017-12-07 12:16:08,969 -> [Partitions Info]Centers;Before indexing;21
-2017-12-07 12:16:12,004 -> [Partitions Info]Centers;After indexing;1024
-2017-12-07 12:16:12,005 -> 04.Indexing centers... [3.036s] [366204 results]
-2017-12-07 12:16:24,088 -> 05.Getting disks... [12.083s] [366204 results]
-2017-12-07 12:16:26,307 -> 06.Filtering less-than-mu disks... [2.219s] [7707 results]
-2017-12-07 12:16:33,103 -> 07.Prunning duplicate candidates... [6.796s] [4797 results]
-2017-12-07 12:16:33,113 -> [Partitions Info]Candidates;Before indexing;200
-2017-12-07 12:16:33,700 -> 08.Indexing candidates... [7.393s] [4797 results]
-2017-12-07 12:16:34,096 -> [Partitions Info]Candidates;After indexing;25
-2017-12-07 12:16:34,096 -> 09.Getting expansions... [0.396s] [10344 results]
-2017-12-07 12:16:34,814 -> 10.Finding maximal disks... [0.718s] [387 results]
-2017-12-07 12:16:37,516 -> 11.Prunning duplicates and subsets... [2.702s] [387 results]
-2017-12-07 12:16:37,517 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
-2017-12-07 12:16:37,517 ->        B180K,  30.0,    21, 10,  56.43,  183102,    366204,         4797,        387
-2017-12-07 12:16:37,637 -> Dropping indices...[0.120s]
-2017-12-07 12:16:37,637 -> Finishing MaximalFinder at 12:16:37.637...
-2017-12-07 12:16:37,638 -> Total time for MaximalFinder: 56.550ms...
-2017-12-07 12:16:37,688 -> Closing session... [0.050s]
-Done!!! Thu Dec  7 12:16:38 PST 2017
-acald013@dblab-rack12: stopping org.apache.spark.deploy.worker.Worker
+2017-12-07 18:40:13,609 -> Starting session... [1.681s]
+2017-12-07 18:40:16,467 -> Reading dataset... [2.857s]
+2017-12-07 18:40:16,513 -> Lauching MaximalFinder at 18:40:16.474...
+2017-12-07 18:40:16,513 -> 00.Setting mu=10,epsilon=30.0,cores=21,dataset=B180K
+2017-12-07 18:40:16,513 -> [Partitions Info]Points;Before indexing;21
+2017-12-07 18:40:29,312 -> [Partitions Info]Points;After indexing;1024
+2017-12-07 18:40:29,312 -> 01.Indexing points... [12.799s] [180000 results]
+2017-12-07 18:40:42,098 -> 02.Getting pairs... [12.786s] [183102 results]
+2017-12-07 18:40:44,787 -> 03.Computing centers... [2.688s] [366204 results]
+2017-12-07 18:40:44,787 -> [Partitions Info]Centers;Before indexing;21
+2017-12-07 18:40:47,531 -> [Partitions Info]Centers;After indexing;1024
+2017-12-07 18:40:47,531 -> 04.Indexing centers... [2.744s] [366204 results]
+2017-12-07 18:40:58,660 -> 05.Getting disks... [11.129s] [366204 results]
+2017-12-07 18:41:00,445 -> 06.Filtering less-than-mu disks... [1.785s] [7707 results]
+2017-12-07 18:41:08,012 -> 07.Prunning duplicate candidates... [7.567s] [4797 results]
+2017-12-07 18:41:08,018 -> [Partitions Info]Candidates;Before indexing;200
+2017-12-07 18:41:08,551 -> 08.Indexing candidates... [8.106s] [4797 results]
+2017-12-07 18:41:08,807 -> [Partitions Info]Candidates;After indexing;25
+2017-12-07 18:41:08,807 -> 09.Getting expansions... [0.256s] [10344 results]
+2017-12-07 18:41:09,387 -> 10.Finding maximal disks... [0.580s] [387 results]
+2017-12-07 18:41:11,894 -> 11.Prunning duplicates and subsets... [2.507s] [387 results]
+2017-12-07 18:41:11,895 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-12-07 18:41:11,895 ->        B180K,  30.0,    21, 10,  55.38,  183102,    366204,         4797,        387
+2017-12-07 18:41:11,953 -> Dropping indices...[0.058s]
+2017-12-07 18:41:11,954 -> Finishing MaximalFinder at 18:41:11.954...
+2017-12-07 18:41:11,954 -> Total time for MaximalFinder: 55.441ms...
+2017-12-07 18:41:11,991 -> Closing session... [0.037s]
+Done!!! Thu Dec  7 18:41:12 PST 2017
+Running iteration 3/3 for B180K (epsilon = 20 , mu = 10)...
+2017-12-07 18:41:16,063 -> Starting session... [1.658s]
+2017-12-07 18:41:19,142 -> Reading dataset... [3.079s]
+2017-12-07 18:41:19,179 -> Lauching MaximalFinder at 18:41:19.147...
+2017-12-07 18:41:19,180 -> 00.Setting mu=10,epsilon=20.0,cores=21,dataset=B180K
+2017-12-07 18:41:19,180 -> [Partitions Info]Points;Before indexing;21
+2017-12-07 18:41:31,157 -> [Partitions Info]Points;After indexing;1024
+2017-12-07 18:41:31,157 -> 01.Indexing points... [11.977s] [180000 results]
+2017-12-07 18:41:43,237 -> 02.Getting pairs... [12.080s] [110937 results]
+2017-12-07 18:41:45,761 -> 03.Computing centers... [2.524s] [221874 results]
+2017-12-07 18:41:45,761 -> [Partitions Info]Centers;Before indexing;21
+2017-12-07 18:41:47,755 -> [Partitions Info]Centers;After indexing;1024
+2017-12-07 18:41:47,756 -> 04.Indexing centers... [1.995s] [221874 results]
+2017-12-07 18:41:58,278 -> 05.Getting disks... [10.522s] [221874 results]
+2017-12-07 18:41:59,849 -> 06.Filtering less-than-mu disks... [1.570s] [2661 results]
+2017-12-07 18:42:06,263 -> 07.Prunning duplicate candidates... [6.414s] [1611 results]
+2017-12-07 18:42:06,273 -> [Partitions Info]Candidates;Before indexing;200
+2017-12-07 18:42:06,814 -> 08.Indexing candidates... [6.965s] [1611 results]
+2017-12-07 18:42:07,037 -> [Partitions Info]Candidates;After indexing;25
+2017-12-07 18:42:07,037 -> 09.Getting expansions... [0.223s] [4836 results]
+2017-12-07 18:42:07,617 -> 10.Finding maximal disks... [0.580s] [141 results]
+2017-12-07 18:42:10,310 -> 11.Prunning duplicates and subsets... [2.693s] [141 results]
+2017-12-07 18:42:10,311 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-12-07 18:42:10,311 ->        B180K,  20.0,    21, 10,  51.13,  110937,    221874,         1611,        141
+2017-12-07 18:42:10,374 -> Dropping indices...[0.062s]
+2017-12-07 18:42:10,374 -> Finishing MaximalFinder at 18:42:10.374...
+2017-12-07 18:42:10,374 -> Total time for MaximalFinder: 51.194ms...
+2017-12-07 18:42:10,430 -> Closing session... [0.056s]
+Done!!! Thu Dec  7 18:42:10 PST 2017
+Running iteration 3/3 for B180K (epsilon = 10 , mu = 10)...
+2017-12-07 18:42:14,254 -> Starting session... [1.503s]
+2017-12-07 18:42:17,216 -> Reading dataset... [2.962s]
+2017-12-07 18:42:17,249 -> Lauching MaximalFinder at 18:42:17.220...
+2017-12-07 18:42:17,250 -> 00.Setting mu=10,epsilon=10.0,cores=21,dataset=B180K
+2017-12-07 18:42:17,250 -> [Partitions Info]Points;Before indexing;21
+2017-12-07 18:42:29,643 -> [Partitions Info]Points;After indexing;1024
+2017-12-07 18:42:29,643 -> 01.Indexing points... [12.393s] [180000 results]
+2017-12-07 18:42:41,005 -> 02.Getting pairs... [11.362s] [47715 results]
+2017-12-07 18:42:43,348 -> 03.Computing centers... [2.343s] [95430 results]
+2017-12-07 18:42:43,348 -> [Partitions Info]Centers;Before indexing;21
+2017-12-07 18:42:45,202 -> [Partitions Info]Centers;After indexing;1024
+2017-12-07 18:42:45,202 -> 04.Indexing centers... [1.854s] [95430 results]
+2017-12-07 18:42:54,472 -> 05.Getting disks... [9.270s] [95430 results]
+2017-12-07 18:42:55,450 -> 06.Filtering less-than-mu disks... [0.978s] [267 results]
+2017-12-07 18:43:00,408 -> 07.Prunning duplicate candidates... [4.958s] [150 results]
+2017-12-07 18:43:00,418 -> [Partitions Info]Candidates;Before indexing;200
+2017-12-07 18:43:01,138 -> 08.Indexing candidates... [5.688s] [150 results]
+2017-12-07 18:43:01,372 -> [Partitions Info]Candidates;After indexing;25
+2017-12-07 18:43:01,372 -> 09.Getting expansions... [0.234s] [1046 results]
+2017-12-07 18:43:02,046 -> 10.Finding maximal disks... [0.674s] [15 results]
+2017-12-07 18:43:04,686 -> 11.Prunning duplicates and subsets... [2.640s] [15 results]
+2017-12-07 18:43:04,686 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-12-07 18:43:04,686 ->        B180K,  10.0,    21, 10,  47.44,   47715,     95430,          150,         15
+2017-12-07 18:43:04,752 -> Dropping indices...[0.066s]
+2017-12-07 18:43:04,752 -> Finishing MaximalFinder at 18:43:04.752...
+2017-12-07 18:43:04,753 -> Total time for MaximalFinder: 47.502ms...
+2017-12-07 18:43:04,826 -> Closing session... [0.073s]
+Done!!! Thu Dec  7 18:43:05 PST 2017
 acald013@dblab-rack14: stopping org.apache.spark.deploy.worker.Worker
+acald013@dblab-rack12: stopping org.apache.spark.deploy.worker.Worker
 acald013@dblab-rack11: stopping org.apache.spark.deploy.worker.Worker
 stopping org.apache.spark.deploy.master.Master
 starting org.apache.spark.deploy.master.Master, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.master.Master-1-dblab-rack11.cs.ucr.edu.out
@@ -814,270 +811,270 @@ acald013@dblab-rack12: starting org.apache.spark.deploy.worker.Worker, logging t
 acald013@dblab-rack15: starting org.apache.spark.deploy.worker.Worker, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.worker.Worker-1-dblab-rack15.out
 acald013@dblab-rack14: starting org.apache.spark.deploy.worker.Worker, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.worker.Worker-1-dblab-rack14.cs.ucr.edu.out
 acald013@dblab-rack11: starting org.apache.spark.deploy.worker.Worker, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.worker.Worker-1-dblab-rack11.cs.ucr.edu.out
-Running iteration 1/3 for B240K (epsilon = 10 , mu = 10)...
-2017-12-07 12:16:48,329 -> Starting session... [1.862s]
-2017-12-07 12:16:51,615 -> Reading dataset... [3.285s]
-2017-12-07 12:16:51,672 -> Lauching MaximalFinder at 12:16:51.622...
-2017-12-07 12:16:51,683 -> 00.Setting mu=10,epsilon=10.0,cores=35,dataset=B240K
-2017-12-07 12:16:51,683 -> [Partitions Info]Points;Before indexing;35
-2017-12-07 12:17:04,460 -> [Partitions Info]Points;After indexing;1024
-2017-12-07 12:17:04,460 -> 01.Indexing points... [12.777s] [240000 results]
-2017-12-07 12:17:15,936 -> 02.Getting pairs... [11.476s] [63620 results]
-2017-12-07 12:17:18,232 -> 03.Computing centers... [2.296s] [127240 results]
-2017-12-07 12:17:18,232 -> [Partitions Info]Centers;Before indexing;35
-2017-12-07 12:17:20,766 -> [Partitions Info]Centers;After indexing;1024
-2017-12-07 12:17:20,766 -> 04.Indexing centers... [2.534s] [127240 results]
-2017-12-07 12:17:29,165 -> 05.Getting disks... [8.399s] [127240 results]
-2017-12-07 12:17:30,285 -> 06.Filtering less-than-mu disks... [1.120s] [356 results]
-2017-12-07 12:17:35,985 -> 07.Prunning duplicate candidates... [5.700s] [200 results]
-2017-12-07 12:17:35,993 -> [Partitions Info]Candidates;Before indexing;200
-2017-12-07 12:17:36,504 -> 08.Indexing candidates... [6.219s] [200 results]
-2017-12-07 12:17:36,699 -> [Partitions Info]Candidates;After indexing;36
-2017-12-07 12:17:36,699 -> 09.Getting expansions... [0.195s] [1626 results]
-2017-12-07 12:17:37,564 -> 10.Finding maximal disks... [0.865s] [20 results]
-2017-12-07 12:17:39,951 -> 11.Prunning duplicates and subsets... [2.386s] [20 results]
-2017-12-07 12:17:39,952 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
-2017-12-07 12:17:39,952 ->        B240K,  10.0,    35, 10,  48.27,   63620,    127240,          200,         20
-2017-12-07 12:17:40,018 -> Dropping indices...[0.065s]
-2017-12-07 12:17:40,018 -> Finishing MaximalFinder at 12:17:40.018...
-2017-12-07 12:17:40,018 -> Total time for MaximalFinder: 48.336ms...
-2017-12-07 12:17:40,089 -> Closing session... [0.071s]
-Done!!! Thu Dec  7 12:17:40 PST 2017
-Running iteration 1/3 for B240K (epsilon = 20 , mu = 10)...
-2017-12-07 12:17:44,048 -> Starting session... [1.707s]
-2017-12-07 12:17:46,914 -> Reading dataset... [2.866s]
-2017-12-07 12:17:46,970 -> Lauching MaximalFinder at 12:17:46.922...
-2017-12-07 12:17:46,970 -> 00.Setting mu=10,epsilon=20.0,cores=35,dataset=B240K
-2017-12-07 12:17:46,971 -> [Partitions Info]Points;Before indexing;35
-2017-12-07 12:17:59,593 -> [Partitions Info]Points;After indexing;1024
-2017-12-07 12:17:59,593 -> 01.Indexing points... [12.623s] [240000 results]
-2017-12-07 12:18:11,604 -> 02.Getting pairs... [12.011s] [147916 results]
-2017-12-07 12:18:14,184 -> 03.Computing centers... [2.580s] [295832 results]
-2017-12-07 12:18:14,184 -> [Partitions Info]Centers;Before indexing;35
-2017-12-07 12:18:16,896 -> [Partitions Info]Centers;After indexing;1024
-2017-12-07 12:18:16,897 -> 04.Indexing centers... [2.713s] [295832 results]
-2017-12-07 12:18:27,533 -> 05.Getting disks... [10.636s] [295832 results]
-2017-12-07 12:18:29,075 -> 06.Filtering less-than-mu disks... [1.542s] [3548 results]
-2017-12-07 12:18:49,268 -> 07.Prunning duplicate candidates... [20.192s] [2148 results]
-2017-12-07 12:18:49,275 -> [Partitions Info]Candidates;Before indexing;200
-2017-12-07 12:18:49,861 -> 08.Indexing candidates... [20.786s] [2148 results]
-2017-12-07 12:18:50,225 -> [Partitions Info]Candidates;After indexing;36
-2017-12-07 12:18:50,225 -> 09.Getting expansions... [0.364s] [6954 results]
-2017-12-07 12:18:50,863 -> 10.Finding maximal disks... [0.638s] [188 results]
-2017-12-07 12:18:52,940 -> 11.Prunning duplicates and subsets... [2.077s] [188 results]
-2017-12-07 12:18:52,940 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
-2017-12-07 12:18:52,940 ->        B240K,  20.0,    35, 10,  65.97,  147916,    295832,         2148,        188
-2017-12-07 12:18:52,997 -> Dropping indices...[0.057s]
-2017-12-07 12:18:52,997 -> Finishing MaximalFinder at 12:18:52.997...
-2017-12-07 12:18:52,997 -> Total time for MaximalFinder: 66.027ms...
-2017-12-07 12:18:53,035 -> Closing session... [0.038s]
-Done!!! Thu Dec  7 12:18:53 PST 2017
 Running iteration 1/3 for B240K (epsilon = 30 , mu = 10)...
-2017-12-07 12:18:57,122 -> Starting session... [1.622s]
-2017-12-07 12:19:00,391 -> Reading dataset... [3.268s]
-2017-12-07 12:19:00,443 -> Lauching MaximalFinder at 12:19:00.397...
-2017-12-07 12:19:00,443 -> 00.Setting mu=10,epsilon=30.0,cores=35,dataset=B240K
-2017-12-07 12:19:00,443 -> [Partitions Info]Points;Before indexing;35
-2017-12-07 12:19:13,444 -> [Partitions Info]Points;After indexing;1024
-2017-12-07 12:19:13,445 -> 01.Indexing points... [13.002s] [240000 results]
-2017-12-07 12:19:25,884 -> 02.Getting pairs... [12.439s] [244136 results]
-2017-12-07 12:19:28,533 -> 03.Computing centers... [2.649s] [488272 results]
-2017-12-07 12:19:28,533 -> [Partitions Info]Centers;Before indexing;35
-2017-12-07 12:19:31,735 -> [Partitions Info]Centers;After indexing;1024
-2017-12-07 12:19:31,736 -> 04.Indexing centers... [3.203s] [488272 results]
-2017-12-07 12:19:42,967 -> 05.Getting disks... [11.231s] [488272 results]
-2017-12-07 12:19:45,430 -> 06.Filtering less-than-mu disks... [2.463s] [10276 results]
-2017-12-07 12:19:52,531 -> 07.Prunning duplicate candidates... [7.101s] [6396 results]
-2017-12-07 12:19:52,538 -> [Partitions Info]Candidates;Before indexing;200
-2017-12-07 12:19:53,131 -> 08.Indexing candidates... [7.701s] [6396 results]
-2017-12-07 12:19:53,566 -> [Partitions Info]Candidates;After indexing;36
-2017-12-07 12:19:53,566 -> 09.Getting expansions... [0.435s] [14106 results]
-2017-12-07 12:19:54,264 -> 10.Finding maximal disks... [0.698s] [516 results]
-2017-12-07 12:19:56,849 -> 11.Prunning duplicates and subsets... [2.585s] [516 results]
-2017-12-07 12:19:56,849 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
-2017-12-07 12:19:56,849 ->        B240K,  30.0,    35, 10,  56.41,  244136,    488272,         6396,        516
-2017-12-07 12:19:56,926 -> Dropping indices...[0.076s]
-2017-12-07 12:19:56,926 -> Finishing MaximalFinder at 12:19:56.926...
-2017-12-07 12:19:56,926 -> Total time for MaximalFinder: 56.483ms...
-2017-12-07 12:19:57,000 -> Closing session... [0.074s]
-Done!!! Thu Dec  7 12:19:57 PST 2017
-Running iteration 2/3 for B240K (epsilon = 10 , mu = 10)...
-2017-12-07 12:20:01,093 -> Starting session... [1.674s]
-2017-12-07 12:20:04,766 -> Reading dataset... [3.672s]
-2017-12-07 12:20:04,822 -> Lauching MaximalFinder at 12:20:04.773...
-2017-12-07 12:20:04,823 -> 00.Setting mu=10,epsilon=10.0,cores=35,dataset=B240K
-2017-12-07 12:20:04,823 -> [Partitions Info]Points;Before indexing;35
-2017-12-07 12:20:18,846 -> [Partitions Info]Points;After indexing;1024
-2017-12-07 12:20:18,846 -> 01.Indexing points... [14.023s] [240000 results]
-2017-12-07 12:20:30,530 -> 02.Getting pairs... [11.684s] [63620 results]
-2017-12-07 12:20:32,795 -> 03.Computing centers... [2.265s] [127240 results]
-2017-12-07 12:20:32,795 -> [Partitions Info]Centers;Before indexing;35
-2017-12-07 12:20:34,958 -> [Partitions Info]Centers;After indexing;1024
-2017-12-07 12:20:34,958 -> 04.Indexing centers... [2.163s] [127240 results]
-2017-12-07 12:20:44,360 -> 05.Getting disks... [9.402s] [127240 results]
-2017-12-07 12:20:45,712 -> 06.Filtering less-than-mu disks... [1.352s] [356 results]
-2017-12-07 12:20:51,319 -> 07.Prunning duplicate candidates... [5.607s] [200 results]
-2017-12-07 12:20:51,326 -> [Partitions Info]Candidates;Before indexing;200
-2017-12-07 12:20:51,844 -> 08.Indexing candidates... [6.132s] [200 results]
-2017-12-07 12:20:52,070 -> [Partitions Info]Candidates;After indexing;36
-2017-12-07 12:20:52,070 -> 09.Getting expansions... [0.226s] [1626 results]
-2017-12-07 12:20:52,898 -> 10.Finding maximal disks... [0.828s] [20 results]
-2017-12-07 12:20:55,331 -> 11.Prunning duplicates and subsets... [2.433s] [20 results]
-2017-12-07 12:20:55,332 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
-2017-12-07 12:20:55,332 ->        B240K,  10.0,    35, 10,  50.51,   63620,    127240,          200,         20
-2017-12-07 12:20:55,397 -> Dropping indices...[0.065s]
-2017-12-07 12:20:55,397 -> Finishing MaximalFinder at 12:20:55.397...
-2017-12-07 12:20:55,398 -> Total time for MaximalFinder: 50.574ms...
-2017-12-07 12:20:55,455 -> Closing session... [0.057s]
-Done!!! Thu Dec  7 12:20:55 PST 2017
-Running iteration 2/3 for B240K (epsilon = 20 , mu = 10)...
-2017-12-07 12:20:59,414 -> Starting session... [1.651s]
-2017-12-07 12:21:02,711 -> Reading dataset... [3.297s]
-2017-12-07 12:21:02,770 -> Lauching MaximalFinder at 12:21:02.718...
-2017-12-07 12:21:02,770 -> 00.Setting mu=10,epsilon=20.0,cores=35,dataset=B240K
-2017-12-07 12:21:02,771 -> [Partitions Info]Points;Before indexing;35
-2017-12-07 12:21:15,928 -> [Partitions Info]Points;After indexing;1024
-2017-12-07 12:21:15,928 -> 01.Indexing points... [13.158s] [240000 results]
-2017-12-07 12:21:28,562 -> 02.Getting pairs... [12.634s] [147916 results]
-2017-12-07 12:21:31,029 -> 03.Computing centers... [2.467s] [295832 results]
-2017-12-07 12:21:31,029 -> [Partitions Info]Centers;Before indexing;35
-2017-12-07 12:21:33,501 -> [Partitions Info]Centers;After indexing;1024
-2017-12-07 12:21:33,502 -> 04.Indexing centers... [2.473s] [295832 results]
-2017-12-07 12:21:43,726 -> 05.Getting disks... [10.224s] [295832 results]
-2017-12-07 12:21:45,616 -> 06.Filtering less-than-mu disks... [1.890s] [3548 results]
-2017-12-07 12:21:51,985 -> 07.Prunning duplicate candidates... [6.369s] [2148 results]
-2017-12-07 12:21:51,992 -> [Partitions Info]Candidates;Before indexing;200
-2017-12-07 12:21:52,589 -> 08.Indexing candidates... [6.973s] [2148 results]
-2017-12-07 12:21:53,058 -> [Partitions Info]Candidates;After indexing;36
-2017-12-07 12:21:53,058 -> 09.Getting expansions... [0.469s] [6954 results]
-2017-12-07 12:21:53,830 -> 10.Finding maximal disks... [0.772s] [188 results]
-2017-12-07 12:21:56,511 -> 11.Prunning duplicates and subsets... [2.681s] [188 results]
-2017-12-07 12:21:56,511 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
-2017-12-07 12:21:56,511 ->        B240K,  20.0,    35, 10,  53.74,  147916,    295832,         2148,        188
-2017-12-07 12:21:56,570 -> Dropping indices...[0.059s]
-2017-12-07 12:21:56,571 -> Finishing MaximalFinder at 12:21:56.571...
-2017-12-07 12:21:56,571 -> Total time for MaximalFinder: 53.801ms...
-2017-12-07 12:21:56,613 -> Closing session... [0.042s]
-Done!!! Thu Dec  7 12:21:57 PST 2017
+2017-12-07 18:43:14,450 -> Starting session... [1.701s]
+2017-12-07 18:43:17,378 -> Reading dataset... [2.927s]
+2017-12-07 18:43:17,417 -> Lauching MaximalFinder at 18:43:17.383...
+2017-12-07 18:43:17,417 -> 00.Setting mu=10,epsilon=30.0,cores=28,dataset=B240K
+2017-12-07 18:43:17,418 -> [Partitions Info]Points;Before indexing;28
+2017-12-07 18:43:30,489 -> [Partitions Info]Points;After indexing;1024
+2017-12-07 18:43:30,489 -> 01.Indexing points... [13.071s] [240000 results]
+2017-12-07 18:43:43,642 -> 02.Getting pairs... [13.153s] [244136 results]
+2017-12-07 18:43:46,329 -> 03.Computing centers... [2.687s] [488272 results]
+2017-12-07 18:43:46,329 -> [Partitions Info]Centers;Before indexing;28
+2017-12-07 18:43:49,664 -> [Partitions Info]Centers;After indexing;1024
+2017-12-07 18:43:49,665 -> 04.Indexing centers... [3.336s] [488272 results]
+2017-12-07 18:44:00,907 -> 05.Getting disks... [11.242s] [488272 results]
+2017-12-07 18:44:03,728 -> 06.Filtering less-than-mu disks... [2.821s] [10276 results]
+2017-12-07 18:44:10,586 -> 07.Prunning duplicate candidates... [6.858s] [6396 results]
+2017-12-07 18:44:10,595 -> [Partitions Info]Candidates;Before indexing;200
+2017-12-07 18:44:11,171 -> 08.Indexing candidates... [7.443s] [6396 results]
+2017-12-07 18:44:11,499 -> [Partitions Info]Candidates;After indexing;30
+2017-12-07 18:44:11,500 -> 09.Getting expansions... [0.329s] [13814 results]
+2017-12-07 18:44:12,437 -> 10.Finding maximal disks... [0.937s] [517 results]
+2017-12-07 18:44:15,262 -> 11.Prunning duplicates and subsets... [2.825s] [516 results]
+2017-12-07 18:44:15,262 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-12-07 18:44:15,263 ->        B240K,  30.0,    28, 10,  57.84,  244136,    488272,         6396,        516
+2017-12-07 18:44:15,327 -> Dropping indices...[0.064s]
+2017-12-07 18:44:15,328 -> Finishing MaximalFinder at 18:44:15.328...
+2017-12-07 18:44:15,328 -> Total time for MaximalFinder: 57.911ms...
+2017-12-07 18:44:15,377 -> Closing session... [0.049s]
+Done!!! Thu Dec  7 18:44:15 PST 2017
+Running iteration 1/3 for B240K (epsilon = 20 , mu = 10)...
+2017-12-07 18:44:19,481 -> Starting session... [1.701s]
+2017-12-07 18:44:22,384 -> Reading dataset... [2.903s]
+2017-12-07 18:44:22,440 -> Lauching MaximalFinder at 18:44:22.391...
+2017-12-07 18:44:22,440 -> 00.Setting mu=10,epsilon=20.0,cores=28,dataset=B240K
+2017-12-07 18:44:22,441 -> [Partitions Info]Points;Before indexing;28
+2017-12-07 18:44:35,524 -> [Partitions Info]Points;After indexing;1024
+2017-12-07 18:44:35,524 -> 01.Indexing points... [13.083s] [240000 results]
+2017-12-07 18:44:47,546 -> 02.Getting pairs... [12.022s] [147916 results]
+2017-12-07 18:44:50,049 -> 03.Computing centers... [2.503s] [295832 results]
+2017-12-07 18:44:50,049 -> [Partitions Info]Centers;Before indexing;28
+2017-12-07 18:44:52,425 -> [Partitions Info]Centers;After indexing;1024
+2017-12-07 18:44:52,425 -> 04.Indexing centers... [2.376s] [295832 results]
+2017-12-07 18:45:04,544 -> 05.Getting disks... [12.119s] [295832 results]
+2017-12-07 18:45:06,277 -> 06.Filtering less-than-mu disks... [1.733s] [3548 results]
+2017-12-07 18:45:11,617 -> 07.Prunning duplicate candidates... [5.340s] [2148 results]
+2017-12-07 18:45:11,623 -> [Partitions Info]Candidates;Before indexing;200
+2017-12-07 18:45:12,280 -> 08.Indexing candidates... [6.003s] [2148 results]
+2017-12-07 18:45:12,561 -> [Partitions Info]Candidates;After indexing;30
+2017-12-07 18:45:12,562 -> 09.Getting expansions... [0.282s] [6436 results]
+2017-12-07 18:45:13,178 -> 10.Finding maximal disks... [0.616s] [188 results]
+2017-12-07 18:45:15,659 -> 11.Prunning duplicates and subsets... [2.481s] [188 results]
+2017-12-07 18:45:15,659 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-12-07 18:45:15,659 ->        B240K,  20.0,    28, 10,  53.22,  147916,    295832,         2148,        188
+2017-12-07 18:45:15,718 -> Dropping indices...[0.059s]
+2017-12-07 18:45:15,718 -> Finishing MaximalFinder at 18:45:15.718...
+2017-12-07 18:45:15,719 -> Total time for MaximalFinder: 53.278ms...
+2017-12-07 18:45:15,757 -> Closing session... [0.038s]
+Done!!! Thu Dec  7 18:45:16 PST 2017
+Running iteration 1/3 for B240K (epsilon = 10 , mu = 10)...
+2017-12-07 18:45:19,955 -> Starting session... [1.724s]
+2017-12-07 18:45:22,986 -> Reading dataset... [3.031s]
+2017-12-07 18:45:23,031 -> Lauching MaximalFinder at 18:45:22.991...
+2017-12-07 18:45:23,031 -> 00.Setting mu=10,epsilon=10.0,cores=28,dataset=B240K
+2017-12-07 18:45:23,031 -> [Partitions Info]Points;Before indexing;28
+2017-12-07 18:45:35,647 -> [Partitions Info]Points;After indexing;1024
+2017-12-07 18:45:35,647 -> 01.Indexing points... [12.616s] [240000 results]
+2017-12-07 18:45:47,901 -> 02.Getting pairs... [12.253s] [63620 results]
+2017-12-07 18:45:50,030 -> 03.Computing centers... [2.129s] [127240 results]
+2017-12-07 18:45:50,030 -> [Partitions Info]Centers;Before indexing;28
+2017-12-07 18:45:51,970 -> [Partitions Info]Centers;After indexing;1024
+2017-12-07 18:45:51,970 -> 04.Indexing centers... [1.940s] [127240 results]
+2017-12-07 18:46:01,079 -> 05.Getting disks... [9.109s] [127240 results]
+2017-12-07 18:46:02,232 -> 06.Filtering less-than-mu disks... [1.153s] [356 results]
+2017-12-07 18:46:07,642 -> 07.Prunning duplicate candidates... [5.410s] [200 results]
+2017-12-07 18:46:07,652 -> [Partitions Info]Candidates;Before indexing;200
+2017-12-07 18:46:08,175 -> 08.Indexing candidates... [5.943s] [200 results]
+2017-12-07 18:46:08,411 -> [Partitions Info]Candidates;After indexing;30
+2017-12-07 18:46:08,411 -> 09.Getting expansions... [0.236s] [1460 results]
+2017-12-07 18:46:09,256 -> 10.Finding maximal disks... [0.845s] [20 results]
+2017-12-07 18:46:11,760 -> 11.Prunning duplicates and subsets... [2.504s] [20 results]
+2017-12-07 18:46:11,760 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-12-07 18:46:11,760 ->        B240K,  10.0,    28, 10,  48.73,   63620,    127240,          200,         20
+2017-12-07 18:46:11,812 -> Dropping indices...[0.052s]
+2017-12-07 18:46:11,813 -> Finishing MaximalFinder at 18:46:11.812...
+2017-12-07 18:46:11,813 -> Total time for MaximalFinder: 48.781ms...
+2017-12-07 18:46:11,852 -> Closing session... [0.039s]
+Done!!! Thu Dec  7 18:46:12 PST 2017
 Running iteration 2/3 for B240K (epsilon = 30 , mu = 10)...
-2017-12-07 12:22:00,816 -> Starting session... [1.678s]
-2017-12-07 12:22:04,042 -> Reading dataset... [3.226s]
-2017-12-07 12:22:04,083 -> Lauching MaximalFinder at 12:22:04.047...
-2017-12-07 12:22:04,083 -> 00.Setting mu=10,epsilon=30.0,cores=35,dataset=B240K
-2017-12-07 12:22:04,083 -> [Partitions Info]Points;Before indexing;35
-2017-12-07 12:22:16,640 -> [Partitions Info]Points;After indexing;1024
-2017-12-07 12:22:16,641 -> 01.Indexing points... [12.558s] [240000 results]
-2017-12-07 12:22:29,394 -> 02.Getting pairs... [12.753s] [244136 results]
-2017-12-07 12:22:32,025 -> 03.Computing centers... [2.631s] [488272 results]
-2017-12-07 12:22:32,025 -> [Partitions Info]Centers;Before indexing;35
-2017-12-07 12:22:35,549 -> [Partitions Info]Centers;After indexing;1024
-2017-12-07 12:22:35,549 -> 04.Indexing centers... [3.524s] [488272 results]
-2017-12-07 12:22:47,255 -> 05.Getting disks... [11.706s] [488272 results]
-2017-12-07 12:22:49,816 -> 06.Filtering less-than-mu disks... [2.561s] [10276 results]
-2017-12-07 12:22:57,066 -> 07.Prunning duplicate candidates... [7.250s] [6396 results]
-2017-12-07 12:22:57,076 -> [Partitions Info]Candidates;Before indexing;200
-2017-12-07 12:22:57,740 -> 08.Indexing candidates... [7.924s] [6396 results]
-2017-12-07 12:22:58,324 -> [Partitions Info]Candidates;After indexing;36
-2017-12-07 12:22:58,324 -> 09.Getting expansions... [0.584s] [14106 results]
-2017-12-07 12:22:59,232 -> 10.Finding maximal disks... [0.908s] [516 results]
-2017-12-07 12:23:01,895 -> 11.Prunning duplicates and subsets... [2.663s] [516 results]
-2017-12-07 12:23:01,895 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
-2017-12-07 12:23:01,895 ->        B240K,  30.0,    35, 10,  57.81,  244136,    488272,         6396,        516
-2017-12-07 12:23:01,953 -> Dropping indices...[0.058s]
-2017-12-07 12:23:01,953 -> Finishing MaximalFinder at 12:23:01.953...
-2017-12-07 12:23:01,953 -> Total time for MaximalFinder: 57.870ms...
-2017-12-07 12:23:02,010 -> Closing session... [0.057s]
-Done!!! Thu Dec  7 12:23:02 PST 2017
-Running iteration 3/3 for B240K (epsilon = 10 , mu = 10)...
-2017-12-07 12:23:05,884 -> Starting session... [1.538s]
-2017-12-07 12:23:09,196 -> Reading dataset... [3.312s]
-2017-12-07 12:23:09,235 -> Lauching MaximalFinder at 12:23:09.201...
-2017-12-07 12:23:09,236 -> 00.Setting mu=10,epsilon=10.0,cores=35,dataset=B240K
-2017-12-07 12:23:09,236 -> [Partitions Info]Points;Before indexing;35
-2017-12-07 12:23:22,041 -> [Partitions Info]Points;After indexing;1024
-2017-12-07 12:23:22,042 -> 01.Indexing points... [12.806s] [240000 results]
-2017-12-07 12:23:34,205 -> 02.Getting pairs... [12.163s] [63620 results]
-2017-12-07 12:23:36,640 -> 03.Computing centers... [2.435s] [127240 results]
-2017-12-07 12:23:36,641 -> [Partitions Info]Centers;Before indexing;35
-2017-12-07 12:23:39,116 -> [Partitions Info]Centers;After indexing;1024
-2017-12-07 12:23:39,116 -> 04.Indexing centers... [2.475s] [127240 results]
-2017-12-07 12:23:48,047 -> 05.Getting disks... [8.930s] [127240 results]
-2017-12-07 12:23:49,250 -> 06.Filtering less-than-mu disks... [1.203s] [356 results]
-2017-12-07 12:23:54,818 -> 07.Prunning duplicate candidates... [5.568s] [200 results]
-2017-12-07 12:23:54,828 -> [Partitions Info]Candidates;Before indexing;200
-2017-12-07 12:23:55,377 -> 08.Indexing candidates... [6.127s] [200 results]
-2017-12-07 12:23:55,581 -> [Partitions Info]Candidates;After indexing;36
-2017-12-07 12:23:55,581 -> 09.Getting expansions... [0.203s] [1626 results]
-2017-12-07 12:23:56,276 -> 10.Finding maximal disks... [0.695s] [20 results]
-2017-12-07 12:23:58,938 -> 11.Prunning duplicates and subsets... [2.662s] [20 results]
-2017-12-07 12:23:58,938 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
-2017-12-07 12:23:58,939 ->        B240K,  10.0,    35, 10,  49.70,   63620,    127240,          200,         20
-2017-12-07 12:23:59,018 -> Dropping indices...[0.079s]
-2017-12-07 12:23:59,018 -> Finishing MaximalFinder at 12:23:59.018...
-2017-12-07 12:23:59,018 -> Total time for MaximalFinder: 49.783ms...
-2017-12-07 12:23:59,067 -> Closing session... [0.048s]
-Done!!! Thu Dec  7 12:23:59 PST 2017
-Running iteration 3/3 for B240K (epsilon = 20 , mu = 10)...
-2017-12-07 12:24:03,075 -> Starting session... [1.661s]
-2017-12-07 12:24:06,193 -> Reading dataset... [3.118s]
-2017-12-07 12:24:06,231 -> Lauching MaximalFinder at 12:24:06.197...
-2017-12-07 12:24:06,232 -> 00.Setting mu=10,epsilon=20.0,cores=35,dataset=B240K
-2017-12-07 12:24:06,232 -> [Partitions Info]Points;Before indexing;35
-2017-12-07 12:24:19,425 -> [Partitions Info]Points;After indexing;1024
-2017-12-07 12:24:19,425 -> 01.Indexing points... [13.193s] [240000 results]
-2017-12-07 12:24:31,592 -> 02.Getting pairs... [12.167s] [147916 results]
-2017-12-07 12:24:34,065 -> 03.Computing centers... [2.473s] [295832 results]
-2017-12-07 12:24:34,065 -> [Partitions Info]Centers;Before indexing;35
-2017-12-07 12:24:36,729 -> [Partitions Info]Centers;After indexing;1024
-2017-12-07 12:24:36,729 -> 04.Indexing centers... [2.664s] [295832 results]
-2017-12-07 12:24:47,801 -> 05.Getting disks... [11.072s] [295832 results]
-2017-12-07 12:24:49,728 -> 06.Filtering less-than-mu disks... [1.927s] [3548 results]
-2017-12-07 12:24:56,881 -> 07.Prunning duplicate candidates... [7.153s] [2148 results]
-2017-12-07 12:24:56,887 -> [Partitions Info]Candidates;Before indexing;200
-2017-12-07 12:24:57,449 -> 08.Indexing candidates... [7.721s] [2148 results]
-2017-12-07 12:24:57,759 -> [Partitions Info]Candidates;After indexing;36
-2017-12-07 12:24:57,759 -> 09.Getting expansions... [0.309s] [6954 results]
-2017-12-07 12:24:58,580 -> 10.Finding maximal disks... [0.821s] [188 results]
-2017-12-07 12:25:01,610 -> 11.Prunning duplicates and subsets... [3.030s] [188 results]
-2017-12-07 12:25:01,610 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
-2017-12-07 12:25:01,610 ->        B240K,  20.0,    35, 10,  55.38,  147916,    295832,         2148,        188
-2017-12-07 12:25:01,663 -> Dropping indices...[0.053s]
-2017-12-07 12:25:01,663 -> Finishing MaximalFinder at 12:25:01.663...
-2017-12-07 12:25:01,664 -> Total time for MaximalFinder: 55.432ms...
-2017-12-07 12:25:01,708 -> Closing session... [0.044s]
-Done!!! Thu Dec  7 12:25:02 PST 2017
+2017-12-07 18:46:15,845 -> Starting session... [1.678s]
+2017-12-07 18:46:19,188 -> Reading dataset... [3.342s]
+2017-12-07 18:46:19,234 -> Lauching MaximalFinder at 18:46:19.194...
+2017-12-07 18:46:19,235 -> 00.Setting mu=10,epsilon=30.0,cores=28,dataset=B240K
+2017-12-07 18:46:19,235 -> [Partitions Info]Points;Before indexing;28
+2017-12-07 18:46:31,765 -> [Partitions Info]Points;After indexing;1024
+2017-12-07 18:46:31,765 -> 01.Indexing points... [12.530s] [240000 results]
+2017-12-07 18:46:45,006 -> 02.Getting pairs... [13.241s] [244136 results]
+2017-12-07 18:46:47,865 -> 03.Computing centers... [2.859s] [488272 results]
+2017-12-07 18:46:47,865 -> [Partitions Info]Centers;Before indexing;28
+2017-12-07 18:46:50,935 -> [Partitions Info]Centers;After indexing;1024
+2017-12-07 18:46:50,935 -> 04.Indexing centers... [3.070s] [488272 results]
+2017-12-07 18:47:02,677 -> 05.Getting disks... [11.742s] [488272 results]
+2017-12-07 18:47:05,382 -> 06.Filtering less-than-mu disks... [2.704s] [10276 results]
+2017-12-07 18:47:13,020 -> 07.Prunning duplicate candidates... [7.638s] [6396 results]
+2017-12-07 18:47:13,028 -> [Partitions Info]Candidates;Before indexing;200
+2017-12-07 18:47:13,617 -> 08.Indexing candidates... [8.235s] [6396 results]
+2017-12-07 18:47:13,983 -> [Partitions Info]Candidates;After indexing;30
+2017-12-07 18:47:13,983 -> 09.Getting expansions... [0.366s] [13814 results]
+2017-12-07 18:47:15,114 -> 10.Finding maximal disks... [1.130s] [517 results]
+2017-12-07 18:47:18,128 -> 11.Prunning duplicates and subsets... [3.014s] [516 results]
+2017-12-07 18:47:18,129 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-12-07 18:47:18,129 ->        B240K,  30.0,    28, 10,  58.89,  244136,    488272,         6396,        516
+2017-12-07 18:47:18,197 -> Dropping indices...[0.068s]
+2017-12-07 18:47:18,197 -> Finishing MaximalFinder at 18:47:18.197...
+2017-12-07 18:47:18,197 -> Total time for MaximalFinder: 58.962ms...
+2017-12-07 18:47:18,250 -> Closing session... [0.053s]
+Done!!! Thu Dec  7 18:47:18 PST 2017
+Running iteration 2/3 for B240K (epsilon = 20 , mu = 10)...
+2017-12-07 18:47:22,190 -> Starting session... [1.608s]
+2017-12-07 18:47:25,174 -> Reading dataset... [2.983s]
+2017-12-07 18:47:25,215 -> Lauching MaximalFinder at 18:47:25.181...
+2017-12-07 18:47:25,215 -> 00.Setting mu=10,epsilon=20.0,cores=28,dataset=B240K
+2017-12-07 18:47:25,215 -> [Partitions Info]Points;Before indexing;28
+2017-12-07 18:47:38,640 -> [Partitions Info]Points;After indexing;1024
+2017-12-07 18:47:38,641 -> 01.Indexing points... [13.426s] [240000 results]
+2017-12-07 18:47:51,129 -> 02.Getting pairs... [12.488s] [147916 results]
+2017-12-07 18:47:53,682 -> 03.Computing centers... [2.553s] [295832 results]
+2017-12-07 18:47:53,682 -> [Partitions Info]Centers;Before indexing;28
+2017-12-07 18:47:56,167 -> [Partitions Info]Centers;After indexing;1024
+2017-12-07 18:47:56,168 -> 04.Indexing centers... [2.486s] [295832 results]
+2017-12-07 18:48:07,212 -> 05.Getting disks... [11.044s] [295832 results]
+2017-12-07 18:48:08,958 -> 06.Filtering less-than-mu disks... [1.746s] [3548 results]
+2017-12-07 18:48:14,958 -> 07.Prunning duplicate candidates... [5.999s] [2148 results]
+2017-12-07 18:48:14,965 -> [Partitions Info]Candidates;Before indexing;200
+2017-12-07 18:48:15,508 -> 08.Indexing candidates... [6.549s] [2148 results]
+2017-12-07 18:48:15,816 -> [Partitions Info]Candidates;After indexing;30
+2017-12-07 18:48:15,817 -> 09.Getting expansions... [0.309s] [6436 results]
+2017-12-07 18:48:16,413 -> 10.Finding maximal disks... [0.596s] [188 results]
+2017-12-07 18:48:18,993 -> 11.Prunning duplicates and subsets... [2.580s] [188 results]
+2017-12-07 18:48:18,993 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-12-07 18:48:18,994 ->        B240K,  20.0,    28, 10,  53.78,  147916,    295832,         2148,        188
+2017-12-07 18:48:19,051 -> Dropping indices...[0.057s]
+2017-12-07 18:48:19,051 -> Finishing MaximalFinder at 18:48:19.051...
+2017-12-07 18:48:19,051 -> Total time for MaximalFinder: 53.836ms...
+2017-12-07 18:48:19,093 -> Closing session... [0.041s]
+Done!!! Thu Dec  7 18:48:19 PST 2017
+Running iteration 2/3 for B240K (epsilon = 10 , mu = 10)...
+2017-12-07 18:48:23,003 -> Starting session... [1.488s]
+2017-12-07 18:48:26,009 -> Reading dataset... [3.006s]
+2017-12-07 18:48:26,065 -> Lauching MaximalFinder at 18:48:26.015...
+2017-12-07 18:48:26,065 -> 00.Setting mu=10,epsilon=10.0,cores=28,dataset=B240K
+2017-12-07 18:48:26,066 -> [Partitions Info]Points;Before indexing;28
+2017-12-07 18:48:38,742 -> [Partitions Info]Points;After indexing;1024
+2017-12-07 18:48:38,742 -> 01.Indexing points... [12.676s] [240000 results]
+2017-12-07 18:48:50,750 -> 02.Getting pairs... [12.008s] [63620 results]
+2017-12-07 18:48:52,937 -> 03.Computing centers... [2.186s] [127240 results]
+2017-12-07 18:48:52,937 -> [Partitions Info]Centers;Before indexing;28
+2017-12-07 18:48:55,092 -> [Partitions Info]Centers;After indexing;1024
+2017-12-07 18:48:55,092 -> 04.Indexing centers... [2.155s] [127240 results]
+2017-12-07 18:49:04,036 -> 05.Getting disks... [8.943s] [127240 results]
+2017-12-07 18:49:05,116 -> 06.Filtering less-than-mu disks... [1.080s] [356 results]
+2017-12-07 18:49:11,135 -> 07.Prunning duplicate candidates... [6.019s] [200 results]
+2017-12-07 18:49:11,145 -> [Partitions Info]Candidates;Before indexing;200
+2017-12-07 18:49:11,674 -> 08.Indexing candidates... [6.558s] [200 results]
+2017-12-07 18:49:11,876 -> [Partitions Info]Candidates;After indexing;30
+2017-12-07 18:49:11,876 -> 09.Getting expansions... [0.202s] [1460 results]
+2017-12-07 18:49:12,680 -> 10.Finding maximal disks... [0.804s] [20 results]
+2017-12-07 18:49:15,087 -> 11.Prunning duplicates and subsets... [2.407s] [20 results]
+2017-12-07 18:49:15,088 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-12-07 18:49:15,088 ->        B240K,  10.0,    28, 10,  49.02,   63620,    127240,          200,         20
+2017-12-07 18:49:15,150 -> Dropping indices...[0.062s]
+2017-12-07 18:49:15,150 -> Finishing MaximalFinder at 18:49:15.150...
+2017-12-07 18:49:15,150 -> Total time for MaximalFinder: 49.085ms...
+2017-12-07 18:49:15,192 -> Closing session... [0.042s]
+Done!!! Thu Dec  7 18:49:15 PST 2017
 Running iteration 3/3 for B240K (epsilon = 30 , mu = 10)...
-2017-12-07 12:25:05,937 -> Starting session... [1.783s]
-2017-12-07 12:25:08,824 -> Reading dataset... [2.887s]
-2017-12-07 12:25:08,876 -> Lauching MaximalFinder at 12:25:08.832...
-2017-12-07 12:25:08,876 -> 00.Setting mu=10,epsilon=30.0,cores=35,dataset=B240K
-2017-12-07 12:25:08,876 -> [Partitions Info]Points;Before indexing;35
-2017-12-07 12:25:22,732 -> [Partitions Info]Points;After indexing;1024
-2017-12-07 12:25:22,733 -> 01.Indexing points... [13.857s] [240000 results]
-2017-12-07 12:25:35,578 -> 02.Getting pairs... [12.845s] [244136 results]
-2017-12-07 12:25:38,415 -> 03.Computing centers... [2.837s] [488272 results]
-2017-12-07 12:25:38,415 -> [Partitions Info]Centers;Before indexing;35
-2017-12-07 12:25:41,780 -> [Partitions Info]Centers;After indexing;1024
-2017-12-07 12:25:41,781 -> 04.Indexing centers... [3.366s] [488272 results]
-2017-12-07 12:25:52,739 -> 05.Getting disks... [10.958s] [488272 results]
-2017-12-07 12:25:54,835 -> 06.Filtering less-than-mu disks... [2.096s] [10276 results]
-2017-12-07 12:26:01,882 -> 07.Prunning duplicate candidates... [7.047s] [6396 results]
-2017-12-07 12:26:01,892 -> [Partitions Info]Candidates;Before indexing;200
-2017-12-07 12:26:02,503 -> 08.Indexing candidates... [7.668s] [6396 results]
-2017-12-07 12:26:02,964 -> [Partitions Info]Candidates;After indexing;36
-2017-12-07 12:26:02,965 -> 09.Getting expansions... [0.462s] [14106 results]
-2017-12-07 12:26:04,567 -> 10.Finding maximal disks... [1.602s] [516 results]
-2017-12-07 12:26:07,078 -> 11.Prunning duplicates and subsets... [2.511s] [516 results]
-2017-12-07 12:26:07,078 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
-2017-12-07 12:26:07,078 ->        B240K,  30.0,    35, 10,  58.20,  244136,    488272,         6396,        516
-2017-12-07 12:26:07,137 -> Dropping indices...[0.058s]
-2017-12-07 12:26:07,137 -> Finishing MaximalFinder at 12:26:07.137...
-2017-12-07 12:26:07,137 -> Total time for MaximalFinder: 58.261ms...
-2017-12-07 12:26:07,182 -> Closing session... [0.045s]
-Done!!! Thu Dec  7 12:26:08 PST 2017
-acald013@dblab-rack12: stopping org.apache.spark.deploy.worker.Worker
+2017-12-07 18:49:19,310 -> Starting session... [1.666s]
+2017-12-07 18:49:22,361 -> Reading dataset... [3.050s]
+2017-12-07 18:49:22,417 -> Lauching MaximalFinder at 18:49:22.368...
+2017-12-07 18:49:22,417 -> 00.Setting mu=10,epsilon=30.0,cores=28,dataset=B240K
+2017-12-07 18:49:22,418 -> [Partitions Info]Points;Before indexing;28
+2017-12-07 18:49:35,185 -> [Partitions Info]Points;After indexing;1024
+2017-12-07 18:49:35,185 -> 01.Indexing points... [12.767s] [240000 results]
+2017-12-07 18:49:48,531 -> 02.Getting pairs... [13.346s] [244136 results]
+2017-12-07 18:49:50,980 -> 03.Computing centers... [2.449s] [488272 results]
+2017-12-07 18:49:50,980 -> [Partitions Info]Centers;Before indexing;28
+2017-12-07 18:49:53,866 -> [Partitions Info]Centers;After indexing;1024
+2017-12-07 18:49:53,866 -> 04.Indexing centers... [2.886s] [488272 results]
+2017-12-07 18:50:06,801 -> 05.Getting disks... [12.935s] [488272 results]
+2017-12-07 18:50:09,450 -> 06.Filtering less-than-mu disks... [2.649s] [10276 results]
+2017-12-07 18:50:16,799 -> 07.Prunning duplicate candidates... [7.349s] [6396 results]
+2017-12-07 18:50:16,810 -> [Partitions Info]Candidates;Before indexing;200
+2017-12-07 18:50:17,449 -> 08.Indexing candidates... [7.999s] [6396 results]
+2017-12-07 18:50:17,805 -> [Partitions Info]Candidates;After indexing;30
+2017-12-07 18:50:17,805 -> 09.Getting expansions... [0.356s] [13814 results]
+2017-12-07 18:50:18,791 -> 10.Finding maximal disks... [0.986s] [517 results]
+2017-12-07 18:50:21,399 -> 11.Prunning duplicates and subsets... [2.608s] [516 results]
+2017-12-07 18:50:21,399 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-12-07 18:50:21,399 ->        B240K,  30.0,    28, 10,  58.98,  244136,    488272,         6396,        516
+2017-12-07 18:50:21,468 -> Dropping indices...[0.068s]
+2017-12-07 18:50:21,468 -> Finishing MaximalFinder at 18:50:21.468...
+2017-12-07 18:50:21,468 -> Total time for MaximalFinder: 59.051ms...
+2017-12-07 18:50:21,513 -> Closing session... [0.045s]
+Done!!! Thu Dec  7 18:50:22 PST 2017
+Running iteration 3/3 for B240K (epsilon = 20 , mu = 10)...
+2017-12-07 18:50:26,184 -> Starting session... [1.493s]
+2017-12-07 18:50:29,521 -> Reading dataset... [3.337s]
+2017-12-07 18:50:29,569 -> Lauching MaximalFinder at 18:50:29.528...
+2017-12-07 18:50:29,569 -> 00.Setting mu=10,epsilon=20.0,cores=28,dataset=B240K
+2017-12-07 18:50:29,569 -> [Partitions Info]Points;Before indexing;28
+2017-12-07 18:50:42,421 -> [Partitions Info]Points;After indexing;1024
+2017-12-07 18:50:42,422 -> 01.Indexing points... [12.852s] [240000 results]
+2017-12-07 18:50:54,720 -> 02.Getting pairs... [12.298s] [147916 results]
+2017-12-07 18:50:57,379 -> 03.Computing centers... [2.659s] [295832 results]
+2017-12-07 18:50:57,380 -> [Partitions Info]Centers;Before indexing;28
+2017-12-07 18:50:59,750 -> [Partitions Info]Centers;After indexing;1024
+2017-12-07 18:50:59,750 -> 04.Indexing centers... [2.370s] [295832 results]
+2017-12-07 18:51:10,588 -> 05.Getting disks... [10.838s] [295832 results]
+2017-12-07 18:51:12,373 -> 06.Filtering less-than-mu disks... [1.784s] [3548 results]
+2017-12-07 18:51:18,916 -> 07.Prunning duplicate candidates... [6.543s] [2148 results]
+2017-12-07 18:51:18,926 -> [Partitions Info]Candidates;Before indexing;200
+2017-12-07 18:51:19,551 -> 08.Indexing candidates... [7.178s] [2148 results]
+2017-12-07 18:51:19,823 -> [Partitions Info]Candidates;After indexing;30
+2017-12-07 18:51:19,823 -> 09.Getting expansions... [0.272s] [6436 results]
+2017-12-07 18:51:20,424 -> 10.Finding maximal disks... [0.601s] [188 results]
+2017-12-07 18:51:23,062 -> 11.Prunning duplicates and subsets... [2.638s] [188 results]
+2017-12-07 18:51:23,062 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-12-07 18:51:23,062 ->        B240K,  20.0,    28, 10,  53.49,  147916,    295832,         2148,        188
+2017-12-07 18:51:23,124 -> Dropping indices...[0.062s]
+2017-12-07 18:51:23,125 -> Finishing MaximalFinder at 18:51:23.124...
+2017-12-07 18:51:23,125 -> Total time for MaximalFinder: 53.555ms...
+2017-12-07 18:51:23,187 -> Closing session... [0.062s]
+Done!!! Thu Dec  7 18:51:24 PST 2017
+Running iteration 3/3 for B240K (epsilon = 10 , mu = 10)...
+2017-12-07 18:51:28,019 -> Starting session... [1.699s]
+2017-12-07 18:51:30,723 -> Reading dataset... [2.704s]
+2017-12-07 18:51:30,777 -> Lauching MaximalFinder at 18:51:30.730...
+2017-12-07 18:51:30,778 -> 00.Setting mu=10,epsilon=10.0,cores=28,dataset=B240K
+2017-12-07 18:51:30,778 -> [Partitions Info]Points;Before indexing;28
+2017-12-07 18:51:43,994 -> [Partitions Info]Points;After indexing;1024
+2017-12-07 18:51:43,994 -> 01.Indexing points... [13.216s] [240000 results]
+2017-12-07 18:51:56,329 -> 02.Getting pairs... [12.335s] [63620 results]
+2017-12-07 18:51:58,530 -> 03.Computing centers... [2.201s] [127240 results]
+2017-12-07 18:51:58,531 -> [Partitions Info]Centers;Before indexing;28
+2017-12-07 18:52:00,631 -> [Partitions Info]Centers;After indexing;1024
+2017-12-07 18:52:00,631 -> 04.Indexing centers... [2.100s] [127240 results]
+2017-12-07 18:52:09,080 -> 05.Getting disks... [8.448s] [127240 results]
+2017-12-07 18:52:10,533 -> 06.Filtering less-than-mu disks... [1.453s] [356 results]
+2017-12-07 18:52:15,978 -> 07.Prunning duplicate candidates... [5.444s] [200 results]
+2017-12-07 18:52:15,985 -> [Partitions Info]Candidates;Before indexing;200
+2017-12-07 18:52:16,486 -> 08.Indexing candidates... [5.952s] [200 results]
+2017-12-07 18:52:16,682 -> [Partitions Info]Candidates;After indexing;30
+2017-12-07 18:52:16,682 -> 09.Getting expansions... [0.196s] [1460 results]
+2017-12-07 18:52:17,529 -> 10.Finding maximal disks... [0.847s] [20 results]
+2017-12-07 18:52:20,139 -> 11.Prunning duplicates and subsets... [2.610s] [20 results]
+2017-12-07 18:52:20,140 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2017-12-07 18:52:20,140 ->        B240K,  10.0,    28, 10,  49.36,   63620,    127240,          200,         20
+2017-12-07 18:52:20,194 -> Dropping indices...[0.054s]
+2017-12-07 18:52:20,194 -> Finishing MaximalFinder at 18:52:20.194...
+2017-12-07 18:52:20,194 -> Total time for MaximalFinder: 49.417ms...
+2017-12-07 18:52:20,235 -> Closing session... [0.041s]
+Done!!! Thu Dec  7 18:52:20 PST 2017
 acald013@dblab-rack15: stopping org.apache.spark.deploy.worker.Worker
-acald013@dblab-rack11: stopping org.apache.spark.deploy.worker.Worker
 acald013@dblab-rack14: stopping org.apache.spark.deploy.worker.Worker
+acald013@dblab-rack11: stopping org.apache.spark.deploy.worker.Worker
+acald013@dblab-rack12: stopping org.apache.spark.deploy.worker.Worker
 stopping org.apache.spark.deploy.master.Master
 Done!!!
