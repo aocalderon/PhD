@@ -101,6 +101,12 @@ object MaximalFinderExpansion {
     centersNumPartitions = centers.rdd.getNumPartitions
     logger.info("[Partitions Info]Centers;After indexing;%d".format(centersNumPartitions))
     logger.info("04.Indexing centers... [%.3fs] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nCenters))
+    
+    ////////////////////////////////////////////////////////////////////
+    saveStringArrayWithoutTimeMillis(points.map(c => "%d,%.2f,%.2f".format(c.id, c.x, c.y)).collect(), "Points", conf)
+    saveStringArrayWithoutTimeMillis(centers.map(c => "%d,%.2f,%.2f".format(c.id, c.x, c.y)).collect(), "Centers", conf)
+    ////////////////////////////////////////////////////////////////////
+
     // 05.Getting disks...
     timer = System.currentTimeMillis()
     val disks = centers
@@ -359,6 +365,15 @@ object MaximalFinderExpansion {
     val path = s"${phd_home}${conf.valpath()}"
     val filename = s"${conf.dataset()}_E${conf.epsilon()}_M${conf.mu()}_C${conf.cores()}"
     new java.io.PrintWriter("%s%s_%s_%d.txt".format(path, filename, tag, System.currentTimeMillis)) {
+      write(array.mkString("\n"))
+      close()
+    }
+  }
+
+  def saveStringArrayWithoutTimeMillis(array: Array[String], tag: String, conf: Conf): Unit = {
+    val path = s"${phd_home}${conf.valpath()}"
+    val filename = s"${conf.dataset()}_E${conf.epsilon()}_M${conf.mu()}_C${conf.cores()}"
+    new java.io.PrintWriter("%s%s_%s.txt".format(path, filename, tag)) {
       write(array.mkString("\n"))
       close()
     }
