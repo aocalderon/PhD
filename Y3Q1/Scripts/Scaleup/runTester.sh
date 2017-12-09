@@ -1,44 +1,6 @@
 #!/bin/bash
 
-N=3
-EPSILONS=(10 20 30 40 50)
-MUS=(10 10 10 10 10)
-M=${#EPSILONS[@]}
-
-# Running Scaleup on 1 Node with 20K dataset...
-$SPARK_HOME/sbin/stop-all.sh
-truncate -s 0 $SPARK_HOME/conf/slaves
-echo "acald013@dblab-rack11" >> $SPARK_HOME/conf/slaves
-$SPARK_HOME/sbin/start-all.sh
-
-DATASET="B20K"
-CORES=7
-for i in `seq 1 $N`
-do
-	for(( j=0; j<${M}; j++ ));
-	do 
-		echo "Running iteration $i/$N for $DATASET (epsilon = ${EPSILONS[$j]} , mu = ${MUS[$j]})..."
-		./runDataset.sh $DATASET ${EPSILONS[$j]} ${MUS[$j]} $CORES
-	done
-done
-
-# Running Scaleup on 2 Nodes with 40K dataset...
-$SPARK_HOME/sbin/stop-all.sh
-truncate -s 0 $SPARK_HOME/conf/slaves
-echo "acald013@dblab-rack11" >> $SPARK_HOME/conf/slaves
-echo "acald013@dblab-rack12" >> $SPARK_HOME/conf/slaves
-$SPARK_HOME/sbin/start-all.sh
-
-DATASET="B40K"
-CORES=14
-for i in `seq 1 $N`
-do
-	for(( j=0; j<${M}; j++ ));
-	do 
-		echo "Running iteration $i/$N for $DATASET (epsilon = ${EPSILONS[$j]} , mu = ${MUS[$j]})..."
-		./runDataset.sh $DATASET ${EPSILONS[$j]} ${MUS[$j]} $CORES
-	done
-done
-
-$SPARK_HOME/sbin/stop-all.sh
-echo "Done!!!"
+CORES=$1
+spark-submit --class BasicSpatialOps /home/acald013/PhD/Y3Q1/PFlock/target/scala-2.11/pflock_2.11-2.0.jar $CORES
+DATE=`date`
+echo "Done!!! $DATE"

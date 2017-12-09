@@ -2,76 +2,102 @@ import org.apache.spark.sql.simba.{Dataset, SimbaSession}
 import org.apache.spark.sql.simba.index.RTreeType
 import org.slf4j.{Logger, LoggerFactory}
 import org.scalameter._
+import org.apache.spark.sql.functions._
+
 
 /**
   * Created by dongx on 3/7/2017.
   */
 object BasicSpatialOps {
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
+  val epsilon = 50
+  val precision = 0.01
+  val master = "spark://169.235.27.134:7077"
+  var cores = 0
+  var timer = new Quantity[Double](0.0, "ms")
   var clock = 0.0
+
   case class PointData(x: Double, y: Double, z: Double, other: String)
-  case class ST_Point(id: Long, x: Double, y: Double)
+  case class SP_Point(id: Long, x: Double, y: Double)
   case class P1(id1: Long, x1: Double, y1: Double)
   case class P2(id2: Long, x2: Double, y2: Double)
 
   def main(args: Array[String]): Unit = {
-    //val master = "spark://169.235.27.134:7077"
     clock = System.nanoTime()
-    val master = "local[10]"
-    val simba = SimbaSession.builder().master("local[4]").
-      appName("SparkSessionForSimba").config("simba.join.partitions", "32").
-      config("simba.index.partitions", "16").getOrCreate()
+    cores = args(0).toInt
+    //master = "local[10]"
+    val simba = SimbaSession.builder().master(master).
+      appName("Benchmark").
+      //config("simba.join.partitions", "32").
+      config("simba.index.partitions", "1024").
+      getOrCreate()
     simba.sparkContext.setLogLevel("ERROR")
     logger.info("Starting session,%.2f,%d".format((System.nanoTime() - clock)/1e9d, 0))
     runJoinQuery(simba)
     simba.stop()
   }
 
-  var timer = new Quantity[Double](0.0, "ms")
-
   private def runJoinQuery(simba: SimbaSession): Unit = {
     clock = System.nanoTime()
     import simba.implicits._
     import simba.simbaImplicits._
-    val epsilon = 10
-    val minx = 25187
-    val maxx = 37625
-    val miny = 11666
-    val maxy = 20887
-    val r = scala.util.Random
     logger.info("Setting variables,%.2f,%d".format((System.nanoTime() - clock)/1e9d, 0))
     clock = System.nanoTime()
-    var p1 = (0 until 20000).map {
-        id =>
-          var x = minx + r.nextInt((maxx - minx) + 1) + r.nextDouble()
-          x = BigDecimal(x).setScale(2, BigDecimal.RoundingMode.HALF_UP).toDouble
-          var y = miny + r.nextInt((maxy - miny) + 1) + r.nextDouble()
-          y = BigDecimal(y).setScale(2, BigDecimal.RoundingMode.HALF_UP).toDouble
-          P1(id, x, y)
+    val phd_home = scala.util.Properties.envOrElse("PHD_HOME", "/home/acald013/PhD/")
+    var path = "Y3Q1/Datasets/"
+    var dataset = "B20K"
+    var extension = "csv"
+    var filename = "%s%s%s.%s".format(phd_home, path, dataset, extension)
+    var points = simba.sparkContext.
+      textFile(filename).
+      map { line =>
+        val lineArray = line.split(",")
+        val id = lineArray(0).toLong
+        val x = lineArray(1).toDouble
+        val y = lineArray(2).toDouble
+        SP_Point(id, x, y)
+      }.toDS() //NO CACHE!!!
+    var nPoints = points.count()
+    path = "Y3Q1/Validation/"
+    dataset = "B20K_E50.0_M10_C7_Centers_1512786463323"
+    extension = "txt"
+    filename = "%s%s%s.%s".format(phd_home, path, dataset, extension)
+    var centers = simba.sparkContext.
+      textFile(filename).
+      map { line =>
+        val lineArray = line.split(",")
+        val id = lineArray(0).toLong
+        val x = lineArray(1).toDouble
+        val y = lineArray(2).toDouble
+        SP_Point(id, x, y)
       }.toDS()
-    var p2 = p1.withColumnRenamed("id1", "id2").
-        withColumnRenamed("x1", "x2").
-        withColumnRenamed("y1", "y2").as[P2]
-    logger.info("Generating Data,%.2f,%d".format((System.nanoTime() - clock)/1e9d, 0))
-    logger.info("" + p1.rdd.getNumPartitions)
-    logger.info("" + p2.rdd.getNumPartitions)
-    /*
-    clock = System.nanoTime()
-    val pairsPreIndex = p1.distanceJoin(p2, Array("x1", "y1"), Array("x2", "y2"), epsilon)
-    val nPairsPreIndex = pairsPreIndex.count()
-    logger.info("DJoin PreIndex,%.2f,%d".format((System.nanoTime() - clock)/1e9d, nPairsPreIndex))
-    */
+    var nCenters = centers.count()
+    logger.info("Reading datasets,%.2f,%d".format((System.nanoTime() - clock)/1e9d, 0))
+    logger.info("Points partitions: " + points.rdd.getNumPartitions)
+    logger.info("Centers partitions: " + centers.rdd.getNumPartitions)
     timer = measure {
-      p1 = p1.index(RTreeType, "p1RT", Array("x1", "y1"))
-      p2 = p2.index(RTreeType, "p2RT", Array("x2", "y2"))
+      points = points.index(RTreeType, "pointsRT", Array("x", "y")).cache()
+      nPoints = points.count()
     }
-    logger.info("Indexing,%.2f,%d".format(timer.value / 1000.0, p2.count()))
-    logger.info("" + p1.rdd.getNumPartitions)
-    logger.info("" + p2.rdd.getNumPartitions)
+    logInfo("01.Indexing points", timer.value, nPoints)
+    timer = measure {
+      centers = centers.index(RTreeType, "centersRT", Array("x", "y")).cache()
+      nCenters = centers.count()
+    }
+    logInfo("02.Indexing centers", timer.value, nCenters)
+    logger.info("" + points.rdd.getNumPartitions)
+    logger.info("" + centers.rdd.getNumPartitions)
     clock = System.nanoTime()
-    val pairsPostIndex = p1.distanceJoin(p2, Array("x1", "y1"), Array("x2", "y2"), epsilon).
-      filter(pair => pair.getLong(0) < pair.getLong(3))
-    val nPairsPostIndex = pairsPostIndex.count()
-    logger.info("DJoin PostIndex,%.2f,%d".format((System.nanoTime() - clock)/1e9d, nPairsPostIndex))
+    val disks = centers.
+      distanceJoin(points.toDF("id1","x1","y1"), Array("x", "y"), Array("x1", "y1"), epsilon/2 + precision).
+      groupBy("id", "x", "y").
+      agg(collect_list("id1").alias("ids")).
+      cache()
+    val nDisks = disks.count()
+    logInfo("03.Joining datasets", (System.nanoTime() - clock) / 1e6d, nDisks)
+  }
+  
+  private def logInfo(msg: String, millis: Double, n: Long): Unit = {
+    logger.info("%s,%.2f,%d,%d,%d".format(msg, millis / 1000.0, n, epsilon, cores))
   }
 }
