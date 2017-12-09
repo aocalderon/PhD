@@ -1,0 +1,52 @@
+---
+title: "Scaleup Analysis"
+author: "Andres Calderon"
+date: '`r Sys.Date()`'
+output:
+  pdf_document: default
+  html_document: 
+    theme: paper
+params:
+  phd_path:
+    value: "Y3Q1/Scripts/Scaleup/"
+  filename:
+    value: "Berlin_DistanceJoin-Benchmark"
+  extension:
+    value: "txt"
+---
+
+<!---  --->
+
+```{r ScaleupSetup, include=FALSE}
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(ggplot2, data.table, foreach, sqldf, tidyr, stringr, dplyr)
+options(digits = 16)
+options(scipen = 0)
+
+PHD_HOME = Sys.getenv(c("PHD_HOME"))
+PHD_PATH = params$phd_path
+FILENAME = params$filename
+EXTENSION = params$extension
+url = paste0(PHD_HOME,PHD_PATH,FILENAME,".",EXTENSION) 
+data0 = read.table(url, sep = ",")
+names(data0) = c("DateTime", "MillisStage", "Time", "N", "Epsilon", "Cores")
+data1 = separate(data0, MillisStage, into = c("Millis", "Stage"), sep = "-> [\\d]+\\.")
+data1$Timestamp = as.numeric(as.POSIXlt(data1$DateTime)) + as.numeric(data1$Millis) / 1000 
+data1$Time = as.numeric(data1$Time)
+data1$Epsilon = as.numeric(data1$Epsilon)
+data1$Cores = factor(data1$Cores)
+
+data2 = sqldf("SELECT Stage, Epsilon, Cores, avg(Time) AS Time FROM data1 GROUP BY 1, 2, 3")
+```
+
+## `r FILENAME`
+
+```{r ScaleupPlot, echo=FALSE, fig.width=10.5, fig.height=7.5, fig.align='center'}
+temp_title = paste("(radius of disk in mts) in Berlin dataset.")
+title = substitute(paste("Execution time by ", epsilon) ~ temp_title, list(temp_title = temp_title))
+g = ggplot(data=data2, aes(x=factor(Epsilon), y=Time, fill=Cores)) +
+  geom_bar(stat="identity", position=position_dodge(width = 0.75),width = 0.75) +
+  labs(title=title, y="Time(s)", x=expression(paste(epsilon,"(mts)"))) +
+  facet_wrap(~Stage)
+plot(g)
+```
