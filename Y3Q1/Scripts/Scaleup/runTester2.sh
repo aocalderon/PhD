@@ -1,5 +1,8 @@
 #!/bin/bash
 
+POINTS=$1
+CENTERS=$2
+EPSILON=$3
 N=5
 
 # Running Scaleup on 1 Node...
@@ -12,7 +15,7 @@ CORES=7
 for i in `seq 1 $N`
 do
 	echo "Running iteration $i/$N for $CORES cores..."
-	./runTester.sh $CORES
+	./runTester.sh $POINTS $CENTERS $EPSILON $CORES
 done
 
 # Running Scaleup on 2 Nodes...
@@ -26,7 +29,7 @@ CORES=14
 for i in `seq 1 $N`
 do
 	echo "Running iteration $i/$N for $CORES cores..."
-	./runTester.sh $CORES
+	./runTester.sh $POINTS $CENTERS $EPSILON $CORES
 done
 
 # Running Scaleup on 3 Nodes...
@@ -41,7 +44,7 @@ CORES=21
 for i in `seq 1 $N`
 do
 	echo "Running iteration $i/$N for $CORES cores..."
-	./runTester.sh $CORES
+	./runTester.sh $POINTS $CENTERS $EPSILON $CORES
 done
 
 # Running Scaleup on 4 Nodes...
@@ -57,7 +60,7 @@ CORES=28
 for i in `seq 1 $N`
 do
 	echo "Running iteration $i/$N for $CORES cores..."
-	./runTester.sh $CORES
+	./runTester.sh $POINTS $CENTERS $EPSILON $CORES
 done
 
 $SPARK_HOME/sbin/stop-all.sh

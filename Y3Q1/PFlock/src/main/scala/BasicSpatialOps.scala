@@ -10,10 +10,12 @@ import org.apache.spark.sql.functions._
   */
 object BasicSpatialOps {
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
-  val epsilon = 50
+  var epsilon = 0.0
   val precision = 0.01
   val master = "spark://169.235.27.134:7077"
   var cores = 0
+  var pointsFile = ""
+  var centersFile = ""
   var timer = new Quantity[Double](0.0, "ms")
   var clock = 0.0
 
@@ -24,7 +26,10 @@ object BasicSpatialOps {
 
   def main(args: Array[String]): Unit = {
     clock = System.nanoTime()
-    cores = args(0).toInt
+    pointsFile = args(0)
+    centersFile = args(1)
+    epsilon = args(2).toDouble
+    cores = args(3).toInt
     //master = "local[10]"
     val simba = SimbaSession.builder().master(master).
       appName("Benchmark").
@@ -44,9 +49,9 @@ object BasicSpatialOps {
     logger.info("Setting variables,%.2f,%d".format((System.nanoTime() - clock)/1e9d, 0))
     clock = System.nanoTime()
     val phd_home = scala.util.Properties.envOrElse("PHD_HOME", "/home/acald013/PhD/")
-    var path = "Y3Q1/Datasets/"
-    var dataset = "B20K"
-    var extension = "csv"
+    var path = "Y3Q1/Validation/"
+    var dataset = pointsFile
+    var extension = "txt"
     var filename = "%s%s%s.%s".format(phd_home, path, dataset, extension)
     var points = simba.sparkContext.
       textFile(filename).
@@ -59,7 +64,7 @@ object BasicSpatialOps {
       }.toDS() //NO CACHE!!!
     var nPoints = points.count()
     path = "Y3Q1/Validation/"
-    dataset = "B20K_E50.0_M10_C7_Centers_1512786463323"
+    dataset = centersFile
     extension = "txt"
     filename = "%s%s%s.%s".format(phd_home, path, dataset, extension)
     var centers = simba.sparkContext.
@@ -98,6 +103,6 @@ object BasicSpatialOps {
   }
   
   private def logInfo(msg: String, millis: Double, n: Long): Unit = {
-    logger.info("%s,%.2f,%d,%d,%d".format(msg, millis / 1000.0, n, epsilon, cores))
+    logger.info("%s,%.2f,%d,%.1f,%d".format(msg, millis / 1000.0, n, epsilon, cores))
   }
 }
