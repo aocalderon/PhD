@@ -93,10 +93,10 @@ object BasicSpatialOps {
     logger.info("" + points.rdd.getNumPartitions)
     logger.info("" + centers.rdd.getNumPartitions)
     clock = System.nanoTime()
-    val disks = centers.
-      distanceJoin(points.toDF("id1","x1","y1"), Array("x", "y"), Array("x1", "y1"), epsilon/2 + precision).
-      groupBy("id", "x", "y").
-      agg(collect_list("id1").alias("ids")).
+    val disks = points.
+      distanceJoin(centers.toDF("id1","x1","y1"), Array("x", "y"), Array("x1", "y1"), epsilon/2 + precision).
+      groupBy("id1", "x1", "y1").
+      agg(collect_list("id").alias("ids")).
       cache()
     val nDisks = disks.count()
     logInfo("03.Joining datasets", (System.nanoTime() - clock) / 1e6d, nDisks)
