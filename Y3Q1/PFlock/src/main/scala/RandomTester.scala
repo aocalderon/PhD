@@ -1,6 +1,7 @@
 import org.apache.spark.sql.simba.{Dataset, SimbaSession}
 import org.apache.spark.sql.simba.index.RTreeType
 import scala.collection.mutable.ListBuffer
+import scala.collection.mutable.HashMap
 import org.slf4j.{Logger, LoggerFactory}
 import org.scalameter._
 import org.apache.spark.sql.functions._
@@ -11,8 +12,15 @@ object RandomTester {
   val precision = 0.01
   val master = "spark://169.235.27.134:7077"
   val random = scala.util.Random
+  val nNodes = 4
   var n = 19714
-  val nCentersList = List(22482, 47664, 72374, 98838, 125542)
+  val nCentersList: HashMap[Double, Int] = HashMap(
+    (10.0,22482), 
+    (20.0,47664), 
+    (30.0, 72374), 
+    (40.0, 98838), 
+    (50.0, 125542)
+  )
   var epsilon = 0.0
   var cores = 0
   var index = 0
@@ -26,11 +34,12 @@ object RandomTester {
     clock = System.nanoTime()
     val simba = SimbaSession.builder().master(master).
       appName("RandomTester").
-      //config("simba.join.partitions", "32").
       config("simba.index.partitions", "1024").
       getOrCreate()
     simba.sparkContext.setLogLevel("ERROR")
     logger.info("Starting session...")
+    epsilon = args(0).toDouble
+    cores   = args(1).toInt
     runJoinQuery(simba)
     simba.stop()
   }
@@ -39,46 +48,40 @@ object RandomTester {
     import simba.implicits._
     import simba.simbaImplicits._
     
-    epsilon = 50.0
-    var nPoints = 0L
-    var nCenters = 0L
-    
     val minx = 25187
-    var miny = 11666
+    val miny = 11666
     val maxx = 37625
-    var maxy = 20887
+    val maxy = 20887
     val deltay = maxy - miny + 1000
+    val pointsBase = (0 until n).
+      map{ id =>
+        var x = minx + random.nextInt((maxx - minx) + 1) + random.nextDouble()
+        x = BigDecimal(x).setScale(2, BigDecimal.RoundingMode.HALF_UP).toDouble
+        var y = miny + random.nextInt((maxy - miny) + 1) + random.nextDouble()
+        y = BigDecimal(y).setScale(2, BigDecimal.RoundingMode.HALF_UP).toDouble
+        SP_Point(id, x, y)
+      }.toDS()
+    var nPoints = pointsBase.count()
     var pointsList = new ListBuffer[Dataset[SP_Point]]
-    var start = 0
-    var end = start + n
-    for(index <- (1 to 2)){
-      pointsList += (start until end).
-        map{ id =>
-          var x = minx + random.nextInt((maxx - minx) + 1) + random.nextDouble()
-          x = BigDecimal(x).setScale(2, BigDecimal.RoundingMode.HALF_UP).toDouble
-          var y = miny + random.nextInt((maxy - miny) + 1) + random.nextDouble()
-          y = BigDecimal(y).setScale(2, BigDecimal.RoundingMode.HALF_UP).toDouble
-          SP_Point(id, x, y)
-        }.toDS()
-      start = end
-      end = index * n
-      miny = index * deltay
-      maxy = index * deltay
+    for(index <- (0 until nNodes)){
+      pointsList += pointsBase.map{ p: SP_Point => 
+        val id = p.id + (index * nPoints)
+        val x  = p.x  
+        val y  = p.y  + (index * deltay)
+        SP_Point(id, x, y)
+      }
+    }
+    for(index <- (1 until nNodes)){
+      pointsList(index) = pointsList(index).union(pointsList(index - 1))
     }
     var pointsIndex = 0
-    val pointsDatasets = new ListBuffer[Dataset[SP_Point]]
-    pointsDatasets += pointsList(0).cache()
-    pointsDatasets += pointsList(0).union(pointsList(1)).cache()
-    //pointsDatasets += pointsList(0).union(pointsList(1).union(pointsList(2))).cache()
-    //pointsDatasets += pointsList(0).union(pointsList(1).union(pointsList(2).union(pointsList(3)))).cache()
-    
-    for(points <- pointsDatasets){
+    for(points <- pointsList){
       nPoints = points.count()
-      logger.info("Points %d count: %d".format(pointsIndex, nPoints))
-      val bboxRow = points.agg(min("x"), min("y"), max("x"), max("y")).collectAsList.asScala.toList
-      logger.info("Points %d BBox: %s".format(pointsIndex, BBox2String(getBBox(bboxRow))))
+      //logger.info("Points %d count: %d".format(pointsIndex, nPoints))
+      //val bboxRow = points.agg(min("x"), min("y"), max("x"), max("y")).collectAsList.asScala.toList
+      //logger.info("Points %d BBox: %s".format(pointsIndex, BBox2String(getBBox(bboxRow))))
       timer = measure{
-        pointsDatasets(pointsIndex) = points.index(RTreeType, "points%dRT".format(pointsIndex), Array("x", "y")).cache()
+        pointsList(pointsIndex) = points.index(RTreeType, "points%dRT".format(pointsIndex), Array("x", "y")).cache()
       }
       logInfo("01.Indexing Points", timer.value, nPoints)
       pointsIndex += 1 
@@ -86,39 +89,35 @@ object RandomTester {
     
 ////////////////////////////////////////////////////////////////////////
 
-    miny = 11666
-    maxy = 20887
+    val centersBase = (0 until nCentersList(epsilon)).
+      map{ id =>
+        var x = minx + random.nextInt((maxx - minx) + 1) + random.nextDouble()
+        x = BigDecimal(x).setScale(2, BigDecimal.RoundingMode.HALF_UP).toDouble
+        var y = miny + random.nextInt((maxy - miny) + 1) + random.nextDouble()
+        y = BigDecimal(y).setScale(2, BigDecimal.RoundingMode.HALF_UP).toDouble
+        SP_Point(id, x, y)
+      }.toDS()
+    var nCenters = centersBase.count()
     var centersList = new ListBuffer[Dataset[SP_Point]]
-    n = 125542
-    start = 0
-    end = start + n
-    for(index <- (1 to 2)){
-      centersList += (start until end).
-        map{ id =>
-          var x = minx + random.nextInt((maxx - minx) + 1) + random.nextDouble()
-          x = BigDecimal(x).setScale(2, BigDecimal.RoundingMode.HALF_UP).toDouble
-          var y = miny + random.nextInt((maxy - miny) + 1) + random.nextDouble()
-          y = BigDecimal(y).setScale(2, BigDecimal.RoundingMode.HALF_UP).toDouble
-          SP_Point(id, x, y)
-        }.toDS()
-      start = end
-      end = start + n
-      miny += deltay
-      maxy += deltay
+    for(index <- (0 until nNodes)){
+      centersList += centersBase.map{ c: SP_Point => 
+        val id = c.id + (index * nCenters)
+        val x  = c.x  
+        val y  = c.y  + (index * deltay)
+        SP_Point(id, x, y)
+      }
+    }
+    for(index <- (1 until nNodes)){
+      centersList(index) = centersList(index).union(centersList(index - 1))
     }
     var centersIndex = 0
-    val centersDatasets = new ListBuffer[Dataset[SP_Point]]
-    centersDatasets += centersList(0).cache()
-    centersDatasets += centersList(0).union(centersList(1)).cache()
-    //centersDatasets += centersList(0).union(centersList(1).union(centersList(2))).cache()
-    //centersDatasets += centersList(0).union(centersList(1).union(centersList(2).union(centersList(3)))).cache()
-    for(centers <- centersDatasets){
+    for(centers <- centersList){
       nCenters = centers.count()
-      logger.info("Centers %d count: %d".format(centersIndex, nCenters))
-      val bboxRow = centers.agg(min("x"), min("y"), max("x"), max("y")).collectAsList.asScala.toList
-      logger.info("Centers %d BBox: %s".format(centersIndex, BBox2String(getBBox(bboxRow))))
+      //logger.info("Points %d count: %d".format(centersIndex, nCenters))
+      //val bboxRow = centers.agg(min("x"), min("y"), max("x"), max("y")).collectAsList.asScala.toList
+      //logger.info("Points %d BBox: %s".format(centersIndex, BBox2String(getBBox(bboxRow))))
       timer = measure{
-        centersDatasets(centersIndex) = centers.index(RTreeType, "centers%dRT".format(centersIndex), Array("x", "y")).cache()
+        centersList(centersIndex) = centers.index(RTreeType, "centers%dRT".format(centersIndex), Array("x", "y")).cache()
       }
       logInfo("02.Indexing Centers", timer.value, nCenters)
       centersIndex += 1 
@@ -126,9 +125,11 @@ object RandomTester {
 
 ////////////////////////////////////////////////////////////////////////
 
-    for(index <- (0 until 2)){
-      val points = pointsDatasets(index)
-      val centers = centersDatasets(index)
+    for(index <- (0 until nNodes)){
+      val points = pointsList(index)
+      //saveToFile(points.map(p => "%d,%.2f,%.2f".format(p.id, p.x, p.y)).collect(), "/tmp/Points%d.txt".format(index))
+      val centers = centersList(index)
+      //saveToFile(centers.map(p => "%d,%.2f,%.2f".format(p.id, p.x, p.y)).collect(), "/tmp/Centers%d.txt".format(index))
       clock = System.nanoTime()
       val disks = centers.
         distanceJoin(points.toDF("id1","x1","y1"), Array("x", "y"), Array("x1", "y1"), epsilon/2 + precision).
@@ -138,42 +139,13 @@ object RandomTester {
       val nDisks = disks.count()
       logInfo("03.Joining datasets", (System.nanoTime() - clock) / 1e6d, nDisks)
     }
-
-    /*
-    timer = measure {
-      points = points.index(RTreeType, "pointsRT", Array("x", "y")).cache()
-      nPoints = points.count()
+  }
+  
+  private def saveToFile(data: Array[String], filename: String): Unit = {
+    new java.io.PrintWriter(filename) {
+      write(data.mkString("\n"))
+      close()
     }
-    val pointsTimer = timer.value
-    epsilon = 10
-    for(n <- nCentersList(index)){
-      logInfo("01.Indexing points", pointsTimer, nPoints)
-      var centers = (0 until n)
-        .map {
-          id =>
-            var x = minx + random.nextInt((maxx - minx) + 1) + random.nextDouble()
-            x = BigDecimal(x).setScale(2, BigDecimal.RoundingMode.HALF_UP).toDouble
-            var y = miny + random.nextInt((maxy - miny) + 1) + random.nextDouble()
-            y = BigDecimal(y).setScale(2, BigDecimal.RoundingMode.HALF_UP).toDouble
-            SP_Point(id, x, y)
-        }.toDS()
-      var nCenters = centers.count()
-      timer = measure {
-        centers = centers.index(RTreeType, "centersRT", Array("x", "y")).cache()
-        nCenters = centers.count()
-      }
-      logInfo("02.Indexing centers", timer.value, nCenters)
-      clock = System.nanoTime()
-      val disks = centers.
-        distanceJoin(points.toDF("id1","x1","y1"), Array("x", "y"), Array("x1", "y1"), epsilon/2 + precision).
-        groupBy("id", "x", "y").
-        agg(collect_list("id1").alias("ids")).
-        cache()
-      val nDisks = disks.count()
-      logInfo("03.Joining datasets", (System.nanoTime() - clock) / 1e6d, nDisks)
-      epsilon = epsilon + 10
-    }
-    */
   }
   
   private def getBBox(bboxRow: List[org.apache.spark.sql.Row]): BBox ={
