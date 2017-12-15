@@ -7,7 +7,7 @@ import org.scalameter._
 import org.apache.spark.sql.functions._
 import scala.collection.JavaConverters._
 
-object RandomTester {
+object RandomTesterRunner {
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
   val precision = 0.01
   val master = "spark://169.235.27.134:7077"
@@ -45,19 +45,19 @@ object RandomTester {
       toDS()
     var nPoints = points.count()
     timer = measure{
-      points = points.index(RTreeType, "points%dRT".format(pointsIndex), Array("x", "y")).cache()
+      points = points.index(RTreeType, "points%dRT".format(node), Array("x", "y")).cache()
     }
     logInfo("01.Indexing Points", timer.value, nPoints)
     ////////////////////////////////////////////////////////////////////////
     val centersFilename = "/home/acald013/PhD/Y3Q1/Validation/RandomData/Centers%d.txt".format(node)
-    val centers = simba.sparkContext.
+    var centers = simba.sparkContext.
       textFile(centersFilename).
       map(_.split(",")).
       map(p => SP_Point(p(0).trim.toLong,p(1).trim.toDouble,p(2).trim.toDouble)).
       toDS()
     var nCenters = centers.count()
     timer = measure{
-      centers = centers.index(RTreeType, "centers%dRT".format(centersIndex), Array("x", "y")).cache()
+      centers = centers.index(RTreeType, "centers%dRT".format(node), Array("x", "y")).cache()
     }
     logInfo("02.Indexing Centers", timer.value, nCenters)
     ////////////////////////////////////////////////////////////////////////
@@ -72,6 +72,6 @@ object RandomTester {
   }
   
   private def logInfo(msg: String, millis: Double, n: Long): Unit = {
-    logger.info("%s,%.2f,%d,%.1f,%d".format(msg, millis / 1000.0, n, epsilon, cores))
+    logger.info("%s,%.2f,%d,%.1f,%d".format(msg, millis / 1000.0, n, epsilon, node))
   }
 }
