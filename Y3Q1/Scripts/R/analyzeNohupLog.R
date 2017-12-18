@@ -25,6 +25,23 @@ runLogETL <- function(PHD_HOME,PHD_PATH,FILENAME,EXTENSION){
   write.table(sapply(stages, trimws, which="both"), paste0(PHD_HOME,PHD_PATH,FILENAME,".txt"), col.names = F, row.names = F, quote = F)
 }
 
+runRandomTesterRunnerETL <- function(PHD_HOME,PHD_PATH,FILENAME,EXTENSION){
+  url = paste0(PHD_HOME,PHD_PATH,FILENAME,".",EXTENSION)
+  cores_per_node = 7
+  
+  lines = readLines(url)
+  data = c()
+  for(line in lines){
+    if(grepl("\\> \\d", line, perl = T)){
+      data = c(data, line)
+    }
+  }
+  data = str_split_fixed(data, ">", 2)
+  data = as.data.frame(str_split_fixed(data[,2], ",", 5))
+  names(data) = c("Stage", "Time", "N", "Epsilon", "Node")
+  data$Cores = as.numeric(data$Node) * cores_per_node
+  write.table(sapply(data, trimws, which="both"), paste0(PHD_HOME,PHD_PATH,FILENAME,".csv"), col.names = T, row.names = F, sep = ",", quote = F)
+}
 #PHD_HOME = Sys.getenv(c("PHD_HOME"))
 #PHD_PATH = "Y3Q1/Scripts/Scaleup/"
 #FILENAME = "Berlin_N20K-40K_E10-50_M10_C7-14_2017-11-30_11-11"
