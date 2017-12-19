@@ -38,7 +38,7 @@ done
 
 # Running Scaleup on 3 Nodes...
 DATASET="B180K"
-CORES=21
+CORES=6
 MASTER="local[6]"
 for i in `seq 1 $N`
 do
@@ -51,7 +51,7 @@ done
 
 # Running Scaleup on 4 Nodes...
 DATASET="B240K"
-CORES=28
+CORES=8
 MASTER="local[8]"
 for i in `seq 1 $N`
 do

@@ -20,7 +20,6 @@ params:
 ```{r ScaleupSetup, include=FALSE}
 if (!require("pacman")) install.packages("pacman")
 pacman::p_load(ggplot2, data.table, foreach, sqldf, tidyr, stringr, dplyr)
-options(digits = 15)
 source('analyzeNohupLog.R')
 
 PHD_HOME = Sys.getenv(c("PHD_HOME"))
@@ -28,21 +27,159 @@ PHD_PATH = params$phd_path
 FILENAME = params$filename
 EXTENSION = params$extension
 
-runRandomTesterRunnerETL(PHD_HOME, PHD_PATH,FILENAME,EXTENSION)
+runLogETL(PHD_HOME, PHD_PATH,FILENAME,EXTENSION)
 data0 = read.csv(paste0(PHD_HOME,PHD_PATH,FILENAME,".csv"))
+data = data0[, c(1, 2, 3, 5)]
+names(data) = c("Dataset", "Epsilon", "Cores", "Time")
+dataLevels = str_sub(str_trim(data$Dataset), 2, -2)
+dataLevels = paste0(sort(as.numeric(levels(factor(dataLevels)))),"K")
+data$Dataset = str_sub(str_trim(data$Dataset), 2)
+data$Dataset = factor(data$Dataset, levels = dataLevels)
+data$Time = as.numeric(data$Time)
+data$Epsilon = as.numeric(data$Epsilon)
+data$Cores = as.numeric(data$Cores)
+data[data$Cores == 21, c('Cores')] = 6
+data[data$Cores == 28, c('Cores')] = 8
 
-data1 = sqldf("SELECT Stage, Epsilon, Cores, avg(Time) AS Time FROM data0 GROUP BY 1, 2, 3")
-data1$Cores = factor(data1$Cores)
+data1 = sqldf("SELECT Dataset, Epsilon, Cores, avg(Time) AS Time FROM data GROUP BY 1, 2, 3")
 ```
 
-## `r FILENAME`
+## General
 
 ```{r ScaleupPlot, echo=FALSE, fig.width=10.5, fig.height=7.5, fig.align='center'}
 temp_title = paste("(radius of disk in mts) in Berlin dataset.")
 title = substitute(paste("Execution time by ", epsilon) ~ temp_title, list(temp_title = temp_title))
-g = ggplot(data=data1, aes(x=factor(Epsilon), y=Time, fill=Cores)) +
+g = ggplot(data=data1, aes(x=factor(Epsilon), y=Time, fill=Dataset)) +
   geom_bar(stat="identity", position=position_dodge(width = 0.75),width = 0.75) +
+  labs(title=title, y="Time(s)", x=expression(paste(epsilon,"(mts)")))
+plot(g)
+```
+
+## By Stage
+
+```{r ScaleupByStages, echo=FALSE, fig.width=10.5, fig.height=7.5, fig.align='center'}
+f = paste0(PHD_HOME,PHD_PATH,FILENAME,".txt")
+lines = readLines(f)
+output = paste0(PHD_HOME,PHD_PATH,"stages.dat")
+cat("Dataset,Cores,Epsilon,Mu,Stages,Time", file=output, sep = "\n")
+for(line in lines){
+  stage = "00.Setting mu="
+  if(grepl(stage, line)){
+    temp = str_split_fixed(line, ",", 4)
+    mu = str_split_fixed(temp[1], "=", 2)[,2]
+    mu = as.numeric(str_trim(mu))
+    epsilon = str_split_fixed(temp[2], "=", 2)[,2]
+    epsilon = as.numeric(str_trim(epsilon))
+    cores = str_split_fixed(temp[3], "=", 2)[,2]
+    cores = as.numeric(str_trim(cores))
+    dataset = str_split_fixed(temp[4], "=", 2)[,2]
+    dataset = str_sub(str_trim(dataset), 2)
+  }
+  stage = "01.Indexing points"
+  if(grepl(stage, line)){
+    time = str_split_fixed(line, "\\[", 2)
+    time = str_split_fixed(time[2], "s\\]", 2)[,1]
+    time = as.numeric(str_trim(time))
+    text = paste0(dataset,",",cores,",",epsilon,",",mu,",",stage,",",time,"\n")
+    cat(text, file=output, append = T)
+  }
+  stage = "02.Getting pairs"
+  if(grepl(stage, line)){
+    time = str_split_fixed(line, "\\[", 2)
+    time = str_split_fixed(time[2], "s\\]", 2)[,1]
+    time = as.numeric(str_trim(time))
+    text = paste0(dataset,",",cores,",",epsilon,",",mu,",",stage,",",time,"\n")
+    cat(text, file=output, append = T)
+  }
+  stage = "03.Computing centers"
+  if(grepl(stage, line)){
+    time = str_split_fixed(line, "\\[", 2)
+    time = str_split_fixed(time[2], "s\\]", 2)[,1]
+    time = as.numeric(str_trim(time))
+    text = paste0(dataset,",",cores,",",epsilon,",",mu,",",stage,",",time,"\n")
+    cat(text, file=output, append = T)
+  }
+  stage = "04.Indexing centers"
+  if(grepl(stage, line)){
+    time = str_split_fixed(line, "\\[", 2)
+    time = str_split_fixed(time[2], "s\\]", 2)[,1]
+    time = as.numeric(str_trim(time))
+    text = paste0(dataset,",",cores,",",epsilon,",",mu,",",stage,",",time,"\n")
+    cat(text, file=output, append = T)
+  }
+  stage = "05.Getting disks"
+  if(grepl(stage, line)){
+    time = str_split_fixed(line, "\\[", 2)
+    time = str_split_fixed(time[2], "s\\]", 2)[,1]
+    time = as.numeric(str_trim(time))
+    text = paste0(dataset,",",cores,",",epsilon,",",mu,",",stage,",",time,"\n")
+    cat(text, file=output, append = T)
+  }
+  stage = "06.Filtering less-than-mu disks"
+  if(grepl(stage, line)){
+    time = str_split_fixed(line, "\\[", 2)
+    time = str_split_fixed(time[2], "s\\]", 2)[,1]
+    time = as.numeric(str_trim(time))
+    text = paste0(dataset,",",cores,",",epsilon,",",mu,",",stage,",",time,"\n")
+    cat(text, file=output, append = T)
+  }
+  stage = "07.Prunning duplicate candidates"
+  if(grepl(stage, line)){
+    time = str_split_fixed(line, "\\[", 2)
+    time = str_split_fixed(time[2], "s\\]", 2)[,1]
+    time = as.numeric(str_trim(time))
+    text = paste0(dataset,",",cores,",",epsilon,",",mu,",",stage,",",time,"\n")
+    cat(text, file=output, append = T)
+  }
+  stage = " 08.Indexing candidates"
+  if(grepl(stage, line)){
+    time = str_split_fixed(line, "\\[", 2)
+    time = str_split_fixed(time[2], "s\\]", 2)[,1]
+    time = as.numeric(str_trim(time))
+    text = paste0(dataset,",",cores,",",epsilon,",",mu,",",stage,",",time,"\n")
+    cat(text, file=output, append = T)
+  }
+  stage = "09.Getting expansions"
+  if(grepl(stage, line)){
+    time = str_split_fixed(line, "\\[", 2)
+    time = str_split_fixed(time[2], "s\\]", 2)[,1]
+    time = as.numeric(str_trim(time))
+    text = paste0(dataset,",",cores,",",epsilon,",",mu,",",stage,",",time,"\n")
+    cat(text, file=output, append = T)
+  }
+  stage = "10.Finding maximal disks"
+  if(grepl(stage, line)){
+    time = str_split_fixed(line, "\\[", 2)
+    time = str_split_fixed(time[2], "s\\]", 2)[,1]
+    time = as.numeric(str_trim(time))
+    text = paste0(dataset,",",cores,",",epsilon,",",mu,",",stage,",",time,"\n")
+    cat(text, file=output, append = T)
+  }
+  stage = "11.Prunning duplicates"
+  if(grepl(stage, line)){
+    stage = "11.Prunning duplicates and subsets"
+    time = str_split_fixed(line, "\\[", 2)
+    time = str_split_fixed(time[2], "s\\]", 2)[,1]
+    time = as.numeric(str_trim(time))
+    text = paste0(dataset,",",cores,",",epsilon,",",mu,",",stage,",",time,"\n")
+    cat(text, file=output, append = T)
+  }
+}
+```
+
+
+```{r ScaleupPlot2, echo=FALSE, fig.width=10.5, fig.height=7.5, fig.align='center'}
+stages = read.csv(output)
+datasetLevels = str_sub(str_trim(stages$Dataset), 1, -2)
+datasetLevels = paste0(sort(as.numeric(levels(factor(datasetLevels)))),"K")
+stages$Dataset = str_trim(stages$Dataset)
+stages$Dataset = factor(stages$Dataset, levels = datasetLevels)
+stages = sqldf("SELECT Dataset, Cores, Epsilon, Stages, AVG(Time) AS Time FROM stages GROUP BY Dataset, Cores, Epsilon, Stages")
+temp_title = paste("(radius of disk in mts) in Berlin dataset.")
+title = substitute(paste("Execution time by stages and ", epsilon) ~ temp_title, list(temp_title = temp_title))
+g = ggplot(data=stages, aes(x=factor(Epsilon), y=Time, fill=Dataset)) +
+  geom_bar(stat="identity", position=position_dodge(width = 0.75), width = 0.75) +
   labs(title=title, y="Time(s)", x=expression(paste(epsilon,"(mts)"))) +
-  facet_wrap(~Stage)
+  facet_wrap(~Stages)
 plot(g)
 ```
