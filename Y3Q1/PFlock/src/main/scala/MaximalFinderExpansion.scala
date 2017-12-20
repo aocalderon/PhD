@@ -1,12 +1,10 @@
 import SPMF.{AlgoFPMax, AlgoLCM, Transactions}
 import org.apache.spark.rdd.RDD
-import org.apache.spark.sql.catalyst.ScalaReflection
 import org.apache.spark.sql.functions._
+import org.apache.spark.sql.simba.SimbaSession
 import org.apache.spark.sql.simba.index.{RTree, RTreeType}
 import org.apache.spark.sql.simba.partitioner.STRPartitioner
-import org.apache.spark.sql.simba.spatial.{MBR, Point, Shape}
-import org.apache.spark.sql.simba.{Dataset, SimbaSession}
-import org.apache.spark.sql.types.StructType
+import org.apache.spark.sql.simba.spatial.{MBR, Point}
 import org.joda.time.DateTime
 import org.rogach.scallop.{ScallopConf, ScallopOption}
 import org.slf4j.{Logger, LoggerFactory}
@@ -66,6 +64,13 @@ object MaximalFinderExpansion {
     pointsNumPartitions = points.rdd.getNumPartitions
     logger.info("[Partitions Info]Points;After indexing;%d".format(pointsNumPartitions))
     logger.info("01.Indexing points... [%.3fs] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nPoints))
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////
+    points.persistIndex("pointsRT", "/tmp/pointsRT")
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /*
     // 02.Getting pairs...
     timer = System.currentTimeMillis()
     val pairs = p1.distanceJoin(p2, Array("x1", "y1"), Array("x2", "y2"), epsilon + precision)
@@ -296,11 +301,13 @@ object MaximalFinderExpansion {
         )
       )
     }
+    */
     // Dropping indices...
     timer = System.currentTimeMillis()
     p1.dropIndex()
     p2.dropIndex()
-    centers.dropIndex()
+    points.dropIndex()
+    //centers.dropIndex()
     logger.info("Dropping indices...[%.3fs]".format((System.currentTimeMillis() - timer)/1000.0))
   }
 
@@ -362,7 +369,7 @@ object MaximalFinderExpansion {
   }
 
   def saveStringArray(array: Array[String], tag: String, conf: Conf): Unit = {
-    val path = s"${phd_home}${conf.valpath()}"
+    val path = s"$phd_home${conf.valpath()}"
     val filename = s"${conf.dataset()}_E${conf.epsilon()}_M${conf.mu()}_C${conf.cores()}"
     new java.io.PrintWriter("%s%s_%s_%d.txt".format(path, filename, tag, System.currentTimeMillis)) {
       write(array.mkString("\n"))
@@ -371,7 +378,7 @@ object MaximalFinderExpansion {
   }
 
   def saveStringArrayWithoutTimeMillis(array: Array[String], tag: String, conf: Conf): Unit = {
-    val path = s"${phd_home}${conf.valpath()}"
+    val path = s"$phd_home${conf.valpath()}"
     val filename = s"${conf.dataset()}_E${conf.epsilon()}_M${conf.mu()}_C${conf.cores()}"
     new java.io.PrintWriter("%s%s_%s.txt".format(path, filename, tag)) {
       write(array.mkString("\n"))
@@ -415,7 +422,6 @@ object MaximalFinderExpansion {
   def main(args: Array[String]): Unit = {
     // Reading arguments from command line...
     val conf = new Conf(args)
-    val POINT_SCHEMA = ScalaReflection.schemaFor[SP_Point].dataType.asInstanceOf[StructType]
     val master = conf.master()
     // Starting session...
     var timer = System.currentTimeMillis()
@@ -425,8 +431,6 @@ object MaximalFinderExpansion {
       .config("simba.index.partitions",conf.partitions().toString)
       .config("spark.cores.max",conf.cores().toString)
       .getOrCreate()
-    import simba.implicits._
-    import simba.simbaImplicits._
     logger.info("Starting session... [%.3fs]".format((System.currentTimeMillis() - timer)/1000.0))
     // Reading...
     timer = System.currentTimeMillis()
