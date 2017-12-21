@@ -19,7 +19,7 @@ object PartitionViewer {
   case class P1(id1: Long, x1: Double, y1: Double)
   case class P2(id2: Long, x2: Double, y2: Double)
   case class Center(id: Long, x: Double, y: Double)
-  case class Pair(id1: Long, x1: Double, y1: Double, id2: Long, x2: Double, y2: Double)
+  case class Pair(id: Long, x: Double, y: Double, id2: Long, x2: Double, y2: Double)
 
   def run(pointsRDD: RDD[String]
       , simba: SimbaSession
@@ -65,18 +65,15 @@ object PartitionViewer {
             pointsMaxEntriesPerNode,
             pointPoints )
           val pointsMBRs = pointsPartitioner.mbrBound.map{ mbr =>
-              "%f;%f;%f;%f".format(
-                mbr._1.low.coord(0),
-                mbr._1.low.coord(1),
-                mbr._1.high.coord(0),
-                mbr._1.high.coord(1) )
+              "%d;%s".format(mbr._2, mbr2wkt(mbr._1))
             }
+          saveStringArrayWithoutTimeMillis(pointsMBRs, "PointsMBRs", conf)
     ///////////
     // 02.Getting pairs...
     timer = System.currentTimeMillis()
     val pairs = p1.distanceJoin(p2, Array("x", "y"), Array("x2", "y2"), epsilon + precision)
       .as[Pair]
-      .filter(pair => pair.id1 < pair.id2)
+      .filter(pair => pair.id < pair.id2)
       .rdd
       .cache()
     val nPairs = pairs.count()
@@ -84,7 +81,7 @@ object PartitionViewer {
     // 03.Computing centers...
     timer = System.currentTimeMillis()
     val centerPairs = findCenters(pairs, epsilon)
-      .filter( pair => pair.id1 != -1 )
+      .filter( pair => pair.id != -1 )
       .toDS()
       .as[Pair]
       .cache()
@@ -107,6 +104,28 @@ object PartitionViewer {
     centersNumPartitions = centers.rdd.getNumPartitions
     logger.info("[Partitions Info]Centers;After indexing;%d".format(centersNumPartitions))
     logger.info("04.Indexing centers... [%.3fs] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nCenters))
+    ///////////
+          val pointCenters = centers.map{ center =>
+              ( new Point(Array(center.x, center.y)), center)
+            }
+            .rdd
+            .cache()
+          val centersSampleRate: Double = sampleRate
+          val centersDimension: Int = dimensions
+          val centersTransferThreshold: Long = 800 * 1024 * 1024
+          val centersMaxEntriesPerNode: Int = 25
+          val centersPartitioner: STRPartitioner = new STRPartitioner(
+            centersNumPartitions,
+            centersSampleRate,
+            centersDimension,
+            centersTransferThreshold,
+            centersMaxEntriesPerNode,
+            pointCenters )
+          val centersMBRs = centersPartitioner.mbrBound.map{ mbr =>
+              "%d;%s".format(mbr._2, mbr2wkt(mbr._1))
+            }
+          saveStringArrayWithoutTimeMillis(centersMBRs, "CentersMBRs", conf)
+    ///////////
     
     ////////////////////////////////////////////////////////////////////
     saveStringArrayWithoutTimeMillis(p1.map(c => "%d,%.2f,%.2f".format(c.id, c.x, c.y)).collect(), "Points", conf)
@@ -125,8 +144,8 @@ object PartitionViewer {
 
   def calculateCenterCoordinates(pair: Pair, r2: Double): Pair = {
     var centerPair = Pair(-1, 0, 0, 0, 0, 0) //To be filtered in case of duplicates...
-    val X: Double = pair.x1 - pair.x2
-    val Y: Double = pair.y1 - pair.y2
+    val X: Double = pair.x - pair.x2
+    val Y: Double = pair.y - pair.y2
     val D2: Double = math.pow(X, 2) + math.pow(Y, 2)
     if (D2 != 0.0){
       val root: Double = math.sqrt(math.abs(4.0 * (r2 / D2) - 1.0))
@@ -134,7 +153,7 @@ object PartitionViewer {
       val k1: Double = ((Y - X * root) / 2) + pair.y2
       val h2: Double = ((X - Y * root) / 2) + pair.x2
       val k2: Double = ((Y + X * root) / 2) + pair.y2
-      centerPair = Pair(pair.id1, h1, k1, pair.id2, h2, k2)
+      centerPair = Pair(pair.id, h1, k1, pair.id2, h2, k2)
     }
     centerPair
   }
@@ -167,11 +186,11 @@ object PartitionViewer {
 
   class Conf(arguments: Seq[String]) extends ScallopConf(arguments) {
     val epsilon:    ScallopOption[Double] = opt[Double] (default = Some(10.0))
-    val partitions: ScallopOption[Int]    = opt[Int]    (default = Some(1024))
+    val partitions: ScallopOption[Int]    = opt[Int]    (default = Some(64))
     val cores:      ScallopOption[Int]    = opt[Int]    (default = Some(30))
     val master:     ScallopOption[String] = opt[String] (default = Some("spark://169.235.27.134:7077")) /* spark://169.235.27.134:7077 */
     val path:       ScallopOption[String] = opt[String] (default = Some("Y3Q1/Datasets/"))
-    val valpath:    ScallopOption[String] = opt[String] (default = Some("Y3Q1/Validation/"))
+    val valpath:    ScallopOption[String] = opt[String] (default = Some("Y3Q1/Validation/MBRs/"))
     val dataset:    ScallopOption[String] = opt[String] (default = Some("B20K"))
     val extension:  ScallopOption[String] = opt[String] (default = Some("csv"))
     verify()
