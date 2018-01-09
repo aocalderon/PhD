@@ -33,10 +33,12 @@ object MaximalFinderExpansion {
 
   def run(pointsRDD: RDD[String]
       , simba: SimbaSession
-      , conf: Conf): Unit = {
+      , conf: FlockFinder.Conf): RDD[String] = {
     // 00.Setting variables...
     val mu = conf.mu()
     val epsilon = conf.epsilon()
+    var maximals3: RDD[String] = simba.sparkContext.emptyRDD
+    
     import simba.implicits._
     import simba.simbaImplicits._
     logger.info("00.Setting mu=%d,epsilon=%.1f,cores=%d,dataset=%s"
@@ -254,11 +256,11 @@ object MaximalFinderExpansion {
         }
         .map(m => (m._1, m._2, isNotInExpansionArea(m._1, m._2, epsilon)))
         .cache()
-      val maximals3 = maximals2
+      maximals3 = maximals2
         .filter(m => m._3)
         .map(m => m._1)   
         .distinct()
-        .cache()
+        .rdd
       nMaximals = maximals3.count()
       logger.info("11.Prunning duplicates and subsets... [%.3fs] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nMaximals))
       val endTime = System.currentTimeMillis()
@@ -282,6 +284,8 @@ object MaximalFinderExpansion {
     points.dropIndex()
     centers.dropIndex()
     logger.info("Dropping indices...[%.3fs]".format((System.currentTimeMillis() - timer)/1000.0))
+    
+    maximals3
   }
 
   import org.apache.spark.Partitioner
@@ -389,12 +393,19 @@ object MaximalFinderExpansion {
     val dataset:    ScallopOption[String] = opt[String] (default = Some("B20K"))
     val extension:  ScallopOption[String] = opt[String] (default = Some("csv"))
     val method:     ScallopOption[String] = opt[String] (default = Some("fpmax"))
+    // FlockFinder parameters
+    val delta:	    ScallopOption[Int]    = opt[Int]    (default = Some(3))    
+    val tstart:     ScallopOption[Int]    = opt[Int]    (default = Some(0))
+    val tend:       ScallopOption[Int]    = opt[Int]    (default = Some(5))
+    val cartesian:  ScallopOption[Int]    = opt[Int]    (default = Some(2))
+    val logs:	    ScallopOption[String] = opt[String] (default = Some("INFO"))    
+    
     verify()
   }
 
   def main(args: Array[String]): Unit = {
     // Reading arguments from command line...
-    val conf = new Conf(args)
+    val conf = new FlockFinder.Conf(args)
     val master = conf.master()
     // Starting session...
     var timer = System.currentTimeMillis()
