@@ -23,7 +23,7 @@ object FlockFinder {
     val master:     ScallopOption[String] = opt[String] (default = Some("spark://169.235.27.134:7077")) /* spark://169.235.27.134:7077 */
     val path:       ScallopOption[String] = opt[String] (default = Some("Y3Q1/Datasets/"))
     val valpath:    ScallopOption[String] = opt[String] (default = Some("Y3Q1/Validation/"))
-    val dataset:    ScallopOption[String] = opt[String] (default = Some("B20K"))
+    val dataset:    ScallopOption[String] = opt[String] (default = Some("Berlin_N15K_A1K_T15"))
     val extension:  ScallopOption[String] = opt[String] (default = Some("csv"))
     val method:     ScallopOption[String] = opt[String] (default = Some("fpmax"))
     // FlockFinder parameters
@@ -44,8 +44,10 @@ object FlockFinder {
     // Setting parameters...
     val epsilon: Double = conf.epsilon()
     val mu: Int = conf.mu()
-    val CARTESIAN: Int = conf.cartesian()
-    val POINT_SCHEMA = ScalaReflection.schemaFor[ST_Point].
+    val tstart: Int = conf.tstart()
+    val tend: Int = conf.tend()
+    val cartesian: Int = conf.cartesian()
+    val point_schema = ScalaReflection.schemaFor[ST_Point].
       dataType.
       asInstanceOf[StructType]
     // Starting a session...
@@ -64,10 +66,10 @@ object FlockFinder {
     log.info("Reading %s ...".format(filename))
     val pointset = simba.read.
       option("header", "false").
-      schema(POINT_SCHEMA).
+      schema(point_schema).
       csv(filename).
       as[ST_Point].
-      filter(datapoint => datapoint.t >= conf.tstart() && datapoint.t <= conf.tend()).
+      filter(datapoint => datapoint.t >= tstart && datapoint.t <= tend).
       cache()
     nPointset = pointset.count()
     log.info("Number of points in dataset: %d".format(nPointset))
@@ -108,7 +110,7 @@ object FlockFinder {
       // Finding maximal disks for current timestamp...
       val F_prime: RDD[Flock] = MaximalFinderExpansion.
         run(currentPoints, simba, conf).
-        repartition(CARTESIAN).
+        repartition(cartesian).
         map(f => Flock(timestamp, timestamp, f))
       // Joining previous flocks and current ones...
       log.info("Running cartesian function for timestamps %d...".format(timestamp))
