@@ -7,8 +7,8 @@ pacman::p_load(data.table, sqldf)
 ###################
 
 PHD_HOME = Sys.getenv(c("PHD_HOME"))
-PATH = "Y3Q1/Datasets/Buses/"
-DATASET = "buses"
+PATH = "Y3Q1/Datasets/"
+DATASET = "busesTest"
 EXTENSION = ".txt"
 SEPARATOR = "\t"
 filename = paste0(PHD_HOME,PATH,DATASET,EXTENSION)
