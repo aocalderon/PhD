@@ -13,7 +13,7 @@ import scala.collection.JavaConverters._
 
 object MaximalFinderExpansion {
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
-  private val precision: Double = 0.01
+  private val precision: Double = 0.001
   private val dimensions: Int = 2
   private val sampleRate: Double = 0.01
   private var phd_home: String = ""

@@ -47,6 +47,7 @@ object FlockFinder {
     val tstart: Int = conf.tstart()
     val tend: Int = conf.tend()
     val cartesian: Int = conf.cartesian()
+    val DELTA = conf.delta()
     val point_schema = ScalaReflection.schemaFor[ST_Point].
       dataType.
       asInstanceOf[StructType]
@@ -86,16 +87,25 @@ object FlockFinder {
     var currentPoints = pointset
       .filter(datapoint => datapoint.t == timestamp)
       .map{ datapoint => 
-        "%d,%.2f,%.2f".format(datapoint.id, datapoint.x, datapoint.y)
+        "%d,%.3f,%.3f".format(datapoint.id, datapoint.x, datapoint.y)
       }.
       rdd
     log.info("nPointset=%d,timestamp=%d".format(currentPoints.count(), timestamp))
-    // Maximal disks for time 0
+    // Maximal disks for time 0...
     var F: RDD[Flock] = MaximalFinderExpansion.
       run(currentPoints, simba, conf).
       repartition(conf.cartesian()).
       map(f => Flock(timestamp, timestamp, f))
     log.info("Flock,Start,End,Flock")
+    // Reporting flocks for time 0...
+    val FlockReport = F.map{ flock =>
+      ("%d,%d,%s".format(flock.start, flock.end, flock.ids.split(";")(2)))
+    }.collect.mkString("\n")
+    log.info(FlockReport)
+    val n = F.filter(flock => flock.end - flock.start + 1 == DELTA).count()
+    log.info("\n######\n#\n# Done!\n# %d flocks found in timestamp %d...\n#\n######".format(n, timestamp))
+    
+    
     // Maximal disks for time 1 and onwards
     for(timestamp <- timestamps.slice(1,timestamps.length)){
 	  // Reading points for current timestamp...
@@ -127,14 +137,13 @@ object FlockFinder {
         filter(flock => flock.ids.length >= mu).
         // Removing duplicates...
         distinct
-      val DELTA = conf.delta()
       // Reporting flocks with duration delta...
       F.foreach{ flock =>
-		if(flock.end - flock.start == DELTA){
-		  log.info("Flock,%d,%d,\"%s\"".format(flock.start, flock.end, flock.ids.mkString(";")))
+		if(flock.end - flock.start + 1 == DELTA){
+		  log.info("%d,%d,%s".format(flock.start, flock.end, flock.ids.mkString(" ")))
         }
-	  }
-	  val n = F.filter(flock => flock.end - flock.start == DELTA).count()
+      }
+      val n = F.filter(flock => flock.end - flock.start + 1 == DELTA).count()
       log.info("\n######\n#\n# Done!\n# %d flocks found in timestamp %d...\n#\n######".format(n, timestamp))
       // Appending new potential flocks from current timestamp...
       F = F.union(F_prime)
