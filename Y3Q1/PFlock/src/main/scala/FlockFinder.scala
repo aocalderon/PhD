@@ -1,3 +1,4 @@
+import scala.collection.mutable.ListBuffer
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.catalyst.ScalaReflection
 import org.apache.spark.sql.simba.SimbaSession
@@ -11,7 +12,7 @@ object FlockFinder {
   private var nPointset: Long = 0
 
   case class ST_Point(x: Double, y: Double, t: Int, id: Int)
-  case class Flock(start: Int, end: Int, ids: String, lon: Double = 0.0, lat: Double = 0.0)
+  case class Flock(start: Int, end: Int, ids: List[Long], lon: Double = 0.0, lat: Double = 0.0)
 
   class Conf(arguments: Seq[String]) extends ScallopConf(arguments) {
     val epsilon:    ScallopOption[Double] = opt[Double] (default = Some(10.0))
@@ -47,6 +48,7 @@ object FlockFinder {
     val tstart: Int = conf.tstart()
     val tend: Int = conf.tend()
     val cartesian: Int = conf.cartesian()
+    val partitions: Int = conf.partitions()
     val DELTA = conf.delta()
     val point_schema = ScalaReflection.schemaFor[ST_Point].
       dataType.
@@ -95,24 +97,35 @@ object FlockFinder {
     var F: RDD[Flock] = MaximalFinderExpansion.
       run(currentPoints, simba, conf).
       repartition(conf.cartesian()).
-      map(f => Flock(timestamp, timestamp, f))
+      map{ f => 
+        Flock(timestamp, 
+          timestamp, 
+          f.split(";")(2).split(" ").toList.map(_.toLong)
+        )
+      }
     log.info("Flock,Start,End,Flock")
     // Reporting flocks for time 0...
     val FlockReport = F.map{ flock =>
-      ("%d,%d,%s".format(flock.start, flock.end, flock.ids.split(";")(2)))
-    }.collect.mkString("\n")
+      ("%d,%d,%s".
+        format(flock.start, 
+          flock.end, 
+          flock.ids.mkString(" ")
+        )
+      )
+    }.
+    collect.
+    mkString("\n")
     log.info(FlockReport)
     val n = F.filter(flock => flock.end - flock.start + 1 == DELTA).count()
     log.info("\n######\n#\n# Done!\n# %d flocks found in timestamp %d...\n#\n######".format(n, timestamp))
     
-    
     // Maximal disks for time 1 and onwards
     for(timestamp <- timestamps.slice(1,timestamps.length)){
-	  // Reading points for current timestamp...
+      // Reading points for current timestamp...
       currentPoints = pointset
         .filter(datapoint => datapoint.t == timestamp)
         .map{ datapoint => 
-          "%d,%.2f,%.2f".format(datapoint.id, datapoint.x, datapoint.y)
+          "%d,%.3f,%.3f".format(datapoint.id, datapoint.x, datapoint.y)
         }.
         rdd
       log.info("nPointset=%d,timestamp=%d".format(currentPoints.count(), timestamp))
@@ -121,36 +134,120 @@ object FlockFinder {
       val F_prime: RDD[Flock] = MaximalFinderExpansion.
         run(currentPoints, simba, conf).
         repartition(cartesian).
-        map(f => Flock(timestamp, timestamp, f))
+        map{ f => 
+          Flock(timestamp, 
+            timestamp, 
+            f.split(";")(2).split(" ").toList.map(_.toLong)
+          )
+        }
       // Joining previous flocks and current ones...
       log.info("Running cartesian function for timestamps %d...".format(timestamp))
       var combinations = F.cartesian(F_prime)
+
+      //////////////////////////////////////////////////////////////////
+      log.info("\nPrinting F... %s".format(printFlocks(F)))
+      log.info("\nPrinting F_prime... %s".format(printFlocks(F_prime)))
+      //////////////////////////////////////////////////////////////////
+
       val ncombinations = combinations.count()
       log.info("Cartesian returns %d combinations...".format(ncombinations))
       // Checking if ids intersect...
-      F = combinations.
+      var F_temp = combinations.
         map{ tuple => 
-          val ids_in_common = tuple._1.ids.intersect(tuple._2.ids).sorted
-          Flock(tuple._1.start, tuple._2.end, ids_in_common)
+          val s = tuple._1.start
+          val e = tuple._2.end
+          val ids1 = tuple._1.ids
+          val ids2 = tuple._2.ids
+          val ids_in_common = ids1.intersect(ids2).sorted
+          Flock(s, e, ids_in_common)
         }.
         // Checking if they are greater than mu...
         filter(flock => flock.ids.length >= mu).
         // Removing duplicates...
         distinct
-      // Reporting flocks with duration delta...
-      F.foreach{ flock =>
-		if(flock.end - flock.start + 1 == DELTA){
-		  log.info("%d,%d,%s".format(flock.start, flock.end, flock.ids.mkString(" ")))
+
+      //////////////////////////////////////////////////////////////////
+      F_temp = F_temp.mapPartitions{ records =>
+        var flocks = new ListBuffer[(Flock, Boolean)]()
+        for(record <- records){
+          flocks += Tuple2(record, true)
         }
+        for(i <- 0 until flocks.length){ 
+          for(j <- 0 until flocks.length){ 
+            if(i != j & flocks(i)._2){
+              val ids1 = flocks(i)._1.ids
+              val ids2 = flocks(j)._1.ids
+              println("%d -> (%s:%s) <=> %d -> (%s:%s)".format(
+                i, ids1.mkString(" "), flocks(i)._2.toString, 
+                j, ids2.mkString(" "), flocks(j)._2.toString)
+              ) 
+              if(flocks(j)._2 & ids1.forall(ids2.contains)){
+                flocks(i) = Tuple2(flocks(i)._1, false)
+              }
+              if(flocks(i)._2 & ids2.forall(ids1.contains)){
+                flocks(j) = Tuple2(flocks(j)._1, false)
+              }
+            }
+          }
+        }
+        flocks.filter(_._2).map(_._1).toIterator
       }
-      val n = F.filter(flock => flock.end - flock.start + 1 == DELTA).count()
+      
+      F_temp = F_temp.repartition(1).
+        mapPartitions{ records =>
+          var flocks = new ListBuffer[(Flock, Boolean)]()
+          for(record <- records){
+            flocks += Tuple2(record, true)
+          }
+          for(i <- 0 until flocks.length){ 
+            for(j <- 0 until flocks.length){ 
+              if(i != j & flocks(i)._2){
+                val ids1 = flocks(i)._1.ids
+                val ids2 = flocks(j)._1.ids
+                if(flocks(j)._2 & ids1.forall(ids2.contains)){
+                  flocks(i) = Tuple2(flocks(i)._1, false)
+                }
+                if(flocks(i)._2 & ids2.forall(ids1.contains)){
+                  flocks(j) = Tuple2(flocks(j)._1, false)
+                }
+              }
+            }
+          }
+          flocks.filter(_._2).map(_._1).toIterator
+      }.
+      repartition(partitions)
+      //////////////////////////////////////////////////////////////////
+        
+      //////////////////////////////////////////////////////////////////
+      log.info("\nPrinting F_temp... %s".format(printFlocks(F_temp)))
+      //////////////////////////////////////////////////////////////////
+
+      
+      // Reporting flocks with delta duration...
+      /*
+      val FlockReports = F.map{ flock =>
+        ("%d,%d,%s".format(flock.start, flock.end, flock.ids.mkString(" ")))
+      }.collect.mkString("\n")
+      log.info(FlockReports)
+      */
+      // Reporting the number of flocks...
+      val n = F_temp.filter(flock => flock.end - flock.start + 1 == DELTA).count()
       log.info("\n######\n#\n# Done!\n# %d flocks found in timestamp %d...\n#\n######".format(n, timestamp))
       // Appending new potential flocks from current timestamp...
-      F = F.union(F_prime)
+      F = F_temp
     }
     // Closing all...
     log.info("Closing app...")
     simba.close()
+  }
+  
+  def printFlocks(flocks: RDD[Flock]): String ={
+    val n = flocks.count()
+    val info = flocks.map{ f => 
+      "\n%d,%d,%s".format(f.start, f.end, f.ids.mkString(" "))
+    }.collect.mkString("")
+    
+    "# of flocks: %d\n%s".format(n,info)
   }
 
   def main(args: Array[String]): Unit = {
