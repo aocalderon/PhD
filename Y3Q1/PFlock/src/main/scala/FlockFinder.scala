@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory
 
 object FlockFinder {
   private val log: Logger = LoggerFactory.getLogger("myLogger")
+  private var phd_home: String = ""
   private var nPointset: Long = 0
 
   case class ST_Point(x: Double, y: Double, t: Int, id: Int)
@@ -94,8 +95,14 @@ object FlockFinder {
       rdd
     log.info("nPointset=%d,timestamp=%d".format(currentPoints.count(), timestamp))
     // Maximal disks for time 0...
-    var F: RDD[Flock] = MaximalFinderExpansion.
-      run(currentPoints, simba, conf).
+    val maximals = MaximalFinderExpansion.
+      run(currentPoints, simba, conf)
+      
+    ////////////////////////////////////////////////////////////////////
+    saveStringArray(maximals.collect, "Flocks", conf)
+    ////////////////////////////////////////////////////////////////////
+      
+    var F: RDD[Flock] = maximals.
       repartition(conf.cartesian()).
       map{ f => 
         Flock(timestamp, 
@@ -241,6 +248,15 @@ object FlockFinder {
     simba.close()
   }
   
+  def saveStringArray(array: Array[String], tag: String, conf: Conf): Unit = {
+    val path = s"$phd_home${conf.valpath()}"
+    val filename = s"${conf.dataset()}_E${conf.epsilon()}_M${conf.mu()}_C${conf.cores()}"
+    new java.io.PrintWriter("%s%s_%s_%d.txt".format(path, filename, tag, System.currentTimeMillis)) {
+      write(array.mkString("\n"))
+      close()
+    }
+  }
+  
   def printFlocks(flocks: RDD[Flock]): String ={
     val n = flocks.count()
     val info = flocks.map{ f => 
@@ -251,7 +267,7 @@ object FlockFinder {
   }
 
   def main(args: Array[String]): Unit = {
-    // Setting a custom logger...
+    phd_home = scala.util.Properties.envOrElse("PHD_HOME", "/home/acald013/PhD/")
     log.info("Starting app...")
     // Reading arguments from command line...
     val conf = new Conf(args)
