@@ -10,7 +10,7 @@ object Checker {
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
 	
   class Disk(val line: String) extends Ordered [Disk]  {
-		val temp = line.split(";")
+		val temp = line.split(",")
 		val x: Double = temp(0).toDouble
 		val y: Double = temp(1).toDouble
 		val pids: SortedSet[Long] = temp(2).split(" ").par.map(_.toLong).to[SortedSet]
@@ -117,8 +117,8 @@ object Checker {
     val val_path = "Y3Q1/Validation/"
 		var extension = "txt"
 
-    val filename1 = "B20K_E50.0_M25_C28_Maximals"
-    var filename2 = "B20K_E50.0_M25_C7_Maximals"
+    val filename1 = args(0)
+    var filename2 = args(1)
 
     var path1 = "%s%s%s.%s".format(phd_home, val_path, filename1, extension)
     var path2 = "%s%s%s.%s".format(phd_home, val_path, filename2, extension)
